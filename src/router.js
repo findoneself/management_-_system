@@ -2,9 +2,16 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './components/Login.vue'
 import Home from './components/Home.vue'
-import Welcome from './components/Welcome'
 import Users from './components/user/Users'
-import Main from './pages/main/index'
+import Main from './pages/main/index' //首页（预警管控）
+import Dustmonitoring from './pages/dustMonitoring/index' //扬尘监测
+import Noisemonitoring from './pages/noiseMonitoring/index' //噪声监测
+import Carwashing from './pages/carWashing/index' //车洗裸土
+import AIdistinguish from './pages/AIdistinguish/index' //AI识别
+import Projectmanagement from './pages/projectManagement/index' //项目管理
+import Patrolrectification from './pages/patrolRectification/index' //巡查整改
+
+
 Vue.use(Router)
 
 const router = new Router({
@@ -15,7 +22,14 @@ const router = new Router({
                 component: Home,
                 redirect: '/main',
                 children: [
-                    { path: '/main', component: Main }
+                    { path: '/main', component: Main },
+                    { path: '/dustMonitoring', component: Dustmonitoring },
+                    { path: '/noiseMonitoring', component: Noisemonitoring },
+                    { path: '/carWashing', component: Carwashing },
+                    { path: '/aiDistinguish', component: AIdistinguish },
+                    { path: '/projectManagement', component: Projectmanagement },
+                    { path: '/patrolRectification', component: Patrolrectification },
+
                 ]
             }
         ]
