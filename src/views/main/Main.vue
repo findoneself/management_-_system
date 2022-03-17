@@ -64,13 +64,11 @@ export default {
 }
 .el-header {
   padding-left: 0;
-  background-color: #373d41;
 }
 .el-aside {
   transition: width 0.3s;
   background-color: #333744;
 }
 .el-main {
-  background-color: #eaedf1;
 }
 </style>

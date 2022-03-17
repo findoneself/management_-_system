@@ -1,12 +1,29 @@
 <template>
-    <div id="app">
-        <router-view />
-    </div>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
 <script>
 export default {
-    name: "app"
+  name: "app",
+  created() {
+    document.documentElement.style.fontSize =
+      document.documentElement.clientWidth / 20 + "px";
+  },
+  mounted() {
+    let that = this;
+    window.onresize = () => {
+      return (() => {
+        document.documentElement.style.fontSize =
+          document.documentElement.clientWidth / 20 + "px";
+        console.log(
+          document.documentElement.style.fontSize,
+          document.documentElement.clientWidth
+        );
+      })();
+    };
+  },
 };
 </script>
 
