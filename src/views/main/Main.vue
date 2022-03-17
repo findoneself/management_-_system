@@ -1,7 +1,7 @@
 <template>
   <el-container class="home-container">
     <!-- 头部区域 -->
-    <el-header style="height:1.2rem">
+    <el-header height="auto">
       <home-header />
     </el-header>
     <!-- 页面主体区 -->
@@ -68,7 +68,5 @@ export default {
 .el-aside {
   transition: width 0.3s;
   background-color: #333744;
-}
-.el-main {
 }
 </style>

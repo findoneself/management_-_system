@@ -33,7 +33,6 @@
 // 导入Vuex
 import { mapMutations } from 'vuex'
 export default {
-
   name: 'Menu',
   data () {
     return {

@@ -1,5 +1,12 @@
 @import "~_ats/css/normalize.css";
 
+@font-face {
+    font-family: "DS-Digital";
+    src: url('../fonts/DS-DIGIT.TTF');
+    /* IE9 */
+    src: url('../fonts/DS-DIGIT.TTF') format('truetype')
+}
+
 /*:root -> 获取根元素html，tintColor背景颜色*/
 
 :root {

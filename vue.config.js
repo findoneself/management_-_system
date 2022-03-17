@@ -1,5 +1,5 @@
 const path = require('path')
-
+const pxtorem = require('postcss-pxtorem')
 function resolve (dir) {
   return path.join(__dirname, dir)
 }
@@ -54,5 +54,16 @@ module.exports = {
     config.module
       .rule('images')
       .test(/\.(png|jpe?g|gif|webp|jfif)(\?.*)?$/)
+  },
+  css: {
+    loaderOptions: {
+      postcss: {
+        plugins: [pxtorem({
+          rootValue: 16, // 换算的基数
+          selectorBlackList: ['ghzhead', 'scrollbar', 'lyform'], // 忽略转换正则匹配项
+          propList: ['*']
+        })]
+      }
+    }
   }
 }
