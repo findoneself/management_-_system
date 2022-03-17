@@ -72,7 +72,7 @@ export default {
   }
 }
 .head {
-  height: 1.05rem;
+  height: 6.9rem;
   background: url('../../assets/img/head.png') no-repeat center center;
   background-size: 100% 100%;
   position: relative;
@@ -90,10 +90,10 @@ export default {
       .menubgr {
         background: url('../../assets/img/menubg.png') no-repeat center center;
         background-size: 100%;
-        margin: 0 0.1rem;
-        width: 1.1rem;
-        height: 0.35rem;
-        line-height: 0.35rem;
+        margin: 0 0.93rem;
+        width: 6.25rem;
+        height: 2.25rem;
+        line-height: 2.25rem;
         text-align: center;
         color: #fff;
         a {
@@ -117,8 +117,8 @@ export default {
 .head h1 {
   color: #fff;
   text-align: center;
-  font-size: 0.4rem;
-  line-height: 0.8rem;
+  font-size: 2.5rem;
+  line-height: 4.8rem;
   margin: 0;
 }
 
