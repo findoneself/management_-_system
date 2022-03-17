@@ -1,7 +1,7 @@
 <template>
   <el-container class="home-container">
     <!-- 头部区域 -->
-    <el-header>
+    <el-header style="height:1.2rem">
       <home-header />
     </el-header>
     <!-- 页面主体区 -->
