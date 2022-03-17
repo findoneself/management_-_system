@@ -13,7 +13,7 @@
       v-for="val in 4"
       :key="val"
       class="triangle-icon"
-      :style="{borderWidth: triangleSize, borderColor: triangleColor}"
+      :style="{borderColor: triangleColor}"
     ></span>
   </div>
 </template>

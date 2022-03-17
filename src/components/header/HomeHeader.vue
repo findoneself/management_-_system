@@ -1,8 +1,8 @@
 <template>
   <div class="head">
     <h1>{{ systemTitle }}</h1>
-    <!-- <Menu /> -->
-    <div class="menus">
+    <Menu />
+    <!-- <div class="menus">
       <div class="menulist menuleft">
         <div class="menubg">
           <router-link to="/main">预警管控</router-link>
@@ -29,17 +29,17 @@
         </div>
         <div class="menubg menubgr">管理员</div>
       </div>
-    </div>
+    </div> -->
   </div>
 
 </template>
 
 <script>
-// import Menu from '_com/menu/Menu'
+import Menu from '_com/menu/Menu'
 export default {
   name: 'HomeHeader',
   components: {
-    // Menu
+    Menu
   },
   data () {
     return {
@@ -65,41 +65,6 @@ export default {
   background-size: 100% 100%;
   position: relative;
   z-index: 100;
-  .menus {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    top: -10px;
-    .menulist {
-      //
-      display: flex;
-
-      .menubg,
-      .menubgr {
-        background: url("../../assets/img/menubg.png") no-repeat center center;
-        background-size: 100%;
-        margin: 0 10px;
-        width: 110px;
-        height: 35px;
-        line-height: 35px;
-        text-align: center;
-        color: #fff;
-        a {
-          color: #fff;
-        }
-      }
-      .menubgr {
-        background: url("../../assets/img/menubgr.png") no-repeat center center;
-        background-size: 100%;
-      }
-    }
-    .menuleft {
-      float: left;
-    }
-    .menuright {
-      float: right;
-    }
-  }
 }
 
 .head h1 {
