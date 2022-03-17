@@ -1,24 +1,26 @@
-import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import Utils from './common/utils'
 // 引入element组件配置
-import "./plugins/element";
+import './plugins/element'
 // 引入图标库
-import "./assets/fonts/iconfont.css";
+import './assets/fonts/iconfont.css'
 // 引入nprogress样式
-import "nprogress/nprogress.css";
+import 'nprogress/nprogress.css'
 // 引入富文本编辑器
-import VueQuillEditor from "vue-quill-editor";
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-Vue.use(VueQuillEditor);
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+Vue.use(VueQuillEditor)
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
+Vue.prototype.$utils = Utils
 
 new Vue({
-    router,
-    store,
-    render: h => h(App)
-}).$mount("#app");
+  router,
+  store,
+  render: h => h(App)
+}).$mount('#app')
