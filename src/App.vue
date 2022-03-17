@@ -15,7 +15,8 @@ export default {
     window.onresize = () => {
       return (() => {
         document.documentElement.style.fontSize = document.documentElement.clientWidth / 20 + 'px'
-      })()
+        console.log(document.documentElement.style.fontSize,document.documentElement.clientWidth)
+     })()
     }
   },
 }

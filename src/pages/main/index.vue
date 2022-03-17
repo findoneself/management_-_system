@@ -1,22 +1,16 @@
 ﻿<template>
   <div>
-    <!-- <div class="canvas" style="opacity: 0.2"> -->
-    <!-- <iframe
-        frameborder="0"
-        src="./js/index.html"
-        style="width: 100%; height: 100%"
-      ></iframe> -->
-    <!-- </div> -->
-    <div class="head">
-      <h1>大数据可视化展板通用模板</h1>
-      <div class="weather">
-        <!--<img src="picture/weather.png"><span>多云转小雨</span>--><span
-          id="showTime"
-        ></span>
-      </div>
-    </div>
     <div class="mainbox">
-      <ul class="clearfix">
+      <div class="topleft">
+
+      </div>
+      <div>
+
+      </div>
+      <div class="topright">
+
+      </div>
+      <!-- <ul class="clearfix top">
         <li>
           <div class="boxall" style="height: 3.2rem">
             <div class="alltitle">模块标题样式</div>
@@ -76,13 +70,12 @@
             <div class="boxfoot"></div>
           </div>
         </li>
-      </ul>
+      </ul> -->
     </div>
     <div class="back"></div>
   </div>
 </template>
 <script>
-
 export default {
   data() {
     return {}
@@ -559,10 +552,17 @@ export default {
 }
 </script>
 
-<style scoped>
+
+
+<style lang="less" scoped>
 @font-face {
   font-family: electronicFont;
   src: url('./font/DS-DIGIT.TTF');
+}
+.clearfix.top{
+  li{
+    display:inline-block;
+  }
 }
 .clearfix:after,
 .clearfix:before {
@@ -653,28 +653,6 @@ export default {
   font-size: 0.16rem;
 }
 
-.head {
-  height: 1.05rem;
-  background: url('./images/head_bg.png') no-repeat center center;
-  background-size: 100% 100%;
-  position: relative;
-  z-index: 100;
-}
-
-.head h1 {
-  color: #fff;
-  text-align: center;
-  font-size: 0.4rem;
-  line-height: 0.8rem;
-}
-
-.head h1 img {
-  width: 1.5rem;
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 0.2rem;
-}
-
 .weather {
   position: absolute;
   right: 0.3rem;
@@ -696,6 +674,12 @@ export default {
 
 .mainbox {
   padding: 0.1rem 0.1rem 0rem 0.1rem;
+  .topleft,
+  .topright{
+    width: 5rem;
+    height: 7rem;
+    border:1px solid 
+  }
 }
 
 .mainbox > ul {
