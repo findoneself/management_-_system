@@ -6,11 +6,9 @@ Vue.use(Vuex)
 
 const state = {
   // 面包屑导航数据
-  breadCrumb: {
-    nav1: '',
-    nav2: '',
-    nav3: ''
-  }
+  breadCrumb: {},
+  // 当前点击的菜单
+  activeMenu: {}
 }
 
 export default new Vuex.Store({
