@@ -13,9 +13,9 @@ module.exports = {
     rules: {
         // 格式化规则
         // 格式化不加分号
-        "semi": [2, "never"],
+        // "semi": [2, "never"],
         // 格式化为单引号
-        "quotes": [2, "single"],
+        // "quotes": [2, "single"],
         // 逗号前后的空格
         "comma-spacing": [2, { "before": false, "after": true }],
         // =>的前/后括号
@@ -23,13 +23,13 @@ module.exports = {
         "camelcase": "off",
         "eqeqeq": [2, "always"],
         // 数组和对象键值对最后一个逗号， never参数：不能带末尾的逗号, always参数：必须带末尾的逗号，
-        "comma-dangle": [2, {
-            "arrays": "never",
-            "objects": "never",
-            "imports": "never",
-            "exports": "never",
-            "functions": "never",
-        }],
+        // "comma-dangle": [2, {
+        //     "arrays": "never",
+        //     "objects": "never",
+        //     "imports": "never",
+        //     "exports": "never",
+        //     "functions": "never",
+        // }],
         // 禁止条件表达式中出现赋值操作符
         "no-cond-assign": 2,
         // 禁止 function 定义中出现重名参数
@@ -43,7 +43,7 @@ module.exports = {
         //一行结束后面不要有空格
         "no-trailing-spaces": 1,
         // 函数名前面是否要空格
-        "space-before-function-paren": [2, "always"],
+        // "space-before-function-paren": [2, "always"],
         // 注释的空格
         "spaced-comment": [2, "always"],
         // 禁止或强制在单行代码块中使用空格

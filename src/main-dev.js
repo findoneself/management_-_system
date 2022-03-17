@@ -7,8 +7,8 @@ import Utils from './libs/utils'
 import './plugins/element'
 // 引入nprogress样式
 import 'nprogress/nprogress.css'
-import './libs/pxtoRem'
 
+import './libs/pxtoRem'
 Vue.config.productionTip = false
 Vue.prototype.$utils = Utils
 
