@@ -6,25 +6,25 @@
 
 <script>
 export default {
-  name: "app",
-  created() {
+  name: 'app',
+  created () {
     document.documentElement.style.fontSize =
-      document.documentElement.clientWidth / 20 + "px";
+      document.documentElement.clientWidth / 20 + 'px'
   },
-  mounted() {
-    let that = this;
+  mounted () {
+    let that = this
     window.onresize = () => {
       return (() => {
         document.documentElement.style.fontSize =
-          document.documentElement.clientWidth / 20 + "px";
+          document.documentElement.clientWidth / 20 + 'px'
         console.log(
           document.documentElement.style.fontSize,
           document.documentElement.clientWidth
-        );
-      })();
-    };
-  },
-};
+        )
+      })()
+    }
+  }
+}
 </script>
 
 <style>

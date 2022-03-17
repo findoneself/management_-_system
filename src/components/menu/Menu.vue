@@ -84,7 +84,9 @@ export default {
       var route = this.rightMenuRoutes.find(item => item.id === menu.id)
       if (route.length > 0) {
         this.$router.push(route.path)
+        // 设置面包屑导航状态管理
         this.setBreadCrumb(obj)
+        // 设置当前点击菜单状态管理
         this.setActiveMenu(menu)
       }
     }
