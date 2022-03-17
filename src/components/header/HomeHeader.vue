@@ -75,12 +75,13 @@ export default {
   height: 6.9rem;
   background: url('../../assets/img/head.png') no-repeat center center;
   background-size: 100% 100%;
-  position: relative;
+  // position: relative;
   z-index: 100;
   .menus {
     display: flex;
+    height: 9rem;
     justify-content: space-between;
-    position: relative;
+    // position: relative;
     top: -0.1rem;
     .menulist {
       // 
@@ -88,16 +89,17 @@ export default {
       
       .menubg,
       .menubgr {
-        background: url('../../assets/img/menubg.png') no-repeat center center;
-        background-size: 100%;
-        margin: 0 0.93rem;
-        width: 6.25rem;
+         width: 6.25rem;
         height: 2.25rem;
+        background: url('../../assets/img/menubg.png') no-repeat center center;
+        background-size: 100% 100%;
+        margin: 0 0.93rem;
         line-height: 2.25rem;
         text-align: center;
         color: #fff;
         a {
           color: #fff;
+          font-size: 1rem;
         }
       }
       .menubgr{
@@ -106,10 +108,10 @@ export default {
       }
     }
     .menuleft{
-      float: left;
+      // float: left;
     }
     .menuright{
-      float: right;
+      // float: right;
     }
   }
 }

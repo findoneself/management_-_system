@@ -1,7 +1,7 @@
 <template>
   <el-container class="home-container">
     <!-- 头部区域 -->
-    <el-header style="height:1.2rem">
+    <el-header style="height:8.75rem">
       <home-header />
     </el-header>
     <!-- 页面主体区 -->
@@ -70,5 +70,7 @@ export default {
   background-color: #333744;
 }
 .el-main {
+  padding: 0;
+  overflow: visible;
 }
 </style>
