@@ -1,7 +1,29 @@
 <template>
   <div class="container">
     <div class="home_top">
-      <div class="home_top_left"></div>
+      <BeautifulCard
+        :width="'23.75rem'"
+        :height="'33.13rem'"
+        title="巡查整改"
+        class="home_top_left"
+      >
+        <div class="inspect">
+          <div class="inspect_time">
+            <div>本月检查次数:<span>2132</span></div>
+            <div>本月检查次数:<span>2132</span></div>
+            <div class="last">本月检查次数:<span>2132</span></div>
+          </div>
+          <div class="inspect_people">
+            <div class="first">网络员：</div>
+            <img src="../../../assets/img/people.png" alt="">
+            <div class="people_num">12345人</div>
+          </div>
+        </div>
+        <div>
+          <PatrolMap></PatrolMap>
+        </div>
+      </BeautifulCard>
+      <div></div>
       <div class="home_top_center">
         <div class="totalnum">
           <div class="time">
@@ -59,8 +81,14 @@
 </template>
 
 <script>
+import BeautifulCard from "_com/common/BeautifulCard";
+import PatrolMap from '_com/patrolMap/patrolMap'
 export default {
   name: "Home",
+  components: {
+    BeautifulCard,
+    PatrolMap
+  },
 };
 </script>
 
@@ -76,7 +104,55 @@ export default {
   .home_top_right {
     width: 23.75rem;
     height: 33.13rem;
-    border: 1px solid blue;
+    .inspect{
+      background-color: #103387;
+      border-radius: 0.5rem;
+      width: 21.6rem;
+      height: 9.4rem;
+      display: flex;
+      .inspect_time,
+      .inspect_people{
+        width: 50%;
+        text-align: center;
+        .first{
+          height: 3.18rem;
+          line-height:3.18rem;
+          font-size: 0.5rem;
+          transform: scale(0.9);
+          text-align: left;
+        }
+        img{
+          width: 3rem;
+          height: 2.88rem;
+        }
+        .people_num{
+          font-size: 1.5rem;
+          color: #59E6FF;
+          margin-top: 0.5rem;
+        }
+      }
+      .inspect_time,{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        border-right:1px solid #183B8F;
+        div{
+          height: 3.18rem;
+          border-bottom:1px solid #183B8F;
+          text-align: center;
+          line-height:3.18rem;
+          font-size: 0.5rem;
+          transform: scale(0.9);
+          span{
+            color:#59E6FF;
+            margin-left: 0.5rem;
+          }
+        }
+        .last{
+          border:none;
+        }
+      }
+    }
   }
   .home_top_center {
     width: 71rem;

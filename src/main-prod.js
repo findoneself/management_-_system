@@ -2,19 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Utils from './common/utils'
-// 引入图标库
-import './assets/fonts/iconfont.css'
+import Utils from './libs/utils'
+import './libs/pxtoRem'
 
-// 引入富文本编辑器
-import VueQuillEditor from 'vue-quill-editor'
+// Vue.use(VueQuillEditor);
 
-Vue.use(VueQuillEditor)
-Vue.prototype.$utils = Utils
 Vue.config.productionTip = false
 
 new Vue({
-    router,
-    store,
-    render: h => h(App)
+  router,
+  store,
+  render: h => h(App)
 }).$mount('#app')

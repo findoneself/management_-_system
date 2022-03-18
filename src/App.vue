@@ -8,21 +8,20 @@
 export default {
   name: 'app',
   created () {
-    document.documentElement.style.fontSize =
-      document.documentElement.clientWidth / 120 + "px";
+    // document.documentElement.style.fontSize =
+    //   document.documentElement.clientWidth / 120 + "px";
   },
   mounted () {
-    let that = this
-    window.onresize = () => {
-      return (() => {
-        document.documentElement.style.fontSize =
-          document.documentElement.clientWidth / 120 + "px";
-        console.log(
-          document.documentElement.style.fontSize,
-          document.documentElement.clientWidth
-        )
-      })()
-    }
+    // window.onresize = () => {
+    //   return (() => {
+    //     document.documentElement.style.fontSize =
+    //       document.documentElement.clientWidth / 120 + "px";
+    //     console.log(
+    //       document.documentElement.style.fontSize,
+    //       document.documentElement.clientWidth
+    //     )
+    //   })()
+    // }
   }
 }
 </script>
