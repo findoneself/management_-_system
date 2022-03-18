@@ -10,11 +10,11 @@
 /*:root -> 获取根元素html，tintColor背景颜色*/
 
 :root {
-    --color-text: #666;
+    --color-text: #fff;
     --color-high-text: #ff5777;
     --color-tint: #ff8198;
     --color-background: #fff;
-    --font-size: 14px;
+    --font-size: 16px;
     --line-height: 1.5;
     --line-color: #f2f2f2;
 }

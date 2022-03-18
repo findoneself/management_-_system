@@ -1,97 +1,66 @@
 <template>
   <div class="menu">
-    <div
-      class="menu-item"
-      v-for="item in menuList"
-      :key="item.id"
-    >
-      <!-- 一级菜单 -->
-      <div
-        class="menu-value"
-        @click="menuClick(item)"
-        :class="item.isActive ? 'active-menu' : ''"
-        v-if="!item.list || item.list.length === 0"
-      >{{ item.name }}</div>
-      <template v-else>
-        <div class="menu-value">{{ item.name }}</div>
-        <!-- 二级菜单 -->
-        <ul class="sub-menu">
-          <li
-            class="submenu-item"
-            v-for="sub in menu.list"
-            :class="item.isActive ? 'active-menu' : ''"
-            @click="menuClick(sub)"
-            :key="sub.id"
-          >{{ sub.name }}</li>
-        </ul>
-      </template>
-    </div>
+    <MenuItem :menu-list="menuList.slice(0, 4)" />
+    <MenuItem
+      :menu-list="menuList.slice(4)"
+      is-scale
+    />
   </div>
 </template>
 
 <script>
 // 导入Vuex
-import { mapMutations } from 'vuex'
+import MenuItem from './MenuItem.vue'
 export default {
   name: 'Menu',
+  components: {
+    MenuItem
+  },
   data () {
     return {
       // 菜单列表
       menuList: [
+        { id: '7', key: 7, name: '巡查整改' },
         {
           id: '1',
+          key: 1,
           name: '预警监控',
           list: [
-            {
-              id: '1-1', name: '测试1', parentId: '1', children: [
-                { id: '1-1-1', name: 'wgwg', parentId: '1-1' }
-              ]
-            },
-            { id: '1-2', name: '测试2', parentId: '1' },
-            { id: '1-3', name: '测试3', parentId: '1' },
-            { id: '1-4', name: '测试4', parentId: '1' }
+            { id: '1-1', key: 1, name: '测试1', parentId: '1' },
+            { id: '1-2', key: 2, name: '测试2', parentId: '1' },
+            { id: '1-3', key: 3, name: '测试3', parentId: '1' },
+            { id: '1-4', key: 4, name: '测试4', parentId: '1' }
           ]
         },
-        { id: '2', name: '扬尘监测' },
-        { id: '3', name: '噪声监测' },
-        { id: '4', name: '车洗裸土' },
-        { id: '5', name: 'AI识别' },
-        { id: '6', name: '项目管理' },
-        { id: '7', name: '巡查整改' },
-        { id: '8', name: '管理员' }
-      ],
-      // 权限菜单列表
-      rightMenuRoutes: [
-        { id: '1', path: '/dustMonitoring' },
-        { id: '2', path: '/noiseMonitoring' },
-        { id: '3', path: '/carWashing' },
-        { id: '4', path: '/aiDistinguish' }
+        { id: '2', key: 2, name: '扬尘监测' },
+        { id: '3', key: 3, name: '噪声监测' },
+        { id: '4', key: 4, name: '车洗裸土' },
+        {
+          id: '5', key: 5, name: 'AI识别', list: [
+            { id: '1-1', key: 1, name: 'AI识别安装率', parentId: '1' },
+            { id: '1-2', key: 2, name: '测试2', parentId: '1' },
+            { id: '1-3', key: 3, name: '测试3', parentId: '1' },
+            { id: '1-4', key: 4, name: '测试4', parentId: '1' }
+          ]
+        },
+        { id: '6', key: 6, name: '项目管理' },
+        { id: '8', key: 8, name: '管理员' }
       ]
     }
   },
-  methods: {
-    ...mapMutations(['setBreadCrumb', 'setActiveMenu']),
-    menuClick (item) {
-      item.isActive
-      this.routeHandle(item)
-    },
-    // 路由操作
-    routeHandle (menu) {
-      // 设置面包屑导航
-      const { obj } = this.$utils.familyTree(this.menuList, menu.id)
-      // 查找菜单是否存在权限
-      var route = this.rightMenuRoutes.find(item => item.id === menu.id)
-      if (route.length > 0) {
-        this.$router.push(route.path)
-        // 设置面包屑导航状态管理
-        this.setBreadCrumb(obj)
-        // 设置当前点击菜单状态管理
-        this.setActiveMenu(menu)
-      }
-    }
+  mounted () {
+    this.menuList = this.$utils.compareSort(this.menuList, 'key')
   }
 }
 </script>
 
 <style scoped>
+.menu {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  top: -10px;
+  padding: 0 12px;
+  z-index: 99;
+}
 </style>
