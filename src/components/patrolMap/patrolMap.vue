@@ -1,5 +1,6 @@
 <template>
   <div>
+<<<<<<< HEAD
     <div id="map" style="width: 100%; height: 18.75rem"></div>
   </div>
 </template>
@@ -78,9 +79,58 @@ export default {
           },
         });
         console.log(item.name, item.color[1]);
+=======
+    <div
+      id="map"
+      style="width: 100%; height: 300px"
+    ></div>
+  </div>
+</template>
+<script>
+import echarts from 'echarts'
+
+export default {
+  data () {
+    return {
+      dataList: [
+        { name: '装备制造', value: 80 },
+        { name: '现代材料', value: 44 },
+        { name: '新能源', value: 35 },
+        { name: '新一代信息技术', value: 30 }
+      ]
+    }
+  },
+  mounted () {
+    this.getmap()
+  },
+  methods: {
+    getmap () {
+      var myChart = echarts.init(document.getElementById('map'))
+      var colors = [
+        ['#389af4', '#dfeaff'],
+        ['#ff8c37', '#ffdcc3'],
+        ['#ffc257', '#ffedcc'],
+        ['#fd6f97', '#fed4e0']
+      ]
+      var titleArr = []
+      var seriesArr = []
+      this.dataList.forEach(function (item, index) {
+        titleArr.push({
+          text: item.name,
+          left: index * 20 + 10 + '%',
+          top: '65%',
+          textAlign: 'center',
+          textStyle: {
+            fontWeight: 'normal',
+            fontSize: '25',
+            color: colors[index][0],
+            textAlign: 'center'
+          }
+        })
+>>>>>>> 7e55452756fe4db4bed0cc98bf4817aabefb7d3f
         seriesArr.push({
           name: item.name,
-          type: "pie",
+          type: 'pie',
           clockWise: false,
           radius: [31,43],
           itemStyle: {
@@ -90,26 +140,35 @@ export default {
               fontSize: "1rem",
               shadowBlur: 0,
               label: {
-                show: false,
+                show: false
               },
               labelLine: {
-                show: false,
-              },
-            },
+                show: false
+              }
+            }
           },
           hoverAnimation: false,
+<<<<<<< HEAD
           center: item.center,
+=======
+          center: [index * 20 + 10 + '%', '50%'],
+>>>>>>> 7e55452756fe4db4bed0cc98bf4817aabefb7d3f
           data: [
             {
               value: item.value,
               label: {
                 normal: {
                   formatter: function (params) {
+<<<<<<< HEAD
                     return item.num;
+=======
+                    return params.value + '%'
+>>>>>>> 7e55452756fe4db4bed0cc98bf4817aabefb7d3f
                   },
-                  position: "center",
+                  position: 'center',
                   show: true,
                   textStyle: {
+<<<<<<< HEAD
                     // fontSize: ".625rem",
                     fontWeight: "bold",
                     color: item.color[1],
@@ -144,6 +203,42 @@ export default {
     },
   },
 };
+=======
+                    fontSize: '20',
+                    fontWeight: 'bold',
+                    color: colors[index][0]
+                  }
+                }
+              }
+            },
+            {
+              value: 100 - item.value,
+              name: 'invisible',
+              itemStyle: {
+                normal: {
+                  color: colors[index][1]
+                },
+                emphasis: {
+                  color: colors[index][1]
+                }
+              }
+            }
+          ]
+        })
+      })
+      var option = {
+        backgroundColor: '#fff',
+        title: titleArr,
+        series: seriesArr
+      }
+      myChart.setOption(option)
+      window.addEventListener('resize', function () {
+        myChart.resize()
+      })
+    }
+  }
+}
+>>>>>>> 7e55452756fe4db4bed0cc98bf4817aabefb7d3f
 </script>
 <style lang="less" scoped>
 </style>
