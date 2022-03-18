@@ -105,7 +105,6 @@ export default {
         title: titleArr,
         series: seriesArr
       }
-      console.log(option)
       myChart.setOption(option)
       window.addEventListener('resize', function () {
         myChart.resize()
