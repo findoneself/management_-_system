@@ -43,7 +43,7 @@ module.exports = {
     //一行结束后面不要有空格
     "no-trailing-spaces": 1,
     // 函数名前面是否要空格
-    // "space-before-function-paren": [2, "always"],
+    "space-before-function-paren": [2, "always"],
     // 注释的空格
     "spaced-comment": [2, "always"],
     // 禁止或强制在单行代码块中使用空格

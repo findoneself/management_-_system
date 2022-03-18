@@ -26,6 +26,21 @@ Utils.setAttribute = function (obj) {
   }
   return obj.data
 }
+// 获取当前年月日
+Utils.getDate = function () {
+  var date = new Date()
+  var year = date.getFullYear()
+  var month = date.getMonth() + 1
+  var day = date.getDate()
+  if (month < 10) {
+    month = '0' + month
+  }
+  if (day < 10) {
+    day = '0' + day
+  }
+  var nowDate = year + '-' + month + '-' + day
+  return nowDate
+}
 // 图片类型的正则判断
 Utils.imageRegExp = function (str) {
   const pattern = /^image\/(jpg|jpeg|png)$/
@@ -36,6 +51,7 @@ Utils.familyTree = function (data, id) {
   let obj = {}
   let lists = []
   let index = 1
+
   function forFn (arr, id) {
     arr.map(list => {
       if (list.id === id) {

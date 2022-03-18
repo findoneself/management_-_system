@@ -70,7 +70,7 @@ export default {
   height: 100%;
 }
 .el-header {
-  padding-left: 0;
+  padding: 0;
 }
 .el-aside {
   transition: width 0.3s;
