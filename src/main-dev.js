@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Utils from './libs/utils'
-import * as echarts from 'echarts';
+import * as echarts from 'echarts'
 
 // 引入element组件配置
 import './plugins/element'
@@ -15,7 +15,7 @@ Vue.config.productionTip = false
 Vue.prototype.$utils = Utils
 Vue.prototype.$echarts = echarts
 new Vue({
-    router,
-    store,
-    render: h => h(App)
+  router,
+  store,
+  render: h => h(App)
 }).$mount('#app')

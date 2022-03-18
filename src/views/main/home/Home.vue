@@ -15,7 +15,10 @@
           </div>
           <div class="inspect_people">
             <div class="first">网络员：</div>
-            <img src="../../../assets/img/people.png" alt="">
+            <img
+              src="../../../assets/img/people.png"
+              alt=""
+            >
             <div class="people_num">12345人</div>
           </div>
         </div>
@@ -27,9 +30,16 @@
       <div class="home_top_center">
         <div class="totalnum">
           <div class="time">
-            <img class="left_img" src="../../../assets/img/right.png" alt="" />
+            <img
+              class="left_img"
+              src="../../../assets/img/right.png"
+              alt=""
+            />
             <div><span class="span">2021年</span> <span>01月</span></div>
-            <img src="../../../assets/img/right.png" alt="" />
+            <img
+              src="../../../assets/img/right.png"
+              alt=""
+            />
           </div>
           <div class="bignum">
             <img
@@ -40,11 +50,14 @@
             <div></div>
             <div></div>
             <div></div>
-            <img class="big_i" src="../../../assets/img/num_right.png" alt="" />
+            <img
+              class="big_i"
+              src="../../../assets/img/num_right.png"
+              alt=""
+            />
           </div>
           <div class="total_text">
-            <span>项</span><span>目</span><span>总</span><span>数</span
-            ><span>:</span>
+            <span>项</span><span>目</span><span>总</span><span>数</span><span>:</span>
           </div>
         </div>
         <div class="images">
@@ -81,15 +94,15 @@
 </template>
 
 <script>
-import BeautifulCard from "_com/common/BeautifulCard";
+import BeautifulCard from '_com/common/BeautifulCard'
 import PatrolMap from '_com/patrolMap/patrolMap'
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     BeautifulCard,
     PatrolMap
-  },
-};
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -104,52 +117,52 @@ export default {
   .home_top_right {
     width: 23.75rem;
     height: 33.13rem;
-    .inspect{
+    .inspect {
       background-color: #103387;
       border-radius: 0.5rem;
       width: 21.6rem;
       height: 9.4rem;
       display: flex;
       .inspect_time,
-      .inspect_people{
+      .inspect_people {
         width: 50%;
         text-align: center;
-        .first{
+        .first {
           height: 3.18rem;
-          line-height:3.18rem;
+          line-height: 3.18rem;
           font-size: 0.5rem;
           transform: scale(0.9);
           text-align: left;
         }
-        img{
+        img {
           width: 3rem;
           height: 2.88rem;
         }
-        .people_num{
+        .people_num {
           font-size: 1.5rem;
-          color: #59E6FF;
+          color: #59e6ff;
           margin-top: 0.5rem;
         }
       }
-      .inspect_time,{
+      .inspect_time {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        border-right:1px solid #183B8F;
-        div{
+        border-right: 1px solid #183b8f;
+        div {
           height: 3.18rem;
-          border-bottom:1px solid #183B8F;
+          border-bottom: 1px solid #183b8f;
           text-align: center;
-          line-height:3.18rem;
+          line-height: 3.18rem;
           font-size: 0.5rem;
           transform: scale(0.9);
-          span{
-            color:#59E6FF;
+          span {
+            color: #59e6ff;
             margin-left: 0.5rem;
           }
         }
-        .last{
-          border:none;
+        .last {
+          border: none;
         }
       }
     }

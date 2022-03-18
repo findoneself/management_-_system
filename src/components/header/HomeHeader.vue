@@ -65,46 +65,6 @@ export default {
   background-size: 100% 100%;
   // position: relative;
   z-index: 100;
-<<<<<<< HEAD
-  .menus {
-    display: flex;
-    height: 9rem;
-    justify-content: space-between;
-    // position: relative;
-    top: -0.1rem;
-    .menulist {
-      //
-      display: flex;
-
-      .menubg,
-      .menubgr {
-         width: 6.25rem;
-        height: 2.25rem;
-        background: url('../../assets/img/menubg.png') no-repeat center center;
-        background-size: 100% 100%;
-        margin: 0 0.93rem;
-        line-height: 2.25rem;
-        text-align: center;
-        color: #fff;
-        a {
-          color: #fff;
-          font-size: 1rem;
-        }
-      }
-      .menubgr {
-        background: url("../../assets/img/menubgr.png") no-repeat center center;
-        background-size: 100%;
-      }
-    }
-    .menuleft{
-      // float: left;
-    }
-    .menuright{
-      // float: right;
-    }
-  }
-=======
->>>>>>> da1c4048e2949fb03b75a6e556961956cf12973b
 }
 
 .head h1 {
