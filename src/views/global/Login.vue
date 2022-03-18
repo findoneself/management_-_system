@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import { postLogin } from '_new/login'
 export default {
   name: 'Login',
   data () {
@@ -89,26 +88,7 @@ export default {
   methods: {
     // 登录按钮
     loginClick () {
-      // validate是element-ui的表单组件的表单验证方法
-      this.$refs.loginForm.validate(async valid => {
-        if (!valid) return
-        // 获取登录发送的数据，{ data: res } 为结构赋值
-        const { data: res } = await postLogin(this.loginForm)
-        // 判断返回的状态，进行后续操作
-        if (res.meta.status === 200) {
-          this.$message.success('登录成功')
-
-          // 1. 将登陆成功之后的token，保存在客户端的sessionStorage中
-          //   1.1 项目中除了登录之外的其他API接口，必须在登录之后才能访问
-          //   1.2 token只应在当前 网站打开期间有效，所以讲token保存在sessionStorage中
-          window.sessionStorage.setItem('token', res.data.token)
-
-          // 通过编程式导航跳转到后台主页，路由地址是/home
-          this.$router.push('/home')
-        } else {
-          this.$message.error('登录失败，请检查填写信息是否正确！')
-        }
-      })
+      this.$router.push({ name: 'main' })
     },
     // 重置按钮
     resetForm () {

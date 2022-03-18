@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Utils from './libs/utils'
+import http from './network'
+import './libs/pxtoRem'
 import * as echarts from 'echarts'
 
 // 引入element组件配置
@@ -10,10 +12,10 @@ import './plugins/element'
 // 引入nprogress样式
 import 'nprogress/nprogress.css'
 
-import './libs/pxtoRem'
 Vue.config.productionTip = false
 Vue.prototype.$utils = Utils
 Vue.prototype.$echarts = echarts
+Vue.prototype.$http = http
 new Vue({
   router,
   store,

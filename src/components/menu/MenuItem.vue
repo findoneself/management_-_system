@@ -10,13 +10,13 @@
         class="menu-value"
         @click="menuClick(item)"
         :class="item.isActive ? 'active-menu' : ''"
-        v-if="!item.list || item.list.length === 0"
+        v-if="!item.children || item.children.length === 0"
       >
         <div
           class="menu-bg"
           :class="isScale && 'menu-bgscale'"
         ></div>
-        <div class="menu-text">{{ item.name }}</div>
+        <div class="menu-text">{{ item.title }}</div>
       </div>
       <template v-else>
         <div class="menu-value">
@@ -24,13 +24,13 @@
             class="menu-bg"
             :class="isScale && 'menu-bgscale'"
           ></div>
-          <div class="menu-text">{{ item.name }}</div>
+          <div class="menu-text">{{ item.title }}</div>
         </div>
         <!-- 二级菜单 -->
         <ul class="sub-menu">
           <li
             class="submenu-item"
-            v-for="sub in item.list"
+            v-for="sub in item.children"
             :class="item.isActive ? 'active-menu' : ''"
             @click="menuClick(sub)"
             :key="sub.key"
@@ -39,7 +39,7 @@
               class="menu-bg"
               :class="isScale && 'menu-bgscale'"
             ></div>
-            <div>{{ sub.name }}</div>
+            <div>{{ sub.title }}</div>
           </li>
         </ul>
       </template>
@@ -78,18 +78,20 @@ export default {
   methods: {
     ...mapMutations(['setBreadCrumb', 'setActiveMenu']),
     menuClick (item) {
-      item.isActive
-      this.routeHandle(item)
+      // item.isActive = true
+      const aa = this.$utils.format()
+      console.log(aa)
+      // this.routeHandle(item)
     },
     // 路由操作
     routeHandle (menu) {
       // 查找菜单是否存在权限
-      var route = this.rightMenuRoutes.find(item => item.id === menu.id)
-      if (route.length > 0) {
-        this.$router.push(route.path)
-        // 设置当前点击菜单状态管理
-        this.setActiveMenu(menu)
-      }
+      // var route = this.rightMenuRoutes.find(item => item.id === menu.id)
+      // if (route.length > 0) {
+      //   this.$router.push(route.path)
+      //   // 设置当前点击菜单状态管理
+      //   this.setActiveMenu(menu)
+      // }
     }
   }
 }

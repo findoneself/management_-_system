@@ -1,14 +1,10 @@
 <template>
-  <!--AI识别 -->
   <div></div>
 </template>
 
 <script>
 export default {
-  name: 'AIdistinguish',
-  data () {
-    return {}
-  }
+  name: ''
 }
 </script>
 
