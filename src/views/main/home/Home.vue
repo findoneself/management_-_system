@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="home_top">
+      <!-- 巡察整改 -->
       <BeautifulCard
         :width="'23.75rem'"
         :height="'33.13rem'"
@@ -15,7 +16,7 @@
           </div>
           <div class="inspect_people">
             <div class="first">网络员：</div>
-            <img src="../../../assets/img/people.png" alt="">
+            <img src="../../../assets/img/people.png" alt="" />
             <div class="people_num">12345人</div>
           </div>
         </div>
@@ -23,7 +24,7 @@
           <PatrolMap></PatrolMap>
         </div>
       </BeautifulCard>
-      <div></div>
+      <!-- 中间项目总数 -->
       <div class="home_top_center">
         <div class="totalnum">
           <div class="time">
@@ -70,24 +71,117 @@
           </div>
         </div>
       </div>
-      <div class="home_top_right"></div>
+      <!-- 国控站点 -->
+      <BeautifulCard class="home_top_right" title="国控站点">
+        <div class="picker">
+          <el-date-picker
+            prefix-icon="el-icon-arrow-down"
+            class="date"
+            v-model="date"
+            type="date"
+            placeholder="选择日期"
+          >
+          </el-date-picker>
+        </div>
+        <div class="params">
+          <div
+            class="item"
+            v-for="(item, index) in paramslist"
+            :key="index + '.'"
+          >
+            <div class="span">{{ item.name }}:</div>
+            <div class="span margin">{{ item.value }}</div>
+          </div>
+        </div>
+      </BeautifulCard>
+      <div></div>
     </div>
     <div class="home_bottom">
-      <div class="home_bottom_left"></div>
-      <div class="home_bottom_center"></div>
-      <div class="home_bottom_right"></div>
+      <BeautifulCard :title="'报警统计趋势分析'" class="home_bottom_left">
+        <div class="pickers">
+          <div class="picker">
+            <span>开始时间：</span>
+            <el-date-picker
+              prefix-icon="el-icon-arrow-down"
+              class="date"
+              v-model="startDate"
+              type="date"
+              placeholder="选择日期"
+            >
+            </el-date-picker>
+          </div>
+          <div class="picker">
+            <span>结束时间：</span>
+            <el-date-picker
+              prefix-icon="el-icon-arrow-down"
+              class="date"
+              v-model="endDate"
+              type="date"
+              placeholder="选择日期"
+            >
+            </el-date-picker>
+          </div>
+        </div>
+      </BeautifulCard>
+      <BeautifulCard :title="'各县区安装数量统计'" class="home_bottom_center">
+        <div></div>
+      </BeautifulCard>
+      <BeautifulCard :title="'文件通报'" class="home_bottom_right">
+        <div></div>
+      </BeautifulCard>
     </div>
   </div>
 </template>
 
 <script>
 import BeautifulCard from "_com/common/BeautifulCard";
-import PatrolMap from '_com/patrolMap/patrolMap'
+import PatrolMap from "_com/patrolMap/patrolMap";
 export default {
   name: "Home",
   components: {
     BeautifulCard,
-    PatrolMap
+    PatrolMap,
+  },
+  data() {
+    return {
+      date: "",
+      startDate:'',
+      endDate:'',
+      paramslist: [
+        {
+          name: "参数类型",
+          value: 2134,
+        },
+        {
+          name: "参数类型",
+          value: 2134,
+        },
+        {
+          name: "参数类型",
+          value: 2134,
+        },
+        {
+          name: "参数类型",
+          value: 2134,
+        },
+      ],
+    };
+  },
+  created() {
+    this.getdate();
+  },
+  methods: {
+    getdate() {
+      let res = this.$utils.getDate();
+      this.date = res;
+      let end = res.split('-')
+       
+     
+      Number(end[2])<31&&(end[2]=(Number(end[2])+1).toString())
+       console.log( end.join('-'), Number(end[1]))
+      this.startDate = res
+      this.endDate = end.join('-')
+    },
   },
 };
 </script>
@@ -99,63 +193,138 @@ export default {
   .home_bottom {
     display: flex;
     justify-content: space-around;
+    .home_bottom_left {
+      .pickers {
+        display: flex;
+        //  align-items: center;
+        justify-content: flex-end;
+        .picker {
+          transform: scale(0.8);
+          text-align: right;
+          // margin-left: auto;
+        }
+        .el-date-editor.el-input,
+        .el-date-editor.el-input__inner {
+          width: 9rem;
+        }
+        /deep/.el-input__prefix {
+          top: 0;
+          left: 7rem;
+        }
+        /deep/.el-input__inner {
+          height: 2.5rem;
+          margin-left: 0.5rem;
+        }
+      }
+    }
   }
   .home_top_left,
   .home_top_right {
     width: 23.75rem;
     height: 33.13rem;
-    .inspect{
+    .inspect {
       background-color: #103387;
       border-radius: 0.5rem;
-      width: 21.6rem;
+      // width: 21.6rem;
       height: 9.4rem;
       display: flex;
       .inspect_time,
-      .inspect_people{
+      .inspect_people {
         width: 50%;
         text-align: center;
-        .first{
+        .first {
           height: 3.18rem;
-          line-height:3.18rem;
+          line-height: 3.18rem;
           font-size: 0.5rem;
           transform: scale(0.9);
           text-align: left;
         }
-        img{
+        img {
           width: 3rem;
           height: 2.88rem;
         }
-        .people_num{
+        .people_num {
           font-size: 1.5rem;
-          color: #59E6FF;
+          color: #59e6ff;
           margin-top: 0.5rem;
         }
       }
-      .inspect_time,{
+      .inspect_time {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        border-right:1px solid #183B8F;
-        div{
+        border-right: 1px solid #183b8f;
+        div {
           height: 3.18rem;
-          border-bottom:1px solid #183B8F;
+          border-bottom: 1px solid #183b8f;
           text-align: center;
-          line-height:3.18rem;
+          line-height: 3.18rem;
           font-size: 0.5rem;
           transform: scale(0.9);
-          span{
-            color:#59E6FF;
+          span {
+            color: #59e6ff;
             margin-left: 0.5rem;
           }
         }
-        .last{
-          border:none;
+        .last {
+          border: none;
+        }
+      }
+    }
+  }
+  .home_top_right,
+  .home_bottom_left {
+    .picker {
+      height: 2.88rem;
+      text-align: right;
+      .date {
+        text-align: right;
+      }
+    }
+    /deep/.el-input__inner {
+      width: 9rem;
+      height: 1.88rem;
+      padding-left: 0.5rem;
+      color: #fff;
+      font-size: 0.88rem;
+      background-color: #040560;
+      border: 0.0625rem solid #040560;
+      box-shadow: inset -1px -1px 10px rgba(48, 82, 184, 0.5),
+        inset 1px 1px 10px rgba(48, 82, 184, 0.5);
+    }
+    /deep/.el-input__prefix {
+      top: -0.3rem;
+      left: 12rem;
+    }
+    /deep/ .el-input__suffix {
+      display: none;
+    }
+    .params {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      overflow: hidden;
+      .item {
+        width: 10.63rem;
+        text-align: center;
+        line-height: 3.1rem;
+        height: 3.1rem;
+        margin: 0.2rem;
+        background-color: #133c91;
+        border-radius: 0.3rem;
+        .span {
+          font-size: 0.88rem;
+          transform: scale(0.9);
+          display: inline-block;
+        }
+        .margin {
+          margin-left: 0.2rem;
         }
       }
     }
   }
   .home_top_center {
-    width: 71rem;
+    flex: 1;
     .totalnum {
       display: flex;
       flex-direction: column;
@@ -207,6 +376,10 @@ export default {
           border: 1px solid #3ccaff;
           border-radius: 1rem;
           // margin: 0 0.4rem;
+        }
+        .big_img,
+        .big_i {
+          border: none;
         }
       }
       .total_text {

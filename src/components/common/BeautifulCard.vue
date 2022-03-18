@@ -1,5 +1,5 @@
 <template>
-  <div class="beautiful-card"  :style="{width: width,height:height}">
+  <div class="beautiful-card"  >
     <div class="card-header">
       <h2 :style="{color: titleColor}">{{ title }}</h2>
       <span class="card-title-icon icon1"></span>
@@ -68,7 +68,8 @@ export default {
 }
 .card-header {
   position: relative;
-  width: 140px;
+  /* width: 140px; */
+  padding: 0.15rem 0.6rem;
   text-align: center;
   line-height: 30px;
   background-color: var(--title-bgcolor);
@@ -124,6 +125,7 @@ export default {
   background-color: #4d82ca;
 }
 .card-content {
+  width: 100%;
   padding: 1.2rem .625rem;
 }
 .triangle-icon {
