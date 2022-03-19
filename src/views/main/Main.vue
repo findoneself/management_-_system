@@ -21,13 +21,7 @@ import HomeHeader from '_com/header/HomeHeader'
 
 
 export default {
-  name: 'Home',
-  // provide () {
-  //   return {
-  //     // 创建一个依赖，可以刷新路由页面
-  //     againAddGoods: this.againAddGoods
-  //   }
-  // },
+  name: 'Main',
   components: {
     HomeHeader
   },
@@ -55,12 +49,45 @@ export default {
   },
   methods: {
     // 路由操作
-    routeHandle (menu, omenu) {
-      if (!this.userId) {
-        // this.getUserInfo()
+    routeHandle (to, oldRoute) {
+      if (to.name === 'main' && !oldRoute) {
+        if (!this.userId) {
+          // this.getUserInfo()
+        }
+        // 保存菜单及其路由数据
+        const menuList = JSON.parse(sessionStorage.getItem('menuList')) || []
+        const menuRoutes = JSON.parse(sessionStorage.getItem('menuRoutes')) || []
+        // 查找默认首页
+        const defaultId = this.$store.state.global.userInfo.homeId
+        if (defaultId) {
+          const isHome = menuRoutes.find(item => item.meta.id === defaultId)
+          if (isHome) {
+            // 如果存在默认首页，查找当前用户的菜单权限是否存在此菜单
+            const isRight = menuList.find(menu => menu.id === isHome.meta.id)
+            if (isRight) {
+              // 如果权限菜单存在，则跳转至默认首页
+              this.$router.push({ name: isHome.name })
+              // 储存当前点击的菜单
+              this.$store.commit('global/setActiveMenu', isHome)
+            } else {
+              // 如果不存在权限
+              this.routeDefalut(menuRoutes[0].name, '当前账户默认首页无权限访问！')
+            }
+          } else {
+            this.routeDefalut(menuRoutes[0].name, '当前账户默认首页不存在！')
+          }
+        } else {
+          this.routeDefalut(menuRoutes[0].name, '当前账户未设置首页！')
+        }
+      } else if (to.name === 'main' && oldRoute) {
+        // 说明是回退到登录页
+        this.$router.push({ name: 'login' })
       }
-      this.$router.push({ name: 'home-Home' })
-      // this.handleUserInputRouter()
+    },
+    // 跳转默认页面
+    routeDefalut (name = 'login', msg = '') {
+      this.$message.info(msg)
+      this.$router.push({ name: name })
     }
   }
 }

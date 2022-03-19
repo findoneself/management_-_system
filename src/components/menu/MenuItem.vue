@@ -9,8 +9,8 @@
       <div
         class="menu-value"
         @click="menuClick(item)"
-        :class="item.isActive ? 'active-menu' : ''"
-        v-if="!item.children || item.children.length === 0"
+        :class="currentParId === item.id ? 'active-menu' : ''"
+        v-if="item.menuType === 'tab' || !item.children || item.children.length === 0"
       >
         <div
           class="menu-bg"
@@ -19,19 +19,25 @@
         <div class="menu-text">{{ item.title }}</div>
       </div>
       <template v-else>
-        <div class="menu-value">
+        <div
+          class="menu-value"
+          :class="currentParId === item.id ? 'active-menu' : ''"
+        >
           <div
             class="menu-bg"
             :class="isScale && 'menu-bgscale'"
           ></div>
           <div class="menu-text">{{ item.title }}</div>
         </div>
-        <!-- 二级菜单 -->
-        <ul class="sub-menu">
+        <!-- 二级菜单，如果父菜单设置的模式是sub，则加载 -->
+        <ul
+          class="sub-menu"
+          v-if="item.menuType === 'sub'"
+        >
           <li
             class="submenu-item"
             v-for="sub in item.children"
-            :class="item.isActive ? 'active-menu' : ''"
+            :class="currentMenu.meta.id === sub.id ? 'sub-active' : ''"
             @click="menuClick(sub)"
             :key="sub.key"
           >
@@ -48,7 +54,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 export default {
   name: 'MenuItem',
   props: {
@@ -67,23 +72,45 @@ export default {
   data () {
     return {
       // 权限菜单列表
-      rightMenuRoutes: [
-        { id: '1', path: '/dustMonitoring' },
-        { id: '2', path: '/noiseMonitoring' },
-        { id: '3', path: '/aiDistinguish' },
-        { id: '4', path: '/carWashing' }
-      ]
+      rightMenuRoutes: []
+    }
+  },
+  created () {
+    this.rightMenuRoutes = this.$store.state.global.menuRoutes
+    const curMenu = JSON.parse(sessionStorage.getItem('currentMenu'))
+    this.$store.commit('global/setActiveMenu', curMenu)
+  },
+  computed: {
+    // 当前点击的菜单
+    currentMenu () {
+      return this.$store.state.global.activeMenu
+    },
+    // 当前菜单的父级菜单
+    currentParId () {
+      if (this.currentMenu) {
+        return this.currentMenu.parentId === '00' ? this.currentMenu.meta.id : this.currentMenu.parentId
+      } else {
+        return ''
+      }
     }
   },
   methods: {
-    ...mapMutations(['setBreadCrumb', 'setActiveMenu']),
     menuClick (item) {
-      // item.isActive = true
-      // const aa = this.$utils.format()
-      this.routeHandle(item)
+      const isRoute = this.rightMenuRoutes.find(menu => menu.meta.id === item.id)
+              console.log(isRoute)
+
+      if (isRoute && isRoute.name) {
+        this.$store.commit('global/setActiveMenu', isRoute)
+        // 存缓存，为了页面刷新也有点击效果
+        sessionStorage.setItem('currentMenu', JSON.stringify(isRoute))
+        this.routeHandle(isRoute)
+      } else {
+        this.routeHandle({ name: '404' })
+      }
     },
     // 路由操作
     routeHandle (menu) {
+      this.$router.push({ name: menu.name })
       // 查找菜单是否存在权限
       var route = this.rightMenuRoutes.find(item => item.id === menu.id)
        console.log(route.path)
@@ -163,7 +190,8 @@ export default {
 .menu-item:hover .sub-menu {
   display: block;
 }
-.submenu-item:hover .menu-bg {
+.submenu-item:hover .menu-bg,
+.sub-active .menu-bg {
   width: 100%;
   height: 100%;
   background: url("~_ats/img/menubg.png") no-repeat center center/ 100%;

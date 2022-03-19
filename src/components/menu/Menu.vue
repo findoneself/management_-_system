@@ -19,11 +19,26 @@ export default {
   data () {
     return {
       // 菜单列表
-      menuList: []
+      menuList: [],
+      // 菜单路由数据
+      menuRoutes: []
     }
   },
   created () {
-    this.menuList = JSON.parse(sessionStorage.getItem('menuList')) || []
+    this.init()
+  },
+  computed: {
+    id () {
+      return this.$store.state.global.userInfo
+    }
+  },
+  methods: {
+    init () {
+      this.menuList = JSON.parse(sessionStorage.getItem('menuList')) || []
+      this.menuRoutes = JSON.parse(sessionStorage.getItem('menuRoutes')) || []
+      this.$store.commit('global/saveMenuList', this.menuList)
+      this.$store.commit('global/saveMenuRouteList', this.menuRoutes)
+    }
   }
 }
 </script>

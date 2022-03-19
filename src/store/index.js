@@ -1,17 +1,21 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import mutations from './mutations'
+import _cloneDeep from 'lodash/cloneDeep'
+import global from './modules/global'
 
 Vue.use(Vuex)
 
-const state = {
-  // 面包屑导航数据
-  breadCrumb: {},
-  // 当前点击的菜单
-  activeMenu: {}
-}
 
 export default new Vuex.Store({
-  state,
-  mutations
+  modules: {
+    global
+  },
+  mutations: {
+    // 重置vuex本地储存状态
+    resetStore (state) {
+      Object.keys(state).forEach((key) => {
+        state[key] = _cloneDeep(window.SITE_CONFIG['storeState'][key])
+      })
+    }
+  }
 })
