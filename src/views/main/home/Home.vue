@@ -34,9 +34,9 @@
           </div>
           <div class="bignum">
             <img class="big_img" src="~_ats/img/num_left.png" alt="" />
-            <div>8</div>
-            <div>7</div>
-            <div>9</div>
+            <div><span>8</span></div>
+            <div><span>7</span></div>
+            <div><span>9</span></div>
             <img class="big_i" src="~_ats/img/num_right.png" alt="" />
           </div>
           <div class="total_text">
@@ -367,6 +367,7 @@ export default {
   }
   .home_top_center {
     flex: 1;
+    position: relative;
     .totalnum {
       display: flex;
       flex-direction: column;
@@ -409,6 +410,10 @@ export default {
           margin-right: 0.4rem;
           font-size: 5.6rem;
           font-family: 'DS-Digital';
+          text-indent: -0.5rem;
+         span{
+            transform: rotate(30deg);
+         }
         }
         .big_img {
           margin-right: 0.8rem;
@@ -447,7 +452,7 @@ export default {
         width: 14.56rem;
         height: 3.5rem;
         position: absolute;
-        top:60%;
+        top:35%;
       }
       .images_item {
         display: flex;

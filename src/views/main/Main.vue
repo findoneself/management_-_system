@@ -8,8 +8,8 @@
     <el-container>
       <!-- 右侧主体 -->
       <el-main>
-        <!-- 路由占位符 -->
-        <router-view v-if="isRouterAlive" />
+        <!-- 路由占位符 v-if="isRouterAlive" -->
+        <router-view  />
       </el-main>
     </el-container>
   </el-container>

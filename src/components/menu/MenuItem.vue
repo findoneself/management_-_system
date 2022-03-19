@@ -70,8 +70,8 @@ export default {
       rightMenuRoutes: [
         { id: '1', path: '/dustMonitoring' },
         { id: '2', path: '/noiseMonitoring' },
-        { id: '3', path: '/carWashing' },
-        { id: '4', path: '/aiDistinguish' }
+        { id: '3', path: '/aiDistinguish' },
+        { id: '4', path: '/carWashing' }
       ]
     }
   },
@@ -79,18 +79,19 @@ export default {
     ...mapMutations(['setBreadCrumb', 'setActiveMenu']),
     menuClick (item) {
       // item.isActive = true
-      const aa = this.$utils.format()
-      console.log(aa)
-      // this.routeHandle(item)
+      // const aa = this.$utils.format()
+      this.routeHandle(item)
     },
     // 路由操作
     routeHandle (menu) {
       // 查找菜单是否存在权限
-      // var route = this.rightMenuRoutes.find(item => item.id === menu.id)
+      var route = this.rightMenuRoutes.find(item => item.id === menu.id)
+       console.log(route.path)
       // if (route.length > 0) {
-      //   this.$router.push(route.path)
-      //   // 设置当前点击菜单状态管理
-      //   this.setActiveMenu(menu)
+       
+        this.$router.push(route.path)
+        // 设置当前点击菜单状态管理
+        this.setActiveMenu(menu)
       // }
     }
   }
