@@ -6,18 +6,18 @@ import './plugins/element.js'
 // 导入全局公共样式
 import './assets/css/gloabel.css'
 import './assets/fonts/iconfont.css'
-import Antd from 'ant-design-vue';
+// import Antd from 'ant-design-vue';
 
-import 'ant-design-vue/dist/antd.css';
+// import 'ant-design-vue/dist/antd.css';
 Vue.config.productionTip = false;
 import * as echarts from 'echarts'
 Vue.prototype.$echarts = echarts
-Vue.use(Antd);
-import 'xe-utils'
-import VXETable from 'vxe-table'
-import 'vxe-table/lib/style.css'
+    // Vue.use(Antd);
+    // import 'xe-utils'
+    // import VXETable from 'vxe-table'
+    // import 'vxe-table/lib/style.css'
 
-Vue.use(VXETable)
+// Vue.use(VXETable)
 import axios from 'axios'
 // 配置请求路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'

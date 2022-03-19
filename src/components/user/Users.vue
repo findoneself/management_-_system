@@ -100,7 +100,7 @@
         <template
           v-for="(item, index) in tagList"
           :slot="item.tagname"
-          slot-scope="text, record"
+          slot-scope="text"
         >
           <!-- <span >{{text}}</span> -->
           <a-checkbox
@@ -124,7 +124,7 @@
             <el-button @click="addDialogVisible=false">取 消</el-button>
             <el-button @click="addUser" type="primary">确 定</el-button>
         </span>
-      </span>
+      <!-- </span> -->
     </el-dialog>
     <!-- <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed" >
         <span>
@@ -436,15 +436,15 @@ export default {
     console.log(_permute('abc'))
 
     function _reduce(arr) {
-      let sum=0
-      for(var i of arr){
+      let sum = 0
+      for (var i of arr) {
         console.log(i)
-        sum = Number(sum)+Number(i)
+        sum = Number(sum) + Number(i)
         // console.log(sum)
       }
       return sum
     }
-   console.log( _reduce([1,2,3,0,88]))
+    console.log(_reduce([1, 2, 3, 0, 88]))
     // console.log(count('hello world'))
     // function count(str) {
     //   let obj = {}
@@ -607,7 +607,7 @@ export default {
     function sefeGet(obj, str, defVal) {
       //请在这里实现
       const keyArr = str.match(/[a-zA-Z0-9]{1,}/g)
-      console.log('610,检验正则',keyArr, obj)
+      console.log('610,检验正则', keyArr, obj)
       let current = obj
       keyArr.forEach((i) => {
         // console.log(current, current[i], i)
@@ -1018,6 +1018,5 @@ export default {
   overflow: hidden;
   flex-direction: column;
   justify-content: space-around;
-
 }
 </style>
