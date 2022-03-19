@@ -59,6 +59,7 @@ export default {
         const menuRoutes = JSON.parse(sessionStorage.getItem('menuRoutes')) || []
         // 查找默认首页
         const defaultId = this.$store.state.global.userInfo.homeId
+        console.log(defaultId)
         if (defaultId) {
           const isHome = menuRoutes.find(item => item.meta.id === defaultId)
           if (isHome) {
@@ -71,13 +72,13 @@ export default {
               this.$store.commit('global/setActiveMenu', isHome)
             } else {
               // 如果不存在权限
-              this.routeDefalut(menuRoutes[0].name, '当前账户默认首页无权限访问！')
+              this.routeDefalut(menuRoutes[0], '当前账户默认首页无权限访问！')
             }
           } else {
-            this.routeDefalut(menuRoutes[0].name, '当前账户默认首页不存在！')
+            this.routeDefalut(menuRoutes[0], '当前账户默认首页不存在！')
           }
         } else {
-          this.routeDefalut(menuRoutes[0].name, '当前账户未设置首页！')
+          this.routeDefalut(menuRoutes[0], '当前账户未设置首页！')
         }
       } else if (to.name === 'main' && oldRoute) {
         // 说明是回退到登录页
@@ -85,9 +86,11 @@ export default {
       }
     },
     // 跳转默认页面
-    routeDefalut (name = 'login', msg = '') {
+    routeDefalut (item = { name: 'login' }, msg = '') {
       this.$message.info(msg)
-      this.$router.push({ name: name })
+      this.$router.push({ name: item.name })
+      console.log(item)
+      this.$store.commit('global/setActiveMenu', item)
     }
   }
 }

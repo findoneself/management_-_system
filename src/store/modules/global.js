@@ -11,12 +11,6 @@ export default {
     // 用户信息
     userInfo: {}
   },
-  getters: {
-    // 用户的首页id
-    userHomeId (state) {
-      return state.userInfo.homeId
-    }
-  },
   mutations: {
     // ----用户
     setUserInfo (state, data) {
@@ -33,6 +27,8 @@ export default {
     // ----菜单
     // 设置当前点击的菜单
     setActiveMenu (state, obj) {
+      console.log(obj)
+      state.activeMenu = {}
       state.activeMenu = obj
     },
     // 保存菜单数据
