@@ -86,6 +86,7 @@ export default {
     currentMenu () {
       return this.$store.state.global.activeMenu
     },
+    // 当前点击的菜单id
     currentMenuId () {
       if (this.currentMenu && this.currentMenu.meta) {
         return this.currentMenu.meta.id
@@ -107,8 +108,6 @@ export default {
       const isRoute = this.rightMenuRoutes.find(menu => menu && menu.meta.id === item.id)
       if (isRoute && isRoute.name) {
         this.$store.commit('global/setActiveMenu', isRoute)
-        // 存缓存，为了页面刷新也有点击效果
-        sessionStorage.setItem('currentMenu', JSON.stringify(isRoute))
         this.routeHandle(isRoute)
       } else {
         this.routeHandle({ name: '404' })

@@ -59,7 +59,6 @@ export default {
         const menuRoutes = JSON.parse(sessionStorage.getItem('menuRoutes')) || []
         // 查找默认首页
         const defaultId = this.$store.state.global.userInfo.homeId
-        console.log(defaultId)
         if (defaultId) {
           const isHome = menuRoutes.find(item => item.meta.id === defaultId)
           if (isHome) {
