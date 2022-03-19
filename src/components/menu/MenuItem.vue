@@ -1,5 +1,8 @@
 <template>
-  <div class="menu-list">
+  <div
+    class="menu-list"
+    v-if="menuList.length > 0"
+  >
     <div
       class="menu-item"
       v-for="(item) in menuList"
@@ -37,7 +40,7 @@
           <li
             class="submenu-item"
             v-for="sub in item.children"
-            :class="currentMenu && currentMenu.meta.id === sub.id ? 'sub-active' : ''"
+            :class="currentMenuId === sub.id ? 'sub-active' : ''"
             @click="menuClick(sub)"
             :key="sub.key"
           >
@@ -77,13 +80,18 @@ export default {
   },
   created () {
     this.rightMenuRoutes = this.$store.state.global.menuRoutes
-    const curMenu = JSON.parse(sessionStorage.getItem('currentMenu'))
-    this.$store.commit('global/setActiveMenu', curMenu)
   },
   computed: {
     // 当前点击的菜单
     currentMenu () {
       return this.$store.state.global.activeMenu
+    },
+    currentMenuId () {
+      if (this.currentMenu && this.currentMenu.meta) {
+        return this.currentMenu.meta.id
+      } else {
+        return false
+      }
     },
     // 当前菜单的父级菜单
     currentParId () {
@@ -96,9 +104,7 @@ export default {
   },
   methods: {
     menuClick (item) {
-      const isRoute = this.rightMenuRoutes.find(menu => menu.meta.id === item.id)
-              console.log(isRoute)
-
+      const isRoute = this.rightMenuRoutes.find(menu => menu && menu.meta.id === item.id)
       if (isRoute && isRoute.name) {
         this.$store.commit('global/setActiveMenu', isRoute)
         // 存缓存，为了页面刷新也有点击效果

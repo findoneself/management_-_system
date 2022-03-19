@@ -28,7 +28,6 @@ export default {
     // 设置当前点击的菜单
     setActiveMenu (state, obj) {
       console.log(obj)
-      state.activeMenu = {}
       state.activeMenu = obj
     },
     // 保存菜单数据
