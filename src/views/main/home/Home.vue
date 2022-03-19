@@ -16,14 +16,7 @@
           </div>
           <div class="inspect_people">
             <div class="first">网络员：</div>
-<<<<<<< HEAD
             <img src="../../../assets/img/people.png" alt="" />
-=======
-            <img
-              src="../../../assets/img/people.png"
-              alt=""
-            >
->>>>>>> 7e55452756fe4db4bed0cc98bf4817aabefb7d3f
             <div class="people_num">12345人</div>
           </div>
         </div>
@@ -151,18 +144,12 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import BeautifulCard from "_com/common/BeautifulCard";
 import PatrolMap from "_com/patrolMap/patrolMap";
-=======
-import BeautifulCard from '_com/common/BeautifulCard'
-import PatrolMap from '_com/patrolMap/patrolMap'
->>>>>>> 7e55452756fe4db4bed0cc98bf4817aabefb7d3f
 export default {
   name: 'Home',
   components: {
     BeautifulCard,
-<<<<<<< HEAD
     PatrolMap,
   },
   data() {
@@ -207,11 +194,6 @@ export default {
     },
   },
 };
-=======
-    PatrolMap
-  }
-}
->>>>>>> 7e55452756fe4db4bed0cc98bf4817aabefb7d3f
 </script>
 
 <style lang="less" scoped>
@@ -296,7 +278,6 @@ export default {
         }
         .last {
           border: none;
-<<<<<<< HEAD
         }
       }
     }
@@ -348,8 +329,6 @@ export default {
         }
         .margin {
           margin-left: 0.2rem;
-=======
->>>>>>> 7e55452756fe4db4bed0cc98bf4817aabefb7d3f
         }
       }
     }
