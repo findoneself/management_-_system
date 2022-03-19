@@ -22,38 +22,45 @@ import HomeHeader from '_com/header/HomeHeader'
 
 export default {
   name: 'Home',
-  provide () {
-    return {
-      // 创建一个依赖，可以刷新路由页面
-      againAddGoods: this.againAddGoods
-    }
-  },
-  data () {
-    return {
-      isRouterAlive: true,
-      menuList: [],
-      // 第三方图标数组
-      iconList: [
-        'iconfont iconusers',
-        'iconfont icontijikongjian',
-        'iconfont iconshangpin',
-        'iconfont icondanju',
-        'iconfont iconbaobiao'
-      ],
-      isAsideTogglet: false
-    }
-  },
+  // provide () {
+  //   return {
+  //     // 创建一个依赖，可以刷新路由页面
+  //     againAddGoods: this.againAddGoods
+  //   }
+  // },
   components: {
     HomeHeader
   },
-  created () {
-    // 获取菜单数据
-    this.getMenus()
+  data () {
+    return {
+      isRouterAlive: true
+    }
+  },
+  computed: {
+    userId: {
+      get () {
+        return 'a'
+        // return this.$store.state.user.id
+      },
+      set (val) {
+        // this.$store.commit('updateUserId', val)
+      }
+    }
+  },
+  watch: {
+    $route: {
+      handler: 'routeHandle',
+      immediate: true
+    }
   },
   methods: {
-    // 获取左侧导航列表数据
-    async getMenus () {
-
+    // 路由操作
+    routeHandle (menu, omenu) {
+      if (!this.userId) {
+        // this.getUserInfo()
+      }
+      this.$router.push({ name: 'home-Home' })
+      // this.handleUserInputRouter()
     }
   }
 }

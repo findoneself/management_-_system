@@ -16,7 +16,7 @@
           </div>
           <div class="inspect_people">
             <div class="first">网络员：</div>
-            <img src="../../../assets/img/people.png" alt="" />
+            <img src="~_ats/img/people.png" alt="" />
             <div class="people_num">12345人</div>
           </div>
         </div>
@@ -28,37 +28,24 @@
       <div class="home_top_center">
         <div class="totalnum">
           <div class="time">
-            <img
-              class="left_img"
-              src="../../../assets/img/right.png"
-              alt=""
-            />
+            <img class="left_img" src="~_ats/img/right.png" alt="" />
             <div><span class="span">2021年</span> <span>01月</span></div>
-            <img
-              src="../../../assets/img/right.png"
-              alt=""
-            />
+            <img src="~_ats/img/right.png" alt="" />
           </div>
           <div class="bignum">
-            <img
-              class="big_img"
-              src="../../../assets/img/num_left.png"
-              alt=""
-            />
-            <div></div>
-            <div></div>
-            <div></div>
-            <img
-              class="big_i"
-              src="../../../assets/img/num_right.png"
-              alt=""
-            />
+            <img class="big_img" src="~_ats/img/num_left.png" alt="" />
+            <div>8</div>
+            <div>7</div>
+            <div>9</div>
+            <img class="big_i" src="~_ats/img/num_right.png" alt="" />
           </div>
           <div class="total_text">
-            <span>项</span><span>目</span><span>总</span><span>数</span><span>:</span>
+            <span>项</span><span>目</span><span>总</span><span>数</span
+            ><span>:</span>
           </div>
         </div>
         <div class="images">
+          <img class="total_y" src="~_ats/img/total_num.png" alt="">
           <div class="images_item images_item1">
             <div class="img1"></div>
             <span>项目分类</span>
@@ -104,9 +91,9 @@
           </div>
         </div>
       </BeautifulCard>
-      <div></div>
     </div>
     <div class="home_bottom">
+      <!-- 报警趋势分析 -->
       <BeautifulCard :title="'报警统计趋势分析'" class="home_bottom_left">
         <div class="pickers">
           <div class="picker">
@@ -132,12 +119,38 @@
             </el-date-picker>
           </div>
         </div>
+        <WarningNum></WarningNum>
+        <div class="button">
+          <img class="left_img" src="~_ats/img/right.png" alt="" />
+          <img class="right_img" src="~_ats/img/right.png" alt="" />
+        </div>
       </BeautifulCard>
+      <!-- 各县区安装数量统计 -->
       <BeautifulCard :title="'各县区安装数量统计'" class="home_bottom_center">
-        <div></div>
+        <InstallNum></InstallNum>
+        <div class="button">
+          <img class="left_img" src="~_ats/img/right.png" alt="" />
+          <img class="right_img" src="~_ats/img/right.png" alt="" />
+        </div>
       </BeautifulCard>
+      <!-- 文件通报 -->
       <BeautifulCard :title="'文件通报'" class="home_bottom_right">
-        <div></div>
+        <div class="tipes">
+          <span>今日</span>
+          <span>历史</span>
+        </div>
+        <div class="file_img">
+          <img src="~_ats/img/book.png" alt="" />
+          <span>文件</span>
+          <span>132(只读）</span>
+          <span>214324</span>
+        </div>
+        <div class="file_img">
+          <img src="~_ats/img/tb.png" alt="" />
+          <span>通报</span>
+          <span>132(只读）</span>
+          <span>214324</span>
+        </div>
       </BeautifulCard>
     </div>
   </div>
@@ -146,17 +159,21 @@
 <script>
 import BeautifulCard from "_com/common/BeautifulCard";
 import PatrolMap from "_com/patrolMap/patrolMap";
+import WarningNum from "./components/warningNum";
+import InstallNum from "./components/installNmu";
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     BeautifulCard,
     PatrolMap,
+    WarningNum,
+    InstallNum,
   },
   data() {
     return {
       date: "",
-      startDate:'',
-      endDate:'',
+      startDate: "",
+      endDate: "",
       paramslist: [
         {
           name: "参数类型",
@@ -184,13 +201,11 @@ export default {
     getdate() {
       let res = this.$utils.getDate();
       this.date = res;
-      let end = res.split('-')
-       
-     
-      Number(end[2])<31&&(end[2]=(Number(end[2])+1).toString())
-       console.log( end.join('-'), Number(end[1]))
-      this.startDate = res
-      this.endDate = end.join('-')
+      let end = res.split("-");
+      Number(end[2]) < 31 && (end[2] = (Number(end[2]) + 1).toString());
+      console.log(end.join("-"), Number(end[1]));
+      this.startDate = res;
+      this.endDate = end.join("-");
     },
   },
 };
@@ -209,13 +224,13 @@ export default {
         //  align-items: center;
         justify-content: flex-end;
         .picker {
-          transform: scale(0.8);
+          transform: scale(0.7);
           text-align: right;
           // margin-left: auto;
         }
         .el-date-editor.el-input,
         .el-date-editor.el-input__inner {
-          width: 9rem;
+          width: 7rem;
         }
         /deep/.el-input__prefix {
           top: 0;
@@ -224,6 +239,23 @@ export default {
         /deep/.el-input__inner {
           height: 2.5rem;
           margin-left: 0.5rem;
+        }
+      }
+      .button {
+        img {
+          width: 0.6rem;
+          height: 1rem;
+          position: absolute;
+        }
+        .left_img {
+          transform: rotate(180deg);
+          position: absolute;
+          bottom: 1.28rem;
+          left: 4.5rem;
+        }
+        .right_img {
+          bottom: 1.28rem;
+          right: 2.8rem;
         }
       }
     }
@@ -368,10 +400,15 @@ export default {
         }
       }
       .bignum {
-        margin-top: 1.5rem;
+        margin-top: 1.8rem;
+        display: flex;
+        justify-content: center;
         div {
-          display: inline-block;
+          text-align: center;
+          line-height: 6.56rem;
           margin-right: 0.4rem;
+          font-size: 5.6rem;
+          font-family: 'DS-Digital';
         }
         .big_img {
           margin-right: 0.8rem;
@@ -395,7 +432,7 @@ export default {
       .total_text {
         color: #39f8ff;
         font-size: 1.6rem;
-        margin-top: 0.5rem;
+        margin-top: 1rem;
         span {
           margin: 0.2rem;
         }
@@ -406,6 +443,12 @@ export default {
       display: flex;
       justify-content: space-evenly;
       padding: 0 2.5rem;
+      .total_y{
+        width: 14.56rem;
+        height: 3.5rem;
+        position: absolute;
+        top:60%;
+      }
       .images_item {
         display: flex;
         flex-direction: column;
@@ -424,7 +467,7 @@ export default {
       .img1,
       .img3,
       .img5 {
-        background: url("../../../assets/img/img1.png") no-repeat center center;
+        background: url("~_ats/img/img1.png") no-repeat center center;
         background-size: 100% 100%;
         width: 10rem;
         height: 10rem;
@@ -432,7 +475,7 @@ export default {
       }
       .img2,
       .img4 {
-        background: url("../../../assets/img/img2.png") no-repeat center center;
+        background: url("~_ats/img/img2.png") no-repeat center center;
         background-size: 100% 100%;
         width: 12rem;
         height: 12rem;
@@ -454,6 +497,48 @@ export default {
     width: 38.13rem;
     height: 28.13rem;
     border: 1px solid blue;
+    position: relative;
+    .button {
+      img {
+        width: 0.6rem;
+        height: 1rem;
+        position: absolute;
+      }
+      .left_img {
+        transform: rotate(180deg);
+        position: absolute;
+        bottom: 1.28rem;
+        left: 4.5rem;
+      }
+      .right_img {
+        bottom: 1.28rem;
+        right: 2.8rem;
+      }
+    }
+    .tipes{
+      display: flex;
+      justify-content: flex-end;
+      text-align: center;
+      margin-top: 2rem;
+      span{
+        width: 28%;
+        color:#39F8FF
+      }
+    }
+    .file_img{
+      display: flex;
+      text-align: center;
+      justify-content: space-around;
+      align-items: center;
+      background-color: #12298D;
+      height: 6.5rem;
+      border-radius: 1rem;
+      margin:0.3rem 0.8rem 2rem 0.5rem;
+      img{
+        width: 4rem;
+        height: 4rem;
+      }
+    }
   }
 }
 </style>

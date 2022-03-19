@@ -3,7 +3,25 @@ const pxtorem = require('postcss-pxtorem')
 function resolve (dir) {
   return path.join(__dirname, dir)
 }
+const sysTitle = '大数据统筹管理系统'
 module.exports = {
+  outputDir: 'dist',
+  devServer: {
+    open: true, // 设置自动打开
+    port: 8081 // 设置端口
+    // proxy: {
+    //   // 设置代理
+    //   '/axios': {
+    //     target: 'http://101.15.22.98',
+    //     changeOrigin: true,
+    //     // 如果是http接口，需要配置该参数
+    //     secure: false,
+    //     pathRewrite: {
+    //       '^/axios': ''
+    //     }
+    //   }
+    // }
+  },
   // productionSourceMap：{ type:Bollean,default:true } 生产源映射，如果您不需要生产时的源映射，那么将此设置为false可以加速生产构建
   productionSourceMap: false,
   // 配置规则
@@ -21,12 +39,12 @@ module.exports = {
         axios: 'axios',
         lodash: '_',
         echarts: 'echarts',
-        nprogress: 'NProgress',
-        'vue-quill-editor': 'VueQuillEditor'
+        nprogress: 'NProgress'
       })
       // 配置 html-webpack-plugin 插件
       config.plugin('html').tap(args => {
         args[0].isProd = true
+        args[0].title = sysTitle
         return args
       })
     })
@@ -40,13 +58,14 @@ module.exports = {
       // 配置 html-webpack-plugin 插件
       config.plugin('html').tap(args => {
         args[0].isProd = false
+        args[0].title = sysTitle
         return args
       })
     })
     // 文件夹简写
     config.resolve.alias
       .set('_ats', resolve('src/assets'))
-      .set('_con', resolve('src/common'))
+      .set('_lib', resolve('src/libs'))
       .set('_com', resolve('src/components'))
       .set('_vie', resolve('src/views'))
       .set('_new', resolve('src/network'))

@@ -17,18 +17,18 @@ module.exports = {
         // 格式化为单引号
         // "quotes": [2, "single"],
         // 逗号前后的空格
-        // "comma-spacing": [2, { "before": false, "after": true }],
+        "comma-spacing": [2, { "before": false, "after": true }],
         // =>的前/后括号
         "arrow-spacing": [2, { "before": true, "after": true }],
         "camelcase": "off",
         "eqeqeq": [2, "always"],
         // 数组和对象键值对最后一个逗号， never参数：不能带末尾的逗号, always参数：必须带末尾的逗号，
         // "comma-dangle": [2, {
-        //     "arrays": "never",
-        //     "objects": "never",
-        //     "imports": "never",
-        //     "exports": "never",
-        //     "functions": "never",
+        //   "arrays": "never",
+        //   "objects": "never",
+        //   "imports": "never",
+        //   "exports": "never",
+        //   "functions": "never",
         // }],
         // 禁止条件表达式中出现赋值操作符
         "no-cond-assign": 2,
