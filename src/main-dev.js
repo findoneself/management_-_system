@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Utils from './libs/utils'
+import format from './libs/format'
 import http from './network'
 import echarts from 'echarts'
 // 引入element组件配置
@@ -15,6 +16,7 @@ Vue.config.productionTip = false
 Vue.prototype.$utils = Utils
 Vue.prototype.$echarts = echarts
 Vue.prototype.$http = http
+Vue.prototype.$format = format
 new Vue({
   router,
   store,

@@ -179,4 +179,25 @@ Utils.clearLoginInfo = function () {
   // router.options.isAddDynamicMenuRoutes = false
   // setAllData('dynamicMenuRoutes', '[]')
 }
+// 节流(规定时间内，只触发一次事件)
+Utils.throttle = function (fn, delay) {
+  let lasttime = 0 // 记录上一次触发的时间
+  return function () { // 通过闭包的方式使用lasttime变量，每次都是上次的时间
+    const nowtime = Date.now()
+    if (nowtime - lasttime > delay) {
+      fn.call(this) // 修正this函数问题
+      lasttime = nowtime // 同步时间
+    }
+  }
+}
+// 防抖(规定时间内，只触发最后一次事件)
+Utils.debounce = function (fn, delay) {
+  let timer = null // 记录上一次的延时器
+  return function () {
+    if (timer) clearTimeout(timer) // 清除上一延时器
+    timer = setTimeout(function () { // 重新设置新的延时器
+      fn.apply(this)
+    }, delay)
+  }
+}
 export default Utils

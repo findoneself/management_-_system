@@ -30,7 +30,6 @@ const mainRoutes = {
   component: Main,
   name: 'main',
   meta: { title: '主入口整体布局' },
-  // redirect: '/home',
   children: routeMenu,
   beforeEnter (to, from, next) {
     // 为了验证token，如果失效跳转至登录页
@@ -65,15 +64,15 @@ router.beforeEach((to, from, next) => {
 // 获取动态路由
 function getMenuData (to, next) {
   mainRoutes.children = []
-  $http({ url: '/menu/nav' }).then(data => {
+  $http({ url: `/menu/nav${to.params.userId || ''}` }).then(data => {
     data = data || []
   }, err => {
     // router.push({ name: 'login' })
     // 下面逻辑当能获取菜单时移入reslove里面，且需要判断是否返回数据
     router.options.isLoadMenu = true
     const list = [
-      { id: '1', key: 1, menuType: 'tab', isHome: true, title: '预警监控', url: '@/home/Home', parentId: '00' },
-      { id: '2', key: 2, menuType: 'tab', title: '扬尘监测', parentId: '00', url: '@/dustMonitoring/DustMonitoring' },
+      { id: '1', key: 1, menuType: 'tab', title: '预警监控', url: '@/home/Home', parentId: '00' },
+      { id: '2', key: 2, menuType: 'sub', title: '扬尘监测', parentId: '00', url: '@/dustMonitoring/DustMonitoring' },
       { id: '2-1', key: 1, title: '测试1', parentId: '2', url: '@/dustMonitoring/children/vue1' },
       { id: '2-2', key: 2, title: '测试2', parentId: '2', url: '@/dustMonitoring/children/vue2' },
       { id: '2-3', key: 3, title: '测试3', parentId: '2', url: '@/dustMonitoring/children/vue3' },
@@ -89,7 +88,7 @@ function getMenuData (to, next) {
       { id: '7', key: 7, menuType: 'tab', title: '巡查整改', url: '@/patrolRectification/PatrolRectification', parentId: '00' },
       { id: '8', key: 8, menuType: 'tab', parentId: '00', title: '管理员', url: '@/manageUser/index' }
     ]
-    // 储存当前菜单
+    // 根据key值排序并储存当前菜单
     const menuList = $utils.compareSort($utils.treeDataTranslate(list), 'key')
     sessionStorage.setItem('menuList', JSON.stringify(menuList))
     let temp = []
@@ -127,6 +126,8 @@ function getMenuData (to, next) {
     })
     mainRoutes.children = temp
     router.addRoutes([mainRoutes])
+    // 储存菜单路由
+    sessionStorage.setItem('menuRoutes', JSON.stringify(mainRoutes.children))
     next({ ...to, replace: true })
   })
 }
