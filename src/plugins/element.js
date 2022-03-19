@@ -32,6 +32,7 @@ import {
   Dialog,
   MessageBox,
   Loading,
+  DatePicker,
   Tag,
   Tree,
   Cascader,
@@ -85,6 +86,7 @@ Vue.use(Step)
 Vue.use(Steps)
 Vue.use(Upload)
 Vue.use(Timeline)
+Vue.use(DatePicker)
 Vue.use(TimelineItem)
 
 // 全局注册提示框
