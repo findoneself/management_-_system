@@ -128,7 +128,7 @@ export default {
                   color: item.color[1]
                 },
                 emphasis: {
-                  //   color: colors[index][1],
+                    // color: colors[index][1],
                 }
               }
             }
