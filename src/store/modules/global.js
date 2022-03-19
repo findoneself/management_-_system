@@ -27,8 +27,9 @@ export default {
     // ----菜单
     // 设置当前点击的菜单
     setActiveMenu (state, obj) {
-      console.log(obj)
       state.activeMenu = obj
+      // 存缓存，为了页面刷新也有点击效果
+      sessionStorage.setItem('currentMenu', JSON.stringify(obj))
     },
     // 保存菜单数据
     saveMenuList (state, list) {
