@@ -37,7 +37,7 @@
           <li
             class="submenu-item"
             v-for="sub in item.children"
-            :class="currentMenu.meta.id === sub.id ? 'sub-active' : ''"
+            :class="currentMenu && currentMenu.meta.id === sub.id ? 'sub-active' : ''"
             @click="menuClick(sub)"
             :key="sub.key"
           >
