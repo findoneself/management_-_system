@@ -28,8 +28,6 @@ const globalRoutes = [
 let routeMenu = []
 const Main = () =>
   import('_vie/main/Main')
-const CarWashing = () =>
-  import('_vie/main/carWashing/CarWashing')
 const mainRoutes = {
   path: '/',
   component: Main,
