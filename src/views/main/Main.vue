@@ -1,7 +1,7 @@
 <template>
   <el-container class="home-container">
     <!-- 头部区域 -->
-    <el-header style="height:8.75rem">
+    <el-header height="auto">
       <home-header />
     </el-header>
     <!-- 页面主体区 -->
@@ -9,7 +9,7 @@
       <!-- 右侧主体 -->
       <el-main>
         <!-- 路由占位符 v-if="isRouterAlive" -->
-        <router-view  />
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
@@ -67,8 +67,6 @@ export default {
             if (isRight) {
               // 如果权限菜单存在，则跳转至默认首页
               this.$router.push({ name: isHome.name })
-              // 储存当前点击的菜单
-              this.$store.commit('global/setActiveMenu', isHome)
             } else {
               // 如果不存在权限
               this.routeDefalut(menuRoutes[0], '当前账户默认首页无权限访问！')
@@ -89,7 +87,6 @@ export default {
     routeDefalut (item = { name: 'login' }, msg = '') {
       this.$message.info(msg)
       this.$router.push({ name: item.name })
-      this.$store.commit('global/setActiveMenu', item)
     }
   }
 }

@@ -1,11 +1,11 @@
 <template>
-  <!--巡查整改 -->
+  <!--单设备统计 -->
   <div></div>
 </template>
 
 <script>
 export default {
-  name: 'PatrolRectification',
+  name: 'DusSingleEcharts',
   data () {
     return {}
   }

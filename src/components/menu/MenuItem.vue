@@ -13,7 +13,6 @@
         class="menu-value"
         @click="menuClick(item)"
         :class="currentParId === item.id ? 'active-menu' : ''"
-        v-if="item.type === 'menu' || (item.catType && item.catType === 'tabs')"
       >
         <div
           class="menu-bg"
@@ -21,37 +20,25 @@
         ></div>
         <div class="menu-text">{{ item.title }}</div>
       </div>
-      <template v-else>
-        <div
-          class="menu-value"
-          :class="currentParId === item.id ? 'active-menu' : ''"
+      <!-- 二级菜单 -->
+      <ul
+        class="sub-menu"
+        v-if="item.catType === 'sub' && item.children && item.children.length > 0"
+      >
+        <li
+          class="submenu-item"
+          v-for="sub in item.children"
+          :class="curRoute.id === sub.id ? 'sub-active' : ''"
+          @click="menuClick(sub)"
+          :key="sub.key"
         >
           <div
             class="menu-bg"
             :class="isScale && 'menu-bgscale'"
           ></div>
-          <div class="menu-text">{{ item.title }}</div>
-        </div>
-        <!-- 二级菜单，如果父菜单设置的模式是sub，则加载 -->
-        <ul
-          class="sub-menu"
-          v-if="item.children && item.children.length > 0"
-        >
-          <li
-            class="submenu-item"
-            v-for="sub in item.children"
-            :class="currentMenuId === sub.id ? 'sub-active' : ''"
-            @click="menuClick(sub)"
-            :key="sub.key"
-          >
-            <div
-              class="menu-bg"
-              :class="isScale && 'menu-bgscale'"
-            ></div>
-            <div>{{ sub.title }}</div>
-          </li>
-        </ul>
-      </template>
+          <div>{{ sub.title }}</div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -75,24 +62,20 @@ export default {
   data () {
     return {
       // 权限菜单列表
-      rightMenuRoutes: []
+      menuRoutes: []
     }
   },
   created () {
-    this.rightMenuRoutes = this.$store.state.global.menuRoutes
+    this.menuRoutes = this.$store.state.global.menuRoutes
   },
   computed: {
-    // 当前点击的菜单
-    currentMenu () {
-      return this.$store.state.global.activeMenu ? (this.$store.state.global.activeMenu.meta || {}) : {}
-    },
-    // 当前点击的菜单id
-    currentMenuId () {
-      return this.currentMenu.id || false
+    // 当前路由
+    curRoute () {
+      return this.$route.meta || {}
     },
     // 当前菜单的父级菜单
     currentParId () {
-      return this.currentMenu.parentId === '00' ? this.currentMenu.id : this.currentMenu.parentId
+      return this.curRoute.parentId === '00' ? this.curRoute.id : this.curRoute.parentId
     }
   },
   methods: {
@@ -105,22 +88,12 @@ export default {
     },
     // 路由操作
     routeHandle (item, val = 'id') {
-      const isRoute = this.rightMenuRoutes.find(menu => menu && menu.meta[val] === item.id)
+      const isRoute = this.menuRoutes.find(menu => menu && menu.meta[val] === item.id)
       if (isRoute && isRoute.name) {
-        this.$store.commit('global/setActiveMenu', isRoute)
         this.$router.push({ name: isRoute.name })
       } else {
         this.$router.push({ name: '404' })
       }
-      // 查找菜单是否存在权限
-      // var route = this.rightMenuRoutes.find(item => item.id === menu.id)
-      //  console.log(route.path)
-      // if (route.length > 0) {
-
-      // this.$router.push(route.path)
-      // 设置当前点击菜单状态管理
-      // this.setActiveMenu(menu)
-      // }
     }
   }
 }

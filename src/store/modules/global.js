@@ -2,8 +2,6 @@ import $http from '_new/index'
 export default {
   namespaced: true,
   state: {
-    // 当前点击的菜单
-    activeMenu: {},
     // 菜单数据
     menuList: [],
     // 菜单路由数据
@@ -25,12 +23,6 @@ export default {
       localStorage.removeItem('userInfo')
     },
     // ----菜单
-    // 设置当前点击的菜单
-    setActiveMenu (state, obj) {
-      state.activeMenu = obj
-      // 存缓存，为了页面刷新也有点击效果
-      sessionStorage.setItem('currentMenu', JSON.stringify(obj))
-    },
     // 保存菜单数据
     saveMenuList (state, list) {
       state.menuList = list
