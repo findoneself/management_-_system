@@ -63,10 +63,9 @@ export default {
   methods: {
     getmap () {
       var myChart = this.$echarts.init(document.getElementById('map'))
-      var colors = []
       var titleArr = []
       var seriesArr = []
-      this.dataList.forEach(function (item, index) {
+      this.dataList.forEach(function (item) {
         // let indexs = index + 1;
         titleArr.push({
           text: item.name,

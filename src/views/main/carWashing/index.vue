@@ -63,12 +63,26 @@
                 :style="{ backgroundColor: item.color}"
               ></div>
             </div>
-            <div class="scale width">{{item.name}}</div>
-            <div class="scale">{{item.value}}次</div>
+            <div class="scale width">{{ item.name }}</div>
+            <div class="scale">{{ item.value }}次</div>
             <div class="lookat">查看</div>
           </div>
         </div>
       </BeautifulCard>
+    </div>
+    <!-- 右侧地图区域 -->
+    <div class="content_right">
+      <!-- 上半部分 -->
+      <div class="map_video">
+        <div class="map"></div>
+        <BeautifulCard
+          class="online_video"
+          :isTriangle="false"
+          :title="'在线视频'"
+        >
+          <div></div>
+        </BeautifulCard>
+      </div>
     </div>
   </div>
 </template>
@@ -133,6 +147,7 @@ export default {
 <style lang="less" scoped>
 .container {
   padding: 1.25rem;
+  display: flex;
 }
 .content_left {
   display: flex;
@@ -254,6 +269,19 @@ export default {
       .el-select-dropdown__item:hover {
         background-color: #040560;
       }
+    }
+  }
+}
+.content_right {
+  flex: 1;
+  .map_video {
+    display: flex;
+    .map {
+      flex: 1;
+    }
+    .online_video {
+      width: 25rem;
+      height: 37.5rem;
     }
   }
 }
