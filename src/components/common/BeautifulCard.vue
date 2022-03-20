@@ -9,7 +9,8 @@
     <div class="card-content">
       <slot></slot>
     </div>
-    <span
+    <span 
+      :v-if="isTriangle"
       v-for="val in 4"
       :key="val"
       class="triangle-icon"
@@ -43,6 +44,10 @@ export default {
     height:{
       type:String,
       default:'33.13rem'
+    },
+    isTriangle:{
+      type:Boolean,
+      default:true
     }
   },
   computed: {
