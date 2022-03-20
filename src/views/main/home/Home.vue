@@ -16,7 +16,10 @@
           </div>
           <div class="inspect_people">
             <div class="first">网络员：</div>
-            <img src="~_ats/img/people.png" alt="" />
+            <img
+              src="~_ats/img/people.png"
+              alt=""
+            />
             <div class="people_num">12345人</div>
           </div>
         </div>
@@ -28,24 +31,42 @@
       <div class="home_top_center">
         <div class="totalnum">
           <div class="time">
-            <img class="left_img" src="~_ats/img/right.png" alt="" />
+            <img
+              class="left_img"
+              src="~_ats/img/right.png"
+              alt=""
+            />
             <div><span class="span">2021年</span> <span>01月</span></div>
-            <img src="~_ats/img/right.png" alt="" />
+            <img
+              src="~_ats/img/right.png"
+              alt=""
+            />
           </div>
           <div class="bignum">
-            <img class="big_img" src="~_ats/img/num_left.png" alt="" />
+            <img
+              class="big_img"
+              src="~_ats/img/num_left.png"
+              alt=""
+            />
             <div><span>8</span></div>
             <div><span>7</span></div>
             <div><span>9</span></div>
-            <img class="big_i" src="~_ats/img/num_right.png" alt="" />
+            <img
+              class="big_i"
+              src="~_ats/img/num_right.png"
+              alt=""
+            />
           </div>
           <div class="total_text">
-            <span>项</span><span>目</span><span>总</span><span>数</span
-            ><span>:</span>
+            <span>项</span><span>目</span><span>总</span><span>数</span><span>:</span>
           </div>
         </div>
         <div class="images">
-          <img class="total_y" src="~_ats/img/total_num.png" alt="">
+          <img
+            class="total_y"
+            src="~_ats/img/total_num.png"
+            alt=""
+          >
           <div class="images_item images_item1">
             <div class="img1"></div>
             <span>项目分类</span>
@@ -69,7 +90,10 @@
         </div>
       </div>
       <!-- 国控站点 -->
-      <BeautifulCard class="home_top_right" title="国控站点">
+      <BeautifulCard
+        class="home_top_right"
+        title="国控站点"
+      >
         <div class="picker">
           <el-date-picker
             prefix-icon="el-icon-arrow-down"
@@ -94,7 +118,10 @@
     </div>
     <div class="home_bottom">
       <!-- 报警趋势分析 -->
-      <BeautifulCard :title="'报警统计趋势分析'" class="home_bottom_left">
+      <BeautifulCard
+        :title="'报警统计趋势分析'"
+        class="home_bottom_left"
+      >
         <div class="pickers">
           <div class="picker">
             <span>开始时间：</span>
@@ -121,32 +148,60 @@
         </div>
         <WarningNum></WarningNum>
         <div class="button">
-          <img class="left_img" src="~_ats/img/right.png" alt="" />
-          <img class="right_img" src="~_ats/img/right.png" alt="" />
+          <img
+            class="left_img"
+            src="~_ats/img/right.png"
+            alt=""
+          />
+          <img
+            class="right_img"
+            src="~_ats/img/right.png"
+            alt=""
+          />
         </div>
       </BeautifulCard>
       <!-- 各县区安装数量统计 -->
-      <BeautifulCard :title="'各县区安装数量统计'" class="home_bottom_center">
+      <BeautifulCard
+        :title="'各县区安装数量统计'"
+        class="home_bottom_center"
+      >
         <InstallNum></InstallNum>
         <div class="button">
-          <img class="left_img" src="~_ats/img/right.png" alt="" />
-          <img class="right_img" src="~_ats/img/right.png" alt="" />
+          <img
+            class="left_img"
+            src="~_ats/img/right.png"
+            alt=""
+          />
+          <img
+            class="right_img"
+            src="~_ats/img/right.png"
+            alt=""
+          />
         </div>
       </BeautifulCard>
       <!-- 文件通报 -->
-      <BeautifulCard :title="'文件通报'" class="home_bottom_right">
+      <BeautifulCard
+        :title="'文件通报'"
+        class="home_bottom_right"
+      >
         <div class="tipes">
           <span>今日</span>
           <span>历史</span>
         </div>
         <div class="file_img">
-          <img src="~_ats/img/book.png" alt="" />
+          <img
+            src="~_ats/img/book.png"
+            alt=""
+          />
           <span>文件</span>
           <span>132(只读）</span>
           <span>214324</span>
         </div>
         <div class="file_img">
-          <img src="~_ats/img/tb.png" alt="" />
+          <img
+            src="~_ats/img/tb.png"
+            alt=""
+          />
           <span>通报</span>
           <span>132(只读）</span>
           <span>214324</span>
@@ -157,58 +212,58 @@
 </template>
 
 <script>
-import BeautifulCard from "_com/common/BeautifulCard";
-import PatrolMap from "_com/patrolMap/patrolMap";
-import WarningNum from "./components/warningNum";
-import InstallNum from "./components/installNmu";
+import BeautifulCard from '_com/common/BeautifulCard'
+import PatrolMap from '_com/patrolMap/patrolMap'
+import WarningNum from './components/warningNum'
+import InstallNum from './components/installNmu'
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     BeautifulCard,
     PatrolMap,
     WarningNum,
-    InstallNum,
+    InstallNum
   },
-  data() {
+  data () {
     return {
-      date: "",
-      startDate: "",
-      endDate: "",
+      date: '',
+      startDate: '',
+      endDate: '',
       paramslist: [
         {
-          name: "参数类型",
-          value: 2134,
+          name: '参数类型',
+          value: 2134
         },
         {
-          name: "参数类型",
-          value: 2134,
+          name: '参数类型',
+          value: 2134
         },
         {
-          name: "参数类型",
-          value: 2134,
+          name: '参数类型',
+          value: 2134
         },
         {
-          name: "参数类型",
-          value: 2134,
-        },
-      ],
-    };
+          name: '参数类型',
+          value: 2134
+        }
+      ]
+    }
   },
-  created() {
-    this.getdate();
+  created () {
+    this.getdate()
   },
   methods: {
-    getdate() {
-      let res = this.$utils.getDate();
-      this.date = res;
-      let end = res.split("-");
-      Number(end[2]) < 31 && (end[2] = (Number(end[2]) + 1).toString());
-      console.log(end.join("-"), Number(end[1]));
-      this.startDate = res;
-      this.endDate = end.join("-");
-    },
-  },
-};
+    getdate () {
+      let res = this.$utils.getDate()
+      this.date = res
+      let end = res.split('-')
+      Number(end[2]) < 31 && (end[2] = (Number(end[2]) + 1).toString())
+      console.log(end.join('-'), Number(end[1]))
+      this.startDate = res
+      this.endDate = end.join('-')
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -409,11 +464,11 @@ export default {
           line-height: 6.56rem;
           margin-right: 0.4rem;
           font-size: 5.6rem;
-          font-family: 'DS-Digital';
+          font-family: "DS-Digital";
           text-indent: -0.5rem;
-         span{
+          span {
             transform: rotate(30deg);
-         }
+          }
         }
         .big_img {
           margin-right: 0.8rem;
@@ -448,11 +503,11 @@ export default {
       display: flex;
       justify-content: space-evenly;
       padding: 0 2.5rem;
-      .total_y{
+      .total_y {
         width: 14.56rem;
         height: 3.5rem;
         position: absolute;
-        top:35%;
+        top: 35%;
       }
       .images_item {
         display: flex;
@@ -520,26 +575,26 @@ export default {
         right: 2.8rem;
       }
     }
-    .tipes{
+    .tipes {
       display: flex;
       justify-content: flex-end;
       text-align: center;
       margin-top: 2rem;
-      span{
+      span {
         width: 28%;
-        color:#39F8FF
+        color: #39f8ff;
       }
     }
-    .file_img{
+    .file_img {
       display: flex;
       text-align: center;
       justify-content: space-around;
       align-items: center;
-      background-color: #12298D;
+      background-color: #12298d;
       height: 6.5rem;
       border-radius: 1rem;
-      margin:0.3rem 0.8rem 2rem 0.5rem;
-      img{
+      margin: 0.3rem 0.8rem 2rem 0.5rem;
+      img {
         width: 4rem;
         height: 4rem;
       }

@@ -13,7 +13,7 @@
         class="menu-value"
         @click="menuClick(item)"
         :class="currentParId === item.id ? 'active-menu' : ''"
-        v-if="item.menuType === 'tab' || !item.children || item.children.length === 0"
+        v-if="item.type === 'menu' || (item.catType && item.catType === 'tabs')"
       >
         <div
           class="menu-bg"
@@ -35,7 +35,7 @@
         <!-- 二级菜单，如果父菜单设置的模式是sub，则加载 -->
         <ul
           class="sub-menu"
-          v-if="item.menuType === 'sub'"
+          v-if="item.children && item.children.length > 0"
         >
           <li
             class="submenu-item"
@@ -84,46 +84,42 @@ export default {
   computed: {
     // 当前点击的菜单
     currentMenu () {
-      return this.$store.state.global.activeMenu
+      return this.$store.state.global.activeMenu ? (this.$store.state.global.activeMenu.meta || {}) : {}
     },
     // 当前点击的菜单id
     currentMenuId () {
-      if (this.currentMenu && this.currentMenu.meta) {
-        return this.currentMenu.meta.id
-      } else {
-        return false
-      }
+      return this.currentMenu.id || false
     },
     // 当前菜单的父级菜单
     currentParId () {
-      if (this.currentMenu) {
-        return this.currentMenu.parentId === '00' ? this.currentMenu.meta.id : this.currentMenu.parentId
-      } else {
-        return ''
-      }
+      return this.currentMenu.parentId === '00' ? this.currentMenu.id : this.currentMenu.parentId
     }
   },
   methods: {
     menuClick (item) {
-      const isRoute = this.rightMenuRoutes.find(menu => menu && menu.meta.id === item.id)
-      if (isRoute && isRoute.name) {
-        this.$store.commit('global/setActiveMenu', isRoute)
-        this.routeHandle(isRoute)
-      } else {
-        this.routeHandle({ name: '404' })
+      if (item.type === 'menu') {
+        this.routeHandle(item)
+      } else if (item.catType && item.catType === 'tabs') {
+        this.routeHandle(item, 'parentId')
       }
     },
     // 路由操作
-    routeHandle (menu) {
-      this.$router.push({ name: menu.name })
+    routeHandle (item, val = 'id') {
+      const isRoute = this.rightMenuRoutes.find(menu => menu && menu.meta[val] === item.id)
+      if (isRoute && isRoute.name) {
+        this.$store.commit('global/setActiveMenu', isRoute)
+        this.$router.push({ name: isRoute.name })
+      } else {
+        this.$router.push({ name: '404' })
+      }
       // 查找菜单是否存在权限
-      var route = this.rightMenuRoutes.find(item => item.id === menu.id)
-       console.log(route.path)
+      // var route = this.rightMenuRoutes.find(item => item.id === menu.id)
+      //  console.log(route.path)
       // if (route.length > 0) {
-       
-        this.$router.push(route.path)
-        // 设置当前点击菜单状态管理
-        this.setActiveMenu(menu)
+
+      // this.$router.push(route.path)
+      // 设置当前点击菜单状态管理
+      // this.setActiveMenu(menu)
       // }
     }
   }
