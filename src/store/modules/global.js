@@ -7,7 +7,9 @@ export default {
     // 菜单路由数据
     menuRoutes: [],
     // 用户信息
-    userInfo: {}
+    userInfo: {},
+    // 当前点击的tab
+    currentTab: {}
   },
   mutations: {
     // ----用户
@@ -38,6 +40,14 @@ export default {
     // 清空菜单数据
     clearMenuRouteLis (state) {
       state.menuRoutes = []
+    },
+    // 设置当前点击的tab
+    setCurrentTab (state, item) {
+      state.currentTab = item
+    },
+    // 清除当前点击的tab
+    clearCurrentTab (state) {
+      state.currentTab = {}
     }
   },
   actions: {

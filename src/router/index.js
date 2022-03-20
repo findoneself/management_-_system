@@ -88,13 +88,9 @@ function getMenuData (to, next) {
     router.options.isLoadMenu = true
     const list = [
       { id: '1', key: 1, type: 'menu', title: '预警监控', alias: '预警监控', parentId: '00', url: '@/home/Home' },
-      { id: '2', key: 2, type: 'cat', title: '扬尘监测', alias: '扬尘监测', parentId: '00', catType: 'tabs' },
-      { id: '2-1', key: 1, type: 'menu', title: '地图', alias: '地图', parentId: '2', url: '@/dustMonitoring/DustMap' },
-      { id: '2-2', key: 2, type: 'menu', title: '单设备统计', alias: '单设备统计', parentId: '2', url: '@/dustMonitoring/DusSingleEcharts' },
-      { id: '2-3', key: 3, type: 'menu', title: '多设备统计', alias: '多设备统计', parentId: '2', url: '@/dustMonitoring/DusMultipleEcharts' },
-      { id: '2-4', key: 4, type: 'menu', title: '排名统计', alias: '排名统计', parentId: '2', url: '@/dustMonitoring/DusRankingEcharts' },
+      { id: '2', key: 2, type: 'menu', title: '扬尘监测', alias: '扬尘监测', parentId: '00', url: '@/dustMonitoring/DusIndex' },
       { id: '3', key: 3, type: 'menu', title: '噪声监测', alias: '噪声监测', parentId: '00', url: '@/noiseMonitoring/NoiseMonitoring' },
-      { id: '4', key: 4, type: 'menu', catType: 'sub', title: '车洗裸土', alias: '车洗裸土', parentId: '00', url: '@/carWashing/index' },
+      { id: '4', key: 4, type: 'menu', catType: 'tabs', title: '车洗裸土', alias: '车洗裸土', parentId: '00', url: '@/carWashing/index' },
       { id: '4-1', key: 1, type: 'menu', title: 'AI识别安装率', alias: 'AI识别安装率', parentId: '4', url: '@/carWashing/CarAIinstall' },
       { id: '4-2', key: 2, type: 'menu', title: '违规渣土车', alias: '违规渣土车', parentId: '4', url: '@/carWashing/CarViolation' },
       { id: '4-3', key: 3, type: 'menu', title: '合规车次', alias: '合规车次', parentId: '4', url: '@/carWashing/CarCompliance' },

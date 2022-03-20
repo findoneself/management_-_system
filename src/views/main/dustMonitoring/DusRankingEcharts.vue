@@ -1,6 +1,6 @@
 <template>
   <!--排名统计 -->
-  <div></div>
+  <div>排名统计</div>
 </template>
 
 <script>

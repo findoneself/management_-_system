@@ -2,13 +2,16 @@
   <div class="beautiful-wrapper">
     <div class="beau-container">
       <span
-        v-for="val in borderIcon"
+        v-for="val in borderIcons"
         :key="val"
         class="border-icon"
         :class="'border-' + val"
       />
       <!-- tabs导航 -->
-      <MenuTab v-if="isMenuTab"></MenuTab>
+      <MenuTab
+        :tabs-list="tabsList"
+        :is-title="isTitle"
+      ></MenuTab>
       <div class="beau-content">
         <slot></slot>
       </div>
@@ -31,10 +34,22 @@ export default {
         return ['top', 'right', 'bottom', 'left', 'triangle']
       }
     },
-    // 是否显示tabs导航
-    isMenuTab: {
+    // 是否显示标题
+    isTitle: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    // tabs数据
+    tabsList: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
+  computed: {
+    borderIcons () {
+      return this.isTitle || this.tabsList.length > 0 ? this.borderIcon.filter(val => val !== 'top') : this.borderIcon
     }
   }
 }
@@ -47,6 +62,9 @@ export default {
 .beau-container {
   position: relative;
   border: 2px solid #0e5dfb;
+}
+.beau-content {
+  min-height: 100px;
 }
 .border-icon {
   position: absolute;
