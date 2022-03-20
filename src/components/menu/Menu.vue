@@ -38,10 +38,6 @@ export default {
       this.menuRoutes = JSON.parse(sessionStorage.getItem('menuRoutes')) || []
       this.$store.commit('global/saveMenuList', this.menuList)
       this.$store.commit('global/saveMenuRouteList', this.menuRoutes)
-      const curMenu = JSON.parse(sessionStorage.getItem('currentMenu'))
-      if (curMenu) {
-        this.$store.commit('global/setActiveMenu', curMenu)
-      }
     }
   }
 }

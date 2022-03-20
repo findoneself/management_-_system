@@ -74,31 +74,42 @@ function getMenuData (to, next) {
     // 下面逻辑当能获取菜单时移入reslove里面，且需要判断是否返回数据
     // key：用来排序
     // title：菜单名
+    // alias：菜单别名，为了菜单和显示在内容中的标题不一致而设立，默认和菜单名一样
     // type：菜单类型（menu菜单，可点击跳转；cat目录，如果carType是tabs可点击，但是是需要跳转到默认第一个子菜单）
     // catType：目录类型，tabs可点击，默认第一个子菜单，sub就是下拉子菜单，当前不可点击
     // url：路由路径，需要和组件路径一致
     // parentId：父节点id
+    /*   一级菜单四种情况：
+        1.单纯的目录，type='cat'且catType='sub'不可点击，只能点击下拉菜单
+        1.单纯的目录，type='cat'且catType='tabs'，可以点击，但是默认跳转至子菜单第一个顺序的
+        3.仅一个菜单type='menu'未勾选是否需要子菜单
+        4.菜单且有子菜单，必须在创建菜单是勾选是否需要子菜单，然后添加选择catType类型
+    */
     router.options.isLoadMenu = true
     const list = [
-      { id: '1', key: 1, type: 'menu', title: '预警监控', url: '@/home/Home', parentId: '00' },
-      { id: '2', key: 2, type: 'cat', catType: 'tabs', title: '扬尘监测', parentId: '00' },
-      { id: '2-1', key: 1, type: 'menu', title: '地图', parentId: '2', url: '@/dustMonitoring/DustMap' },
-      { id: '2-2', key: 2, type: 'menu', title: '测试2', parentId: '2', url: '@/dustMonitoring/children/vue2' },
-      { id: '2-3', key: 3, type: 'menu', title: '测试3', parentId: '2', url: '@/dustMonitoring/children/vue3' },
-      { id: '2-4', key: 4, type: 'menu', title: '测试4', parentId: '2', url: '@/dustMonitoring/children/vue4' },
-      { id: '3', key: 3, type: 'menu', title: '噪声监测', parentId: '00', url: '@/noiseMonitoring/NoiseMonitoring' },
-      { id: '4', key: 4, type: 'menu', catType: 'sub', title: '车洗裸土', parentId: '00', url: '@/carWashing/index' },
-      { id: '4-1', key: 1, type: 'menu', title: 'AI识别安装率', parentId: '4', url: '@/carWashing/CarAIinstall' },
-      { id: '4-2', key: 2, type: 'menu', title: '违规渣土车', parentId: '4', url: '@/carWashing/CarViolation' },
-      { id: '4-3', key: 3, type: 'menu', title: '合规车次', parentId: '4', url: '@/carWashing/CarCompliance' },
-      { id: '4-4', key: 4, type: 'menu', title: '备案渣土车', parentId: '4', url: '@/carWashing/CarKeepRecord' },
-      { id: '4-5', key: 5, type: 'menu', title: '在监工程', parentId: '4', url: '@/carWashing/CarMonitorProject' },
-      { id: '4-6', key: 6, type: 'menu', title: '准运渣土车', parentId: '4', url: '@/carWashing/CarQuasiTransportation' },
-      { id: '4-7', key: 7, type: 'menu', title: '合规车次+点击弹窗视频', parentId: '4', url: '@/carWashing/CarVideo' },
-      { id: '5', key: 5, type: 'menu', title: 'AI识别', url: '@/AIdistinguish/AIdistinguish', parentId: '00' },
-      { id: '6', key: 6, type: 'menu', title: '项目管理', parentId: '00', url: '@/projectManagement/ProjectManagement' },
-      { id: '7', key: 7, type: 'menu', title: '巡查整改', url: '@/patrolRectification/PatrolRectification', parentId: '00' },
-      { id: '8', key: 8, type: 'menu', parentId: '00', title: '管理员', url: '@/manageUser/index' }
+      { id: '1', key: 1, type: 'menu', title: '预警监控', alias: '预警监控', parentId: '00', url: '@/home/Home' },
+      { id: '2', key: 2, type: 'cat', title: '扬尘监测', alias: '扬尘监测', parentId: '00', catType: 'tabs' },
+      { id: '2-1', key: 1, type: 'menu', title: '地图', alias: '地图', parentId: '2', url: '@/dustMonitoring/DustMap' },
+      { id: '2-2', key: 2, type: 'menu', title: '单设备统计', alias: '单设备统计', parentId: '2', url: '@/dustMonitoring/DusSingleEcharts' },
+      { id: '2-3', key: 3, type: 'menu', title: '多设备统计', alias: '多设备统计', parentId: '2', url: '@/dustMonitoring/DusMultipleEcharts' },
+      { id: '2-4', key: 4, type: 'menu', title: '排名统计', alias: '排名统计', parentId: '2', url: '@/dustMonitoring/DusRankingEcharts' },
+      { id: '3', key: 3, type: 'menu', title: '噪声监测', alias: '噪声监测', parentId: '00', url: '@/noiseMonitoring/NoiseMonitoring' },
+      { id: '4', key: 4, type: 'menu', catType: 'sub', title: '车洗裸土', alias: '车洗裸土', parentId: '00', url: '@/carWashing/index' },
+      { id: '4-1', key: 1, type: 'menu', title: 'AI识别安装率', alias: 'AI识别安装率', parentId: '4', url: '@/carWashing/CarAIinstall' },
+      { id: '4-2', key: 2, type: 'menu', title: '违规渣土车', alias: '违规渣土车', parentId: '4', url: '@/carWashing/CarViolation' },
+      { id: '4-3', key: 3, type: 'menu', title: '合规车次', alias: '合规车次', parentId: '4', url: '@/carWashing/CarCompliance' },
+      { id: '4-4', key: 4, type: 'menu', title: '备案渣土车', alias: '备案渣土车', parentId: '4', url: '@/carWashing/CarKeepRecord' },
+      { id: '4-5', key: 5, type: 'menu', title: '在监工程', alias: '在监工程', parentId: '4', url: '@/carWashing/CarMonitorProject' },
+      { id: '4-6', key: 6, type: 'menu', title: '准运渣土车', alias: '准运渣土车', parentId: '4', url: '@/carWashing/CarQuasiTransportation' },
+      { id: '4-7', key: 7, type: 'menu', title: '合规视频', alias: '合规车次+点击弹窗视频', parentId: '4', url: '@/carWashing/CarVideo' },
+      { id: '5', key: 5, type: 'menu', title: 'AI识别', alias: 'AI识别', parentId: '00', url: '@/AIdistinguish/AIdistinguish' },
+      { id: '6', key: 6, type: 'cat', title: '巡查整改', alias: '巡查整改', parentId: '00', catType: 'tabs' },
+      { id: '6-1', key: 1, type: 'menu', title: '统计', alias: '统计', parentId: '6', url: '@/patrolRectification/PatroEcharts' },
+      { id: '6-2', key: 2, type: 'menu', title: '整改', alias: '整改', parentId: '6', url: '@/patrolRectification/Rectification' },
+      { id: '6-3', key: 3, type: 'menu', title: '巡查', alias: '巡查', parentId: '6', url: '@/patrolRectification/Patro' },
+      { id: '7', key: 7, type: 'menu', title: '项目管理', alias: '项目管理', parentId: '00', url: '@/projectManagement/ProjectIndex', catType: 'sub' },
+      { id: '7-1', key: 1, type: 'menu', title: '超期项目', alias: '超过90天未竣工', parentId: '7', url: '@/projectManagement/ProjectOverdue' },
+      { id: '8', key: 8, type: 'menu', title: '管理员', alias: '管理员', parentId: '00', url: '@/manageUser/ManageUser' }
     ]
     // 根据key值排序并储存当前菜单
     const menuList = $utils.compareSort($utils.treeDataTranslate(list), 'key')
@@ -115,10 +126,11 @@ function getMenuData (to, next) {
             id: item.id,
             parentId: item.parentId,
             title: item.title,
+            alias: item.alias,
             menuType: item.menuType || false,
             iframeUrl: '',
             type: item.type,
-            catType: item.catType
+            catType: item.catType || ''
           }
         }
         if (item.isHome) {
