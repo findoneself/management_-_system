@@ -28,8 +28,8 @@ const globalRoutes = [
 let routeMenu = []
 const Main = () =>
     import ('_vie/main/Main')
-const CarWashing = () =>
-    import ('_vie/main/carWashing/CarWashing')
+    // const CarWashing = () =>
+    //     import ('_vie/main/carWashing/CarWashing')
 const mainRoutes = {
         path: '/',
         component: Main,
@@ -123,8 +123,11 @@ function getMenuData(to, next) {
                     route.meta.type = 'iframe'
                     route.meta.iframeUrl = item.url
                 } else {
-                    next()
+                    router.component = () => {
+                        import (`_vie/main${route.path}`)
+                    }
                 }
+                temp.push(route)
             }
         })
         mainRoutes.children = temp

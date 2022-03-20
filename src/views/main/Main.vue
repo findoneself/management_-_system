@@ -77,6 +77,7 @@ export default {
             this.routeDefalut(menuRoutes[0], '当前账户默认首页不存在！')
           }
         } else {
+          console.log(menuRoutes[0])
           this.routeDefalut(menuRoutes[0], '当前账户未设置首页！')
         }
       } else if (to.name === 'main' && oldRoute) {
