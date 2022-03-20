@@ -44,16 +44,34 @@
         </div>
         <CarInAndOutMap></CarInAndOutMap>
         <div class="recordlist">
-          <div class="record_item" v-for="(item,index) in recordList" :key="index" :style="{backgroundColor:index%2==0?'#0B1771':'#02004D'}">
-            <div >
-              <div class="colorBox" :style="{ backgroundColor: item.color}"></div>
+          <div
+            class="record_item"
+            v-for="(item, index) in recordList"
+            :key="index"
+            :style="{ backgroundColor: index % 2 == 0 ? '#0B1771' : '#02004D' }"
+          >
+            <div>
+              <div
+                class="colorBox"
+                :style="{ backgroundColor: item.color }"
+              ></div>
             </div>
-            <div class="scale width">{{item.name}}</div>
-            <div class="scale">{{item.value}}次</div>
+            <div class="scale width">{{ item.name }}</div>
+            <div class="scale">{{ item.value }}次</div>
             <div class="lookat">查看</div>
           </div>
         </div>
       </BeautifulCard>
+    </div>
+    <!-- 右侧地图区域 -->
+    <div class="content_right">
+      <!-- 上半部分 -->
+      <div class="map_video">
+        <div class="map"></div>
+        <BeautifulCard class="online_video" :isTriangle="false" :title="'在线视频'">
+          <div ></div>
+        </BeautifulCard>
+      </div>
     </div>
   </div>
 </template>
@@ -118,6 +136,7 @@ export default {
 <style lang="less" scoped>
 .container {
   padding: 1.25rem;
+  display: flex;
 }
 .content_left {
   display: flex;
@@ -164,7 +183,7 @@ export default {
   .car_in_out {
     width: 25rem;
     height: 35rem;
-    background-color: #02004D;
+    background-color: #02004d;
     .record {
       text-align: right;
       padding: 0.5rem;
@@ -174,36 +193,35 @@ export default {
         z-index: 999;
       }
     }
-    .recordlist{
+    .recordlist {
       display: flex;
       flex-direction: column;
       align-items: center;
-     
-      .record_item{
+
+      .record_item {
         display: flex;
         width: 22.5rem;
         height: 2.3rem;
-        background-color: #02004D;
-        justify-content:space-around;
+        background-color: #02004d;
+        justify-content: space-around;
         align-items: center;
         line-height: 2.3rem;
         font-size: 0.88rem;
-        div{
+        div {
           flex: 1;
         }
-        .lookat{
-          color: #00FFFF;
+        .lookat {
+          color: #00ffff;
           transform: scale(0.9);
           cursor: pointer;
         }
-        .scale{
+        .scale {
           transform: scale(0.8);
-           
         }
-        .width{
+        .width {
           flex: 25%;
         }
-        .colorBox{
+        .colorBox {
           width: 1.3rem;
           height: 0.56rem;
           margin-left: 1.3rem;
@@ -242,5 +260,18 @@ export default {
       }
     }
   }
+}
+.content_right{
+flex: 1;
+.map_video{
+  display: flex;
+  .map{
+    flex: 1;
+  }
+  .online_video{
+    width: 25rem;
+    height: 37.5rem;
+  }
+}
 }
 </style>

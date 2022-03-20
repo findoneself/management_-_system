@@ -43,7 +43,7 @@ module.exports = {
         //一行结束后面不要有空格
         "no-trailing-spaces": 1,
         // 函数名前面是否要空格
-        // "space-before-function-paren": [2, "always"],
+        "space-before-function-paren": [2, "always"],
         // 注释的空格
         "spaced-comment": [2, "always"],
         // 禁止或强制在单行代码块中使用空格
@@ -70,6 +70,23 @@ module.exports = {
             }
         }],
         "vue/this-in-template": 2,
-
+        // 每次保存的时候自动格式化
+        "editor.formatOnSave": true,
+        // vue的html内容格式化方式
+        "vetur.format.defaultFormatter.html": "js-beautify-html",
+        // vue的js内容格式化方式，可以处理函数名与括号之间没有空格的问题
+        "vetur.format.defaultFormatter.js": "vscode-typescript",
+        // 保存自动fix处理eslint错误和警告
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true
+        },
+        // 添加eslint支持的语言
+        "eslint.validate": [
+            "javascript",
+            "vue",
+            "html"
+        ],
+        // 关闭无配置文件警告
+        "vetur.ignoreProjectWarning": true,
     },
 }
