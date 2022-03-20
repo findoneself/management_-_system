@@ -1,7 +1,7 @@
 <template>
-  <div class="beautiful-card"  >
+  <div class="beautiful-card">
     <div class="card-header">
-      <h2 :style="{color: titleColor}">{{ title }}</h2>
+      <h2 :style="{ color: titleColor }">{{ title }}</h2>
       <span class="card-title-icon icon1"></span>
       <span class="card-title-icon icon2"></span>
       <span class="card-title-line"></span>
@@ -9,54 +9,50 @@
     <div class="card-content">
       <slot></slot>
     </div>
-    <span 
-      :v-if="isTriangle"
+    <span
+      v-show="isTriangle"
       v-for="val in 4"
       :key="val"
       class="triangle-icon"
-      :style="{borderColor: triangleColor}"
+      :style="{ borderColor: triangleColor }"
     ></span>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'BeautifulCard',
+  name: "BeautifulCard",
   props: {
     // 标题
     title: {
       type: String,
-      default: ''
+      default: "",
     },
     titleColor: {
       type: String,
-      default: '#fff'
+      default: "#fff",
     },
     // 三角颜色
     triangleColor: {
       type: String,
-      default: '#39dffb'
+      default: "#39dffb",
     },
-    width:{
-      type:String,
-      default:'23.75rem'
+    width: {
+      type: String,
+      default: "23.75rem",
     },
-    height:{
-      type:String,
-      default:'33.13rem'
+    height: {
+      type: String,
+      default: "33.13rem",
     },
-    isTriangle:{
-      type:Boolean,
-      default:true
-    }
+    isTriangle: {
+      type: Boolean,
+      default: true,
+    },
   },
-  computed: {
-
-  },
-  methods: {
-
-  }
-}
+  computed: {},
+  methods: {},
+};
 </script>
 
 <style scoped>
@@ -131,7 +127,7 @@ export default {
 }
 .card-content {
   width: 100%;
-  padding: 1.2rem .625rem;
+  padding: 1.2rem 0.625rem;
 }
 .triangle-icon {
   position: absolute;
