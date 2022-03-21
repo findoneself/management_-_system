@@ -80,6 +80,7 @@ export default {
   },
   methods: {
     menuClick (item) {
+      console.log(item)
       if (item.type === 'menu') {
         this.routeHandle(item)
       } else if (item.catType && item.catType === 'tabs') {

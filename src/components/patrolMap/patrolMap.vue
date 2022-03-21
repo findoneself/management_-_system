@@ -106,7 +106,7 @@ export default {
               value: item.value,
               label: {
                 normal: {
-                  formatter: function (params) {
+                  formatter: function () {
                     return item.num
                   },
                   position: 'center',
@@ -127,7 +127,7 @@ export default {
                   color: item.color[1]
                 },
                 emphasis: {
-                    // color: colors[index][1],
+                  // color: colors[index][1],
                 }
               }
             }

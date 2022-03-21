@@ -1,8 +1,8 @@
 <template>
   <div>
     <div
-      id="warningnum"
-      style="width: 93%; height: 21rem"
+      id="double_line"
+      style="width: 98%; height: 13.5rem"
     ></div>
   </div>
 </template>
@@ -33,7 +33,7 @@ export default {
         },
         yAxis: {
           type: 'value',
-          name: '数量',
+          name: '次数',
           axisLabel: {
             color: '#fff',
             fontSize: '10'
@@ -58,8 +58,8 @@ export default {
         grid: {
           left: '20rem',
           right: '1rem',
-          top: '50rem',
-          bottom: '5rem',
+          top: '40rem',
+          bottom: '1rem',
           containLabel: true
         },
         tooltip: {
@@ -70,11 +70,29 @@ export default {
         },
         series: [
           {
-            data: [20, 50, 70, 35, 35, 47, 260],
+            data: [2, 10, 14, 19, 23, 26, 29],
             type: 'line',
             itemStyle: {
               normal: {
                 color: '#23DBFC',
+                // shadowColor: item.color[1],
+                fontSize: '1rem',
+                shadowBlur: 0,
+                label: {
+                  show: false
+                },
+                labelLine: {
+                  show: false
+                }
+              }
+            }
+          },
+          {
+            data: [5, 15, 15, 25, 30, 29, 39],
+            type: 'line',
+            itemStyle: {
+              normal: {
+                color: '#FF6D15',
                 // shadowColor: item.color[1],
                 fontSize: '1rem',
                 shadowBlur: 0,
@@ -96,7 +114,7 @@ export default {
   },
   methods: {
     getmap () {
-      var myChart = this.$echarts.init(document.getElementById('warningnum'))
+      var myChart = this.$echarts.init(document.getElementById('double_line'))
       myChart.setOption(this.option)
       window.addEventListener('resize', function () {
         myChart.resize()

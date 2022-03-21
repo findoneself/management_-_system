@@ -56,7 +56,7 @@ export default {
             name: 'Radius Mode',
             type: 'pie',
             radius: [40, 60],
-            center: ['50%', '50%'],
+            center: ['50%', '47%'],
             // roseType: 'radius',
             itemStyle: {
               // borderRadius: 5
