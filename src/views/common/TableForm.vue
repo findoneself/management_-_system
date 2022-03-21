@@ -5,34 +5,43 @@
     </div>
     <div class="tform-contnent">
       <div
-        class="tform-table-title"
-        v-if="tableHeader.isTableHead"
+        class="tfrom-table"
+        v-show="isTable"
       >
-        <h2>{{ tableHeader.title || '' }}</h2>
-        <small>{{ tableHeader.small || '' }}</small>
         <div
-          class="tform-btnlist"
-          v-show="tableHeader.isButton && tableHeader.btnList.length > 0"
+          class="tform-table-title"
+          v-if="tableHeader.isTableHead"
         >
-          <el-button
-            v-for="item in tableHeader.btnList"
-            :key="item.id || ''"
-            :size="item.size"
-            :type="item.type || 'primary'"
-            @click="buttonClick(item)"
-          >{{ item.name || '' }}</el-button>
+          <h2>{{ tableHeader.title || '' }}</h2>
+          <small>{{ tableHeader.small || '' }}</small>
+          <div
+            class="tform-btnlist"
+            v-show="tableHeader.isButton && tableHeader.btnList.length > 0"
+          >
+            <el-button
+              v-for="item in tableHeader.btnList"
+              :key="item.id || ''"
+              :size="item.size"
+              :type="item.type || 'primary'"
+              @click="buttonClick(item)"
+            >{{ item.name || '' }}</el-button>
+          </div>
         </div>
+        <BeautifulTableEl
+          ref="tableEl"
+          :is-clear-border="isClearBorder"
+          :loading="loading"
+          :height="height"
+          :stripe="stripe"
+          :border="border"
+          :size="size"
+          :index-obj="indexObj"
+          :oper-obj="operObj"
+          :data-list="dataList"
+          :columns="columns"
+        />
       </div>
-      <BeautifulTableEl
-        ref="tableEl"
-        :loading="loading"
-        :height="height"
-        :stripe="stripe"
-        :border="border"
-        :size="size"
-        :data-list="dataList"
-        :columns="columns"
-      />
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -47,6 +56,11 @@ export default {
   },
   props: {
     // ------公共表格组件的数据
+    // 是否清除表格所有边框
+    isClearBorder: {
+      type: Boolean,
+      default: false
+    },
     // 加载loading
     loading: {
       type: Boolean,
@@ -72,6 +86,20 @@ export default {
         return value === 'medium' || 'small' || 'mini'
       }
     },
+    // 序号内容
+    indexObj: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
+    // 操作内容
+    operObj: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
     // 表格数据
     dataList: {
       type: Array,
@@ -95,6 +123,11 @@ export default {
       default () {
         return {}
       }
+    },
+    // 是否需要显示表格
+    isTable: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

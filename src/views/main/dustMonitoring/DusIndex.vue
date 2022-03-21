@@ -1,7 +1,7 @@
 <template>
   <!--扬尘检测首-地图 -->
   <BeautifulWrapper :tabsList="tabsList">
-    <DustMap v-if="currentTabs.id === '1'" />
+    <DusMap v-if="currentTabs.id === '1'" />
     <DusMultipleEcharts v-else-if="currentTabs.id === '2'" />
     <DusSingleEcharts v-else-if="currentTabs.id === '3'" />
     <DusRankingEcharts v-else />
@@ -13,7 +13,7 @@ import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import DusMultipleEcharts from './DusMultipleEcharts'
 import DusRankingEcharts from './DusRankingEcharts'
 import DusSingleEcharts from './DusSingleEcharts'
-import DustMap from './DustMap'
+import DusMap from './DusMap'
 export default {
   name: 'DustMonitoring',
   components: {
@@ -21,7 +21,7 @@ export default {
     DusMultipleEcharts,
     DusRankingEcharts,
     DusSingleEcharts,
-    DustMap
+    DusMap
   },
   data () {
     return {
@@ -36,7 +36,8 @@ export default {
   computed: {
     // 当前点击的tab
     currentTabs () {
-      return this.$store.state.global.currentTab || {}
+      const obj = this.$store.state.global.currentTab
+      return obj.id ? obj : this.tabsList[0]
     }
   }
 }

@@ -25,7 +25,8 @@
     @row-dblclick="rowDblClick"
     @selection-change="selectionChange"
     @expand-change="expandClick"
-    class="u-table-el"
+    class="beautiful-table-el"
+    :class="isClearBorder ? 'clear-table-border' : ''"
   >
     <!-- 多选功能 -->
     <el-table-column
@@ -124,6 +125,11 @@
 export default {
   name: 'BeautifulTableEl',
   props: {
+    // 是否清除表格所有边框
+    isClearBorder: {
+      type: Boolean,
+      default: false
+    },
     // 加载loading
     loading: {
       type: Boolean,

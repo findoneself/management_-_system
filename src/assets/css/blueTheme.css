@@ -16,6 +16,23 @@
 }
 
 /* -------------el-ui表单样式 */
+.el-form-item .el-form-item__label {
+    color: #fff;
+}
+
+.el-input--suffix .el-input__inner {
+    background-color: #02004d;
+    height: 2.8rem;
+    width: 8.5rem;
+    transform: scale(0.8);
+    color: #fff;
+    font-size: 0.88rem;
+    background-color: #040560;
+    border: 0.0625rem solid #040560;
+    box-shadow: inset -1px -1px 10px rgba(48, 82, 184, 0.5),
+        inset 1px 1px 10px rgba(48, 82, 184, 0.5);
+}
+
 .el-input .el-input__inner {
     width: 9rem;
     height: 1.88rem;

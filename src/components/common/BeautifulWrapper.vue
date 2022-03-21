@@ -21,7 +21,7 @@
               v-for="(item, index) in tabsList"
               :style="{zIndex: 10 - index, cursor: 'pointer'}"
               @click="tabClick(item)"
-              :class="curTabs.id === item.id ? 'tabmenu-active' : ''"
+              :class="currentTabs.id === item.id ? 'tabmenu-active' : ''"
               :key="item.id"
             >{{ item.title }}</li>
           </template>
@@ -104,7 +104,7 @@ export default {
       }
     },
     // 当前点击的tabs
-    curTabs () {
+    currentTabs () {
       const obj = this.$store.state.global.currentTab
       return obj.id ? obj : this.tabsList[0]
     }

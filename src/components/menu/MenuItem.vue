@@ -80,7 +80,6 @@ export default {
   },
   methods: {
     menuClick (item) {
-      console.log(item)
       if (item.type === 'menu') {
         this.routeHandle(item)
       } else if (item.catType && item.catType === 'tabs') {
@@ -90,6 +89,7 @@ export default {
     // 路由操作
     routeHandle (item, val = 'id') {
       const isRoute = this.menuRoutes.find(menu => menu && menu.meta[val] === item.id)
+      console.log(isRoute)
       if (isRoute && isRoute.name) {
         this.$router.push({ name: isRoute.name })
       } else {
