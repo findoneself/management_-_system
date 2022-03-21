@@ -1,49 +1,31 @@
 import Vue from 'vue'
 import {
-    Button,
-    Form,
-    FormItem,
-    Input,
-    Radio,
-    RadioGroup,
-    CheckboxGroup,
-    Checkbox,
-    Select,
-    Option,
-    Autocomplete,
-    Message,
-    Container,
-    Header,
-    Aside,
-    Main,
-    Menu,
-    Submenu,
-    MenuItem,
-    Breadcrumb,
-    BreadcrumbItem,
-    Card,
-    Row,
-    Col,
-    Table,
-    TableColumn,
-    Switch,
-    Tooltip,
-    Pagination,
-    Dialog,
-    MessageBox,
-    Loading,
-    Tag,
-    Tree,
-    Cascader,
-    Alert,
-    Tabs,
-    TabPane,
-    Step,
-    Steps,
-    Upload,
-    Timeline,
-    TimelineItem,
-    DatePicker
+  Button,
+  Form,
+  FormItem,
+  Input,
+  Radio,
+  RadioGroup,
+  CheckboxGroup,
+  Checkbox,
+  Select,
+  Option,
+  Autocomplete,
+  Message,
+  Main,
+  Table,
+  TableColumn,
+  Switch,
+  Tooltip,
+  Pagination,
+  Dialog,
+  MessageBox,
+  Loading,
+  Tag,
+  Cascader,
+  Alert,
+  Upload,
+  DatePicker
 } from 'element-ui'
 
 Vue.use(Button)
@@ -57,18 +39,7 @@ Vue.use(Checkbox)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Autocomplete)
-Vue.use(Container)
-Vue.use(Header)
-Vue.use(Aside)
 Vue.use(Main)
-Vue.use(Menu)
-Vue.use(Submenu)
-Vue.use(MenuItem)
-Vue.use(Breadcrumb)
-Vue.use(BreadcrumbItem)
-Vue.use(Card)
-Vue.use(Row)
-Vue.use(Col)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Switch)
@@ -76,19 +47,12 @@ Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Tag)
-Vue.use(Tree)
 Vue.use(Loading)
 Vue.use(Cascader)
 Vue.use(Alert)
-Vue.use(Tabs)
-Vue.use(TabPane)
-Vue.use(Step)
-Vue.use(Steps)
 Vue.use(Upload)
-Vue.use(Timeline)
 Vue.use(DatePicker)
-Vue.use(TimelineItem)
 Vue.use(DatePicker)
-    // 全局注册提示框
+// 全局注册提示框
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
