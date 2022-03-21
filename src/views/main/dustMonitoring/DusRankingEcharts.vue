@@ -20,7 +20,8 @@
       <el-form-item label="行政区域：">
         <el-select
           v-model="dataForm.xzqy"
-          placeholder="行政区域"
+          clearable
+          placeholder="请选择"
         >
           <el-option
             v-for="item in dictOptions.xzqyList"
@@ -39,6 +40,7 @@
           type="daterange"
           align="right"
           unlink-panels
+          clearable
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -69,12 +71,15 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="数据图表：">
-        <div
-          v-for="item in dictOptions.tabsTypes"
-          :key="item.id"
-          class="tabs-button"
-          @click="tabsClick(item.id)"
-        >{{ item.name }}</div>
+        <div class="tabs-button">
+          <div
+            v-for="item in dictOptions.tabsTypes"
+            :key="item.id"
+            class="tabs-button-item"
+            :class="item.id === tabsType && 'tabs-button-active'"
+            @click="tabsClick(item.id)"
+          >{{ item.name }}</div>
+        </div>
       </el-form-item>
     </el-form>
     <div
@@ -165,7 +170,7 @@ export default {
       dataForm: {
         xzqy: '',
         date: [],
-        order: '',
+        order: 'asc',
         paramType: ''
       },
       // 展示数据类型

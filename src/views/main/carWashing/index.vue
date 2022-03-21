@@ -43,6 +43,7 @@
                 class="select_online_video"
                 @change="(e)=>{videoChange(e,'cartime')}"
                 v-model="value"
+                size="mini"
                 placeholder="请选择"
               >
                 <el-option
@@ -91,6 +92,7 @@
                 <el-select
                   class="select_online_video"
                   @change="(e)=>{videoChange(e,'region')}"
+                  size="mini"
                   v-model="regionValue"
                   placeholder="请选择"
                 >
@@ -106,6 +108,7 @@
                   class="select_online_video"
                   @change="(e)=>{videoChange(e,'project')}"
                   v-model="projectValue"
+                  size="mini"
                   placeholder="请选择"
                 >
                   <el-option
@@ -120,6 +123,7 @@
                   class="select_online_video"
                   @change="(e)=>{videoChange(e,'video')}"
                   v-model="videoValue"
+                  size="mini"
                   placeholder="请选择"
                 >
                   <el-option
@@ -489,7 +493,7 @@ export default {
     .select_car_time {
       width: 7.63rem;
       /deep/.el-input {
-        transform: scale(0.8);
+        // transform: scale(0.8);
       }
       /deep/.el-select-dropdown {
         border: none !important;
@@ -652,5 +656,10 @@ export default {
 
 .select_online_video {
   width: 7.8rem;
+  /deep/.el-input--suffix .el-input__inner {
+    // height: 2.8rem;
+    width: 6.5rem;
+    // transform: scale(0.8);
+  }
 }
 </style>

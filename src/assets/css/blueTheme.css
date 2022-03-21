@@ -1,7 +1,8 @@
 @import "~_ats/css/base.css";
 
 /* ------------common */
-#app {
+:root {
+    --color-text: #fff;
     --protitle-color: #fff;
     --shadow-color: rgba(48, 82, 184, 0.5);
     --triangle-color: #39dffb;
@@ -12,50 +13,141 @@
     --card-bdcolor: #3048b8;
     --wrapper-bdcolor: #0e5dfb;
     --submenu-bdcolor: #0c4edf;
-    --menu-hovercolor: rgb(255 255 255 / 64%)
+    --menu-hovercolor: rgb(255 255 255 / 64%);
+    --input-bdcolor: #1843ad;
 }
 
 /* -------------el-ui表单样式 */
+
 .el-form-item .el-form-item__label {
-    color: #fff;
+    color: var(--color-text);
 }
 
-.el-input--suffix .el-input__inner {
-    background-color: #02004d;
-    height: 2.8rem;
-    width: 8.5rem;
-    transform: scale(0.8);
-    color: #fff;
-    font-size: 0.88rem;
+.el-input .el-input__inner,
+.el-date-editor.el-input__inner,
+div.el-select-dropdown,
+div.el-picker-panel,
+div.el-picker-panel [slot=sidebar],
+div.el-picker-panel__sidebar {
     background-color: #040560;
-    border: 0.0625rem solid #040560;
-    box-shadow: inset -1px -1px 10px rgba(48, 82, 184, 0.5),
-        inset 1px 1px 10px rgba(48, 82, 184, 0.5);
-}
-
-.el-input .el-input__inner {
-    width: 9rem;
-    height: 1.88rem;
-    padding-left: 0.5rem;
+    border-color: var(--input-bdcolor);
     color: #fff;
-    font-size: 0.88rem;
-    background-color: #040560;
-    border: 0.0625rem solid #040560;
-    box-shadow: inset -1px -1px 10px rgba(48, 82, 184, 0.5),
-        inset 1px 1px 10px rgba(48, 82, 184, 0.5);
+    box-shadow: inset -1px -1px 10px var(--shadow-color),
+        inset 1px 1px 10px var(--shadow-color);
 }
 
-.el-input .el-input__prefix {
-    top: -0.3rem;
-    left: 12rem;
+.el-input .el-input__inner:hover,
+.el-date-editor.el-input__inner:hover,
+.el-input .el-input__inner:focus,
+.el-date-editor.el-input__inner:focus,
+.el-select:hover input.el-input__inner,
+.el-select input.el-input__inner:focus,
+.el-select .el-input.is-focus input.el-input__inner,
+div.el-range-editor.is-active,
+div.el-range-editor.is-active:hover {
+    border-color: var(--wrapper-bdcolor);
 }
 
-.el-input .el-input__suffix {
-    display: none;
+.el-date-editor span.el-range-separator {
+    color: #c0c4cc;
+}
+
+.el-date-editor input.el-range-input {
+    color: inherit;
+}
+
+.el-date-editor .el-range-input {
+    background: transparent;
+    color: var(--color-text);
+}
+
+/* 表单下拉框 */
+li.el-select-dropdown__item {
+    color: var(--color-text);
+}
+
+li.el-select-dropdown__item.hover {
+    background-color: #000146;
+}
+
+div.el-popper[x-placement^=bottom] .popper__arrow::after {
+    border-bottom-color: var(--shadow-color);
+}
+
+div.el-popper[x-placement^=bottom] .popper__arrow {
+    border-bottom-color: var(--input-bdcolor);
+}
+
+/* 日期选择下拉框 */
+button.el-picker-panel__icon-btn,
+button.el-picker-panel__shortcut,
+table.el-date-table th {
+    color: inherit;
+}
+
+table.el-date-table td.next-month,
+table.el-date-table td.prev-month {
+    color: #818489;
+}
+
+table.el-date-table td.in-range div,
+table.el-date-table td.in-range div:hover,
+table.el-date-table.is-week-mode .el-date-table__row.current div,
+table.el-date-table.is-week-mode .el-date-table__row:hover div {
+    background-color: #0a0b7b;
+}
+
+/* .el-radio和el-check-box */
+label.el-radio {
+    color: inherit;
+}
+
+span.el-radio__inner {
+    width: 27px;
+    height: 27px;
+    background: transparent;
+    border-color: var(--input-bdcolor);
+}
+
+span.el-radio__input.is-checked .el-radio__inner {
+    border-color: var(--input-bdcolor);
+    background: transparent;
+}
+
+span.el-radio__inner::after {
+    width: 12px;
+    height: 12px;
+    background: #4F78FF;
+    border: 1px solid #467BFF;
+}
+
+/* 自定义表单中的tabs按钮 */
+.tabs-button {
+    display: flex;
+    align-items: center;
+}
+
+.tabs-button-item {
+    width: 90px;
+    margin-right: 20px;
+    line-height: 38px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all .2s;
+    background: rgba(79, 120, 255, 0);
+    border: 1px solid var(--input-bdcolor);
+    box-shadow: inset -1px -1px 10px var(--shadow-color),
+        inset 1px 1px 10px var(--shadow-color);
+}
+
+.tabs-button-active {
+    background: #4F78FF;
+    border-color: var(--wrapper-bdcolor);
 }
 
 /* -------------tform-wrapper：上面表单下面表格的业务公共组件 */
 .tform-wrapper {
     --head-bgcolor: rgba(7, 58, 172, 0.3);
-    --head-bdcolor: #0e5dfb;
+    --head-bdcolor: var(--wrapper-bdcolor);
 }

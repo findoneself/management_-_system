@@ -18,7 +18,7 @@ export default {
             normal: {
               color: '#FCFF20'
             }
-          },
+          }
         },
         {
           name: '市政',
@@ -27,7 +27,7 @@ export default {
             normal: {
               color: '#FF4F01'
             }
-          },
+          }
         },
         {
           name: '轨道',
@@ -36,7 +36,7 @@ export default {
             normal: {
               color: '#FF3D54'
             }
-          },
+          }
         },
         {
           name: '其他',
@@ -45,7 +45,7 @@ export default {
             normal: {
               color: '#00FFFF'
             }
-          },
+          }
         }
       ],
       option: {
