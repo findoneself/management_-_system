@@ -1,14 +1,23 @@
 <template>
-  <div class="beautiful-wrapper">
-    <div class="beau-container">
+  <div
+    class="beautiful-wrapper"
+    :style="{padding: setStyle.padding}"
+  >
+    <div
+      class="beau-container"
+      :style="{borderWidth: setStyle.borderWidth}"
+    >
       <span
-        v-for="val in borderIcon"
+        v-for="val in borderIcons"
         :key="val"
         class="border-icon"
         :class="'border-' + val"
       />
       <!-- tabs导航 -->
-      <MenuTab v-if="isMenuTab"></MenuTab>
+      <MenuTab
+        :tabs-list="tabsList"
+        :is-title="isTitle"
+      ></MenuTab>
       <div class="beau-content">
         <slot></slot>
       </div>
@@ -24,6 +33,13 @@ export default {
     MenuTab
   },
   props: {
+    // 容器的样式
+    wraStyle: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
     // 边框图标数组
     borderIcon: {
       type: Array,
@@ -31,22 +47,43 @@ export default {
         return ['top', 'right', 'bottom', 'left', 'triangle']
       }
     },
-    // 是否显示tabs导航
-    isMenuTab: {
+    // 是否显示标题
+    isTitle: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    // tabs数据
+    tabsList: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
+  computed: {
+    // 边框过滤
+    borderIcons () {
+      return this.isTitle || this.tabsList.length > 0 ? this.borderIcon.filter(val => val !== 'top') : this.borderIcon
+    },
+    // 容器样式
+    setStyle () {
+      return Object.assign({
+        padding: '1.25rem 1.25rem',
+        borderWidth: '0.125rem 0.125rem'
+      }, this.wraStyle)
     }
   }
 }
 </script>
 
 <style scoped>
-.beautiful-wrapper {
-  padding: 20px;
-}
 .beau-container {
   position: relative;
-  border: 2px solid #0e5dfb;
+  border-style: solid;
+  border-color: #0e5dfb;
+}
+.beau-content {
+  min-height: 100px;
 }
 .border-icon {
   position: absolute;

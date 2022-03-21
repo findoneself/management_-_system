@@ -1,22 +1,24 @@
 <template>
   <div class="menu-tabs">
     <ul class="menu-tablist">
-      <template v-if="isMenu">
+      <template v-if="!isTitle && tabsList.length > 0">
         <li
-          v-for="(item, index) in subMenuList"
+          v-for="(item, index) in tabsList"
           :style="{zIndex: 10 - index, cursor: 'pointer'}"
-          @click="tabMenuClick(item)"
-          :class="curRoute.id === item.id ? 'tabmenu-active' : ''"
+          @click="tabClick(item)"
+          :class="curTabs.id === item.id ? 'tabmenu-active' : ''"
           :key="item.id"
         >{{ item.title }}</li>
       </template>
       <li
-        v-else
+        v-if="isTitle"
         :style="{zIndex: 10}"
         class="tabmenu-active"
       >{{ curRoute.alias || '' }}</li>
-      <li class="tab-shadow tab-shadow1"></li>
-      <li class="tab-shadow tab-shadow2"></li>
+      <template v-if="isTitle || tabsList.length > 0">
+        <li class="tab-shadow tab-shadow1"></li>
+        <li class="tab-shadow tab-shadow2"></li>
+      </template>
     </ul>
   </div>
 </template>
@@ -25,54 +27,39 @@
 export default {
   name: 'MenuTab',
   props: {
-    // 是否显示菜单
-    isMenu: {
-      type: Boolean,
-      default: true
+    // 是否显示标题
+    isTitle: {
+      type: Boolean
+    },
+    // tabs的数据，{id: '', title: ''}
+    tabsList: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   data () {
     return {
-      // 权限菜单列表
-      menuRoutes: [],
-      // 菜单列表
-      menuList: this.$store.state.global.menuList,
-      // 子菜单列表
-      subMenuList: []
     }
   },
   computed: {
+    // 当前路由
     curRoute: {
       get () {
         return this.$route.meta || false
       }
+    },
+    // 当前点击的tabs
+    curTabs () {
+      const obj = this.$store.state.global.currentTab
+      return obj.id ? obj : this.tabsList[0]
     }
   },
-  created () {
-    // 初始化子菜单
-    this.initMenu()
-  },
   methods: {
-    initMenu () {
-      if (this.curRoute) {
-        // 查找当前路由的父节点
-        const curId = this.curRoute.parentId === '00' ? 'id' : 'parentId'
-        const isMenu = this.menuList.find(item => item.id === this.curRoute[curId])
-        if (isMenu && isMenu.catType && isMenu.catType === 'tabs') {
-          // 如果路由节点存在切catType为tabs，则过滤出子菜单
-          this.subMenuList = isMenu.children || []
-        }
-      }
-      this.menuRoutes = this.$store.state.global.menuRoutes
-    },
-    // 菜单点击
-    tabMenuClick (item) {
-      const isRoute = this.menuRoutes.find(menu => menu && menu.meta.id === item.id)
-      if (isRoute && isRoute.name) {
-        this.$router.push({ name: isRoute.name })
-      } else {
-        this.$router.push({ name: '404' })
-      }
+    // tabs点击
+    tabClick (item) {
+      this.$store.commit('global/setCurrentTab', item)
     }
   }
 }

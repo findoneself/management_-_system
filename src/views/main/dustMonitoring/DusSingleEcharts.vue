@@ -1,6 +1,6 @@
 <template>
   <!--单设备统计 -->
-  <div></div>
+  <div>单设备统计</div>
 </template>
 
 <script>

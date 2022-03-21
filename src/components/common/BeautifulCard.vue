@@ -1,21 +1,29 @@
 <template>
-  <div class="beautiful-card">
+  <div
+    class="beautiful-card"
+    :style="{borderWidth: setCardStyle.borderWidth}"
+  >
     <div class="card-header">
       <h2 :style="{ color: titleColor }">{{ title }}</h2>
       <span class="card-title-icon icon1"></span>
       <span class="card-title-icon icon2"></span>
       <span class="card-title-line"></span>
     </div>
-    <div class="card-content">
+    <div
+      class="card-content"
+      :style="{padding: setCardStyle.padding}"
+    >
       <slot></slot>
     </div>
-    <span
-      v-show="isTriangle"
-      v-for="val in 4"
-      :key="val"
-      class="triangle-icon"
-      :style="{ borderColor: triangleColor }"
-    ></span>
+    <template v-if="isTriangle">
+      <span
+        v-for="val in riangle"
+        :key="val"
+        :class="'triangle-' + val"
+        class="triangle-icon"
+        :style="{ borderColor: triangleColor }"
+      ></span>
+    </template>
   </div>
 </template>
 
@@ -23,19 +31,39 @@
 export default {
   name: 'BeautifulCard',
   props: {
-    // 标题
-    title: {
-      type: String,
-      default: ''
-    },
-    titleColor: {
-      type: String,
-      default: '#fff'
+    // card样式
+    cardStyle: {
+      type: Object,
+      default () {
+        return {}
+      }
     },
     // 三角颜色
     triangleColor: {
       type: String,
       default: '#39dffb'
+    },
+    // 是否需要三角
+    isTriangle: {
+      type: Boolean,
+      default: true
+    },
+    // 三角的数据
+    riangle: {
+      type: Array,
+      default () {
+        return ['top', 'right', 'bottom', 'left']
+      }
+    },
+    // 标题
+    title: {
+      type: String,
+      default: ''
+    },
+    // 标题颜色
+    titleColor: {
+      type: String,
+      default: '#fff'
     },
     width: {
       type: String,
@@ -44,14 +72,16 @@ export default {
     height: {
       type: String,
       default: '33.13rem'
-    },
-    isTriangle: {
-      type: Boolean,
-      default: true
     }
   },
-  computed: {},
-  methods: {}
+  computed: {
+    setCardStyle () {
+      return Object.assign({
+        padding: '1.2rem 0.625rem',
+        borderWidth: '0.0625rem 0.0625rem'
+      }, this.cardStyle)
+    }
+  }
 }
 </script>
 
@@ -63,7 +93,8 @@ export default {
   align-items: center;
 
   --title-bgcolor: #0f2b8c;
-  border: 1px solid #3048b8;
+  border-color: #3048b8;
+  border-style: solid;
   box-shadow: inset -3px -3px 30px rgba(48, 82, 184, 0.5),
     inset 3px 3px 30px rgba(48, 82, 184, 0.5);
 }
@@ -127,35 +158,34 @@ export default {
 }
 .card-content {
   width: 100%;
-  padding: 1.2rem 0.625rem;
 }
 .triangle-icon {
   position: absolute;
   border-style: solid;
   border-width: 4px;
 }
-.triangle-icon:nth-of-type(1) {
+.triangle-top {
   top: 4px;
   left: 4px;
   border-right-color: transparent !important;
   border-bottom-color: transparent !important;
 }
-.triangle-icon:nth-of-type(2) {
+.triangle-right {
   top: 4px;
   right: 4px;
   border-left-color: transparent !important;
   border-bottom-color: transparent !important;
 }
-.triangle-icon:nth-of-type(3) {
-  bottom: 4px;
-  left: 4px;
-  border-top-color: transparent !important;
-  border-right-color: transparent !important;
-}
-.triangle-icon:nth-of-type(4) {
+.triangle-bottom {
   bottom: 4px;
   right: 4px;
   border-top-color: transparent !important;
   border-left-color: transparent !important;
+}
+.triangle-left {
+  bottom: 4px;
+  left: 4px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
 }
 </style>
