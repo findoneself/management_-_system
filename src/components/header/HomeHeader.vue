@@ -68,7 +68,7 @@ export default {
 }
 
 .head h1 {
-  color: #fff;
+  color: var(--protitle-color);
   text-align: center;
   font-size: 33px;
   line-height: 80px;

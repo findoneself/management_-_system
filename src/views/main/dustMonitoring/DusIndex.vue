@@ -3,8 +3,8 @@
   <BeautifulWrapper :tabsList="tabsList">
     <DustMap v-if="currentTabs.id === '1'" />
     <DusMultipleEcharts v-else-if="currentTabs.id === '2'" />
-    <DusRankingEcharts v-else-if="currentTabs.id === '3'" />
-    <DusSingleEcharts v-else />
+    <DusSingleEcharts v-else-if="currentTabs.id === '3'" />
+    <DusRankingEcharts v-else />
   </BeautifulWrapper>
 </template>
 
