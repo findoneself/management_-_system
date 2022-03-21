@@ -11,5 +11,5 @@ export default {
 </script>
 
 <style>
-@import "~_ats/css/base.css";
+@import "~_ats/css/blueTheme.css";
 </style>

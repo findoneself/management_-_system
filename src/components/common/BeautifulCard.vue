@@ -4,7 +4,7 @@
     :style="{borderWidth: setCardStyle.borderWidth}"
   >
     <div class="card-header">
-      <h2 :style="{ color: titleColor }">{{ title }}</h2>
+      <h2>{{ title }}</h2>
       <span class="card-title-icon icon1"></span>
       <span class="card-title-icon icon2"></span>
       <span class="card-title-line"></span>
@@ -21,7 +21,6 @@
         :key="val"
         :class="'triangle-' + val"
         class="triangle-icon"
-        :style="{ borderColor: triangleColor }"
       ></span>
     </template>
   </div>
@@ -37,11 +36,6 @@ export default {
       default () {
         return {}
       }
-    },
-    // 三角颜色
-    triangleColor: {
-      type: String,
-      default: '#39dffb'
     },
     // 是否需要三角
     isTriangle: {
@@ -59,11 +53,6 @@ export default {
     title: {
       type: String,
       default: ''
-    },
-    // 标题颜色
-    titleColor: {
-      type: String,
-      default: '#fff'
     },
     width: {
       type: String,
@@ -91,12 +80,10 @@ export default {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-
-  --title-bgcolor: #0f2b8c;
-  border-color: #3048b8;
+  border-color: var(--card-bdcolor);
   border-style: solid;
-  box-shadow: inset -3px -3px 30px rgba(48, 82, 184, 0.5),
-    inset 3px 3px 30px rgba(48, 82, 184, 0.5);
+  box-shadow: inset -3px -3px 30px var(--shadow-color),
+    inset 3px 3px 30px var(--shadow-color);
 }
 .card-header {
   position: relative;
@@ -104,7 +91,7 @@ export default {
   padding: 0.15rem 0.6rem;
   text-align: center;
   line-height: 30px;
-  background-color: var(--title-bgcolor);
+  background-color: var(--card-title-bgcolor);
 }
 
 .card-header::after,
@@ -117,19 +104,20 @@ export default {
 }
 .card-header::before {
   left: -8px;
-  border-color: var(--title-bgcolor) var(--title-bgcolor) transparent
+  border-color: var(--card-title-bgcolor) var(--card-title-bgcolor) transparent
     transparent;
 }
 .card-header::after {
   right: -8px;
-  border-color: var(--title-bgcolor) transparent transparent
-    var(--title-bgcolor);
+  border-color: var(--card-title-bgcolor) transparent transparent
+    var(--card-title-bgcolor);
 }
 .card-header > h2 {
   width: 100%;
   font-size: 16px;
   padding: 0 5px;
   letter-spacing: 2px;
+  color: var(--card-title-color);
 }
 .card-title-icon {
   position: absolute;
@@ -138,7 +126,7 @@ export default {
   height: 0;
   border-width: 4px 1px 0 1px;
   border-style: solid;
-  border-color: var(--title-bgcolor) transparent transparent transparent;
+  border-color: var(--card-title-bgcolor) transparent transparent transparent;
 }
 .icon1 {
   left: 0;
@@ -154,7 +142,7 @@ export default {
   border-radius: 2px;
   transform: translateX(-50%);
   width: calc(100% - 28px);
-  background-color: #4d82ca;
+  background-color: var(--card-title-linecolor);
 }
 .card-content {
   width: 100%;
@@ -167,25 +155,25 @@ export default {
 .triangle-top {
   top: 4px;
   left: 4px;
-  border-right-color: transparent !important;
-  border-bottom-color: transparent !important;
+  border-color: var(--triangle-color) transparent transparent
+    var(--triangle-color);
 }
 .triangle-right {
   top: 4px;
   right: 4px;
-  border-left-color: transparent !important;
-  border-bottom-color: transparent !important;
+  border-color: var(--triangle-color) var(--triangle-color) transparent
+    transparent;
 }
 .triangle-bottom {
   bottom: 4px;
   right: 4px;
-  border-top-color: transparent !important;
-  border-left-color: transparent !important;
+  border-color: transparent var(--triangle-color) var(--triangle-color)
+    transparent;
 }
 .triangle-left {
   bottom: 4px;
   left: 4px;
-  border-top-color: transparent !important;
-  border-right-color: transparent !important;
+  border-color: transparent transparent var(--triangle-color)
+    var(--triangle-color);
 }
 </style>

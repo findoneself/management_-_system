@@ -88,8 +88,6 @@ export default {
     routeDefalut (item = { name: 'login' }, msg = '') {
       this.$message.info(msg)
       this.$router.push({ name: item.name })
-      this.$store.commit('global/setActiveMenu', item)
-
     }
   }
 }

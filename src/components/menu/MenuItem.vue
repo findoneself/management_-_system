@@ -89,6 +89,7 @@ export default {
     // 路由操作
     routeHandle (item, val = 'id') {
       const isRoute = this.menuRoutes.find(menu => menu && menu.meta[val] === item.id)
+      console.log(isRoute)
       if (isRoute && isRoute.name) {
         this.$router.push({ name: isRoute.name })
       } else {
@@ -112,7 +113,6 @@ export default {
   line-height: 36px;
   cursor: pointer;
   margin: 0 7px;
-  color: #fff;
 }
 .menu-value {
   position: relative;
@@ -122,8 +122,8 @@ export default {
 }
 .active-menu .menu-bg,
 .menu-value:hover .menu-bg {
-  box-shadow: rgb(255 255 255 / 64%) 0px 0px 48px inset,
-    rgb(255 255 255 / 64%) 0px 0px 10px;
+  box-shadow: var(--menu-hovercolor) 0px 0px 48px inset,
+    var(--menu-hovercolor) 0px 0px 10px;
   -webkit-clip-path: polygon(-15% -17%, 90% 0px, 111% 100%, 0 200%);
 }
 .menu-bg {
@@ -151,8 +151,8 @@ export default {
   top: 100%;
   left: 0;
   width: 100%;
-  background-color: #0f2b8c;
-  border: 1px solid #0c4edf;
+  background-color: var(--card-title-bgcolor);
+  border: 1px solid var(--submenu-bdcolor);
   border-top: 0;
   padding: 0 5px;
   text-align: center;

@@ -8,10 +8,6 @@ import http from './network'
 import echarts from 'echarts'
 // 引入element组件配置
 import './plugins/element'
-import 'element-ui'
-// import ElementUI from 'element-ui'
-// import 'element-ui/lib/theme-chalk/index.css'
-// Vue.use(ElementUI)
 // 引入pxtorem配置
 import './libs/pxtoRem'
 // 引入nprogress样式
@@ -22,7 +18,7 @@ Vue.prototype.$echarts = echarts
 Vue.prototype.$http = http
 Vue.prototype.$format = format
 new Vue({
-    router,
-    store,
-    render: h => h(App)
+  router,
+  store,
+  render: h => h(App)
 }).$mount('#app')

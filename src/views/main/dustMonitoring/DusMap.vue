@@ -5,7 +5,7 @@
 
 <script>
 export default {
-  name: 'DustMonitoring',
+  name: 'DusMap',
   data () {
     return {}
   }
