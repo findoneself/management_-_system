@@ -13,9 +13,9 @@ module.exports = {
     rules: {
         // 格式化规则
         // 格式化不加分号
-        // "semi": [2, "never"],
+        "semi": [2, "never"],
         // 格式化为单引号
-        // "quotes": [2, "single"],
+        "quotes": [2, "single"],
         // 逗号前后的空格
         "comma-spacing": [2, { "before": false, "after": true }],
         // =>的前/后括号
@@ -23,13 +23,13 @@ module.exports = {
         "camelcase": "off",
         "eqeqeq": [2, "always"],
         // 数组和对象键值对最后一个逗号， never参数：不能带末尾的逗号, always参数：必须带末尾的逗号，
-        // "comma-dangle": [2, {
-        //     "arrays": "never",
-        //     "objects": "never",
-        //     "imports": "never",
-        //     "exports": "never",
-        //     "functions": "never",
-        // }],
+        "comma-dangle": [2, {
+            "arrays": "never",
+            "objects": "never",
+            "imports": "never",
+            "exports": "never",
+            "functions": "never",
+        }],
         // 禁止条件表达式中出现赋值操作符
         "no-cond-assign": 2,
         // 禁止 function 定义中出现重名参数
@@ -70,23 +70,6 @@ module.exports = {
             }
         }],
         "vue/this-in-template": 2,
-        // 每次保存的时候自动格式化
-        "editor.formatOnSave": true,
-        // vue的html内容格式化方式
-        "vetur.format.defaultFormatter.html": "js-beautify-html",
-        // vue的js内容格式化方式，可以处理函数名与括号之间没有空格的问题
-        "vetur.format.defaultFormatter.js": "vscode-typescript",
-        // 保存自动fix处理eslint错误和警告
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true
-        },
-        // 添加eslint支持的语言
-        "eslint.validate": [
-            "javascript",
-            "vue",
-            "html"
-        ],
-        // 关闭无配置文件警告
-        "vetur.ignoreProjectWarning": true,
+
     },
 }

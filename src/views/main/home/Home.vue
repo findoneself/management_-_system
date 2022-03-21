@@ -268,7 +268,7 @@ export default {
 
 <style lang="less" scoped>
 .container {
-  padding: 0 1.25rem;
+  padding: 1.25rem;
   .home_top,
   .home_bottom {
     display: flex;
@@ -549,7 +549,6 @@ export default {
   }
   .home_bottom {
     justify-content: space-between;
-    margin: 1.25rem 0;
   }
   .home_bottom_left,
   .home_bottom_right,

@@ -21,38 +21,38 @@
 
 <script>
 export default {
-  name: "BeautifulCard",
+  name: 'BeautifulCard',
   props: {
     // 标题
     title: {
       type: String,
-      default: "",
+      default: ''
     },
     titleColor: {
       type: String,
-      default: "#fff",
+      default: '#fff'
     },
     // 三角颜色
     triangleColor: {
       type: String,
-      default: "#39dffb",
+      default: '#39dffb'
     },
     width: {
       type: String,
-      default: "23.75rem",
+      default: '23.75rem'
     },
     height: {
       type: String,
-      default: "33.13rem",
+      default: '33.13rem'
     },
     isTriangle: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   computed: {},
-  methods: {},
-};
+  methods: {}
+}
 </script>
 
 <style scoped>
