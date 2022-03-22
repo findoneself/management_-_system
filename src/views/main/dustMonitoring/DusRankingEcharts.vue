@@ -7,7 +7,7 @@
     :data-list="dataList"
     :columns="columns"
     :index-obj="{isIndex: false}"
-    :oper-obj="{isOperation: false}"
+    :oper-obj="rankOperList"
     :is-table="tabsType === 'table'"
     :tform-head="tformHead"
   >
@@ -195,7 +195,32 @@ export default {
         { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
         { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
         { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' }
-      ]
+      ],
+      // 操作按钮
+      rankOperList: {
+        isOperation: false,
+        width: 270,
+        operButton: [
+          {
+            text: '修改',
+            click: this.updateClick
+          },
+          {
+            text: '详情',
+            click: this.orderDetailClick
+          }, {
+            text: '删除',
+            click: this.removeClick
+          }, {
+            text: '下载附件',
+            click: this.orderDetailClick
+          }, {
+            text: '短信提醒',
+            click: this.noteClick
+          }
+        ]
+      }
+
     }
   },
   computed: {
