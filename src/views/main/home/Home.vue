@@ -269,7 +269,7 @@ export default {
 <style lang="less" scoped>
 .container {
   padding: 20px;
-  height: calc(100% - 110px);
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -600,9 +600,9 @@ export default {
       justify-content: space-around;
       align-items: center;
       background-color: #12298d;
-      height: 6.5rem;
+      // height: 6.5rem;
       border-radius: 1rem;
-      margin: 0.3rem 0.8rem 2rem 0.5rem;
+      // margin: 0.3rem 0.8rem 2rem 0.5rem;
       img {
         width: 4rem;
         height: 4rem;

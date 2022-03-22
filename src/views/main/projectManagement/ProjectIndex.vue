@@ -169,6 +169,7 @@ export default {
 .container {
   display: flex;
   background-color: #03014f;
+  height: 100%;
   .map {
     flex: 1;
   }

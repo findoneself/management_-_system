@@ -1,54 +1,132 @@
 <template>
   <!--车洗裸土 -->
-  <div>
-    <BeautifulWrapper
-      :isMenuTab='false'
-      :borderIcon='borderIcon'
-      :wraStyle='wraStyle'
-    >
-      <div class="container">
-        <div class="content_left">
-          <BeautifulCard
-            class="control"
-            :isTriangle="false"
-            :title="'管控信息'"
-          >
-            <div class="params">
-              <div
-                class="item"
-                v-for="item in paramslist"
-                :key="item.id"
-                @click="controlHandel(item.path)"
-              >
-                <div></div>
-                <div class="span">{{ item.name }}</div>
-                <div class="span">
-                  <div
-                    class="margin"
-                    :style="{ color: item.color }"
-                  >
-                    {{ item.value }}
-                  </div>
-                  <span class="company">{{ item.company }}</span>
+  <BeautifulWrapper
+    :isMenuTab='false'
+    :borderIcon='borderIcon'
+    :wraStyle='wraStyle'
+  >
+    <div class="container">
+      <div class="content_left">
+        <BeautifulCard
+          :isTriangle="false"
+          :title="'管控信息'"
+          class="control"
+        >
+          <div class="params">
+            <div
+              class="item"
+              v-for="item in paramslist"
+              :key="item.id"
+              @click="controlHandel(item.path)"
+            >
+              <div class="span">{{ item.name }}</div>
+              <div class="span">
+                <div
+                  class="margin"
+                  :style="{ color: item.color }"
+                >
+                  {{ item.value }}
                 </div>
+                <span class="company">{{ item.company }}</span>
               </div>
             </div>
-          </BeautifulCard>
+          </div>
+        </BeautifulCard>
+        <BeautifulCard
+          class="car_in_out"
+          :isTriangle="false"
+          :title="'车辆出入记录'"
+        >
+          <div class="record">
+            <el-select
+              class="select_online_video"
+              @change="(e)=>{videoChange(e,'cartime')}"
+              v-model="value"
+              size="mini"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in carTImeList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </div>
+          <CarInAndOutMap></CarInAndOutMap>
+          <div class="recordlist">
+            <div
+              class="record_item"
+              v-for="(item, index) in recordList"
+              :key="index"
+              :style="{ backgroundColor: index % 2 == 0 ? '#0B1771' : '#02004D' }"
+            >
+              <div>
+                <div
+                  class="colorBox"
+                  :style="{ backgroundColor: item.color }"
+                ></div>
+              </div>
+              <div class="scale width">{{ item.name }}</div>
+              <div class="scale">{{ item.value }}次</div>
+              <div class="lookat">查看</div>
+            </div>
+          </div>
+        </BeautifulCard>
+      </div>
+      <!-- 右侧地图区域 -->
+      <div class="content_right">
+        <!-- 上半部分 -->
+        <div class="map_video">
+          <!-- 中间地图部分 -->
+          <div class="map"></div>
+          <!-- 右边在线视频 -->
           <BeautifulCard
-            class="car_in_out"
+            class="online_video"
             :isTriangle="false"
-            :title="'车辆出入记录'"
+            :title="'在线视频'"
           >
-            <div class="record">
+            <div class="select_list">
               <el-select
                 class="select_online_video"
-                @change="(e)=>{videoChange(e,'cartime')}"
-                v-model="value"
+                @change="(e)=>{videoChange(e,'region')}"
+                size="mini"
+                v-model="regionValue"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in regionList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+              <el-select
+                class="select_online_video"
+                @change="(e)=>{videoChange(e,'project')}"
+                v-model="projectValue"
                 size="mini"
                 placeholder="请选择"
               >
                 <el-option
-                  v-for="item in carTImeList"
+                  v-for="item in projectList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+              <el-select
+                class="select_online_video"
+                @change="(e)=>{videoChange(e,'video')}"
+                v-model="videoValue"
+                size="mini"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in videoList"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -56,182 +134,64 @@
                 </el-option>
               </el-select>
             </div>
-            <CarInAndOutMap></CarInAndOutMap>
-            <div class="recordlist">
+            <div class="video">
+              <video
+                :src="videoSrc"
+                controls="controls"
+              >
+              </video>
+            </div>
+            <div class="video_list">
+              <div class="video_list_title">
+                <span>通行状态</span>
+                <span>通行时间</span>
+                <span>资质状态</span>
+                <span>车辆型号</span>
+              </div>
               <div
-                class="record_item"
-                v-for="(item, index) in recordList"
+                class="video_list_data"
+                v-for="(item, index) in carList"
                 :key="index"
                 :style="{ backgroundColor: index % 2 == 0 ? '#0B1771' : '#02004D' }"
               >
-                <div>
-                  <div
-                    class="colorBox"
-                    :style="{ backgroundColor: item.color }"
-                  ></div>
-                </div>
-                <div class="scale width">{{ item.name }}</div>
-                <div class="scale">{{ item.value }}次</div>
-                <div class="lookat">查看</div>
+                <div>{{item.carnum}}</div>
+                <div>{{item.time}}</div>
+                <div>{{item.status}}</div>
+                <div>{{item.type}}</div>
               </div>
             </div>
           </BeautifulCard>
         </div>
-        <!-- 右侧地图区域 -->
-        <div class="content_right">
-          <!-- 上半部分 -->
-          <div class="map_video">
-            <!-- 中间地图部分 -->
-            <div class="map"></div>
-            <!-- 右边在线视频 -->
-            <BeautifulCard
-              class="online_video"
-              :isTriangle="false"
-              :title="'在线视频'"
-            >
-              <div class="select_list">
-                <el-select
-                  class="select_online_video"
-                  @change="(e)=>{videoChange(e,'region')}"
-                  size="mini"
-                  v-model="regionValue"
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in regionList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+        <!-- 下半部分-统计图区域 -->
+        <div class="map_region">
+          <BeautifulCard
+            class="car_analysis"
+            :title="'车辆出入分析'"
+          >
+            <div class="car_analysis_content">
+              <div class="car_analysis_left">
+                <CarInAndOutPieChart></CarInAndOutPieChart>
+                <div class="pie_chart_List">
+                  <div
+                    class="pie_chart_item"
+                    v-for="(item,index) in pieChartList"
+                    :key="index+']'"
                   >
-                  </el-option>
-                </el-select>
-                <el-select
-                  class="select_online_video"
-                  @change="(e)=>{videoChange(e,'project')}"
-                  v-model="projectValue"
-                  size="mini"
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in projectList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-                <el-select
-                  class="select_online_video"
-                  @change="(e)=>{videoChange(e,'video')}"
-                  v-model="videoValue"
-                  size="mini"
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in videoList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-              </div>
-              <div class="video">
-                <video
-                  :src="videoSrc"
-                  controls="controls"
-                >
-                </video>
-              </div>
-              <div class="video_list">
-                <div class="video_list_title">
-                  <span>通行状态</span>
-                  <span>通行时间</span>
-                  <span>资质状态</span>
-                  <span>车辆型号</span>
-                </div>
-                <div
-                  class="video_list_data"
-                  v-for="(item, index) in carList"
-                  :key="index"
-                  :style="{ backgroundColor: index % 2 == 0 ? '#0B1771' : '#02004D' }"
-                >
-                  <div>{{item.carnum}}</div>
-                  <div>{{item.time}}</div>
-                  <div>{{item.status}}</div>
-                  <div>{{item.type}}</div>
-                </div>
-              </div>
-            </BeautifulCard>
-          </div>
-          <!-- 下半部分-统计图区域 -->
-          <div class="map_region">
-            <BeautifulCard
-              class="car_analysis"
-              :title="'车辆出入分析'"
-            >
-              <div class="car_analysis_content">
-                <div class="car_analysis_left">
-                  <CarInAndOutPieChart></CarInAndOutPieChart>
-                  <div class="pie_chart_List">
                     <div
-                      class="pie_chart_item"
-                      v-for="(item,index) in pieChartList"
-                      :key="index+']'"
-                    >
-                      <div
-                        class="color_item"
-                        :style="{ backgroundColor: item.color }"
-                      ></div>
-                      <div class="span">{{item.name}}</div>
-                    </div>
-                  </div>
-                </div>
-                <!-- 双层折线图 -->
-                <div class="double_line">
-                  <div class="double_line_select">
-                    <el-select
-                      class="select_online_video"
-                      @change="(e)=>{videoChange(e,'double_line')}"
-                      v-model="doubleLineValue"
-                      placeholder="请选择"
-                    >
-                      <el-option
-                        v-for="item in carTImeList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      >
-                      </el-option>
-                    </el-select>
-                  </div>
-                  <DoubleLineChart></DoubleLineChart>
-                  <div class="button">
-                    <img
-                      class="left_img"
-                      src="~_ats/img/right.png"
-                      alt=""
-                    />
-                    <img
-                      class="right_img"
-                      src="~_ats/img/right.png"
-                      alt=""
-                    />
+                      class="color_item"
+                      :style="{ backgroundColor: item.color }"
+                    ></div>
+                    <div class="span">{{item.name}}</div>
                   </div>
                 </div>
               </div>
-            </BeautifulCard>
-            <!-- 区域报警分析 -->
-            <BeautifulCard
-              class="car_county"
-              :title="'区县报警分析'"
-            >
-              <div class="car_county_select">
+              <!-- 双层折线图 -->
+              <div class="double_line">
                 <div class="double_line_select">
                   <el-select
                     class="select_online_video"
-                    @change="(e)=>{videoChange(e,'car_county')}"
-                    v-model="carCountyValue"
+                    @change="(e)=>{videoChange(e,'double_line')}"
+                    v-model="doubleLineValue"
                     placeholder="请选择"
                   >
                     <el-option
@@ -243,8 +203,7 @@
                     </el-option>
                   </el-select>
                 </div>
-                <!-- 柱状图区域 -->
-                <CountyAnalysisBar></CountyAnalysisBar>
+                <DoubleLineChart></DoubleLineChart>
                 <div class="button">
                   <img
                     class="left_img"
@@ -258,12 +217,50 @@
                   />
                 </div>
               </div>
-            </BeautifulCard>
-          </div>
+            </div>
+          </BeautifulCard>
+          <!-- 区域报警分析 -->
+          <BeautifulCard
+            class="car_county"
+            :title="'区县报警分析'"
+          >
+            <div class="car_county_select">
+              <div class="double_line_select">
+                <el-select
+                  class="select_online_video"
+                  @change="(e)=>{videoChange(e,'car_county')}"
+                  v-model="carCountyValue"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in carTImeList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+              <!-- 柱状图区域 -->
+              <CountyAnalysisBar></CountyAnalysisBar>
+              <div class="button">
+                <img
+                  class="left_img"
+                  src="~_ats/img/right.png"
+                  alt=""
+                />
+                <img
+                  class="right_img"
+                  src="~_ats/img/right.png"
+                  alt=""
+                />
+              </div>
+            </div>
+          </BeautifulCard>
         </div>
       </div>
-    </BeautifulWrapper>
-  </div>
+    </div>
+  </BeautifulWrapper>
 </template>
 
 <script>
@@ -404,27 +401,30 @@ export default {
 }
 .container {
   display: flex;
-  width: 100%;
+  // width: 100%;
+  height: 100%;
 }
 .content_left {
   display: flex;
   flex-direction: column;
   .control {
     width: 25rem;
-    height: 22.45rem;
+    // height: 40%;
     .params {
+      // width: 25rem;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
       overflow: hidden;
-      padding: 0 0.2rem;
-      margin-top: 0.5rem;
+      padding: 0 0.6rem;
+      margin-top: 10px;
+      height: calc(100% - 80px);
       .item {
-        width: 11.1rem;
+        width: 11.3rem;
         text-align: center;
         cursor: pointer;
-        height: 5rem;
-        margin: 0.25rem;
+        height: 30%;
+        margin: 2px;
         background-color: #133c91;
         border-radius: 0.3rem;
         display: flex;
@@ -438,7 +438,7 @@ export default {
           align-items: center;
           transform: scale(0.9);
           text-align-last: justify;
-          margin-top: 0.4rem;
+          margin-top: 5px;
           .margin {
             font-size: 1.5rem;
             width: 2.5rem;
@@ -450,7 +450,7 @@ export default {
   }
   .car_in_out {
     width: 25rem;
-    height: 35rem;
+    height: 60%;
     background-color: #02004d;
     .record {
       text-align: right;
