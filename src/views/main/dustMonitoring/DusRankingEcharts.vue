@@ -4,16 +4,16 @@
     :loading="dataLoading"
     stripe
     is-clear-border
-    :dataList="dataList"
+    :data-list="dataList"
     :columns="columns"
     :index-obj="{isIndex: false}"
-    :oper-obj="{isOperation: false}"
+    :oper-obj="rankOperList"
     :is-table="tabsType === 'table'"
-    :table-header="{title: '温度', samll: '2022-3-01 ( 小时数据 ）'}"
+    :tform-head="tformHead"
   >
     <el-form
       :inline="true"
-      slot="tformheader"
+      slot="headform"
       size="medium"
       :model="formInline"
       class="demo-form-inline"
@@ -178,7 +178,7 @@ export default {
       tabsType: 'table',
       // 表格表头
       columns: [
-        { name: '监测点', prop: 'jcd', key: 1 },
+        { name: '监测点', prop: 'jcd', key: 4 },
         { name: '时间', prop: 'sj', tooltip: true, key: 2 },
         { name: '温度', prop: 'jcwd', key: 3 }
       ],
@@ -187,12 +187,60 @@ export default {
         { id: '1', jcd: '云-徐州传染病医院', sj: '2022-03-10 00:00:00', jcwd: '21' },
         { id: '2', jcd: '云-徐州传染病医院', sj: '2022-03-11 00:00:00', jcwd: '12' },
         { id: '3', jcd: '云-徐州传染病医院', sj: '2022-03-12 00:00:00', jcwd: '24' },
-        { id: '4', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00', jcwd: '15' }
-        // { id: '5', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00', jcwd: '21' },
-        // { id: '6', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00', jcwd: '16' },
-        // { id: '7', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00', jcwd: '21' },
-        // { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' }
-      ]
+        { id: '4', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00', jcwd: '15' },
+        { id: '5', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00', jcwd: '21' },
+        { id: '6', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00', jcwd: '16' },
+        { id: '7', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00', jcwd: '21' },
+        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
+        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
+        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
+        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' }
+      ],
+      // 操作按钮
+      rankOperList: {
+        isOperation: false,
+        width: 270,
+        operButton: [
+          {
+            text: '修改',
+            click: this.updateClick
+          },
+          {
+            text: '详情',
+            click: this.orderDetailClick
+          }, {
+            text: '删除',
+            click: this.removeClick
+          }, {
+            text: '下载附件',
+            click: this.orderDetailClick
+          }, {
+            text: '短信提醒',
+            click: this.noteClick
+          }
+        ]
+      }
+
+    }
+  },
+  computed: {
+    tformHead () {
+      // 需要取参数类型和选择日期的信息
+      const info = { title: '温度', small: '2022-3-01 ( 小时数据 ）' }
+      if (this.tabsType === 'table') {
+        info.btnType = 'elbtn'
+        info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
+      } else if (this.tabsType === 'echart') {
+        info.btnType = 'custom'
+        info.btnList = [{
+          id: 'jcy',
+          name: '检测源'
+        }, {
+          id: 'xm',
+          name: '项目'
+        }]
+      }
+      return info
     }
   },
   methods: {
@@ -204,5 +252,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+/deep/ .tform-contnent {
+  height: calc(100% - 178px);
+}
 </style>

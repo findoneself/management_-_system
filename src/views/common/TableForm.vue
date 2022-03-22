@@ -1,104 +1,95 @@
 <template>
   <div class="tform-wrapper">
-    <div class="tform-head">
-      <slot name="tformheader" />
+    <div class="tform-form">
+      <slot name="headform" />
     </div>
     <div class="tform-contnent">
+      <div
+        class="tform-table-title"
+        v-if="tformHeader.isTableHead"
+      >
+        <h2>{{ tformHeader.title || '' }}</h2>
+        <small>{{ tformHeader.small || '' }}</small>
+        <div
+          class="tform-btnlist"
+          v-show="tformHeader.btnType && tformHeader.btnList.length > 0"
+        >
+          <template v-if="tformHeader.btnType === 'elbtn'">
+            <el-button
+              v-for="item in tformHeader.btnList"
+              :key="item.id || ''"
+              :size="item.size || ''"
+              :type="item.type || ''"
+              @click="buttonClick(item)"
+            >{{ item.name || '' }}</el-button>
+          </template>
+          <template v-else>
+            <div
+              v-for="item in tformHeader.btnList"
+              :key="item.id"
+              class="tabs-button-item"
+              :class="item.id === cusCurBtn && 'tabs-button-active'"
+              @click="buttonClick(item)"
+            >{{ item.name }}</div>
+          </template>
+        </div>
+      </div>
       <div
         class="tfrom-table"
         v-show="isTable"
       >
-        <div
-          class="tform-table-title"
-          v-if="tableHeader.isTableHead"
-        >
-          <h2>{{ tableHeader.title || '' }}</h2>
-          <small>{{ tableHeader.small || '' }}</small>
-          <div
-            class="tform-btnlist"
-            v-show="tableHeader.isButton && tableHeader.btnList.length > 0"
-          >
-            <el-button
-              v-for="item in tableHeader.btnList"
-              :key="item.id || ''"
-              :size="item.size"
-              :type="item.type || 'primary'"
-              @click="buttonClick(item)"
-            >{{ item.name || '' }}</el-button>
-          </div>
-        </div>
-        <BeautifulTableEl
-          ref="tableEl"
-          :is-clear-border="isClearBorder"
+        <BeautifulTableList
           :loading="loading"
-          :height="height"
+          :loading-text="loadingText"
+          :loading-icon="loadingIcon"
           :stripe="stripe"
-          :border="border"
-          :size="size"
           :index-obj="indexObj"
           :oper-obj="operObj"
           :data-list="dataList"
           :columns="columns"
         />
       </div>
-      <slot></slot>
+      <div
+        class="tform-custom"
+        v-show="!isTable"
+      >
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 // 引入的表格组件，需要什么props或methods请在props中添加
-import BeautifulTableEl from '_com/common/BeautifulTableEl'
+import BeautifulTableList from '_com/common/BeautifulTableList'
 export default {
   name: 'TableForm',
   components: {
-    BeautifulTableEl
+    BeautifulTableList
   },
   props: {
     // ------公共表格组件的数据
-    // 是否清除表格所有边框
-    isClearBorder: {
-      type: Boolean,
-      default: false
-    },
     // 加载loading
     loading: {
       type: Boolean,
       default: false
     },
-    // 表格高度
-    height: [String, Number],
+    loadingText: {
+      type: String,
+      default: '数据加载中...'
+    },
+    loadingIcon: {
+      type: String,
+      default: 'el-icon-loading'
+    },
+    // 序号内容
+    indexObj: Object,
+    // 操作内容
+    operObj: Object,
     // 是否斑马纹
     stripe: {
       type: Boolean,
       default: false
-    },
-    // 表格边框
-    border: {
-      type: Boolean,
-      default: false
-    },
-    // 表格尺寸
-    size: {
-      type: String,
-      default: '',
-      validator: function (value) {
-        return value === 'medium' || 'small' || 'mini'
-      }
-    },
-    // 序号内容
-    indexObj: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    // 操作内容
-    operObj: {
-      type: Object,
-      default () {
-        return {}
-      }
     },
     // 表格数据
     dataList: {
@@ -117,8 +108,9 @@ export default {
     },
     // -----组件内的参数
     // 表格顶部信息，其中按钮可以扩展为多个按钮
-    // isTableHead：是否显示顶部;isButton：是否显示按钮;btnList：按钮数据;title：顶部标题;small：小文字
-    tableHead: {
+    // isTableHead：是否显示顶部;btnType：按钮类型（elbtn/custom/false）;btnList：按钮数据;title：顶部标题;small：小文字
+    // 按钮类型：elbtn需要传基本的四个参数，自定义必须传id和name
+    tformHead: {
       type: Object,
       default () {
         return {}
@@ -128,23 +120,46 @@ export default {
     isTable: {
       type: Boolean,
       default: true
+    },
+    // 是否高亮当前选中的行
+    highlightCurrent: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      // 自定义按钮当前点击
+      cusCurBtn: ''
     }
   },
   computed: {
-    tableHeader () {
+    tformHeader () {
       // 按钮{ id: 'export', name: '导出Excel', type: '', size: 'mini' }
       return Object.assign({
         isTableHead: true,
-        isButton: true,
-        btnList: [{ id: 'export', name: '导出Excel', type: '', size: 'mini' }],
+        btnType: false,
+        btnList: [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }],
         title: '测试标题',
         small: ''
-      }, this.tableHead)
+      }, this.tformHead)
+    }
+  },
+  watch: {
+    // 监听按钮类型改变，如果是自定义，则设置默认点击为第一个
+    'tformHead.btnType': {
+      handler (val) {
+        if (val === 'custom' && this.tformHead.btnList && this.tformHead.btnList.length > 0) {
+          this.cusCurBtn = this.tformHead.btnList[0].id
+        }
+      },
+      immediate: true
     }
   },
   methods: {
     // 按钮点击
     buttonClick (item) {
+      this.cusCurBtn = item.id
       this.$emit('buttonClick', item)
     }
   }
@@ -154,12 +169,24 @@ export default {
 <style scoped>
 .tform-wrapper {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
-.tform-head {
+.tform-contnent {
+  flex: 1;
+}
+.tform-form {
   padding: 18px;
-  min-height: 82px;
+  flex-shrink: 0;
   background: var(--head-bgcolor);
   border: 1px solid var(--head-bdcolor);
+}
+.tfrom-table,
+.tform-custom {
+  height: calc(100% - 100px);
+}
+.el-table {
+  margin-top: 0;
 }
 .tform-table-title {
   position: relative;
@@ -172,21 +199,26 @@ export default {
 }
 .tform-table-title > h2 {
   font-size: 20px;
+  line-height: 180%;
   font-weight: bold;
 }
 .tform-table-title > small {
   font-size: 16px;
+  line-height: 180%;
   color: inherit;
 }
 .tform-btnlist {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 24px;
+  right: 30px;
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
 }
 .tform-btnlist .el-button {
   margin-left: 10px;
+}
+.tabs-button-item {
+  margin: 0;
 }
 </style>
