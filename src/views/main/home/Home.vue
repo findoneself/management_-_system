@@ -268,7 +268,17 @@ export default {
 
 <style lang="less" scoped>
 .container {
-  padding: 1.25rem;
+  padding: 20px;
+  height: calc(100% - 110px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .home_top {
+    height: 57.5%;
+  }
+  .home_bottom {
+    height: 40%;
+  }
   .home_top,
   .home_bottom {
     display: flex;
@@ -318,7 +328,7 @@ export default {
   .home_top_left,
   .home_top_right {
     width: 23.75rem;
-    height: 33.13rem;
+    // height: 33.13rem;
     .inspect {
       background-color: #103387;
       border-radius: 0.5rem;
@@ -554,7 +564,7 @@ export default {
   .home_bottom_right,
   .home_bottom_center {
     width: 38.13rem;
-    height: 28.13rem;
+    // height: 28.13rem;
     border: 1px solid blue;
     position: relative;
     .button {

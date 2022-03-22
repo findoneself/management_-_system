@@ -3,7 +3,7 @@
     <div>
       <div
         id="installnum"
-        style="width: 93%; height: 24rem"
+        style="width: 93%; height: 2rem"
       ></div>
     </div>
   </div>

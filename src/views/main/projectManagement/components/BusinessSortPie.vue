@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      id="project_total"
+      id="business_sort"
       style="width: 100%; height: 13rem"
     ></div>
   </div>
@@ -12,7 +12,7 @@ export default {
     return {
       data: [
         {
-          name: '房建',
+          name: 'AI识别',
           value: 45,
           color: '#FCFF20', itemStyle: {
             normal: {
@@ -21,7 +21,7 @@ export default {
           }
         },
         {
-          name: '市政',
+          name: ' 水质',
           value: 34,
           color: '#FF4F01', itemStyle: {
             normal: {
@@ -30,7 +30,7 @@ export default {
           }
         },
         {
-          name: '轨道',
+          name: ' 噪声',
           value: 21,
           color: '#FF3D54', itemStyle: {
             normal: {
@@ -39,11 +39,20 @@ export default {
           }
         },
         {
-          name: '其他',
+          name: ' 扬尘',
           value: 50,
           color: ' #00FFFF', itemStyle: {
             normal: {
               color: '#00FFFF'
+            }
+          }
+        },
+        {
+          name: '智慧工地',
+          value: 50,
+          color: ' #FFAE00', itemStyle: {
+            normal: {
+              color: '#FFAE00'
             }
           }
         }
@@ -84,7 +93,7 @@ export default {
   // 橘黄色//红色//亮蓝//黄色
   methods: {
     getmap () {
-      var myChart = this.$echarts.init(document.getElementById('project_total'))
+      var myChart = this.$echarts.init(document.getElementById('business_sort'))
       this.option.series[0].data = this.data
       myChart.setOption(this.option)
       window.addEventListener('resize', function () {

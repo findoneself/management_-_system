@@ -2,7 +2,7 @@
   <div>
     <div
       id="warningnum"
-      style="width: 93%; height: 21rem"
+      style="width: 93%; height: 2rem"
     ></div>
   </div>
 </template>

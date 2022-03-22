@@ -4,6 +4,7 @@
     <BeautifulWrapper
       :isMenuTab='false'
       :borderIcon='borderIcon'
+      :wraStyle='wraStyle'
     >
       <div class="container">
         <div class="content_left">
@@ -362,6 +363,7 @@ export default {
       doubleLineValue: '选项1',
       carCountyValue: '选项1',
       borderIcon: ['top', 'right', 'bottom', 'left'],
+      wraStyle: { inPadding: '0px' },
       menuList: this.$store.state.global.menuList
     }
   },
