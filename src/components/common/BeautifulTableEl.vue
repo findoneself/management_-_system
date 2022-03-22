@@ -251,12 +251,12 @@ export default {
     // 奇数行类名
     addClass: {
       type: String,
-      default: ''
+      default: 'add-table-style'
     },
     // 偶数行类名
     evenClass: {
       type: String,
-      default: ''
+      default: 'even-table-style'
     },
     // 表格头类名
     headerClassName: {

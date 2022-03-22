@@ -10,15 +10,33 @@
     --card-title-bgcolor: #0f2b8c;
     --card-title-linecolor: #4d82ca;
     --card-bdcolor: #3048b8;
-    --card-bdcolor: #3048b8;
     --wrapper-bdcolor: #0e5dfb;
+    --wraper-bgcolor: #02004D;
     --submenu-bdcolor: #0c4edf;
     --menu-hovercolor: rgb(255 255 255 / 64%);
     --input-bdcolor: #1843ad;
 }
 
+/* -------------滚动条样式 */
+/* 谷歌滚动条样式 */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    position: absolute
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--wrapper-bdcolor);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
 /* -------------el-ui表单样式 */
-.el-form-item:last-of-type {
+.el-form .el-form-item:last-of-type {
     margin-bottom: 0;
 }
 
@@ -100,6 +118,10 @@ table.el-date-table.is-week-mode .el-date-table__row:hover div {
     background-color: #0a0b7b;
 }
 
+div.el-date-range-picker__content.is-left {
+    border-color: var(--input-bdcolor);
+}
+
 /* .el-radio和el-check-box */
 label.el-radio {
     color: inherit;
@@ -131,14 +153,22 @@ span.el-radio__inner::after {
     --head-bdcolor: var(--wrapper-bdcolor);
 }
 
-.tform-wrapper .el-radio__inner {
+.tform-head .el-radio__inner {
     width: 22px;
     height: 22px;
 }
 
-.tform-wrapper .el-radio__inner::after {
+.tform-head .el-radio__inner::after {
     width: 10px;
     height: 10px;
+}
+
+.tform-head .el-form-item {
+    margin-bottom: 16px;
+}
+
+.tform-head .el-radio {
+    margin-right: 40px;
 }
 
 /* 自定义表单中的tabs按钮 */
@@ -166,8 +196,74 @@ span.el-radio__inner::after {
     border-color: var(--wrapper-bdcolor);
 }
 
-/* -------------按钮及其el-link样式 */
+/* -------------el-button及其el-link样式 */
+.el-button {
+    --border-color: #467BFF
+}
+
+button.el-button {
+    border-radius: 0;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--color-text);
+    transition: all .2s;
+}
+
+button.el-button:focus,
+button.el-button:hover,
 .el-button.el-button--primary {
-    background: #0A44FF;
-    border: 1px solid #467BFF;
+    background: #083caf;
+    border-color: var(--border-color);
+    color: inherit;
+}
+
+.el-button.el-button--primary:hover,
+.el-button.el-button--primary:focus {
+    background-color: #0A44FF;
+}
+
+.el-button.el-button--medium {
+    height: 38px;
+}
+
+/* -----------el-table */
+div.el-table {
+    color: inherit;
+}
+
+div.el-table,
+div.el-table__expanded-cell.el-table,
+div.el-table__expanded-cell,
+div.el-table th,
+div.el-table tr {
+    background-color: transparent;
+}
+
+div.el-table td,
+div.el-table th.is-leaf {
+    border: 0;
+}
+
+div.el-table--border::after,
+div.el-table--group::after,
+div.el-table::before {
+    background-color: transparent;
+}
+
+div.el-table--striped .el-table__body tr.even-table-style td {
+    background-color: #0b1771;
+}
+
+div.el-table--striped .el-table__body tr.add-table-style td {
+    background-color: transparent;
+}
+
+div.el-table .el-table__body tr.el-table__row.current-row td,
+div.el-table--enable-row-hover .el-table__body tr:hover>td {
+    /* background-color: #163ea6; */
+    background-color: #132184;
+}
+
+div.el-table thead {
+    color: #39F8FF;
 }

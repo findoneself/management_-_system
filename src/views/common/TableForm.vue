@@ -22,7 +22,7 @@
               v-for="item in tableHeader.btnList"
               :key="item.id || ''"
               :size="item.size"
-              :type="item.type || 'primary'"
+              :type="item.type"
               @click="buttonClick(item)"
             >{{ item.name || '' }}</el-button>
           </div>
@@ -31,17 +31,23 @@
           ref="tableEl"
           :is-clear-border="isClearBorder"
           :loading="loading"
-          :height="height"
+          height="calc(100% - 6.25rem)"
           :stripe="stripe"
           :border="border"
           :size="size"
+          :highlight-current="highlightCurrent"
           :index-obj="indexObj"
           :oper-obj="operObj"
           :data-list="dataList"
           :columns="columns"
         />
       </div>
-      <slot></slot>
+      <div
+        class="tform-custom"
+        v-show="!isTable"
+      >
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -128,6 +134,11 @@ export default {
     isTable: {
       type: Boolean,
       default: true
+    },
+    // 是否高亮当前选中的行
+    highlightCurrent: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -136,7 +147,7 @@ export default {
       return Object.assign({
         isTableHead: true,
         isButton: true,
-        btnList: [{ id: 'export', name: '导出Excel', type: '', size: 'mini' }],
+        btnList: [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }],
         title: '测试标题',
         small: ''
       }, this.tableHead)
@@ -154,12 +165,24 @@ export default {
 <style scoped>
 .tform-wrapper {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.tform-contnent {
+  flex: 1;
 }
 .tform-head {
   padding: 18px;
-  min-height: 82px;
+  flex-shrink: 0;
   background: var(--head-bgcolor);
   border: 1px solid var(--head-bdcolor);
+}
+.tfrom-table,
+.tform-custom {
+  height: 100%;
+}
+.el-table {
+  margin-top: 0;
 }
 .tform-table-title {
   position: relative;
@@ -172,16 +195,18 @@ export default {
 }
 .tform-table-title > h2 {
   font-size: 20px;
+  line-height: 180%;
   font-weight: bold;
 }
 .tform-table-title > small {
   font-size: 16px;
+  line-height: 180%;
   color: inherit;
 }
 .tform-btnlist {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 24px;
+  right: 30px;
   display: flex;
   align-items: stretch;
   justify-content: flex-end;

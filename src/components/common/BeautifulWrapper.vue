@@ -127,6 +127,7 @@ export default {
   position: relative;
   height: inherit;
   border-style: solid;
+  background-color: var(--wraper-bgcolor);
   border-color: var(--wrapper-bdcolor);
   box-shadow: inset -3px -3px 30px var(--shadow-color),
     inset 3px 3px 30px var(--shadow-color);
