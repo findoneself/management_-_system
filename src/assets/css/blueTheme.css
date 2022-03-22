@@ -18,6 +18,9 @@
 }
 
 /* -------------el-ui表单样式 */
+.el-form-item:last-of-type {
+    margin-bottom: 0;
+}
 
 .el-form-item .el-form-item__label {
     color: var(--color-text);
@@ -121,6 +124,23 @@ span.el-radio__inner::after {
     border: 1px solid #467BFF;
 }
 
+
+/* -------------tform-wrapper：上面表单下面表格的业务公共组件 */
+.tform-wrapper {
+    --head-bgcolor: rgba(7, 58, 172, 0.3);
+    --head-bdcolor: var(--wrapper-bdcolor);
+}
+
+.tform-wrapper .el-radio__inner {
+    width: 22px;
+    height: 22px;
+}
+
+.tform-wrapper .el-radio__inner::after {
+    width: 10px;
+    height: 10px;
+}
+
 /* 自定义表单中的tabs按钮 */
 .tabs-button {
     display: flex;
@@ -128,9 +148,9 @@ span.el-radio__inner::after {
 }
 
 .tabs-button-item {
-    width: 90px;
+    width: 80px;
     margin-right: 20px;
-    line-height: 38px;
+    line-height: 34px;
     text-align: center;
     font-size: 16px;
     cursor: pointer;
@@ -146,8 +166,8 @@ span.el-radio__inner::after {
     border-color: var(--wrapper-bdcolor);
 }
 
-/* -------------tform-wrapper：上面表单下面表格的业务公共组件 */
-.tform-wrapper {
-    --head-bgcolor: rgba(7, 58, 172, 0.3);
-    --head-bdcolor: var(--wrapper-bdcolor);
+/* -------------按钮及其el-link样式 */
+.el-button.el-button--primary {
+    background: #0A44FF;
+    border: 1px solid #467BFF;
 }
