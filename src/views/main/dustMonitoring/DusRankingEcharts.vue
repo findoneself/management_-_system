@@ -9,7 +9,7 @@
     :index-obj="{isIndex: false}"
     :oper-obj="{isOperation: false}"
     :is-table="tabsType === 'table'"
-    :tform-head="{title: '温度', small: '2022-3-01 ( 小时数据 ）'}"
+    :tform-head="tformHead"
   >
     <el-form
       :inline="true"
@@ -178,7 +178,7 @@ export default {
       tabsType: 'table',
       // 表格表头
       columns: [
-        { name: '监测点', prop: 'jcd', key: 1 },
+        { name: '监测点', prop: 'jcd', key: 4 },
         { name: '时间', prop: 'sj', tooltip: true, key: 2 },
         { name: '温度', prop: 'jcwd', key: 3 }
       ],
@@ -196,6 +196,26 @@ export default {
         { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
         { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' }
       ]
+    }
+  },
+  computed: {
+    tformHead () {
+      // 需要取参数类型和选择日期的信息
+      const info = { title: '温度', small: '2022-3-01 ( 小时数据 ）' }
+      if (this.tabsType === 'table') {
+        info.btnType = 'elbtn'
+        info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
+      } else if (this.tabsType === 'echart') {
+        info.btnType = 'custom'
+        info.btnList = [{
+          id: 'jcy',
+          name: '检测源'
+        }, {
+          id: 'xm',
+          name: '项目'
+        }]
+      }
+      return info
     }
   },
   methods: {

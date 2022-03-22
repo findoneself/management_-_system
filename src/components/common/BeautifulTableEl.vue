@@ -250,9 +250,9 @@ export default {
       }
     },
     // 奇数行类名
-    addClass: {
+    oddClass: {
       type: String,
-      default: 'add-table-style'
+      default: 'odd-table-style'
     },
     // 偶数行类名
     evenClass: {
@@ -343,7 +343,7 @@ export default {
     // 为表格奇偶行设置不同class
     addEvenClass ({ row, rowIndex }) {
       let i = rowIndex % 2
-      return i ? this.addClass : this.evenClass
+      return i ? this.oddClass : this.evenClass
     },
     // 表格行点击事件
     rowClick (row) {
@@ -374,5 +374,8 @@ export default {
 <style scoped>
 .table-link {
   margin: 0 3px;
+}
+/* 样式暂无 */
+.clear-table-border {
 }
 </style>

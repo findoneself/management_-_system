@@ -254,7 +254,7 @@ div.el-table--striped .el-table__body tr.even-table-style td {
     background-color: #0b1771;
 }
 
-div.el-table--striped .el-table__body tr.add-table-style td {
+div.el-table--striped .el-table__body tr.odd-table-style td {
     background-color: transparent;
 }
 
@@ -266,4 +266,56 @@ div.el-table--enable-row-hover .el-table__body tr:hover>td {
 
 div.el-table thead {
     color: #39F8FF;
+}
+
+/* -----------table-list手写列表 */
+.be-table-list {
+    height: 100%;
+}
+
+.be-table-header {
+    overflow: scroll;
+}
+
+.be-table-ul {
+    height: inherit;
+}
+
+.be-table-li {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+/* 减去的是表头高度 */
+.be-table-content {
+    height: calc(100% - 46px);
+    overflow: scroll;
+}
+
+.be-table--stripe .be-table-item:nth-of-type(odd) {
+    background-color: #0b1771;
+}
+
+.be-table-list .cell {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+    color: inherit;
+}
+
+.be-table-list .be-table-index.cell,
+.be-table-list .be-table-oper.cell {
+    flex: none;
+}
+
+.be-table-header .cell {
+    height: 46px;
+    color: #00ffff;
+}
+
+.be-table-item .cell {
+    min-height: 46px;
 }
