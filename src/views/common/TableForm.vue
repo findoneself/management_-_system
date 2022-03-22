@@ -1,37 +1,37 @@
 <template>
   <div class="tform-wrapper">
-    <div class="tform-head">
-      <slot name="tformheader" />
+    <div class="tform-form">
+      <slot name="headform" />
     </div>
     <div class="tform-contnent">
+      <div
+        class="tform-table-title"
+        v-if="tformHeader.isTableHead"
+      >
+        <h2>{{ tformHeader.title || '' }}</h2>
+        <small>{{ tformHeader.small || '' }}</small>
+        <div
+          class="tform-btnlist"
+          v-show="tformHeader.isButton && tformHeader.btnList.length > 0"
+        >
+          <el-button
+            v-for="item in tformHeader.btnList"
+            :key="item.id || ''"
+            :size="item.size"
+            :type="item.type"
+            @click="buttonClick(item)"
+          >{{ item.name || '' }}</el-button>
+        </div>
+      </div>
       <div
         class="tfrom-table"
         v-show="isTable"
       >
-        <div
-          class="tform-table-title"
-          v-if="tableHeader.isTableHead"
-        >
-          <h2>{{ tableHeader.title || '' }}</h2>
-          <small>{{ tableHeader.small || '' }}</small>
-          <div
-            class="tform-btnlist"
-            v-show="tableHeader.isButton && tableHeader.btnList.length > 0"
-          >
-            <el-button
-              v-for="item in tableHeader.btnList"
-              :key="item.id || ''"
-              :size="item.size"
-              :type="item.type"
-              @click="buttonClick(item)"
-            >{{ item.name || '' }}</el-button>
-          </div>
-        </div>
         <BeautifulTableEl
           ref="tableEl"
           :is-clear-border="isClearBorder"
           :loading="loading"
-          height="calc(100% - 6.25rem)"
+          height="100%"
           :stripe="stripe"
           :border="border"
           :size="size"
@@ -124,7 +124,7 @@ export default {
     // -----组件内的参数
     // 表格顶部信息，其中按钮可以扩展为多个按钮
     // isTableHead：是否显示顶部;isButton：是否显示按钮;btnList：按钮数据;title：顶部标题;small：小文字
-    tableHead: {
+    tformHead: {
       type: Object,
       default () {
         return {}
@@ -142,7 +142,7 @@ export default {
     }
   },
   computed: {
-    tableHeader () {
+    tformHeader () {
       // 按钮{ id: 'export', name: '导出Excel', type: '', size: 'mini' }
       return Object.assign({
         isTableHead: true,
@@ -171,7 +171,7 @@ export default {
 .tform-contnent {
   flex: 1;
 }
-.tform-head {
+.tform-form {
   padding: 18px;
   flex-shrink: 0;
   background: var(--head-bgcolor);
@@ -179,7 +179,7 @@ export default {
 }
 .tfrom-table,
 .tform-custom {
-  height: 100%;
+  height: calc(100% - 100px);
 }
 .el-table {
   margin-top: 0;

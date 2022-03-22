@@ -1,4 +1,5 @@
 <template>
+  <!-- 基于el-table封装的组件 -->
   <el-table
     v-loading="loading"
     :element-loading-text="loadingText"

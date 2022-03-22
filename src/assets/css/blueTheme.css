@@ -153,21 +153,21 @@ span.el-radio__inner::after {
     --head-bdcolor: var(--wrapper-bdcolor);
 }
 
-.tform-head .el-radio__inner {
+.tform-form .el-radio__inner {
     width: 22px;
     height: 22px;
 }
 
-.tform-head .el-radio__inner::after {
+.tform-form .el-radio__inner::after {
     width: 10px;
     height: 10px;
 }
 
-.tform-head .el-form-item {
+.tform-form .el-form-item {
     margin-bottom: 16px;
 }
 
-.tform-head .el-radio {
+.tform-form .el-radio {
     margin-right: 40px;
 }
 

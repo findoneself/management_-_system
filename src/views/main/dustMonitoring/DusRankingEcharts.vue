@@ -9,11 +9,11 @@
     :index-obj="{isIndex: false}"
     :oper-obj="{isOperation: false}"
     :is-table="tabsType === 'table'"
-    :table-head="{title: '温度', small: '2022-3-01 ( 小时数据 ）'}"
+    :tform-head="{title: '温度', small: '2022-3-01 ( 小时数据 ）'}"
   >
     <el-form
       :inline="true"
-      slot="tformheader"
+      slot="headform"
       size="medium"
       :model="formInline"
       class="demo-form-inline"
