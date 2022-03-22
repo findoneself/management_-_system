@@ -1,11 +1,9 @@
 <template>
-  <el-container class="home-container">
+  <el-container class="base-wrapper">
     <!-- 头部区域 -->
-    <el-header height="auto">
-      <home-header />
-    </el-header>
+    <home-header />
     <!-- 页面主体区 -->
-    <el-container>
+    <el-container class="base-container">
       <!-- 右侧主体 -->
       <el-main>
         <!-- 路由占位符 v-if="isRouterAlive" -->
@@ -93,17 +91,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.home-container {
+.base-wrapper {
   height: 100%;
+  display: block;
 }
-.el-header {
-  padding: 0;
-}
-.el-aside {
-  transition: width 0.3s;
-  background-color: #333744;
+.base-container {
+  display: block;
+  height: calc(100% - 110px);
 }
 .el-main {
+  height: 100%;
   padding: 0;
   overflow: visible;
 }

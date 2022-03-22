@@ -39,6 +39,7 @@
       <!-- 内容部分 -->
       <div
         class="beau-content"
+        :class="isTitle || tabsList.length > 0 ? 'beau-content-tab' : ''"
         :style="{padding: setStyle.inPadding}"
       >
         <slot></slot>
@@ -64,11 +65,11 @@ export default {
         return {}
       }
     },
-    // 边框图标数组
+    // 边框图标数组['top', 'right', 'bottom', 'left', 'triangle']
     borderIcon: {
       type: Array,
       default () {
-        return ['top', 'right', 'bottom', 'left', 'triangle']
+        return ['top', 'right', 'bottom', 'left']
       }
     },
     // 是否显示标题
@@ -119,15 +120,23 @@ export default {
 </script>
 
 <style scoped>
+.beautiful-wrapper {
+  height: inherit;
+}
 .beau-container {
   position: relative;
+  height: inherit;
   border-style: solid;
   border-color: var(--wrapper-bdcolor);
   box-shadow: inset -3px -3px 30px var(--shadow-color),
     inset 3px 3px 30px var(--shadow-color);
 }
 .beau-content {
-  min-height: 100px;
+  height: 100%;
+}
+.beau-content-tab {
+  /* 减去的是tab的高度 */
+  height: calc(100% - 51px);
 }
 .border-icon {
   position: absolute;

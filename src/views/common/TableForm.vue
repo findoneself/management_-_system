@@ -152,10 +152,41 @@ export default {
 </script>
 
 <style scoped>
+.tform-wrapper {
+  height: 100%;
+}
 .tform-head {
-  padding: 20px;
-  min-height: 100px;
+  padding: 18px;
+  min-height: 82px;
   background: var(--head-bgcolor);
   border: 1px solid var(--head-bdcolor);
+}
+.tform-table-title {
+  position: relative;
+  text-align: center;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.tform-table-title > h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+.tform-table-title > small {
+  font-size: 16px;
+  color: inherit;
+}
+.tform-btnlist {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+.tform-btnlist .el-button {
+  margin-left: 10px;
 }
 </style>

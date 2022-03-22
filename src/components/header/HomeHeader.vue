@@ -1,37 +1,8 @@
 <template>
-  <div class="head">
+  <div class="base-header">
     <h1>{{ systemTitle }}</h1>
     <Menu />
-    <!-- <div class="menus">
-      <div class="menulist menuleft">
-        <div class="menubg">
-          <router-link to="/main">预警管控</router-link>
-        </div>
-        <div class="menubg">
-          <router-link to="/dustMonitoring">扬尘监测</router-link>
-        </div>
-        <div class="menubg">
-          <router-link to="/page1">噪声监测</router-link>
-        </div>
-        <div class="menubg">
-          <router-link to="/page1">车洗裸土</router-link>
-        </div>
-      </div>
-      <div class="menulist menuright">
-        <div class="menubg menubgr">
-          <router-link to="/main">AI识别</router-link>
-        </div>
-        <div class="menubg menubgr">
-          <router-link to="/dustMonitoring">项目管理</router-link>
-        </div>
-        <div class="menubg menubgr">
-          <router-link to="/page1">巡查整改</router-link>
-        </div>
-        <div class="menubg menubgr">管理员</div>
-      </div>
-    </div> -->
   </div>
-
 </template>
 
 <script>
@@ -59,22 +30,22 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.head {
+.base-header {
   height: 110px;
-  background: url("../../assets/img/head.png") no-repeat center center;
+  background: url("~_ats/img/head.png") no-repeat center center;
   background-size: 100% 100%;
   // position: relative;
   z-index: 100;
 }
 
-.head h1 {
+.base-header h1 {
   color: var(--protitle-color);
   text-align: center;
   font-size: 33px;
   line-height: 80px;
 }
 
-.head h1 img {
+.base-header h1 img {
   display: inline-block;
   vertical-align: middle;
   margin-right: 0.2rem;

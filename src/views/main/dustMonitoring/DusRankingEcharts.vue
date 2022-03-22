@@ -2,7 +2,6 @@
   <!--排名统计 -->
   <TableForm
     :loading="dataLoading"
-    height="30rem"
     stripe
     is-clear-border
     :dataList="dataList"
@@ -10,17 +9,20 @@
     :index-obj="{isIndex: false}"
     :oper-obj="{isOperation: false}"
     :is-table="tabsType === 'table'"
+    :table-header="{title: '温度', samll: '2022-3-01 ( 小时数据 ）'}"
   >
     <el-form
       :inline="true"
       slot="tformheader"
+      size="medium"
       :model="formInline"
       class="demo-form-inline"
     >
       <el-form-item label="行政区域：">
         <el-select
           v-model="dataForm.xzqy"
-          placeholder="行政区域"
+          clearable
+          placeholder="请选择"
         >
           <el-option
             v-for="item in dictOptions.xzqyList"
@@ -39,6 +41,7 @@
           type="daterange"
           align="right"
           unlink-panels
+          clearable
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -69,12 +72,15 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="数据图表：">
-        <div
-          v-for="item in dictOptions.tabsTypes"
-          :key="item.id"
-          class="tabs-button"
-          @click="tabsClick(item.id)"
-        >{{ item.name }}</div>
+        <div class="tabs-button">
+          <div
+            v-for="item in dictOptions.tabsTypes"
+            :key="item.id"
+            class="tabs-button-item"
+            :class="item.id === tabsType && 'tabs-button-active'"
+            @click="tabsClick(item.id)"
+          >{{ item.name }}</div>
+        </div>
       </el-form-item>
     </el-form>
     <div
@@ -165,7 +171,7 @@ export default {
       dataForm: {
         xzqy: '',
         date: [],
-        order: '',
+        order: 'asc',
         paramType: ''
       },
       // 展示数据类型
@@ -181,11 +187,11 @@ export default {
         { id: '1', jcd: '云-徐州传染病医院', sj: '2022-03-10 00:00:00', jcwd: '21' },
         { id: '2', jcd: '云-徐州传染病医院', sj: '2022-03-11 00:00:00', jcwd: '12' },
         { id: '3', jcd: '云-徐州传染病医院', sj: '2022-03-12 00:00:00', jcwd: '24' },
-        { id: '4', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00', jcwd: '15' },
-        { id: '5', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00', jcwd: '21' },
-        { id: '6', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00', jcwd: '16' },
-        { id: '7', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00', jcwd: '21' },
-        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' }
+        { id: '4', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00', jcwd: '15' }
+        // { id: '5', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00', jcwd: '21' },
+        // { id: '6', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00', jcwd: '16' },
+        // { id: '7', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00', jcwd: '21' },
+        // { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' }
       ]
     }
   },
