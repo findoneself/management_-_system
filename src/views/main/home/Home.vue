@@ -4,7 +4,6 @@
       <!-- 巡察整改 -->
       <BeautifulCard
         :width="'23.75rem'"
-        :height="'33.13rem'"
         title="巡查整改"
         class="home_top_left"
       >

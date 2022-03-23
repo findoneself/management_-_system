@@ -2,7 +2,7 @@
   <div>
     <div
       id="car_in_out"
-      style="width: 100%; height: 15rem"
+      style="width: 100%; height: 12rem"
     ></div>
   </div>
 </template>
@@ -55,8 +55,8 @@ export default {
           {
             name: 'Radius Mode',
             type: 'pie',
-            radius: [40, 60],
-            center: ['50%', '47%'],
+            radius: [35, 45],
+            center: ['50%', '48%'],
             // roseType: 'radius',
             itemStyle: {
               // borderRadius: 5

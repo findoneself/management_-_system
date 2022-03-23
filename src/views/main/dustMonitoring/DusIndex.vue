@@ -1,6 +1,9 @@
 <template>
   <!--扬尘检测首-地图 -->
-  <BeautifulWrapper :tabsList="tabsList">
+  <BeautifulWrapper
+    :wraStyle='wraStyle'
+    :tabsList="tabsList"
+  >
     <DusMap v-if="currentTabs.id === '1'" />
     <DusMultipleEcharts v-else-if="currentTabs.id === '2'" />
     <DusSingleEcharts v-else-if="currentTabs.id === '3'" />
@@ -30,7 +33,8 @@ export default {
         { id: '2', title: '单设备统计' },
         { id: '3', title: '多设备统计' },
         { id: '4', title: '排名统计' }
-      ]
+      ],
+      wraStyle: { inPadding: '0px' }
     }
   },
   computed: {

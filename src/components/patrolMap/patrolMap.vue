@@ -2,7 +2,7 @@
   <div>
     <div
       id="map"
-      style="width: 100%; height: 18.75rem"
+      style="width: 100%; height: 8.75rem"
     ></div>
   </div>
 </template>
@@ -79,7 +79,6 @@ export default {
             textAlign: 'center'
           }
         })
-        console.log(item.name, item.color[1])
         seriesArr.push({
           name: item.name,
           type: 'pie',

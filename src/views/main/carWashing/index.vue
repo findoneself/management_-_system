@@ -83,6 +83,7 @@
           <div class="map"></div>
           <!-- 右边在线视频 -->
           <BeautifulCard
+            :cardStyle='cardStyle'
             class="online_video"
             :isTriangle="false"
             :title="'在线视频'"
@@ -165,6 +166,7 @@
         <!-- 下半部分-统计图区域 -->
         <div class="map_region">
           <BeautifulCard
+            :cardStyle='cardStyle'
             class="car_analysis"
             :title="'车辆出入分析'"
           >
@@ -221,6 +223,7 @@
           </BeautifulCard>
           <!-- 区域报警分析 -->
           <BeautifulCard
+            :cardStyle='cardStyle'
             class="car_county"
             :title="'区县报警分析'"
           >
@@ -365,7 +368,8 @@ export default {
       carCountyValue: '选项1',
       borderIcon: ['top', 'right', 'bottom', 'left'],
       wraStyle: { inPadding: '0px' },
-      menuList: this.$store.state.global.menuList
+      menuList: this.$store.state.global.menuList,
+      cardStyle: { padding: '0px' }
     }
   },
   created () {
@@ -407,31 +411,32 @@ export default {
 .content_left {
   display: flex;
   flex-direction: column;
+  height: 100%;
   .control {
     width: 25rem;
-    // height: 40%;
+    height: 40%;
     .params {
       // width: 25rem;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
       overflow: hidden;
-      padding: 0 0.6rem;
-      margin-top: 10px;
-      height: calc(100% - 80px);
+      padding: 0 0.2rem;
+      margin-top: 5px;
+      // height: calc(100% - 80px);
       .item {
-        width: 11.3rem;
+        width: 11.2rem;
         text-align: center;
         cursor: pointer;
-        height: 30%;
-        margin: 2px;
+        // height: 30%;
+        margin: 4px 2.5px;
         background-color: #133c91;
         border-radius: 0.3rem;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
         font-size: 1rem;
-        padding: 1rem;
+        padding: 0.2rem 1rem;
         align-items: flex-start;
         .span {
           display: flex;
@@ -460,15 +465,14 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: center;
-
       .record_item {
         display: flex;
         width: 22.5rem;
-        height: 2.5rem;
+        // height: 2.5rem;
         background-color: #02004d;
         justify-content: space-around;
         align-items: center;
-        line-height: 2.5rem;
+        line-height: 28px;
         font-size: 0.88rem;
         div {
           flex: 1;
@@ -518,32 +522,35 @@ export default {
   .left_img {
     transform: rotate(180deg);
     position: absolute;
-    bottom: 0.2rem;
+    bottom: 0.5rem;
     left: 3.5rem;
   }
   .right_img {
-    bottom: 0.2rem;
-    right: 0.6rem;
+    bottom: 0.5rem;
+    right: 1.6rem;
   }
 }
 .content_right {
   flex: 1;
+  height: 100%;
   .map_video {
     display: flex;
+    height: 64.5%;
     .map {
       flex: 1;
     }
     .online_video {
       width: 25rem;
-      height: 37.5rem;
+
       background-color: #02004d;
       .select_list {
         display: flex;
         justify-content: space-around;
+        margin-top: 20px;
       }
       .video {
         width: 100%;
-        height: 12.5rem;
+        height: 45%;
         margin: 1rem 0 1.5rem 0;
         video {
           width: 100%;
@@ -553,6 +560,7 @@ export default {
       .video_list {
         display: flex;
         flex-direction: column;
+        height: 40%;
         .video_list_title {
           display: flex;
           color: #00ffff;
@@ -565,7 +573,7 @@ export default {
         }
         .video_list_data {
           display: flex;
-          height: 2.65rem;
+          // height: 2.65rem;
           justify-content: space-between;
           align-items: center;
           padding: 0 1rem;
@@ -580,9 +588,9 @@ export default {
     display: flex;
     margin: 1.25rem 1.25rem 0 1.25rem;
     justify-content: space-between;
+    height: 30%;
     .car_analysis {
       width: 52rem;
-      height: 17.6rem;
       .car_analysis_content {
         display: flex;
       }
@@ -601,7 +609,7 @@ export default {
             align-items: center;
             text-align: center;
             height: 1.1rem;
-            margin: 0.3rem;
+            margin: 0.2rem;
             border-radius: 0.3rem;
             .color_item {
               width: 0.75rem;
@@ -624,32 +632,27 @@ export default {
         .double_line_select {
           text-align: right;
           position: absolute;
-          top: -2.5rem;
+          top: -1rem;
           right: 0.4rem;
         }
         .left_img {
-          bottom: 0.8rem;
+          bottom: 0.5rem;
         }
         .right_img {
-          bottom: 0.8rem;
+          bottom: 0.5rem;
         }
       }
     }
     .car_county {
-      width: 36.5rem;
-      height: 17.6rem;
+      width: 37rem;
+      // height: 17.6rem;
       .car_county_select {
         position: relative;
         .double_line_select {
           text-align: right;
           position: absolute;
-          top: -2.5rem;
+          top: -1rem;
           right: 0.4rem;
-        }
-        .button {
-          .left_img {
-            left: 2.5rem;
-          }
         }
       }
     }

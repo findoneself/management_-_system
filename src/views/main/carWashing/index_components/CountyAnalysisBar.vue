@@ -3,7 +3,7 @@
     <div>
       <div
         id="countyBar"
-        style="width: 98%; height: 13.5rem"
+        style="width: 98%; height: 11rem"
       ></div>
     </div>
   </div>
@@ -50,10 +50,10 @@ export default {
           }
         },
         grid: {
-          left: '10rem',
-          right: '1rem',
-          top: '40rem',
-          bottom: '1rem',
+          left: '20rem',
+          right: '10rem',
+          top: '30rem',
+          bottom: '5rem',
           containLabel: true
         },
         xAxis: {

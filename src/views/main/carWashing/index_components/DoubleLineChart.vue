@@ -2,7 +2,7 @@
   <div>
     <div
       id="double_line"
-      style="width: 98%; height: 13.5rem"
+      style="width: 98%; height: 11rem"
     ></div>
   </div>
 </template>
@@ -57,9 +57,9 @@ export default {
         },
         grid: {
           left: '20rem',
-          right: '1rem',
-          top: '40rem',
-          bottom: '1rem',
+          right: '10rem',
+          top: '30rem',
+          bottom: '5rem',
           containLabel: true
         },
         tooltip: {
