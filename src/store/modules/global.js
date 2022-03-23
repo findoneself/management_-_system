@@ -9,7 +9,9 @@ export default {
     // 用户信息
     userInfo: {},
     // 当前点击的tab
-    currentTab: {}
+    currentTab: {},
+    // 所有字典数据
+    dictData: {}
   },
   mutations: {
     // ----用户
@@ -48,6 +50,10 @@ export default {
     // 清除当前点击的tab
     clearCurrentTab (state) {
       state.currentTab = {}
+    },
+    // 存储字典数据
+    setDictData (state, obj) {
+      state.dictData = obj
     }
   },
   actions: {

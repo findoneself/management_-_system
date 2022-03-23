@@ -7,7 +7,14 @@
       <!-- 右侧主体 -->
       <el-main>
         <!-- 路由占位符 v-if="isRouterAlive" -->
-        <router-view />
+        <transition
+          name="fade"
+          mode="out-in"
+        >
+          <keep-alive>
+            <router-view :key="$route.name"></router-view>
+          </keep-alive>
+        </transition>
       </el-main>
     </el-container>
   </el-container>
@@ -16,7 +23,7 @@
 <script>
 // 导入子组件
 import HomeHeader from '_com/header/HomeHeader'
-
+import dictList from '_pls/dict'
 
 export default {
   name: 'Main',
@@ -45,6 +52,12 @@ export default {
       handler: 'routeHandle',
       immediate: true
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      // 获取所有字典数据，处理后存储在vuex
+      this.initAllDict()
+    })
   },
   methods: {
     // 路由操作
@@ -86,6 +99,37 @@ export default {
     routeDefalut (item = { name: 'login' }, msg = '') {
       this.$message.info(msg)
       this.$router.push({ name: item.name })
+    },
+    // 获取所有字典数据
+    initAllDict () {
+      this.$http({
+        url: '/dict/getAllDict'
+      }).then(res => {
+        if (res.code === 200) {
+          const list = res.data.list
+          let temp = {}
+          list.map(item => {
+            if (temp[item.type]) {
+              temp[item.type].list.push(item)
+            } else {
+              temp[item.type] = { list: [item] }
+            }
+          })
+          this.$store.commit('global/setDictData', temp)
+        }
+      }, () => {
+        this.$message.warning('初始化字典失败！')
+        const list = dictList
+        let temp = {}
+        list.map(item => {
+          if (temp[item.type]) {
+            temp[item.type].push(item)
+          } else {
+            temp[item.type] = [item]
+          }
+        })
+        this.$store.commit('global/setDictData', temp)
+      })
     }
   }
 }
