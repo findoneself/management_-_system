@@ -6,6 +6,7 @@ import Utils from './libs/utils'
 import format from './libs/format'
 import http from './network'
 import echarts from 'echarts'
+import _cloneDeep from 'lodash/cloneDeep'
 // 引入element组件配置
 import './plugins/element'
 // 引入pxtorem配置
@@ -17,6 +18,7 @@ Vue.prototype.$utils = Utils
 Vue.prototype.$echarts = echarts
 Vue.prototype.$http = http
 Vue.prototype.$format = format
+Vue.prototype._cloneDeep = _cloneDeep
 new Vue({
   router,
   store,

@@ -19,6 +19,7 @@ import {
   Tooltip,
   Pagination,
   Dialog,
+  Container,
   MessageBox,
   Loading,
   Tag,
@@ -43,6 +44,7 @@ Vue.use(Main)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Switch)
+Vue.use(Container)
 Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)

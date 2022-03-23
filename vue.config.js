@@ -35,6 +35,7 @@ module.exports = {
 
       config.set('externals', {
         vue: 'Vue',
+        vuex: 'Vuex',
         'vue-router': 'VueRouter',
         axios: 'axios',
         lodash: '_',
@@ -64,6 +65,7 @@ module.exports = {
     })
     // 文件夹简写
     config.resolve.alias
+      .set('_pls', resolve('src/plugins'))
       .set('_ats', resolve('src/assets'))
       .set('_lib', resolve('src/libs'))
       .set('_com', resolve('src/components'))

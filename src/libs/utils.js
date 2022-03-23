@@ -200,4 +200,46 @@ Utils.debounce = function (fn, delay) {
     }, delay)
   }
 }
+/*
+* 获取echart默认的参数配置
+*/
+Utils.getEchartDefaultParams = function () {
+  if (!Utils.echartDefaultParams) {
+    var echartParams = {
+      // 图例标题颜色
+      titleColor: '#FFFFFF',
+      // X轴参数
+      xAxis: {
+        // 字体颜色
+        textColor: '#48e9f2',
+        // 线条颜色
+        lineColor: '#2462AE',
+        // 线宽
+        lineWidth: 2
+      },
+      // 图例组参数
+      legend: {
+        // 字体颜色
+        textColor: '#48e9f2',
+        // 图例颜色组
+        colors: ['#3398DB', '#fddd60', '#73c0de', '#7dffb2', '#5ed8fe', '#ff707a', '#5470c6'],
+        // 翻页三角箭头颜色
+        pageIconColor: '#48e9f2',
+        // 翻页（即翻页到头时）
+        pageIconInactiveColor: '#aaa'
+      },
+      // Y轴颜色
+      yAxis: {
+        // 字体颜色
+        textColor: '#2462AE',
+        // 线条颜色
+        lineColor: '#2462AE',
+        // 线宽
+        lineWidth: 2
+      }
+    }
+    Utils.echartDefaultParams = echartParams
+  }
+  return Utils.echartDefaultParams
+}
 export default Utils

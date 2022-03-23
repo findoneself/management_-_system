@@ -15,17 +15,17 @@
       :inline="true"
       slot="headform"
       size="medium"
-      :model="formInline"
+      :model="dataForm"
       class="demo-form-inline"
     >
       <el-form-item label="行政区域：">
         <el-select
-          v-model="dataForm.xzqy"
+          v-model="dataForm.area"
           clearable
           placeholder="请选择"
         >
           <el-option
-            v-for="item in dictOptions.xzqyList"
+            v-for="item in dictOptions.areaList"
             :key="item.id"
             :label="item.name"
             :value="item.id"
@@ -87,53 +87,37 @@
       class="echart-tab"
       v-show="tabsType === 'echart'"
     >
-      echart
+      <BeEchartBar
+        :show-title="false"
+        :xAxis="echartXAxis"
+        :series="echartSeries"
+      />
     </div>
   </TableForm>
 </template>
 
 <script>
 import TableForm from '_vie/common/TableForm'
+import BeEchartBar from '_com/common/BeEchartBar'
 export default {
   name: 'DusRankingEcharts',
   components: {
-    TableForm
+    TableForm,
+    BeEchartBar
   },
   data () {
     return {
       // 字典数据
       dictOptions: {
         // 行政区域
-        xzqyList: [
-          { id: 'xz-1', name: '区域1' },
-          { id: 'xz-2', name: '区域2' },
-          { id: 'xz-3', name: '区域3' },
-          { id: 'xz-4', name: '区域4' }
-        ],
+        areaList: [],
         // 排序
         orderList: [
           { id: 'desc', name: '降序' },
           { id: 'asc', name: '升序' }
         ],
         // 参数类型
-        paramTypes: [
-          { id: 'kz', name: '控制' },
-          { id: 'wd', name: '温度' },
-          { id: 'sd', name: '湿度' },
-          { id: 'qy', name: '气压' },
-          { id: 'fs', name: '风速' },
-          { id: 'fx', name: '风向' },
-          { id: 'pm2.5', name: 'Pm2.5' },
-          { id: 'pm10', name: 'Pm10' },
-          { id: 'eyht', name: '二氧化氮 ' },
-          { id: 'eyhl', name: '二氧化硫' },
-          { id: 'yyht', name: '一氧化碳' },
-          { id: 'o3', name: 'O3' },
-          { id: 'tvoc', name: 'TVOC' },
-          { id: 'zy', name: '噪音' },
-          { id: 'tsp', name: 'TSP' },
-          { id: 'yy', name: '油烟' }
-        ],
+        paramTypes: [],
         tabsTypes: [
           { id: 'echart', name: '图形' },
           { id: 'table', name: '表格' }
@@ -167,35 +151,25 @@ export default {
           }
         }]
       },
+      // 加载效果
+      dataLoading: false,
       // 查询表单
       dataForm: {
-        xzqy: '',
-        date: [],
+        area: 'xz-1',
+        date: ['2022-01-01', '2022-05-02'],
         order: 'asc',
-        paramType: ''
+        paramType: 'wd'
       },
       // 展示数据类型
-      tabsType: 'table',
+      tabsType: 'echart',
       // 表格表头
       columns: [
         { name: '监测点', prop: 'jcd', key: 4 },
         { name: '时间', prop: 'sj', tooltip: true, key: 2 },
-        { name: '温度', prop: 'jcwd', key: 3 }
+        { name: '温度', prop: 'wd', key: 3 }
       ],
-      // 表格数据
-      dataList: [
-        { id: '1', jcd: '云-徐州传染病医院', sj: '2022-03-10 00:00:00', jcwd: '21' },
-        { id: '2', jcd: '云-徐州传染病医院', sj: '2022-03-11 00:00:00', jcwd: '12' },
-        { id: '3', jcd: '云-徐州传染病医院', sj: '2022-03-12 00:00:00', jcwd: '24' },
-        { id: '4', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00', jcwd: '15' },
-        { id: '5', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00', jcwd: '21' },
-        { id: '6', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00', jcwd: '16' },
-        { id: '7', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00', jcwd: '21' },
-        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
-        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
-        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
-        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' }
-      ],
+      // 表格数据---echart原始数据
+      dataList: [],
       // 操作按钮
       rankOperList: {
         isOperation: false,
@@ -219,8 +193,12 @@ export default {
             click: this.noteClick
           }
         ]
-      }
-
+      },
+      // ehcart----数据
+      // x轴
+      echartXAxis: [],
+      // 数据
+      echartSeries: []
     }
   },
   computed: {
@@ -243,10 +221,99 @@ export default {
       return info
     }
   },
+  created () {
+    this.initDict()
+  },
+  mounted () {
+    this.getDataList()
+  },
   methods: {
+    // 初始化字典数据
+    initDict () {
+      const dict = this.$store.state.global.dictData
+      if (dict.paramsType && dict.paramsType.length > 0) {
+        this.dictOptions.paramTypes = dict.paramsType
+        this.dataForm.paramType = dict.paramsType[0].id
+      }
+      if (dict.xzarea && dict.xzarea.length > 0) {
+        this.dictOptions.areaList = dict.xzarea
+        this.dataForm.area = dict.xzarea[0].id
+      }
+    },
     // 设置展示类型
     tabsClick (id) {
       this.tabsType = id
+    },
+    // 获取表格和统计数据
+    getDataList () {
+      this.dataLoading = true
+      const params = this._cloneDeep(this.dataForm)
+      if (params.date.length > 0) {
+        params.startTime = params.date[0]
+        params.endTime = params.date[1]
+        delete params.date
+      }
+      this.$http({
+        url: 'dusQuery/getDusrankData',
+        data: params
+      }).then(res => {
+        this.dataLoading = false
+        if (res.code === 200) {
+          this.dataList = res.data.list
+          console.log(res)
+        } else {
+          this.$message.error('获取统计数据失败！')
+          this.dataList = []
+        }
+      }, (err) => {
+        this.dataLoading = false
+        this.$message.error('获取统计数据失败！')
+        // 下面逻辑放在正常返回里面
+        const list = [
+          { id: '1', jcd: '云-徐州传染病医院', sj: '2022-03-10 00:00:00', wd: '21' },
+          { id: '2', jcd: '云-徐州传染病医院', sj: '2022-03-11 00:00:00', wd: '12' },
+          { id: '3', jcd: '云-徐州传染病医院', sj: '2022-03-12 00:00:00', wd: '24' },
+          { id: '4', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00', wd: '15' },
+          { id: '5', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00', wd: '21' },
+          { id: '6', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00', wd: '16' },
+          { id: '7', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00', wd: '21' },
+          { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
+          { id: '9', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
+          { id: '10', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
+          { id: '11', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' }
+        ]
+        this.dataList = list
+        let xAxis = []
+        let series = []
+        list.map(item => {
+          xAxis.push(item.jcd)
+          series.push(item.wd)
+        })
+        this.echartXAxis = xAxis
+        this.echartSeries = [
+          {
+            type: 'bar',
+            barMaxWidth: 35,
+            barGap: '10%',
+            itemStyle: {
+              'normal': {
+                'color': 'rgba(255,144,128,1)',
+                'label': {
+                  'show': true,
+                  'textStyle': {
+                    'color': '#fff'
+                  },
+                  'position': 'inside',
+                  formatter: function (p) {
+                    return p.value > 0 ? (p.value) : ''
+                  }
+                }
+              }
+            },
+            data: series
+          }
+        ]
+      })
     }
   }
 }
