@@ -53,20 +53,12 @@ export default {
     title: {
       type: String,
       default: ''
-    },
-    width: {
-      type: String,
-      default: '23.75rem'
-    },
-    height: {
-      type: String,
-      default: '33.13rem'
     }
   },
   computed: {
     setCardStyle () {
       return Object.assign({
-        padding: '1.2rem 0.625rem',
+        padding: '1.2rem 0.875rem',
         borderWidth: '0.0625rem 0.0625rem'
       }, this.cardStyle)
     }
@@ -88,9 +80,9 @@ export default {
 .card-header {
   position: relative;
   /* width: 140px; */
-  padding: 0.15rem 0.6rem;
+  padding: 0 14px;
   text-align: center;
-  line-height: 30px;
+  line-height: 32px;
   background-color: var(--card-title-bgcolor);
 }
 
@@ -99,7 +91,7 @@ export default {
   content: "";
   position: absolute;
   top: 0;
-  border-width: 15px 4px;
+  border-width: 16px 4px;
   border-style: solid;
 }
 .card-header::before {
@@ -146,6 +138,7 @@ export default {
 }
 .card-content {
   width: 100%;
+  height: 100%;
 }
 .triangle-icon {
   position: absolute;

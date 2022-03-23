@@ -144,10 +144,10 @@ export default {
     }
   },
   watch: {
-    series (vals, oval) {
+    series () {
       this.initChartBar()
     },
-    yFormatter (vals, oval) {
+    yFormatter (vals) {
       if (vals === 'int' || vals === 'number') {
         this.minInterval = 1
       }
@@ -265,7 +265,7 @@ export default {
             color: '#7b7b7b'
           },
           axisLabel: {
-            formatter: function (value, index) {
+            formatter: function (value) {
               if (_this.yFormatter === 'int') {
                 _this.minInterval = 1
                 return parseInt(value)

@@ -1,31 +1,24 @@
 <template>
-  <div class="container">
+  <div class="home-container">
     <div class="home_top">
       <!-- 巡察整改 -->
       <BeautifulCard
-        :width="'23.75rem'"
-        :height="'33.13rem'"
         title="巡查整改"
         class="home_top_left"
       >
         <div class="inspect">
-          <div class="inspect_time">
-            <div>本月检查次数:<span>2132</span></div>
-            <div>本月检查次数:<span>2132</span></div>
-            <div class="last">本月检查次数:<span>2132</span></div>
-          </div>
+          <ul class="inspect_time">
+            <li>本月检查项目：<span>{{ patrolData.inspect.project }}</span></li>
+            <li>本月检查次数：<span>{{ patrolData.inspect.num1 }}</span></li>
+            <li>本月检查次数：<span>{{ patrolData.inspect.num2 }}</span></li>
+          </ul>
           <div class="inspect_people">
             <div class="first">网络员：</div>
-            <img
-              src="~_ats/img/people.png"
-              alt=""
-            />
-            <div class="people_num">12345人</div>
+            <img src="~_ats/img/people.png" />
+            <div class="people_num">{{ patrolData.people }}人</div>
           </div>
         </div>
-        <div>
-          <PatrolMap></PatrolMap>
-        </div>
+        <PatrolMap :data-list="patrolData.patrolList"></PatrolMap>
       </BeautifulCard>
       <!-- 中间项目总数 -->
       <div class="home_top_center">
@@ -98,7 +91,7 @@
           <el-date-picker
             prefix-icon="el-icon-arrow-down"
             class="date"
-            v-model="date"
+            v-model="gkzdDate"
             type="date"
             placeholder="选择日期"
           >
@@ -124,26 +117,18 @@
       >
         <div class="pickers">
           <div class="picker">
-            <span>开始时间：</span>
-            <el-date-picker
-              prefix-icon="el-icon-arrow-down"
-              class="date"
-              v-model="startDate"
-              type="date"
-              placeholder="选择日期"
-            >
-            </el-date-picker>
-          </div>
-          <div class="picker">
-            <span>结束时间：</span>
-            <el-date-picker
-              prefix-icon="el-icon-arrow-down"
-              class="date"
-              v-model="endDate"
-              type="date"
-              placeholder="选择日期"
-            >
-            </el-date-picker>
+            <el-form>
+              <el-form-item label="时间区间">
+                <el-date-picker
+                  v-model="echartDate"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </el-form>
           </div>
         </div>
         <WarningNum></WarningNum>
@@ -213,7 +198,7 @@
 
 <script>
 import BeautifulCard from '_com/common/BeautifulCard'
-import PatrolMap from '_com/patrolMap/patrolMap'
+import PatrolMap from './components/patrolMap'
 import WarningNum from './components/warningNum'
 import InstallNum from './components/installNmu'
 export default {
@@ -226,9 +211,25 @@ export default {
   },
   data () {
     return {
-      date: '',
-      startDate: '',
-      endDate: '',
+      // 国控站点日期
+      gkzdDate: '',
+      // 统计时间区间
+      echartDate: [],
+      // 巡查整改数据
+      patrolData: {
+        inspect: {
+          project: 2245,
+          num1: 2654,
+          num2: 6562
+        },
+        people: 45661,
+        patrolList: [
+          { name: '巡查单', count: 256643, percent: 80 },
+          { name: '停工单', count: 256643, percent: 60 },
+          { name: '督办单', count: 256643, percent: 40 },
+          { name: '整改单', count: 256643, percent: 50 }
+        ]
+      },
       paramslist: [
         {
           name: '参数类型',
@@ -267,61 +268,105 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.home-container {
   padding: 20px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  .home_top,
+  .home_bottom {
+    display: flex;
+    justify-content: space-between;
+  }
   .home_top {
     height: 57.5%;
   }
   .home_bottom {
     height: 40%;
   }
-  .home_top,
-  .home_bottom {
+  .inspect {
+    background-color: #103387;
+    border-radius: 0.5rem;
+    border: 1px solid #334c9e;
     display: flex;
-    justify-content: space-around;
-    .home_bottom_left {
-      .pickers {
+    align-items: stretch;
+    font-size: 14px;
+    .inspect_time,
+    .inspect_people {
+      width: 50%;
+    }
+    .inspect_time {
+      border-right: 1px solid #183b8f;
+      > li {
         display: flex;
-        //  align-items: center;
-        justify-content: flex-end;
-        .picker {
-          transform: scale(0.7);
-          text-align: right;
-          // margin-left: auto;
+        align-items: center;
+        padding: 0 14px;
+        height: 50px;
+        :nth-of-type(n + 2) {
+          border-top: 1px solid #183b8f;
         }
-        .el-date-editor.el-input,
-        .el-date-editor.el-input__inner {
-          width: 7rem;
-        }
-        /deep/.el-input__prefix {
-          top: 0;
-          left: 7rem;
-        }
-        /deep/.el-input__inner {
-          height: 2.5rem;
-          margin-left: 0.5rem;
+        span {
+          font-weight: bold;
+          color: var(--high-color);
         }
       }
-      .button {
-        img {
-          width: 0.6rem;
-          height: 1rem;
-          position: absolute;
-        }
-        .left_img {
-          transform: rotate(180deg);
-          position: absolute;
-          bottom: 1.28rem;
-          left: 4.5rem;
-        }
-        .right_img {
-          bottom: 1.28rem;
-          right: 2.8rem;
-        }
+    }
+    .inspect_people {
+      text-align: center;
+      .first {
+        display: flex;
+        align-items: center;
+        padding-left: 14px;
+        height: 50px;
+      }
+      img {
+        display: inline-block;
+        width: 3rem;
+      }
+      .people_num {
+        font-size: 24px;
+        color: var(--high-color);
+        margin-top: 0.5rem;
+      }
+    }
+  }
+  .home_bottom_left {
+    .pickers {
+      display: flex;
+      justify-content: flex-end;
+      .picker {
+        transform: scale(0.7);
+        text-align: right;
+      }
+      .el-date-editor.el-input,
+      .el-date-editor.el-input__inner {
+        width: 7rem;
+      }
+      /deep/.el-input__prefix {
+        top: 0;
+        left: 7rem;
+      }
+      /deep/.el-input__inner {
+        height: 2.5rem;
+        margin-left: 0.5rem;
+      }
+    }
+    .button {
+      img {
+        width: 0.6rem;
+        height: 1rem;
+        position: absolute;
+      }
+      .left_img {
+        transform: rotate(180deg);
+        position: absolute;
+        bottom: 1.28rem;
+        left: 4.5rem;
+      }
+      .right_img {
+        bottom: 1.28rem;
+        right: 2.8rem;
       }
     }
   }
@@ -329,55 +374,6 @@ export default {
   .home_top_right {
     width: 23.75rem;
     // height: 33.13rem;
-    .inspect {
-      background-color: #103387;
-      border-radius: 0.5rem;
-      // width: 21.6rem;
-      height: 9.4rem;
-      display: flex;
-      .inspect_time,
-      .inspect_people {
-        width: 50%;
-        text-align: center;
-        .first {
-          height: 3.18rem;
-          line-height: 3.18rem;
-          font-size: 0.5rem;
-          transform: scale(0.9);
-          text-align: left;
-        }
-        img {
-          width: 3rem;
-          height: 2.88rem;
-        }
-        .people_num {
-          font-size: 1.5rem;
-          color: #59e6ff;
-          margin-top: 0.5rem;
-        }
-      }
-      .inspect_time {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        border-right: 1px solid #183b8f;
-        div {
-          height: 3.18rem;
-          border-bottom: 1px solid #183b8f;
-          text-align: center;
-          line-height: 3.18rem;
-          font-size: 0.5rem;
-          transform: scale(0.9);
-          span {
-            color: #59e6ff;
-            margin-left: 0.5rem;
-          }
-        }
-        .last {
-          border: none;
-        }
-      }
-    }
   }
   .home_top_right,
   .home_bottom_left {

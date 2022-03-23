@@ -1,6 +1,6 @@
 @import "~_ats/css/base.css";
 
-/* ------------common */
+/* ===============common=============== */
 :root {
     --color-text: #fff;
     --protitle-color: #fff;
@@ -17,7 +17,7 @@
     --input-bdcolor: #1843ad;
 }
 
-/* -------------滚动条样式 */
+/* ===============滚动条样式=============== */
 /* 谷歌滚动条样式 */
 
 ::-webkit-scrollbar {
@@ -35,7 +35,7 @@
     background-color: transparent;
 }
 
-/* -------------el-ui表单样式 */
+/* ===============el-ui表单样式=============== */
 .el-form .el-form-item:last-of-type {
     margin-bottom: 0;
 }
@@ -147,7 +147,7 @@ span.el-radio__inner::after {
 }
 
 
-/* -------------tform-wrapper：上面表单下面表格的业务公共组件 */
+/* ===============-tform-wrapper：上面表单下面表格的业务公共组件=============== */
 .tform-wrapper {
     --head-bgcolor: rgba(7, 58, 172, 0.3);
     --head-bdcolor: var(--wrapper-bdcolor);
@@ -196,7 +196,7 @@ span.el-radio__inner::after {
     border-color: var(--wrapper-bdcolor);
 }
 
-/* -------------el-button及其el-link样式 */
+/* ===============el-button及其el-link样式=============== */
 .el-button {
     --border-color: #467BFF
 }
@@ -226,7 +226,7 @@ button.el-button:hover,
     height: 38px;
 }
 
-/* -----------el-table */
+/* ===============el-table=============== */
 div.el-table {
     color: inherit;
 }
@@ -268,7 +268,7 @@ div.el-table thead {
     color: #39F8FF;
 }
 
-/* -----------table-list手写列表 */
+/* ===============table-list手写列表=============== */
 .be-table-list {
     height: 100%;
 }
@@ -318,4 +318,9 @@ div.el-table thead {
 
 .be-table-item .cell {
     min-height: 46px;
+}
+
+/* ===============首页样式=============== */
+.home-container {
+    --high-color: #4ecaeb;
 }

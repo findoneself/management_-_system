@@ -265,7 +265,7 @@ export default {
           this.$message.error('获取统计数据失败！')
           this.dataList = []
         }
-      }, (err) => {
+      }, () => {
         this.dataLoading = false
         this.$message.error('获取统计数据失败！')
         // 下面逻辑放在正常返回里面
