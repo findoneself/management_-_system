@@ -58,9 +58,13 @@
       v-else
       @monitoringSpotBack='monitoringSpotBack'
     />
-    <div @click="changeActivePage">改变</div>
+    <!-- <div @click="changeActivePage">改变</div> -->
     <div class="map">
-      <DustMonitoringMap />
+      <AirQualityMap
+        :isMarkHandle='true'
+        :coordinateList='coordinateList'
+        @markHandle='markHandle'
+      />
     </div>
   </div>
 </template>
@@ -69,14 +73,14 @@
 import BeautifulCard from '_com/common/BeautifulCard'
 import BeautifulTableList from '_com/common/BeautifulTableList'
 import MonitoringSpot from './components/MonitoringSpot.vue'
-import DustMonitoringMap from './components/DustMonitoringMap.vue'
+import AirQualityMap from '_com/common//AirQualityMap.vue'
 export default {
   name: 'DusMap',
   components: {
     BeautifulCard,
     BeautifulTableList,
     MonitoringSpot,
-    DustMonitoringMap
+    AirQualityMap
   },
   data () {
     return {
@@ -112,9 +116,9 @@ export default {
         { id: '6', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00', jcwd: '16' },
         { id: '7', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00', jcwd: '21' },
         { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
-        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
-        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
-        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' }
+        { id: '9', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
+        { id: '10', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
+        { id: '11', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' }
       ],
       // 监测点数据
       monitoringSspotData: {
@@ -128,7 +132,13 @@ export default {
         { name: '二氧化氮', value: '254' },
         { name: '风速', value: '23' },
         { name: '二氧化硫', value: '5425' }]
-      }
+      },
+      // 地图标记
+      coordinateList: [{ lng: 116.2787, lat: 40.0492, 'pm2.5': 80, color: 'blue' },
+      { lng: 116.297047, lat: 39.979542, 'pm2.5': 30, color: 'yellow' },
+      { lng: 116.321768, lat: 39.88748, 'pm2.5': 30, color: 'yellow' },
+      { lng: 116.494243, lat: 39.956539, 'pm2.5': 10, color: 'green' },
+      { lng: 116.594243, lat: 40.01, 'pm2.5': 100, color: 'red' }]
     }
   },
   methods: {
@@ -140,6 +150,9 @@ export default {
     },
     changeActivePage () {
       this.activePage = 1
+    },
+    markHandle (e) {
+      console.log(e)
     }
   }
 }

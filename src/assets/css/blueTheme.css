@@ -334,21 +334,7 @@ div.el-table thead {
     min-height: 46px;
 }
 
-<<<<<<< HEAD
-/* 搜索框 放大镜 */
-.el-input-group__append button.el-button,
-.el-input-group__append div.el-select .el-input__inner,
-.el-input-group__append div.el-select:hover .el-input__inner,
-.el-input-group__prepend button.el-button,
-.el-input-group__prepend div.el-select .el-input__inner,
-.el-input-group__prepend div.el-select:hover .el-input__inner {
-    /* background-color: #0b1771;
-    box-shadow: inset -1px -1px 10px var(--shadow-color),
-        inset 1px 1px 10px var(--shadow-color); */
-    border-color: #0b1771;
-=======
 /* ===============首页样式=============== */
 .home-container {
     --high-color: #4ecaeb;
->>>>>>> 7284d1ccfeedbe080698a6626d289f9968e15d4a
 }
