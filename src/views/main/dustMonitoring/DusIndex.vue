@@ -1,7 +1,7 @@
 <template>
   <!--扬尘检测首-地图 -->
   <BeautifulWrapper
-    :wraStyle='wraStyle'
+    :wraStyle="currentTabs.id === '1' ? { inPadding: '0px' } : {}"
     :tabsList="tabsList"
   >
     <DusMap v-if="currentTabs.id === '1'" />

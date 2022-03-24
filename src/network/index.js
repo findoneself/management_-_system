@@ -4,7 +4,7 @@ NProgress.configure({ showSpinner: false })
 import router from '../router'
 const http = axios.create({
   timeout: 1000 * 5,
-  baseURL: 'http://192.168.8.88',
+  baseURL: 'http://192.168.8.88:8081',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json; charset=utf-8'

@@ -26,5 +26,12 @@ export default [
   { id: 'tvoc', name: 'TVOC', type: 'paramsType', params: '' },
   { id: 'zy', name: '噪音', type: 'paramsType', params: '' },
   { id: 'tsp', name: 'TSP', type: 'paramsType', params: '' },
-  { id: 'yy', name: '油烟', type: 'paramsType', params: '' }
+  { id: 'yy', name: '油烟', type: 'paramsType', params: '' },
+  // 监控点位
+  { id: 'jkdw', name: '监控点位', type: 'jkdwType', params: '' },
+  { id: 'jkhJ', name: '监控环境', type: 'jkdwType', params: '' },
+  // 项目报警统计排行
+  { id: 'zr', name: '今日', type: 'xmbjDate', params: '' },
+  { id: 'jz', name: '昨日', type: 'xmbjDate', params: '' },
+  { id: 'bz', name: '本周', type: 'xmbjDate', params: '' }
 ]

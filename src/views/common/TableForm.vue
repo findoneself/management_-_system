@@ -43,6 +43,8 @@
           :loading-text="loadingText"
           :loading-icon="loadingIcon"
           :stripe="stripe"
+          :cell-height="cellHeight"
+          :is-header="isHeader"
           :index-obj="indexObj"
           :oper-obj="operObj"
           :data-list="dataList"
@@ -73,10 +75,7 @@ export default {
   props: {
     // ------公共表格组件的数据
     // 加载loading
-    loading: {
-      type: Boolean,
-      default: false
-    },
+    loading: Boolean,
     loadingText: {
       type: String,
       default: '数据加载中...'
@@ -85,6 +84,13 @@ export default {
       type: String,
       default: 'el-icon-loading'
     },
+    // 是否需要表头
+    isHeader: {
+      type: Boolean,
+      default: true
+    },
+    // cell高度，单位为rem
+    cellHeight: String,
     // 序号内容
     indexObj: Object,
     // 操作内容
@@ -92,7 +98,7 @@ export default {
     // 是否斑马纹
     stripe: {
       type: Boolean,
-      default: false
+      default: true
     },
     // 表格数据
     dataList: {

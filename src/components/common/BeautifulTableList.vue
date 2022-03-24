@@ -5,28 +5,33 @@
       class="be-table-ul"
       :class="stripe && 'be-table--stripe'"
     >
-      <div class="be-table-li be-table-header">
+      <div
+        class="be-table-li be-table-header"
+        v-if="isHeader"
+      >
         <!-- 序号表头列 -->
         <div
           v-if="dataList.length > 0 && columns.length > 0 && tableIndex.isIndex"
-          :style="{width: tableIndex.width}"
+          :style="cellHeight ? {width: tableIndex.width, height: cellHeight} : {width: tableIndex.width}"
           class="be-table-index cell"
         >序号</div>
         <!-- 所有表头列 -->
         <div
           class="cell"
           v-for="item in tabColumns"
+          :style="cellHeight ? {height: cellHeight} : {}"
           :key="item.prop"
         >{{ item.name|| '' }}</div>
         <!-- 操作列 -->
         <div
           class="be-table-oper cell"
-          :style="{width: tableOper.width}"
+          :style="cellHeight ? {width: tableIndex.width, height: cellHeight} : {width: tableIndex.width}"
           v-if="dataList.length > 0 && columns.length > 0 && tableOper.isOperation"
         >操作</div>
       </div>
       <div
         class="be-table-content"
+        :class="isHeader ? 'be-ishead-content' : 'be-nohead-content'"
         v-loading="loading"
         :element-loading-text="loadingText"
         :element-loading-spinner="loadingIcon"
@@ -39,19 +44,20 @@
           <!-- 序号列 -->
           <div
             v-if="dataList.length > 0 && columns.length > 0 && tableIndex.isIndex"
-            :style="{width: tableIndex.width}"
+            :style="cellHeight ? {width: tableIndex.width, minHeight: cellHeight} : {width: tableIndex.width}"
             class="be-table-index cell"
           >{{ iindex + 1 }}</div>
           <!-- 所有字段列 -->
           <div
             class="cell"
             v-for="(value, vindex) in columns"
+            :style="cellHeight ? {minHeight: cellHeight} : {}"
             :key="'value-' + vindex"
           >{{ item[value.prop] || '' }}</div>
           <!-- 操作列，传参复杂 -->
           <div
             class="be-table-oper cell"
-            :style="{width: tableOper.width}"
+            :style="cellHeight ? {width: tableIndex.width, minHeight: cellHeight} : {width: tableIndex.width}"
             v-if="dataList.length > 0 && columns.length > 0 && tableOper.isOperation"
           >
             <template v-if="tableOper.isUnifiedOper">
@@ -101,13 +107,15 @@ export default {
     // 是否斑马纹
     stripe: {
       type: Boolean,
-      default: false
+      default: true
     },
     // 表格高度
     height: {
       type: String,
       default: '100%'
     },
+    // cell高度，单位为rem
+    cellHeight: String,
     // 序号内容
     indexObj: {
       type: Object,
@@ -122,6 +130,11 @@ export default {
         return {}
       }
     },
+    // 是否需要表头
+    isHeader: {
+      type: Boolean,
+      default: true
+    },
     // 表格数据
     dataList: {
       type: Array,
@@ -133,6 +146,7 @@ export default {
     // 表头数据
     columns: {
       type: Array,
+      required: true,
       default () {
         return []
       }
@@ -142,7 +156,7 @@ export default {
     // 定义默认序号列数据
     tableIndex () {
       return Object.assign({
-        isIndex: true,
+        isIndex: false,
         width: '3.75rem'
       }, this.indexObj)
     },
@@ -158,7 +172,7 @@ export default {
     tableOper () {
       return Object.assign({
         operButton: [],
-        isOperation: true,
+        isOperation: false,
         isUnifiedOper: true,
         btnUnderline: false,
         width: '6.25rem'
