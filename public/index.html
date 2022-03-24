@@ -6,12 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+
     <title><%= htmlWebpackPlugin.options.title%></title>
     <% if(htmlWebpackPlugin.options.isProd){ %>
+
         <!-- nprogress 的样式表文件 -->
         <link rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
         <!-- element-ui 的样式表文件 -->
         <link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.2/lib/theme-chalk/index.css">
+
+        <script src="http://api.map.baidu.com/api?v=3.0&ak=n3U8OT9b5COsP61ayOdOtjHK6rVOWwci"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/extension/bmap.min.js"></script>
 
         <script src="https://cdn.staticfile.org/vue/2.6.12/vue.min.js"></script>
         <script src="https://cdn.staticfile.org/vue-router/3.4.7/vue-router.min.js"></script>
@@ -22,8 +28,6 @@
         <script src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js"></script>
         <!-- element-ui 的 js 文件 -->
         <script src="https://cdn.staticfile.org/element-ui/2.13.2/index.js"></script>
-        <!-- <script src="http://api.map.baidu.com/api?v=2.0&ak=y5vpGn7gL7QdbNBrc6GEbizGuaQezXiy"></script> -->
-        <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/extension/bmap.min.js"></script>
         <% } %>
 </head>
 
