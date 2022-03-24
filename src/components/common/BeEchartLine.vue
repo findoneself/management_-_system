@@ -3,7 +3,7 @@
   <div
     :id="id"
     ref="chartLineBox"
-    :style="mainStyle"
+    style="width: 100%;height: 100%"
   ></div>
 </template>
 <script>
@@ -98,14 +98,14 @@ export default {
         ]
       }
     },
-    // 图形高度
-    height: {
-      type: [Number, String]
-    },
-    // 图形宽度
-    width: {
-      type: [Number, String]
-    },
+    // // 图形高度
+    // height: {
+    //   type: [Number, String]
+    // },
+    // // 图形宽度
+    // width: {
+    //   type: [Number, String]
+    // },
     // Y轴值得格式化
     yFormatter: {
       type: String,
@@ -122,29 +122,29 @@ export default {
     }
   },
   computed: {
-    mainStyle: {
-      get () {
-        var style = {}
-        if (this.height) {
-          if (typeof this.height === 'number' || !isNaN(this.height)) {
-            style.height = this.height + 'rem'
-          } else {
-            style.height = this.height
-          }
-        }
-        if (!style.height) {
-          style.height = '25rem'
-        }
-        if (this.width) {
-          if (typeof this.width === 'number' || !isNaN(this.width)) {
-            style.width = this.width + 'rem'
-          } else {
-            style.width = this.width
-          }
-        }
-        return style
-      }
-    }
+    // mainStyle: {
+    //   get () {
+    //     var style = {}
+    //     if (this.height) {
+    //       if (typeof this.height === 'number' || !isNaN(this.height)) {
+    //         style.height = this.height + 'rem'
+    //       } else {
+    //         style.height = this.height
+    //       }
+    //     }
+    //     if (!style.height) {
+    //       style.height = '25rem'
+    //     }
+    //     if (this.width) {
+    //       if (typeof this.width === 'number' || !isNaN(this.width)) {
+    //         style.width = this.width + 'rem'
+    //       } else {
+    //         style.width = this.width
+    //       }
+    //     }
+    //     return style
+    //   }
+    // }
   },
   activated () {
     // 由于给echart添加了resize事件, 在组件激活时需要重新resize绘画一次, 否则出现空白bug

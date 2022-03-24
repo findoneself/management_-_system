@@ -35,6 +35,20 @@
     background-color: transparent;
 }
 
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+/* ===============loading表单样式=============== */
+div.el-loading-mask {
+    background-color: #02004db0;
+}
+
+div.el-loading-spinner .el-loading-text,
+div.el-loading-spinner i {
+    color: var(--triangle-color);
+}
+
 /* ===============el-ui表单样式=============== */
 .el-form .el-form-item:last-of-type {
     margin-bottom: 0;

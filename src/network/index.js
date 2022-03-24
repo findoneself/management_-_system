@@ -1,6 +1,6 @@
 import axios from 'axios'
 import NProgress from 'nprogress'
-
+NProgress.configure({ showSpinner: false })
 import router from '../router'
 const http = axios.create({
   timeout: 1000 * 5,

@@ -70,6 +70,7 @@ export default {
                     return item.count
                   },
                   position: 'center',
+                  padding: [0, 0, 5, 0],
                   show: true,
                   textStyle: {
                     fontWeight: 'bold'

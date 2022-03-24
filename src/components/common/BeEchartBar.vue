@@ -3,7 +3,7 @@
   <div
     :id="id"
     ref="chartBarBox"
-    :style="mainStyle"
+    style="width: 100%; height: 100%"
   ></div>
 </template>
 <script>
@@ -73,6 +73,13 @@ export default {
         return []
       }
     },
+    // 是否需要工具栏
+    isToolbox: {
+      type: Boolean,
+      default () {
+        return false
+      }
+    },
     // 各个Y轴参数对应得X轴节点数据列表
     series: {
       type: Array,
@@ -86,14 +93,14 @@ export default {
         ]
       }
     },
-    // 图形高度
-    height: {
-      type: [Number, String]
-    },
-    // 图形宽度
-    width: {
-      type: [Number, String]
-    },
+    // // 图形高度
+    // height: {
+    //   type: [Number, String]
+    // },
+    // // 图形宽度
+    // width: {
+    //   type: [Number, String]
+    // },
     // Y轴值得格式化
     yFormatter: {
       type: String,
@@ -110,29 +117,29 @@ export default {
     }
   },
   computed: {
-    mainStyle: {
-      get () {
-        var style = {}
-        if (this.height) {
-          if (typeof this.height === 'number' || !isNaN(this.height)) {
-            style.height = this.height + 'rem'
-          } else {
-            style.height = this.height
-          }
-        }
-        if (!style.height) {
-          style.height = '25rem'
-        }
-        if (this.width) {
-          if (typeof this.width === 'number' || !isNaN(this.width)) {
-            style.width = this.width + 'rem'
-          } else {
-            style.width = this.width
-          }
-        }
-        return style
-      }
-    }
+    // mainStyle: {
+    //   get () {
+    //     var style = {}
+    //     if (this.height) {
+    //       if (typeof this.height === 'number' || !isNaN(this.height)) {
+    //         style.height = this.height + 'rem'
+    //       } else {
+    //         style.height = this.height
+    //       }
+    //     }
+    //     if (!style.height) {
+    //       style.height = '25rem'
+    //     }
+    //     if (this.width) {
+    //       if (typeof this.width === 'number' || !isNaN(this.width)) {
+    //         style.width = this.width + 'rem'
+    //       } else {
+    //         style.width = this.width
+    //       }
+    //     }
+    //     return style
+    //   }
+    // }
   },
   mounted () {
     this.initChartBar()
@@ -210,18 +217,6 @@ export default {
           bottom: '3%',
           containLabel: true
         },
-        // 工具箱
-        toolbox: {
-          top: 3,
-          right: 10,
-          feature: {
-            dataZoom: {
-              yAxisIndex: 'none'
-            },
-            restore: {},
-            saveAsImage: {}
-          }
-        },
         // 鼠标移入的弹窗配置
         tooltip: {
           trigger: 'axis',
@@ -296,6 +291,19 @@ export default {
       // 图例组
       if (this.legends) {
         options.legend.data = this.legends
+      }
+      if (this.isToolbox) {
+        options.toolbox = {
+          top: 3,
+          right: 10,
+          feature: {
+            dataZoom: {
+              yAxisIndex: 'none'
+            },
+            restore: {},
+            saveAsImage: {}
+          }
+        }
       }
       // 序列数据
       options.series = this.series || []

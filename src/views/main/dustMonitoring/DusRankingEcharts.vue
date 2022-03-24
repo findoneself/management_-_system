@@ -9,6 +9,8 @@
     :index-obj="{isIndex: false}"
     :oper-obj="rankOperList"
     :is-table="tabsType === 'table'"
+    :cur-btn-id="echartsType"
+    @buttonClick="buttonClick"
     :tform-head="tformHead"
   >
     <el-form
@@ -83,16 +85,13 @@
         </div>
       </el-form-item>
     </el-form>
-    <div
-      class="echart-tab"
+    <BeEchartBar
       v-show="tabsType === 'echart'"
-    >
-      <BeEchartBar
-        :show-title="false"
-        :xAxis="echartXAxis"
-        :series="echartSeries"
-      />
-    </div>
+      :show-title="false"
+      :options="{xAxis: {axisLabel:{ rotate: 45 }}}"
+      :xAxis="echartXAxis"
+      :series="echartSeries"
+    />
   </TableForm>
 </template>
 
@@ -161,7 +160,9 @@ export default {
         paramType: 'wd'
       },
       // 展示数据类型
-      tabsType: 'echart',
+      tabsType: '',
+      // echarts的参数类型
+      echartsType: '',
       // 表格表头
       columns: [
         { name: '监测点', prop: 'jcd', key: 4 },
@@ -223,6 +224,8 @@ export default {
   },
   created () {
     this.initDict()
+    // 设置默认展示类型和默认echart类型
+    this.tabsClick(this.dictOptions.tabsTypes[0].id)
   },
   mounted () {
     this.getDataList()
@@ -240,10 +243,6 @@ export default {
         this.dataForm.area = dict.xzarea[0].id
       }
     },
-    // 设置展示类型
-    tabsClick (id) {
-      this.tabsType = id
-    },
     // 获取表格和统计数据
     getDataList () {
       this.dataLoading = true
@@ -252,6 +251,10 @@ export default {
         params.startTime = params.date[0]
         params.endTime = params.date[1]
         delete params.date
+      }
+      if (this.echartsType !== '') {
+        // echart图表获取数据参数
+        params.echartsType = this.echartsType
       }
       this.$http({
         url: 'dusQuery/getDusrankData',
@@ -280,7 +283,9 @@ export default {
           { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
           { id: '9', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
           { id: '10', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '11', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' }
+          { id: '11', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
+          { id: '12', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
+          { id: '13', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' }
         ]
         this.dataList = list
         let xAxis = []
@@ -293,17 +298,20 @@ export default {
         this.echartSeries = [
           {
             type: 'bar',
-            barMaxWidth: 35,
+            barMaxWidth: 23,
             barGap: '10%',
+            label: {
+              show: true
+            },
             itemStyle: {
-              'normal': {
-                'color': 'rgba(255,144,128,1)',
-                'label': {
-                  'show': true,
-                  'textStyle': {
-                    'color': '#fff'
+              normal: {
+                color: '#486AFF',
+                label: {
+                  show: true,
+                  textStyle: {
+                    color: '#fff'
                   },
-                  'position': 'inside',
+                  position: 'top',
                   formatter: function (p) {
                     return p.value > 0 ? (p.value) : ''
                   }
@@ -314,6 +322,23 @@ export default {
           }
         ]
       })
+    },
+    // 设置展示类型
+    tabsClick (id) {
+      this.tabsType = id
+      if (id === 'echart') {
+        this.echartsType = this.tformHead.btnList[0].id
+      }
+    },
+    // 点击回调
+    buttonClick (item) {
+      if (this.tabsType === 'table') {
+        // 表格按钮点击回调--导出表格
+
+      } else {
+        // 图表按钮点击回调--切换检测源或者项目
+        this.echartsType = item.id
+      }
     }
   }
 }
