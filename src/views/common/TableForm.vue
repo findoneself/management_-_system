@@ -28,7 +28,7 @@
               v-for="item in tformHeader.btnList"
               :key="item.id"
               class="tabs-button-item"
-              :class="item.id === cusCurBtn && 'tabs-button-active'"
+              :class="item.id === curBtnId && 'tabs-button-active'"
               @click="buttonClick(item)"
             >{{ item.name }}</div>
           </template>
@@ -51,6 +51,9 @@
       </div>
       <div
         class="tform-custom"
+        v-loading="loading"
+        :element-loading-text="loadingText"
+        :element-loading-spinner="loadingIcon"
         v-show="!isTable"
       >
         <slot></slot>
@@ -125,12 +128,11 @@ export default {
     highlightCurrent: {
       type: Boolean,
       default: false
-    }
-  },
-  data () {
-    return {
-      // 自定义按钮当前点击
-      cusCurBtn: ''
+    },
+    // 当前自定义按钮点击的id
+    curBtnId: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -145,21 +147,9 @@ export default {
       }, this.tformHead)
     }
   },
-  watch: {
-    // 监听按钮类型改变，如果是自定义，则设置默认点击为第一个
-    'tformHead.btnType': {
-      handler (val) {
-        if (val === 'custom' && this.tformHead.btnList && this.tformHead.btnList.length > 0) {
-          this.cusCurBtn = this.tformHead.btnList[0].id
-        }
-      },
-      immediate: true
-    }
-  },
   methods: {
     // 按钮点击
     buttonClick (item) {
-      this.cusCurBtn = item.id
       this.$emit('buttonClick', item)
     }
   }

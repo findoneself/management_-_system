@@ -69,7 +69,8 @@ function getMenuData (to, next) {
   mainRoutes.children = []
   $http({ url: `/menu/nav${to.params.userId || ''}` }).then(data => {
     data = data || []
-  }, err => {
+    console.log(data)
+  }, () => {
     // router.push({ name: 'login' })
     // 下面逻辑当能获取菜单时移入reslove里面，且需要判断是否返回数据
     // key：用来排序

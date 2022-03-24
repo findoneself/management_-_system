@@ -11,9 +11,7 @@
           name="fade"
           mode="out-in"
         >
-          <keep-alive>
-            <router-view :key="$route.name"></router-view>
-          </keep-alive>
+          <router-view :key="$route.name"></router-view>
         </transition>
       </el-main>
     </el-container>

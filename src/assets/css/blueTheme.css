@@ -1,6 +1,6 @@
 @import "~_ats/css/base.css";
 
-/* ------------common */
+/* ===============common=============== */
 :root {
     --color-text: #fff;
     --protitle-color: #fff;
@@ -17,7 +17,7 @@
     --input-bdcolor: #1843ad;
 }
 
-/* -------------滚动条样式 */
+/* ===============滚动条样式=============== */
 /* 谷歌滚动条样式 */
 
 ::-webkit-scrollbar {
@@ -35,7 +35,21 @@
     background-color: transparent;
 }
 
-/* -------------el-ui表单样式 */
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+/* ===============loading表单样式=============== */
+div.el-loading-mask {
+    background-color: #02004db0;
+}
+
+div.el-loading-spinner .el-loading-text,
+div.el-loading-spinner i {
+    color: var(--triangle-color);
+}
+
+/* ===============el-ui表单样式=============== */
 .el-form .el-form-item:last-of-type {
     margin-bottom: 0;
 }
@@ -147,7 +161,7 @@ span.el-radio__inner::after {
 }
 
 
-/* -------------tform-wrapper：上面表单下面表格的业务公共组件 */
+/* ===============-tform-wrapper：上面表单下面表格的业务公共组件=============== */
 .tform-wrapper {
     --head-bgcolor: rgba(7, 58, 172, 0.3);
     --head-bdcolor: var(--wrapper-bdcolor);
@@ -196,7 +210,7 @@ span.el-radio__inner::after {
     border-color: var(--wrapper-bdcolor);
 }
 
-/* -------------el-button及其el-link样式 */
+/* ===============el-button及其el-link样式=============== */
 .el-button {
     --border-color: #467BFF
 }
@@ -226,7 +240,7 @@ button.el-button:hover,
     height: 38px;
 }
 
-/* -----------el-table */
+/* ===============el-table=============== */
 div.el-table {
     color: inherit;
 }
@@ -268,7 +282,7 @@ div.el-table thead {
     color: #39F8FF;
 }
 
-/* -----------table-list手写列表 */
+/* ===============table-list手写列表=============== */
 .be-table-list {
     height: 100%;
 }
@@ -320,6 +334,7 @@ div.el-table thead {
     min-height: 46px;
 }
 
+<<<<<<< HEAD
 /* 搜索框 放大镜 */
 .el-input-group__append button.el-button,
 .el-input-group__append div.el-select .el-input__inner,
@@ -331,4 +346,9 @@ div.el-table thead {
     box-shadow: inset -1px -1px 10px var(--shadow-color),
         inset 1px 1px 10px var(--shadow-color); */
     border-color: #0b1771;
+=======
+/* ===============首页样式=============== */
+.home-container {
+    --high-color: #4ecaeb;
+>>>>>>> 7284d1ccfeedbe080698a6626d289f9968e15d4a
 }

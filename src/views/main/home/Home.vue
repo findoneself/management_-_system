@@ -1,63 +1,47 @@
 <template>
-  <div class="container">
+  <div class="home-container">
     <div class="home_top">
       <!-- 巡察整改 -->
       <BeautifulCard
+<<<<<<< HEAD
         :width="'23.75rem'"
+=======
+>>>>>>> 7284d1ccfeedbe080698a6626d289f9968e15d4a
         title="巡查整改"
         class="home_top_left"
       >
         <div class="inspect">
-          <div class="inspect_time">
-            <div>本月检查次数:<span>2132</span></div>
-            <div>本月检查次数:<span>2132</span></div>
-            <div class="last">本月检查次数:<span>2132</span></div>
-          </div>
+          <ul class="inspect_time">
+            <li>本月检查项目：<span>{{ patrolData.inspect.project }}</span></li>
+            <li>本月检查次数：<span>{{ patrolData.inspect.num1 }}</span></li>
+            <li>本月检查次数：<span>{{ patrolData.inspect.num2 }}</span></li>
+          </ul>
           <div class="inspect_people">
             <div class="first">网络员：</div>
-            <img
-              src="~_ats/img/people.png"
-              alt=""
-            />
-            <div class="people_num">12345人</div>
+            <img src="~_ats/img/people.png" />
+            <div class="people_num">{{ patrolData.people }}人</div>
           </div>
         </div>
-        <div>
-          <PatrolMap></PatrolMap>
-        </div>
+        <PatrolMap :data-list="patrolData.patrolList"></PatrolMap>
       </BeautifulCard>
       <!-- 中间项目总数 -->
       <div class="home_top_center">
         <div class="totalnum">
           <div class="time">
-            <img
-              class="left_img"
-              src="~_ats/img/right.png"
-              alt=""
-            />
-            <div><span class="span">2021年</span> <span>01月</span></div>
-            <img
-              src="~_ats/img/right.png"
-              alt=""
-            />
+            <span class="span">{{ projectInfo.year }}年</span> <span>{{ projectInfo.month }}月</span>
           </div>
           <div class="bignum">
-            <img
-              class="big_img"
-              src="~_ats/img/num_left.png"
-              alt=""
-            />
-            <div><span>8</span></div>
-            <div><span>7</span></div>
-            <div><span>9</span></div>
-            <img
-              class="big_i"
-              src="~_ats/img/num_right.png"
-              alt=""
-            />
+            <div class="bginum-text">
+              <span
+                class="bginum-text-item"
+                v-for="(val, index) in projectInfo.count"
+                :key="index"
+              >{{ val }}</span>
+            </div>
           </div>
           <div class="total_text">
-            <span>项</span><span>目</span><span>总</span><span>数</span><span>:</span>
+            <span>项目总数</span>
+            <span></span>
           </div>
         </div>
         <div class="images">
@@ -66,25 +50,14 @@
             src="~_ats/img/total_num.png"
             alt=""
           >
-          <div class="images_item images_item1">
-            <div class="img1"></div>
-            <span>项目分类</span>
-          </div>
-          <div class="images_item images_item2">
-            <div class="img2"></div>
-            <span>项目分类</span>
-          </div>
-          <div class="images_item images_item3">
-            <div class="img3"></div>
-            <span>项目分类</span>
-          </div>
-          <div class="images_item images_item4">
-            <div class="img4"></div>
-            <span>项目分类</span>
-          </div>
-          <div class="images_item images_item5">
-            <div class="img5"></div>
-            <span>项目分类</span>
+          <div
+            class="images_item"
+            :class="'images_item' + (index +1)"
+            v-for="(item, index) in projectInfo.list"
+            :key="item.id"
+          >
+            <div class="images_value">{{ item.num }}</div>
+            <span>{{ item.name }}</span>
           </div>
         </div>
       </div>
@@ -95,24 +68,25 @@
       >
         <div class="picker">
           <el-date-picker
-            prefix-icon="el-icon-arrow-down"
-            class="date"
-            v-model="date"
+            prefix-icon="el-icon-time"
+            class="gkzd-date"
+            size="mini"
+            v-model="gkzdDate"
             type="date"
             placeholder="选择日期"
           >
           </el-date-picker>
         </div>
-        <div class="params">
-          <div
-            class="item"
+        <ul class="gkzd-list">
+          <li
+            class="gkzd-list-item"
             v-for="(item, index) in paramslist"
             :key="index + '.'"
           >
-            <div class="span">{{ item.name }}:</div>
-            <div class="span margin">{{ item.value }}</div>
-          </div>
-        </div>
+            <span>{{ item.name }}：</span>
+            <span>{{ item.value }}</span>
+          </li>
+        </ul>
       </BeautifulCard>
     </div>
     <div class="home_bottom">
@@ -121,29 +95,17 @@
         :title="'报警统计趋势分析'"
         class="home_bottom_left"
       >
-        <div class="pickers">
-          <div class="picker">
-            <span>开始时间：</span>
-            <el-date-picker
-              prefix-icon="el-icon-arrow-down"
-              class="date"
-              v-model="startDate"
-              type="date"
-              placeholder="选择日期"
-            >
-            </el-date-picker>
-          </div>
-          <div class="picker">
-            <span>结束时间：</span>
-            <el-date-picker
-              prefix-icon="el-icon-arrow-down"
-              class="date"
-              v-model="endDate"
-              type="date"
-              placeholder="选择日期"
-            >
-            </el-date-picker>
-          </div>
+        <div class="picker">
+          时间区间：
+          <el-date-picker
+            v-model="echartDate"
+            type="daterange"
+            size="mini"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
         </div>
         <WarningNum></WarningNum>
         <div class="button">
@@ -212,7 +174,7 @@
 
 <script>
 import BeautifulCard from '_com/common/BeautifulCard'
-import PatrolMap from '_com/patrolMap/patrolMap'
+import PatrolMap from './components/patrolMap'
 import WarningNum from './components/warningNum'
 import InstallNum from './components/installNmu'
 export default {
@@ -225,31 +187,66 @@ export default {
   },
   data () {
     return {
-      date: '',
-      startDate: '',
-      endDate: '',
+      // 国控站点日期
+      gkzdDate: new Date(),
+      // 统计时间区间
+      echartDate: [],
+      // 巡查整改数据
+      patrolData: {
+        inspect: {
+          project: 2245,
+          num1: 2654,
+          num2: 6562
+        },
+        people: 45661,
+        patrolList: [
+          { name: '巡查单', count: 256643, percent: 80 },
+          { name: '停工单', count: 256643, percent: 60 },
+          { name: '督办单', count: 256643, percent: 40 },
+          { name: '整改单', count: 256643, percent: 50 }
+        ]
+      },
+      // 中间当前时间
+      projectInfo: {
+        year: '',
+        month: '',
+        count: '56562',
+        list: [
+          { id: 'xm1', name: '项目1', num: 3145 },
+          { id: 'xm2', name: '项目2', num: 3145 },
+          { id: 'xm3', name: '项目3', num: 3145 },
+          { id: 'xm4', name: '项目4', num: 3145 },
+          { id: 'xm5', name: '项目5', num: 3145 }
+        ]
+      },
+      // 国控数据
       paramslist: [
-        {
-          name: '参数类型',
-          value: 2134
-        },
-        {
-          name: '参数类型',
-          value: 2134
-        },
-        {
-          name: '参数类型',
-          value: 2134
-        },
-        {
-          name: '参数类型',
-          value: 2134
-        }
+        { id: '1', name: '参数类型', value: 2134 },
+        { id: '2', name: '参数类型', value: 2134 },
+        { id: '3', name: '参数类型', value: 2134 },
+        { id: '4', name: '参数类型', value: 2134 },
+        { id: '5', name: '参数类型', value: 2134 },
+        { id: '6', name: '参数类型', value: 2134 },
+        { id: '7', name: '参数类型', value: 2134 },
+        { id: '8', name: '参数类型', value: 2134 },
+        { id: '9', name: '参数类型', value: 2134 },
+        { id: '10', name: '参数类型', value: 2134 },
+        { id: '11', name: '参数类型', value: 2134 },
+        { id: '12', name: '参数类型', value: 2134 },
+        { id: '13', name: '参数类型', value: 2134 },
+        { id: '14', name: '参数类型', value: 2134 },
+        { id: '54', name: '参数类型', value: 2134 },
+        { id: '45', name: '参数类型', value: 2134 },
+        { id: '47', name: '参数类型', value: 2134 }
       ]
     }
   },
   created () {
     this.getdate()
+    const cdate = new Date()
+    this.projectInfo.year = cdate.getFullYear()
+    this.projectInfo.month = cdate.getMonth()
+    this.projectInfo.count = this.projectInfo.count.split('')
   },
   methods: {
     getdate () {
@@ -266,293 +263,285 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.home-container {
   padding: 20px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  .picker {
+    height: 35px;
+    text-align: right;
+    .gkzd-date {
+      width: 9rem;
+    }
+  }
+  .home_top,
+  .home_bottom {
+    display: flex;
+    justify-content: space-between;
+  }
   .home_top {
     height: 57.5%;
   }
   .home_bottom {
     height: 40%;
   }
-  .home_top,
-  .home_bottom {
+  .inspect {
+    background-color: #103387;
+    border-radius: 0.5rem;
+    border: 1px solid #334c9e;
     display: flex;
-    justify-content: space-around;
-    .home_bottom_left {
-      .pickers {
+    align-items: stretch;
+    font-size: 14px;
+    .inspect_time,
+    .inspect_people {
+      width: 50%;
+    }
+    .inspect_time {
+      border-right: 1px solid #183b8f;
+      > li {
         display: flex;
-        //  align-items: center;
-        justify-content: flex-end;
-        .picker {
-          transform: scale(0.7);
-          text-align: right;
-          // margin-left: auto;
+        align-items: center;
+        padding: 0 14px;
+        height: 50px;
+        :nth-of-type(n + 2) {
+          border-top: 1px solid #183b8f;
         }
-        .el-date-editor.el-input,
-        .el-date-editor.el-input__inner {
-          width: 7rem;
-        }
-        /deep/.el-input__prefix {
-          top: 0;
-          left: 7rem;
-        }
-        /deep/.el-input__inner {
-          height: 2.5rem;
-          margin-left: 0.5rem;
+        span {
+          font-weight: bold;
+          color: var(--high-color);
         }
       }
-      .button {
-        img {
-          width: 0.6rem;
-          height: 1rem;
-          position: absolute;
-        }
-        .left_img {
-          transform: rotate(180deg);
-          position: absolute;
-          bottom: 1.28rem;
-          left: 4.5rem;
-        }
-        .right_img {
-          bottom: 1.28rem;
-          right: 2.8rem;
-        }
+    }
+    .inspect_people {
+      text-align: center;
+      .first {
+        display: flex;
+        align-items: center;
+        padding-left: 14px;
+        height: 50px;
+      }
+      img {
+        display: inline-block;
+        width: 3rem;
+      }
+      .people_num {
+        font-size: 24px;
+        color: var(--high-color);
+        margin-top: 0.5rem;
       }
     }
   }
   .home_top_left,
   .home_top_right {
     width: 23.75rem;
-    // height: 33.13rem;
-    .inspect {
-      background-color: #103387;
-      border-radius: 0.5rem;
-      // width: 21.6rem;
-      height: 9.4rem;
-      display: flex;
-      .inspect_time,
-      .inspect_people {
-        width: 50%;
-        text-align: center;
-        .first {
-          height: 3.18rem;
-          line-height: 3.18rem;
-          font-size: 0.5rem;
-          transform: scale(0.9);
-          text-align: left;
-        }
-        img {
-          width: 3rem;
-          height: 2.88rem;
-        }
-        .people_num {
-          font-size: 1.5rem;
-          color: #59e6ff;
-          margin-top: 0.5rem;
-        }
-      }
-      .inspect_time {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        border-right: 1px solid #183b8f;
-        div {
-          height: 3.18rem;
-          border-bottom: 1px solid #183b8f;
-          text-align: center;
-          line-height: 3.18rem;
-          font-size: 0.5rem;
-          transform: scale(0.9);
-          span {
-            color: #59e6ff;
-            margin-left: 0.5rem;
-          }
-        }
-        .last {
-          border: none;
-        }
-      }
-    }
+    flex-shrink: 0;
   }
-  .home_top_right,
-  .home_bottom_left {
-    .picker {
-      height: 2.88rem;
-      text-align: right;
-      .date {
-        text-align: right;
-      }
-    }
-    /deep/.el-input__inner {
-      width: 9rem;
-      height: 1.88rem;
-      padding-left: 0.5rem;
-      color: #fff;
-      font-size: 0.88rem;
-      background-color: #040560;
-      border: 0.0625rem solid #040560;
-      box-shadow: inset -1px -1px 10px rgba(48, 82, 184, 0.5),
-        inset 1px 1px 10px rgba(48, 82, 184, 0.5);
-    }
-    /deep/.el-input__prefix {
-      top: -0.3rem;
-      left: 12rem;
-    }
-    /deep/ .el-input__suffix {
-      display: none;
-    }
-    .params {
+  .home_top_right {
+    .gkzd-list {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
       overflow: hidden;
-      .item {
-        width: 10.63rem;
-        text-align: center;
-        line-height: 3.1rem;
-        height: 3.1rem;
-        margin: 0.2rem;
-        background-color: #133c91;
-        border-radius: 0.3rem;
-        .span {
-          font-size: 0.88rem;
-          transform: scale(0.9);
-          display: inline-block;
-        }
-        .margin {
-          margin-left: 0.2rem;
-        }
-      }
+      height: calc(100% - 35px);
+      overflow-y: scroll;
+    }
+    .gkzd-list-item {
+      width: calc(50% - 5px);
+      display: inline-flex;
+      align-items: center;
+      height: 40px;
+      background: rgba(19, 60, 145, 0.85);
+      border: 1px solid #334c9e;
+      margin: 5px 0;
+      padding: 4px 15px;
+      background-color: #133c91;
+      border-radius: 4px;
     }
   }
+  // --------
   .home_top_center {
     flex: 1;
-    position: relative;
     .totalnum {
-      display: flex;
-      flex-direction: column;
-      height: 12.2rem;
-      color: #fff;
-      text-align: center;
       position: relative;
+      top: -1.5rem;
+      color: var(--color-text);
+      text-align: center;
       .time {
-        text-align: center;
-        position: absolute;
-        top: -1rem;
-        left: 50%;
-        transform: translateX(-50%);
-        img {
-          width: 0.69rem;
-          height: 1rem;
+        position: relative;
+        top: -0.5rem;
+        padding: 0 20px;
+        width: 170px;
+        margin: 0 auto;
+        font-size: 20px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        span {
+          margin: 0 5px;
         }
-        .left_img {
-          transform: rotate(180deg);
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          margin-top: -8px;
+          width: 11px;
+          height: 16px;
+          background: url("~_ats/img/icon_brackets.png") no-repeat center/ 100%
+            auto;
         }
-        div {
-          display: inline;
-          margin: 0 1.75rem;
-          .span {
-            margin-right: 1.25rem;
-          }
-          .span,
-          span {
-            font-size: 1.31rem;
-          }
+        &::before {
+          left: 0;
+        }
+        &::after {
+          right: 0;
+          transform: scale(-1, 1);
         }
       }
       .bignum {
-        margin-top: 1.8rem;
-        display: flex;
-        justify-content: center;
-        div {
-          text-align: center;
-          line-height: 6.56rem;
-          margin-right: 0.4rem;
-          font-size: 5.6rem;
+        position: relative;
+        padding: 0 72px;
+        height: 140px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          margin-top: 0;
+          width: 58px;
+          height: 140px;
+          background: url("~_ats/img/num_left.png") no-repeat center/ 100% auto;
+        }
+        &::before {
+          left: 0;
+        }
+        &::after {
+          right: 0;
+          transform: scale(-1, 1);
+        }
+        .bginum-text {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 89px;
           font-family: "DS-Digital";
-          text-indent: -0.5rem;
-          span {
-            transform: rotate(30deg);
-          }
         }
-        .big_img {
-          margin-right: 0.8rem;
-        }
-        .big_i {
-          margin-left: 0.4rem;
-        }
-        img,
-        div {
-          width: 4.13rem;
-          height: 6.56rem;
-          border: 1px solid #3ccaff;
-          border-radius: 1rem;
-          // margin: 0 0.4rem;
-        }
-        .big_img,
-        .big_i {
-          border: none;
+        .bginum-text-item {
+          position: relative;
+          display: inline-block;
+          width: 72px;
+          height: 103px;
+          border: 2px solid #29c0ff;
+          margin: 0 4px;
+          border-radius: 8px;
+          z-index: 1;
         }
       }
       .total_text {
-        color: #39f8ff;
-        font-size: 1.6rem;
-        margin-top: 1rem;
-        span {
-          margin: 0.2rem;
-        }
+        font-size: 28px;
+        font-family: YouSheBiaoTiHei;
+        font-weight: bold;
+        color: var(--high-color);
+        letter-spacing: 4px;
+        margin-top: 6px;
       }
     }
     .images {
+      position: relative;
+      top: -16px;
       text-align: center;
       display: flex;
       justify-content: space-evenly;
       padding: 0 2.5rem;
       .total_y {
         width: 14.56rem;
-        height: 3.5rem;
         position: absolute;
-        top: 35%;
+        top: -12px;
       }
       .images_item {
-        display: flex;
-        flex-direction: column;
         display: inline-block;
         font-size: 1rem;
         color: #fff;
         position: relative;
+        font-weight: bold;
       }
       .images_item1,
       .images_item5 {
-        margin-top: -2rem;
+        margin-top: -32px;
       }
       .images_item3 {
-        margin-top: 2rem;
+        margin-top: 32px;
       }
-      .img1,
-      .img3,
-      .img5 {
+      .images_value {
+        font-size: 22px;
+        font-family: HYLingXinJ;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+      .images_item1 .images_value,
+      .images_item3 .images_value,
+      .images_item5 .images_value {
         background: url("~_ats/img/img1.png") no-repeat center center;
         background-size: 100% 100%;
-        width: 10rem;
-        height: 10rem;
-        margin-bottom: 0.9rem;
+        width: 140px;
+        height: 140px;
       }
-      .img2,
-      .img4 {
+      .images_item2 .images_value,
+      .images_item4 .images_value {
         background: url("~_ats/img/img2.png") no-repeat center center;
         background-size: 100% 100%;
-        width: 12rem;
-        height: 12rem;
-        margin-bottom: 0.9rem;
+        width: 170px;
+        height: 170px;
       }
-      .img3 {
-        width: 15rem;
-        height: 15rem;
+      .images_item3 .images_value {
+        width: 200px;
+        height: 200px;
+      }
+    }
+  }
+  .home_bottom_left {
+    .pickers {
+      display: flex;
+      justify-content: flex-end;
+      .picker {
+        transform: scale(0.7);
+        text-align: right;
+      }
+      /deep/.el-input__prefix {
+        top: 0;
+        left: 7rem;
+      }
+      /deep/.el-input__inner {
+        height: 2.5rem;
+        margin-left: 0.5rem;
+      }
+    }
+    .button {
+      img {
+        width: 0.6rem;
+        height: 1rem;
+        position: absolute;
+      }
+      .left_img {
+        transform: rotate(180deg);
+        position: absolute;
+        bottom: 1.28rem;
+        left: 4.5rem;
+      }
+      .right_img {
+        bottom: 1.28rem;
+        right: 2.8rem;
       }
     }
   }
