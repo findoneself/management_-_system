@@ -2,6 +2,7 @@
   <!--扬尘检测首-地图 -->
   <div class="container">
     <BeautifulCard
+      v-if="activePage==0"
       :title="'监测源'"
       class="map_monitoring_source"
       :isTriangle='false'
@@ -52,9 +53,15 @@
         :operObj='{isOperation: false}'
       />
     </BeautifulCard>
-    <MonitoringSpot />
-    <div></div>
-    <div class="map"></div>
+    <!-- 监测点数据 -->
+    <MonitoringSpot
+      v-else
+      @monitoringSpotBack='monitoringSpotBack'
+    />
+    <div @click="changeActivePage">改变</div>
+    <div class="map">
+      <DustMonitoringMap />
+    </div>
   </div>
 </template>
 
@@ -62,16 +69,18 @@
 import BeautifulCard from '_com/common/BeautifulCard'
 import BeautifulTableList from '_com/common/BeautifulTableList'
 import MonitoringSpot from './components/MonitoringSpot.vue'
+import DustMonitoringMap from './components/DustMonitoringMap.vue'
 export default {
   name: 'DusMap',
   components: {
     BeautifulCard,
     BeautifulTableList,
-    MonitoringSpot
-
+    MonitoringSpot,
+    DustMonitoringMap
   },
   data () {
     return {
+      activePage: 0,
       dictOptions: {
         // 行政区域
         xzqyList: [
@@ -125,6 +134,12 @@ export default {
   methods: {
     iconSearchHandle () {
 
+    },
+    monitoringSpotBack () {
+      this.activePage = 0
+    },
+    changeActivePage () {
+      this.activePage = 1
     }
   }
 }

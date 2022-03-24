@@ -40,7 +40,9 @@ module.exports = {
         axios: 'axios',
         lodash: '_',
         echarts: 'echarts',
-        nprogress: 'NProgress'
+        nprogress: 'NProgress',
+        'BMap': 'BMap',
+        'BMap_Symbol_SHAPE_POINT': 'BMap_Symbol_SHAPE_POINT'
       })
       // 配置 html-webpack-plugin 插件
       config.plugin('html').tap(args => {

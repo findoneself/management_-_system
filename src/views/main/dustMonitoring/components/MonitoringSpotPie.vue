@@ -34,8 +34,8 @@ export default {
       var option = {
         title: {
           text: item.value,
-          //   left: '42%',
-          //   top: '20%',
+          // left: '42%',
+          // top: '20%',
           x: 'center',
           y: 'center',
           subtext: item.company + '\n' + item.title + '\n\n\n',

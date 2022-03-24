@@ -6,6 +6,10 @@ import Utils from './libs/utils'
 import format from './libs/format'
 import http from './network'
 import echarts from 'echarts'
+import BaiduMap from 'vue-baidu-map'
+Vue.use(BaiduMap, {
+  ak: 'y5vpGn7gL7QdbNBrc6GEbizGuaQezXiy'
+})
 import _cloneDeep from 'lodash/cloneDeep'
 // 引入element组件配置
 import './plugins/element'
