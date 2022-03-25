@@ -3,10 +3,6 @@
     <div class="home_top">
       <!-- 巡察整改 -->
       <BeautifulCard
-<<<<<<< HEAD
-        :width="'23.75rem'"
-=======
->>>>>>> 989c3505d9185f58e799f706f7520e799ac25cba
         title="巡查整改"
         class="home_top_left"
       >

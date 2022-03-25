@@ -341,7 +341,7 @@ export default {
   },
   methods: {
     // 为表格奇偶行设置不同class
-    addEvenClass ({ rowIndex }) {
+    addEvenClass ({ row, rowIndex }) {
       let i = rowIndex % 2
       return i ? this.oddClass : this.evenClass
     },
