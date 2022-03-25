@@ -326,6 +326,11 @@ export default {
         })
       }
     }
+  },
+  destroyed () {
+    window.removeEventListener('resize', () => {
+      this.chartBar.resize()
+    })
   }
 }
 </script>

@@ -94,6 +94,7 @@ div.el-range-editor.is-active:hover {
 }
 
 .el-date-editor span.el-range-separator {
+    width: auto;
     color: #c0c4cc;
 }
 

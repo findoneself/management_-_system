@@ -46,6 +46,20 @@ Utils.imageRegExp = function (str) {
   const pattern = /^image\/(jpg|jpeg|png)$/
   return pattern.test(str)
 }
+// 递归查找树结构的第一条无children的数据
+Utils.queryTreeFirst = function (data) {
+  let obj = {}
+  if (data && data.length > 0) {
+    obj = data.find(item => {
+      if (item.children && item.children.length > 0) {
+        Utils.queryTreeFirst(item.children)
+      } else {
+        return item
+      }
+    })
+  }
+  return obj
+}
 // 递归获取当前节点的所有父节点
 Utils.familyTree = function (data, id) {
   let obj = {}

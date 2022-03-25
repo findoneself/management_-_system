@@ -6,10 +6,10 @@ export default [
   { id: 'xz-3', name: '区域3', type: 'xzarea', params: '' },
   { id: 'xz-4', name: '区域4', type: 'xzarea', params: '' },
   // 监测站点
-  { id: 'zd-1', name: '站点1', type: 'xzarea', params: '' },
-  { id: 'zd-2', name: '站点2', type: 'xzarea', params: '' },
-  { id: 'zd-3', name: '站点3', type: 'xzarea', params: '' },
-  { id: 'zd-4', name: '站点4', type: 'xzarea', params: '' },
+  { id: 'zd-1', name: '站点1', type: 'jcStation', params: '' },
+  { id: 'zd-2', name: '站点2', type: 'jcStation', params: '' },
+  { id: 'zd-3', name: '站点3', type: 'jcStation', params: '' },
+  { id: 'zd-4', name: '站点4', type: 'jcStation', params: '' },
   // 扬尘监测参数类型
   { id: 'kz', name: '控制', type: 'paramsType', params: '' },
   { id: 'wd', name: '温度', type: 'paramsType', params: '' },
@@ -27,11 +27,17 @@ export default [
   { id: 'zy', name: '噪音', type: 'paramsType', params: '' },
   { id: 'tsp', name: 'TSP', type: 'paramsType', params: '' },
   { id: 'yy', name: '油烟', type: 'paramsType', params: '' },
-  // 监控点位
-  { id: 'jkdw', name: '监控点位', type: 'jkdwType', params: '' },
-  { id: 'jkhJ', name: '监控环境', type: 'jkdwType', params: '' },
   // 项目报警统计排行
   { id: 'zr', name: '今日', type: 'xmbjDate', params: '' },
   { id: 'jz', name: '昨日', type: 'xmbjDate', params: '' },
-  { id: 'bz', name: '本周', type: 'xmbjDate', params: '' }
+  { id: 'bz', name: '本周', type: 'xmbjDate', params: '' },
+  // 报警分类
+  { id: 'bj1', name: '反光衣', type: 'alertType', params: '' },
+  { id: 'bj2', name: '行人闯入', type: 'alertType', params: '' },
+  { id: 'bj3', name: '打电话', type: 'alertType', params: '' },
+  { id: 'bj4', name: '抽烟', type: 'alertType', params: '' },
+  { id: 'bj5', name: '火焰', type: 'alertType', params: '' },
+  { id: 'bj6', name: '安全帽', type: 'alertType', params: '' },
+  { id: 'bj7', name: '人员离岗', type: 'alertType', params: '' },
+  { id: 'bj8', name: '工作服', type: 'alertType', params: '' }
 ]
