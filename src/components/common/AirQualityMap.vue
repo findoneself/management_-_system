@@ -7,7 +7,7 @@
       @ready="handler"
     >
       <!--缩放-->
-      <bm-navigation anchor="BMAP_ANCHOR_TOP_LEFT"></bm-navigation>
+      <!-- <bm-navigation anchor="BMAP_ANCHOR_TOP_LEFT"></bm-navigation> -->
       <!--定位-->
     </baidu-map>
   </div>
