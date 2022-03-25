@@ -2,12 +2,8 @@
   <!--排名统计 -->
   <TableForm
     :loading="dataLoading"
-    stripe
-    is-clear-border
     :data-list="dataList"
     :columns="columns"
-    :index-obj="{isIndex: false}"
-    :oper-obj="rankOperList"
     :is-table="tabsType === 'table'"
     :cur-btn-id="echartsType"
     @buttonClick="buttonClick"
@@ -64,7 +60,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="参数类型：">
+      <el-form-item
+        label="参数类型："
+        style="width: 100%;"
+      >
         <el-radio-group v-model="dataForm.paramType">
           <el-radio
             :label="item.id"
@@ -171,30 +170,6 @@ export default {
       ],
       // 表格数据---echart原始数据
       dataList: [],
-      // 操作按钮
-      rankOperList: {
-        isOperation: false,
-        width: 270,
-        operButton: [
-          {
-            text: '修改',
-            click: this.updateClick
-          },
-          {
-            text: '详情',
-            click: this.orderDetailClick
-          }, {
-            text: '删除',
-            click: this.removeClick
-          }, {
-            text: '下载附件',
-            click: this.orderDetailClick
-          }, {
-            text: '短信提醒',
-            click: this.noteClick
-          }
-        ]
-      },
       // ehcart----数据
       // x轴
       echartXAxis: [],

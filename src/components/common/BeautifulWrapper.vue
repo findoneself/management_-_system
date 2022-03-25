@@ -121,11 +121,13 @@ export default {
 
 <style scoped>
 .beautiful-wrapper {
+  width: 100%;
   height: inherit;
 }
 .beau-container {
   position: relative;
   height: inherit;
+  width: 100%;
   border-style: solid;
   background-color: var(--wraper-bgcolor);
   border-color: var(--wrapper-bdcolor);
@@ -133,6 +135,7 @@ export default {
     inset 3px 3px 30px var(--shadow-color);
 }
 .beau-content {
+  width: 100%;
   height: 100%;
 }
 .beau-content-tab {
