@@ -407,6 +407,11 @@ export default {
         })
       }
     }
+  },
+  destroyed () {
+    window.removeEventListener('resize', () => {
+      this.chartLine.resize()
+    })
   }
 }
 </script>
