@@ -89,7 +89,8 @@ div.el-picker-panel__sidebar {
 .el-select input.el-input__inner:focus,
 .el-select .el-input.is-focus input.el-input__inner,
 div.el-range-editor.is-active,
-div.el-range-editor.is-active:hover {
+div.el-range-editor.is-active:hover,
+.el-cascader:not(.is-disabled):hover input.el-input__inner {
     border-color: var(--wrapper-bdcolor);
 }
 
@@ -122,6 +123,62 @@ div.el-popper[x-placement^=bottom] .popper__arrow::after {
 
 div.el-popper[x-placement^=bottom] .popper__arrow {
     border-bottom-color: var(--input-bdcolor);
+}
+
+/* 级联下拉框 */
+div.el-cascader__dropdown {
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    background: #02004C;
+    --border-color: #467BFF;
+}
+
+div.el-cascader-menu__wrap {
+    margin-bottom: 0 !important;
+    margin-right: 0 !important;
+    overflow: hidden;
+}
+
+div.el-cascader-menu {
+    min-width: 160px;
+    border: 0.0625rem solid var(--border-color);
+    margin-left: -1px;
+}
+
+div.el-cascader-menu:last-child {
+    border-right: 0.0625rem solid var(--border-color);
+}
+
+ul.el-cascader-menu__list {
+    padding: 0;
+    overflow: auto;
+    max-height: 200px;
+}
+
+li.el-cascader-node {
+    box-shadow: inset -0.0625rem -0.0625rem 0.625rem var(--shadow-color),
+        inset 0.0625rem 0.0625rem 0.625rem var(--shadow-color);
+    color: var(--color-text);
+    line-height: normal;
+
+}
+
+li.el-cascader-node:nth-of-type(n+2) {
+    border-top: 1px solid var(--border-color);
+}
+
+li.el-cascader-node:last-of-type {
+    border-bottom: 1px solid var(--border-color);
+}
+
+li.el-cascader-node.in-active-path,
+li.el-cascader-node.is-active,
+li.el-cascader-node.is-selectable.in-checked-path,
+li.el-cascader-node:not(.is-disabled):focus,
+li.el-cascader-node:not(.is-disabled):hover {
+    color: var(--color-text);
+    background: #4F78FF;
 }
 
 /* 日期选择下拉框 */
@@ -182,6 +239,43 @@ span.el-radio__inner::after {
     box-shadow: inset -1px -1px 10px var(--shadow-color),
         inset 1px 1px 10px var(--shadow-color); */
     border-color: #0b1771;
+}
+
+/* ===============el-ui翻页样式=============== */
+div.el-pagination {
+    color: var(--color-text);
+    text-align: center;
+}
+
+div.el-pagination .btn-next,
+div.el-pagination .btn-prev {
+    color: var(--triangle-color);
+    background-color: transparent;
+}
+
+ul.el-pager li {
+    border: 1px solid #317fff80;
+    background: transparent;
+    margin: 0 4px;
+    width: 30px;
+    height: 30px;
+    min-width: unset;
+    transition: all .3s;
+}
+
+ul.el-pager li.active+li {
+    border-left: 1px solid #317fff80;
+}
+
+ul.el-pager li:hover,
+ul.el-pager li.active {
+    color: var(--color-text);
+    background: #0e5dfb;
+}
+
+div.el-pagination button:disabled {
+    background-color: transparent;
+    color: #39dffb8a;
 }
 
 /* ===============-tform-wrapper：上面表单下面表格的业务公共组件=============== */
@@ -337,7 +431,7 @@ div.el-table thead {
     height: inherit;
 }
 
-.be-table--stripe .be-table-item:nth-of-type(even) {
+.be-table--stripe li.be-table-item:nth-of-type(odd) {
     background-color: #0b1771;
 }
 

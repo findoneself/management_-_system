@@ -14,7 +14,7 @@
         <div class="form-select">
           <el-cascader
             v-model="dataForm.jkdw"
-            how-all-levels
+            :show-all-levels="false"
             :options="dictOptions.jkdwList"
             size="small"
             :props="{emitPath: false, value: 'id', label: 'name'}"
@@ -137,16 +137,14 @@
         :data-list="dataList.xmbjList"
         :columns="columns.xmbjColumns"
       />
-      <!-- <el-pagination
-        @size-change="handleSizeChange"
+      <el-pagination
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :current-page="dataForm.pageIndex"
+        :page-size="dataForm.pageSize"
+        layout="prev, pager, next"
+        :total="dataForm.total"
       >
-      </el-pagination> -->
+      </el-pagination>
     </BeautifulCard>
   </BeautifulWrapper>
 </template>
@@ -197,7 +195,10 @@ export default {
       dataForm: {
         jkdw: '',
         xmbjDate: '',
-        dateList: []
+        dateList: [],
+        pageIndex: 1,
+        pageSize: 3,
+        total: 0
       },
       // 报警分类图信息
       bjflOption: {
@@ -246,6 +247,11 @@ export default {
         this.dictOptions.xmbjList = dict.xmbjDate
         this.dataForm.xmbjDate = dict.xmbjDate[0].id
       }
+    },
+    // 页码改变
+    handleCurrentChange (val) {
+      this.dataForm.pageIndex = val
+      this.getXmbjData()
     },
     // 获取所有数据
     getData () {
@@ -320,22 +326,25 @@ export default {
       this.$http({
         url: '/aixb/getXmbjData',
         data: {
-          order: 'asc',
+          page: this.dataForm.pageIndex,
+          pageSize: this.dataForm.pageSize,
           date: this.dataForm.xmbjDate || ''
         }
       }).then(res => {
         this.loadings.xmbjLoading = false
         if (res.code === 200) {
           this.dataList.xmbjList = res.data.list
+          this.dataForm.total = res.data.total
           console.log(res)
         } else {
           this.$message.error('获取项目报警统计排行失败！')
           this.dataList.xmbjList = []
+          this.dataForm.total = 0
         }
       }, () => {
         this.loadings.xmbjLoading = false
         this.$message.error('获取项目报警统计排行失败！')
-        this.dataList.xmbjList = [
+        const list = [
           { id: '1212', name: '项目名称项目名称', count: 16 },
           { id: '165', name: '项目名称项目名称', count: 26 },
           { id: '1215542', name: '项目名称项目名称', count: 36 },
@@ -350,6 +359,8 @@ export default {
           { id: '152', name: '项目名称项目名称', count: 126 },
           { id: '1552', name: '项目名称项目名称', count: 128 }
         ]
+        this.dataForm.total = list.length
+        this.dataList.xmbjList = list
       })
     },
     // 获取监控点位树结构数据
@@ -716,9 +727,14 @@ export default {
   width: 34%;
   flex-shrink: 0;
 }
-.jkdw-card .video,
-.xmbj-card .be-table-list {
+.jkdw-card .video {
   height: calc(100% - 47px);
+}
+.xmbj-card .be-table-list {
+  height: calc(100% - 101px);
+}
+/deep/ .be-table-ul {
+  height: 100%;
 }
 .bjfl-card,
 .bjls-card {

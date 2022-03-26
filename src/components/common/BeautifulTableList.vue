@@ -36,52 +36,54 @@
         :element-loading-text="loadingText"
         :element-loading-spinner="loadingIcon"
       >
-        <div
-          class="be-table-li be-table-item"
-          v-for="(item, iindex) in dataList"
-          :key="item.id"
-        >
-          <!-- 序号列 -->
-          <div
-            v-if="dataList.length > 0 && columns.length > 0 && tableIndex.isIndex"
-            :style="cellHeight ? {width: tableIndex.width, minHeight: cellHeight} : {width: tableIndex.width}"
-            class="be-table-index cell"
-          >{{ iindex + 1 }}</div>
-          <!-- 所有字段列 -->
-          <div
-            class="cell"
-            v-for="(value, vindex) in columns"
-            :style="cellHeight ? {minHeight: cellHeight} : {}"
-            :key="'value-' + vindex"
-          >{{ item[value.prop] || '' }}</div>
-          <!-- 操作列，传参复杂 -->
-          <div
-            class="be-table-oper cell"
-            :style="cellHeight ? {width: tableIndex.width, minHeight: cellHeight} : {width: tableIndex.width}"
-            v-if="dataList.length > 0 && columns.length > 0 && tableOper.isOperation"
+        <ul style="height: 100%">
+          <li
+            class="be-table-li be-table-item"
+            v-for="(item, iindex) in dataList"
+            :key="item.id"
           >
-            <template v-if="tableOper.isUnifiedOper">
-              <el-link
-                class="table-link"
-                v-for="(btn, index) in tableOper.operButton"
-                :key="btn.key ? btn.key : index"
-                :type="btn.type ? btn.type : ''"
-                :disabled="btn.disabled ? btn.disabled : false"
-                :underline="btn.underline || tableOper.btnUnderline || false"
-                :icon="btn.icon ? btn.icon : ''"
-                @click.stop="btn.click(scope.row)"
-              >
-                {{ btn.text }}
-              </el-link>
-            </template>
-            <template v-else>
-              <slot
-                name="oper"
-                v-bind="{ row: scope.row }"
-              ></slot>
-            </template>
-          </div>
-        </div>
+            <!-- 序号列 -->
+            <div
+              v-if="dataList.length > 0 && columns.length > 0 && tableIndex.isIndex"
+              :style="cellHeight ? {width: tableIndex.width, minHeight: cellHeight} : {width: tableIndex.width}"
+              class="be-table-index cell"
+            >{{ iindex + 1 }}</div>
+            <!-- 所有字段列 -->
+            <div
+              class="cell"
+              v-for="(value, vindex) in columns"
+              :style="cellHeight ? {minHeight: cellHeight} : {}"
+              :key="'value-' + vindex"
+            >{{ item[value.prop] || '' }}</div>
+            <!-- 操作列，传参复杂 -->
+            <div
+              class="be-table-oper cell"
+              :style="cellHeight ? {width: tableIndex.width, minHeight: cellHeight} : {width: tableIndex.width}"
+              v-if="dataList.length > 0 && columns.length > 0 && tableOper.isOperation"
+            >
+              <template v-if="tableOper.isUnifiedOper">
+                <el-link
+                  class="table-link"
+                  v-for="(btn, index) in tableOper.operButton"
+                  :key="btn.key ? btn.key : index"
+                  :type="btn.type ? btn.type : ''"
+                  :disabled="btn.disabled ? btn.disabled : false"
+                  :underline="btn.underline || tableOper.btnUnderline || false"
+                  :icon="btn.icon ? btn.icon : ''"
+                  @click.stop="btn.click(scope.row)"
+                >
+                  {{ btn.text }}
+                </el-link>
+              </template>
+              <template v-else>
+                <slot
+                  name="oper"
+                  v-bind="{ row: scope.row }"
+                ></slot>
+              </template>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

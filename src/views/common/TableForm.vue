@@ -153,6 +153,9 @@ export default {
       }, this.tformHead)
     }
   },
+  mounted () {
+    console.log(Boolean(this.$slots.headform))
+  },
   methods: {
     // 按钮点击
     buttonClick (item) {
