@@ -31,6 +31,11 @@ export default [
   { id: 'zr', name: '今日', type: 'xmbjDate', params: '' },
   { id: 'jz', name: '昨日', type: 'xmbjDate', params: '' },
   { id: 'bz', name: '本周', type: 'xmbjDate', params: '' },
+  // 类型
+  { id: 'ssj', name: '时数据', type: 'type', params: '' },
+  { id: 'tsj', name: '天数据', type: 'type', params: '' },
+  { id: 'zsj', name: '周数据', type: 'type', params: '' },
+  { id: 'ysj', name: '月数据', type: 'type', params: '' },
   // 报警分类
   { id: 'bj1', name: '反光衣', type: 'alertType', params: '' },
   { id: 'bj2', name: '行人闯入', type: 'alertType', params: '' },

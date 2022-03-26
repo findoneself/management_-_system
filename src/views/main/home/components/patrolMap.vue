@@ -1,4 +1,5 @@
 <template>
+  <!-- 巡查整改环状饼图 -->
   <div
     id="patrol"
     class="patrol-echart"

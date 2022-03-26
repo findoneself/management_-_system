@@ -55,6 +55,7 @@ Vue.use(Alert)
 Vue.use(Upload)
 Vue.use(DatePicker)
 Vue.use(DatePicker)
+
 // 全局注册提示框
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

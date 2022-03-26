@@ -309,7 +309,6 @@ export default {
     buttonClick (item) {
       if (this.tabsType === 'table') {
         // 表格按钮点击回调--导出表格
-
       } else {
         // 图表按钮点击回调--切换检测源或者项目
         this.echartsType = item.id

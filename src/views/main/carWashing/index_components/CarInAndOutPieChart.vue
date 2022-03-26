@@ -1,4 +1,5 @@
 <template>
+  <!-- 车辆出入分析 -->
   <div>
     <div
       id="car_in_out_pie"
@@ -15,9 +16,6 @@ export default {
           value: 1048, name: '干净', color: '#FFE827', itemStyle: {// 饼图相关模块扇形颜色
             normal: {
               color: '#FFE827'
-            },
-            emphasis: {
-              color: '#FFE827'
             }
           }
         },
@@ -25,9 +23,6 @@ export default {
           value: 484, name: '不干净', color: '#DF4C4C', itemStyle: {
             normal: {
               color: '#DF4C4C'
-            },
-            emphasis: {
-              // color: colors[index][1],
             }
           }
         },
@@ -35,9 +30,6 @@ export default {
           value: 735, name: '密封', color: '#23DBFC', itemStyle: {
             normal: {
               color: '#23DBFC'
-            },
-            emphasis: {
-              // color: colors[index][1],
             }
           }
         },
@@ -45,9 +37,6 @@ export default {
           value: 300, name: '未密封', color: '#993FFF', itemStyle: {
             normal: {
               color: '#993FFF'
-            },
-            emphasis: {
-              // color: colors[index][1],
             }
           }
         },
@@ -55,9 +44,6 @@ export default {
           value: 580, name: '证件合规', color: ' #FFAD2D', itemStyle: {
             normal: {
               color: '#FFAD2D'
-            },
-            emphasis: {
-              // color: colors[index][1],
             }
           }
         },
@@ -65,9 +51,6 @@ export default {
           value: 300, name: '证件违规', color: '#68A4FF', itemStyle: {
             normal: {
               color: '#68A4FF'
-            },
-            emphasis: {
-              // color: colors[index][1],
             }
           }
         }

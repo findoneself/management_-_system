@@ -1,9 +1,10 @@
 <template>
+  <!-- 各区县安装数量统计 -->
   <div>
     <div>
       <div
         id="installnum"
-        style="width: 93%; height: 2rem"
+        style="width: 93%; height: 12rem"
       ></div>
     </div>
   </div>
@@ -14,6 +15,7 @@ export default {
     return {
       option: {
         // backgroundColor: "#000",
+        // 右上角的色块加title
         legend: [
           {
             data: ['D', 'Mail Ad'],
@@ -50,10 +52,10 @@ export default {
           }
         },
         grid: {
-          left: '20rem',
+          left: '10rem',
           right: '1rem',
-          top: '78rem',
-          bottom: '5rem',
+          top: '50rem',
+          bottom: '15rem',
           containLabel: true
         },
         xAxis: {
