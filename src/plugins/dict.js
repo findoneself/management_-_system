@@ -5,11 +5,6 @@ export default [
   { id: 'xz-2', name: '区域2', type: 'xzarea', params: '' },
   { id: 'xz-3', name: '区域3', type: 'xzarea', params: '' },
   { id: 'xz-4', name: '区域4', type: 'xzarea', params: '' },
-  // 监测站点
-  { id: 'zd-1', name: '站点1', type: 'jcStation', params: '' },
-  { id: 'zd-2', name: '站点2', type: 'jcStation', params: '' },
-  { id: 'zd-3', name: '站点3', type: 'jcStation', params: '' },
-  { id: 'zd-4', name: '站点4', type: 'jcStation', params: '' },
   // 扬尘监测参数类型
   { id: 'kz', name: '控制', type: 'paramsType', params: '' },
   { id: 'wd', name: '温度', type: 'paramsType', params: '' },

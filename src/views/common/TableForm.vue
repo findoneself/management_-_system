@@ -35,7 +35,7 @@
         </div>
       </div>
       <div
-        class="tfrom-table"
+        :class="tformHeader.isTableHead ? 'tfrom-tabs' : 'is-nohead-tabs'"
         v-show="isTable"
       >
         <BeautifulTableList
@@ -43,6 +43,7 @@
           :loading-text="loadingText"
           :loading-icon="loadingIcon"
           :stripe="stripe"
+          :class="$slots.pagination && 'ispage-tablelist'"
           :cell-height="cellHeight"
           :is-header="isHeader"
           :index-obj="indexObj"
@@ -50,13 +51,14 @@
           :data-list="dataList"
           :columns="columns"
         />
+        <slot name="pagination"></slot>
       </div>
       <div
-        class="tform-custom"
+        :class="tformHeader.isTableHead ? 'tfrom-tabs' : 'is-nohead-tabs'"
         v-loading="loading"
         :element-loading-text="loadingText"
         :element-loading-spinner="loadingIcon"
-        v-show="!isTable"
+        v-if="!isTable"
       >
         <slot></slot>
       </div>
@@ -153,9 +155,6 @@ export default {
       }, this.tformHead)
     }
   },
-  mounted () {
-    console.log(Boolean(this.$slots.headform))
-  },
   methods: {
     // 按钮点击
     buttonClick (item) {
@@ -180,9 +179,11 @@ export default {
   background: var(--head-bgcolor);
   border: 1px solid var(--head-bdcolor);
 }
-.tfrom-table,
-.tform-custom {
+.tfrom-tabs {
   height: calc(100% - 100px);
+}
+.is-nohead-tabs {
+  height: 100%;
 }
 .el-table {
   margin-top: 0;
@@ -219,5 +220,8 @@ export default {
 }
 .tabs-button-item {
   margin: 0;
+}
+.ispage-tablelist {
+  height: calc(100% - 54px);
 }
 </style>

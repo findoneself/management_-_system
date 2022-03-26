@@ -13,6 +13,11 @@
         class="border-icon"
         :class="'border-' + val"
       />
+      <i
+        class="el-icon-close close-btn"
+        @click="closeClick"
+        v-show="borderIcons.includes('close')"
+      ></i>
       <!-- tabs导航 -->
       <div class="menu-tabs">
         <ul class="menu-tablist">
@@ -65,7 +70,8 @@ export default {
         return {}
       }
     },
-    // 边框图标数组['top', 'right', 'bottom', 'left', 'triangle']
+    // 边框图标数组
+    // ['top', 'right', 'bottom', 'left', 'triangle', 'close']
     borderIcon: {
       type: Array,
       default () {
@@ -114,6 +120,10 @@ export default {
     // tabs点击
     tabClick (item) {
       this.$store.commit('global/setCurrentTab', item)
+    },
+    // 关闭按钮点击回调
+    closeClick () {
+      this.$emit('closeClick')
     }
   }
 }
@@ -221,5 +231,19 @@ export default {
 .menu-tablist .tab-shadow2 {
   z-index: 1;
   opacity: 0.3;
+}
+.close-btn {
+  position: absolute;
+  z-index: 21;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #31bcf2;
+  cursor: pointer;
+}
+.close-btn:hover,
+.close-btn:active {
+  color: var(--triangle-color);
 }
 </style>

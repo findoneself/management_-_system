@@ -163,7 +163,6 @@ export default {
   methods: {
     // 柱状图
     initChartBar () {
-      console.log('aa')
       if (this.yFormatter === 'int' || this.yFormatter === 'number') {
         this.minInterval = 1
       }
