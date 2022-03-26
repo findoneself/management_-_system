@@ -207,6 +207,34 @@ span.el-radio__inner::after {
     margin-right: 25px;
 }
 
+/* 复选框 */
+.tform-form .el-checkbox {
+    color: #fff;
+}
+
+.tform-form .el-checkbox__input.is-checked .el-checkbox__inner {
+
+    background: #081C89;
+    border-color: #2C51C3;
+    color: #fff
+}
+
+.tform-form .el-checkbox__inner {
+    width: 22px;
+    height: 22px;
+    background: #081C89;
+    border-color: var(--wrapper-bdcolor);
+}
+
+.tform-form .el-checkbox__inner::after {
+    width: 6px;
+    height: 12px;
+    left: 0.4rem;
+    border: 0.15rem solid #FFF;
+    border-top: 0;
+    border-left: 0;
+}
+
 /* 自定义表单中的tabs按钮 */
 .tabs-button {
     display: flex;

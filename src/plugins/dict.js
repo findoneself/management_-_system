@@ -6,10 +6,10 @@ export default [
   { id: 'xz-3', name: '区域3', type: 'xzarea', params: '' },
   { id: 'xz-4', name: '区域4', type: 'xzarea', params: '' },
   // 监测站点
-  { id: 'zd-1', name: '站点1', type: 'xzarea', params: '' },
-  { id: 'zd-2', name: '站点2', type: 'xzarea', params: '' },
-  { id: 'zd-3', name: '站点3', type: 'xzarea', params: '' },
-  { id: 'zd-4', name: '站点4', type: 'xzarea', params: '' },
+  { id: 'zd-1', name: '站点1', type: 'jcarea', params: '' },
+  { id: 'zd-2', name: '站点2', type: 'jcarea', params: '' },
+  { id: 'zd-3', name: '站点3', type: 'jcarea', params: '' },
+  { id: 'zd-4', name: '站点4', type: 'jcarea', params: '' },
   // 扬尘监测参数类型
   { id: 'kz', name: '控制', type: 'paramsType', params: '' },
   { id: 'wd', name: '温度', type: 'paramsType', params: '' },
@@ -33,5 +33,10 @@ export default [
   // 项目报警统计排行
   { id: 'zr', name: '今日', type: 'xmbjDate', params: '' },
   { id: 'jz', name: '昨日', type: 'xmbjDate', params: '' },
-  { id: 'bz', name: '本周', type: 'xmbjDate', params: '' }
+  { id: 'bz', name: '本周', type: 'xmbjDate', params: '' },
+  // 类型
+  { id: 'ssj', name: '时数据', type: 'type', params: '' },
+  { id: 'tsj', name: '天数据', type: 'type', params: '' },
+  { id: 'zsj', name: '周数据', type: 'type', params: '' },
+  { id: 'ysj', name: '月数据', type: 'type', params: '' }
 ]

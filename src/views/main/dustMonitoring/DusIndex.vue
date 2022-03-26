@@ -5,8 +5,8 @@
     :tabsList="tabsList"
   >
     <DusMap v-if="currentTabs.id === '1'" />
-    <DusMultipleEcharts v-else-if="currentTabs.id === '2'" />
-    <DusSingleEcharts v-else-if="currentTabs.id === '3'" />
+    <DusMultipleEcharts v-else-if="currentTabs.id === '3'" />
+    <DusSingleEcharts v-else-if="currentTabs.id === '2'" />
     <DusRankingEcharts v-else />
   </BeautifulWrapper>
 </template>

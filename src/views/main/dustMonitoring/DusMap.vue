@@ -53,7 +53,13 @@
         :operObj='{isOperation: false}'
         cell-height='2rem'
         class="tableList"
-      />
+      >
+        <div class="order_sj">
+          <div class="up"></div>
+          <div class="down"></div>
+        </div>
+      </BeautifulTableList>
+
     </BeautifulCard>
     <!-- 监测点数据 -->
     <MonitoringSpot
@@ -72,7 +78,7 @@
         <div class="switch_box">
           <div><span>视频:</span>
             <el-switch
-              width="30"
+              :width="30"
               @change="switchChange('value1')"
               v-model="switch_value1"
             >
@@ -80,7 +86,7 @@
           </div>
           <div><span>喷淋:</span>
             <el-switch
-              width="30"
+              :width="30"
               @change="switchChange('value2')"
               v-model="switch_value2"
             >
@@ -138,22 +144,22 @@ export default {
       cardStyle: { padding: '0px' },
       // 表格表头
       columns: [
-        { name: '监测点', prop: 'jcd', key: 4 },
-        { name: 'PM2.5', prop: 'jcwd', key: 3 }
+        { name: '监测点', prop: 'jcd', key: 1 },
+        { name: 'PM2.5', prop: 'jcwd', key: 2 }
       ],
       // 表格数据
       dataList: [
         { id: '1', jcwd: '21', jcd: '云-徐州传染病医院' },
-        { id: '2', jcd: '云-徐州传染病医院', sj: '2022-03-11 00:00:00', jcwd: '12' },
-        { id: '3', jcd: '云-徐州传染病医院', sj: '2022-03-12 00:00:00', jcwd: '24' },
-        { id: '4', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00', jcwd: '15' },
-        { id: '5', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00', jcwd: '21' },
-        { id: '6', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00', jcwd: '16' },
-        { id: '7', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00', jcwd: '21' },
-        { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
-        { id: '9', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
-        { id: '10', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' },
-        { id: '11', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', jcwd: '20' }
+        { id: '2', jcwd: '12', jcd: '云-徐州传染病医院', sj: '2022-03-11 00:00:00' },
+        { id: '3', jcwd: '24', jcd: '云-徐州传染病医院', sj: '2022-03-12 00:00:00' },
+        { id: '4', jcwd: '15', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00' },
+        { id: '5', jcwd: '15', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00' },
+        { id: '6', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00' },
+        { id: '7', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00' },
+        { id: '8', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
+        { id: '9', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
+        { id: '10', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
+        { id: '11', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' }
       ],
       // 监测点数据
       monitoringSspotData: {
@@ -213,6 +219,25 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.card-content .tableList .be-table-header {
+  color: red;
+  position: relative;
+}
+.tableList {
+  position: relative;
+  .order_sj {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    div {
+      width: 5px;
+      height: 5px;
+      background-color: red;
+      // border: transparent transparent 1px transparent;
+    }
+  }
+}
+
 .container {
   display: flex;
   height: 100%;
@@ -293,6 +318,7 @@ export default {
 
     .map_num_box {
       display: flex;
+      font-size: 0.88rem;
       div {
         text-align: left;
         transform: scale(0.9);

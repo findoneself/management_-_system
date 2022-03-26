@@ -2,7 +2,7 @@
   <div>
     <div
       id="warningnum"
-      style="width: 93%; height: 2rem"
+      style="width: 95%; height: 12rem"
     ></div>
   </div>
 </template>
@@ -56,10 +56,10 @@ export default {
           }
         },
         grid: {
-          left: '20rem',
+          left: '10rem',
           right: '1rem',
-          top: '50rem',
-          bottom: '5rem',
+          top: '30rem',
+          bottom: '40rem',
           containLabel: true
         },
         tooltip: {

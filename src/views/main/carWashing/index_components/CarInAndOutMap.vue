@@ -1,4 +1,5 @@
 <template>
+  <!-- 车辆出入记录 -->
   <div>
     <div
       id="car_in_out"
