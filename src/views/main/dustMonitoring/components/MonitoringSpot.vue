@@ -8,7 +8,7 @@
     <div class="monitoring_spot_title">
       {{monitoringSspotData.title}}
     </div>
-    <MonitoringSpotPie />
+    <MonitoringSpotPie :pieData='monitoringSspotData.pieData' />
     <div class="monitoring_spot_detail">
       <div
         v-for="(item,index) in monitoringSspotData.detailList"
@@ -34,29 +34,16 @@ export default {
     MonitoringSpotPie
   },
   props: {
-
+    monitoringSspotData: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
   },
   data () {
     return {
-      cardStyle: { padding: '0px' },
-      monitoringSspotData: {
-        title: '云 - 徐州传染病医院',
-        pieData: {},
-        detailList: [{ name: '温度', value: '75 ℃' },
-        { name: 'pm2.5', value: '62ug/m³' },
-        { name: '湿度', value: '15%' },
-        { name: 'pm10', value: '21ug/m³' },
-        { name: '气压', value: '135' },
-        { name: '二氧化氮', value: '254' },
-        { name: '风速', value: '23' },
-        { name: '二氧化硫', value: '5425' },
-        { name: '风向', value: '24' },
-        { name: '一氧化碳', value: '2883' }, { name: '气压', value: '135' },
-        { name: '二氧化氮', value: '254' },
-        { name: '风速', value: '23' },
-        { name: '二氧化硫', value: '5425' },
-        { name: '风向', value: '24' }]
-      }
+      cardStyle: { padding: '0px' }
     }
   },
   methods: {
@@ -79,7 +66,7 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    height: 40%;
+    // height: 40%;
     margin-top: 1.5rem;
     padding: 0 1rem;
     .monitoring_spot_detail_item {

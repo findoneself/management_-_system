@@ -385,7 +385,7 @@ export default {
           { name: '其他', count: 49 }
         ]
         this.xmflOption.list = list
-        const series = list.map((item, index) => {
+        const series = list.map((item) => {
           return {
             value: item.count,
             name: item.name
@@ -418,7 +418,7 @@ export default {
           { name: '工作服', count: 80 }
         ]
         this.bjflOption.list = list
-        const series = list.map((item, index) => {
+        const series = list.map((item) => {
           return {
             value: item.count,
             name: item.name
@@ -698,9 +698,9 @@ export default {
         color: index === undefined ? this.bjlsOption.colors : [this.bjlsOption.colors[index]],
         tooltip: {
           trigger: 'axis',
-          transitionDuration: 0,
+          // transitionDuration: 0,
           axisPointer: {
-            type: 'shadow'
+            type: 'cross'
           }
         },
         grid: {
@@ -712,11 +712,15 @@ export default {
         },
         xAxis: {
           type: 'category',
-          boundaryGap: false,
+          // boundaryGap: false,
+          axisLabel: {
+            color: '#fff',
+            fontSize: '10'
+          },
           axisLine: {
             onZero: false,
             lineStyle: {
-              color: '#fff'
+              color: '#B9C8DB'
             }
           },
           data: xlist || []
@@ -725,6 +729,10 @@ export default {
           type: 'value',
           nameTextStyle: {
             color: '#fff'
+          },
+          axisLabel: {
+            color: '#fff',
+            fontSize: '10'
           },
           splitLine: {
             lineStyle: {
@@ -736,10 +744,9 @@ export default {
           },
           axisLine: {
             lineStyle: {
-              color: '#fff'
+              color: '#B9C8DB'
             }
           },
-          axisLabel: { show: true, color: '#fff' },
           axisTick: { show: false }
         },
         series: data || []

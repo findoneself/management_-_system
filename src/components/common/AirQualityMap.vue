@@ -2,13 +2,10 @@
   <div style="width:100%;height:100%">
     <baidu-map
       style="width:100%;height:100%"
-      :center="map.center"
+      :center="center"
       :zoom="map.zoom"
       @ready="handler"
     >
-      <!--缩放-->
-      <!-- <bm-navigation anchor="BMAP_ANCHOR_TOP_LEFT"></bm-navigation> -->
-      <!--定位-->
     </baidu-map>
   </div>
 </template>
@@ -18,7 +15,6 @@ export default {
   data () {
     return {
       map: {
-        center: { lng: 116.404, lat: 39.915 },
         zoom: 15,
         show: true,
         dragging: true
@@ -26,6 +22,13 @@ export default {
     }
   },
   props: {
+    // 中心坐标
+    center: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
     // 是否有标记点击事件（扬尘监测首页有）
     isMarkHandle: {
       type: Boolean,
@@ -37,9 +40,17 @@ export default {
       default () {
         return []
       }
+    },
+    // 标识颜色
+    mapColorList: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   mounted () {
+    this.getColor()
   },
   methods: {
     handler ({ BMap, map }) {
@@ -66,12 +77,13 @@ export default {
           position: new BMap.Point(item.lng, item.lat), // 指定文本标注所在的地理位置
           offset: new BMap.Size(30, -30) // 设置文本偏移量
         }
-        var label = new BMap.Label(item['pm2.5'], opts)
+        let color = this.getColor(item.value)
+        var label = new BMap.Label(item.value, opts)
         label.setStyle({
           color: '#fff',
           borderRadius: '5px',
-          borderColor: item.color,
-          backgroundColor: item.color,
+          borderColor: color,
+          backgroundColor: color,
           padding: '8px 0',
           fontSize: '16px',
           width: '35px',
@@ -80,6 +92,17 @@ export default {
         })
         map.addOverlay(label)
       }
+    },
+    getColor (value) {
+      let color
+      this.mapColorList.map(i => {
+        let section = i.section.split('-')
+        console.log(section)
+        if (value >= section[0] && value <= section[1]) {
+          color = i.color
+        }
+      })
+      return color
     }
   }
 }

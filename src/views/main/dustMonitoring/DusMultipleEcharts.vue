@@ -98,16 +98,18 @@
         </div>
       </el-form-item>
     </el-form>
+    <MultilineChart v-if="tabsType !== 'table'" />
   </TableForm>
 </template>
 
 <script>
 import TableForm from '_vie/common/TableForm'
-
+import MultilineChart from './components/MultilineChart'
 export default {
   name: 'DusMultipleEcharts',
   components: {
-    TableForm
+    TableForm,
+    MultilineChart
   },
   data () {
     return {
@@ -134,6 +136,7 @@ export default {
         typeList: [],
         // 参数类型
         paramTypes: [],
+        jczdList: [{ id: 'jc-1', name: '站点1' }, { id: 'jc-2', name: '站点2' }, { id: 'jc-3', name: '站点3' }, { id: 'jd-4', name: '站点4' }],
         tabsTypes: [
           { id: 'echart', name: '图形' },
           { id: 'table', name: '表格' }
@@ -193,11 +196,11 @@ export default {
         this.dictOptions.areaList = dict.xzarea
         this.dataForm.area = dict.xzarea[0].id
       }
-      if (dict.jcarea.length > 0) {
-        (this.dictOptions.jczdList = dict.jcarea)
-        this.dataForm.jcd = dict.jcarea[0].id
-      }
-      if (dict.type.length > 0) {
+      // if (dict.jcStation.length > 0) {
+      //   (this.dictOptions.jczdList = dict.jcStation)
+      //   this.dataForm.jcd = dict.jcStation[0].id
+      // }
+      if (dict.type && dict.type.length > 0) {
         (this.dictOptions.typeList = dict.type)
         this.dataForm.type = dict.type[0].id
       }
@@ -292,6 +295,8 @@ export default {
           }
         ]
       })
+      console.log(this.dataLoading)
+      this.dataLoading = false
     },
     // 设置展示类型
     tabsClick (id) {
