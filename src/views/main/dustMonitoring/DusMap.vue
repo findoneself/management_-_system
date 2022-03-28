@@ -65,13 +65,16 @@
     <MonitoringSpot
       v-else
       @monitoringSpotBack='monitoringSpotBack'
+      :monitoringSspotData='monitoringSspotData'
     />
     <!-- <div @click="changeActivePage">改变</div> -->
     <div class="map">
       <AirQualityMap
+        :center='center'
         :isMarkHandle='true'
         :coordinateList='coordinateList'
         @markHandle='markHandle'
+        :mapColorList='mapColorList'
       />
       <div class="map_title">地图</div>
       <div class="map_switch_box">
@@ -127,6 +130,7 @@ export default {
   },
   data () {
     return {
+      center: { lng: 116.404, lat: 39.915 },
       activePage: 0,
       dictOptions: {
         // 行政区域
@@ -163,8 +167,13 @@ export default {
       ],
       // 监测点数据
       monitoringSspotData: {
-        title: '云●徐州传染病医院',
-        pieData: {},
+        title: '云-徐州传染病医院',
+        pieData: {
+          name: '监测点数据',
+          value: 80,
+          title: 'pm2.5',
+          company: '62ug/m³'
+        },
         detailList: [{ name: '温度', value: '75 ℃' },
         { name: 'pm2.5', value: '62ug/m³' },
         { name: '湿度', value: '15%' },
@@ -172,23 +181,26 @@ export default {
         { name: '气压', value: '135' },
         { name: '二氧化氮', value: '254' },
         { name: '风速', value: '23' },
+        { name: '二氧化氮', value: '254' },
         { name: '二氧化硫', value: '5425' }]
       },
       // 地图标记
-      coordinateList: [{ lng: 116.2787, lat: 40.0492, 'pm2.5': 80, color: 'blue' },
-      { lng: 116.297047, lat: 39.979542, 'pm2.5': 30, color: 'yellow' },
-      { lng: 116.321768, lat: 39.88748, 'pm2.5': 30, color: 'yellow' },
-      { lng: 116.494243, lat: 39.956539, 'pm2.5': 10, color: 'green' },
-      { lng: 116.594243, lat: 40.01, 'pm2.5': 100, color: 'red' }],
+      coordinateList: [{ lng: 116.2787, lat: 40.0492, value: 80 },
+      { lng: 116.2787, lat: 40.040, value: 130 },
+      { lng: 116.2887, lat: 40.040, value: 230 },
+      { lng: 116.297047, lat: 39.979542, value: 30 },
+      { lng: 116.321768, lat: 39.88748, value: 30 },
+      { lng: 116.494243, lat: 39.956539, value: 10 },
+      { lng: 116.594243, lat: 40.01, value: 100 }],
       // 地图右下角的switch 和相关data
       switch_value1: '',
       switch_value2: '',
-      mapColorList: [{ name: '优', color: '#30D385' },
-      { name: '良', color: '#FFD902' },
-      { name: '轻度', color: '#FF9902' },
-      { name: '中度', color: '#FF0200' },
-      { name: '重度', color: '#990099' },
-      { name: '严重', color: '#990000' }],
+      mapColorList: [{ name: '优', color: '#30D385', section: '0-35' },
+      { name: '良', color: '#FFD902', section: '36-75' },
+      { name: '轻度', color: '#FF9902', section: '76-115' },
+      { name: '中度', color: '#FF0200', section: '116-150' },
+      { name: '重度', color: '#990099', section: '151-250' },
+      { name: '严重', color: '#990000', section: '251-500' }],
       mapNumList: [0, 35, 75, 115, 150, 250, 500]
     }
   },

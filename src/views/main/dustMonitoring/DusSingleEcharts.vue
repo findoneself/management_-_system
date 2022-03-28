@@ -98,25 +98,19 @@
         </div>
       </el-form-item>
     </el-form>
-    <BeEchartBar
-      v-show="tabsType === 'echart'"
-      :show-title="false"
-      :options="{xAxis: {axisLabel:{ rotate: 45 }}}"
-      :xAxis="echartXAxis"
-      :series="echartSeries"
-    />
+    <MultilineChart v-if="tabsType !== 'table'" />
   </TableForm>
 </template>
 
 <script>
 import TableForm from '_vie/common/TableForm'
-import BeEchartBar from '_com/common/BeEchartBar'
+import MultilineChart from './components/MultilineChart'
 
 export default {
   name: 'DusSingleEcharts',
   components: {
     TableForm,
-    BeEchartBar
+    MultilineChart
   },
   data () {
     return {
@@ -126,6 +120,7 @@ export default {
         areaList: [],
         // 监测站点
         jczdList: [],
+        // 类型
         typeList: [],
         // 参数类型
         paramTypes: [],
@@ -209,14 +204,14 @@ export default {
         this.dictOptions.areaList = dict.xzarea
         this.dataForm.area = dict.xzarea[0].id
       }
-      if (dict.jcarea.length > 0) {
-        (this.dictOptions.jczdList = dict.jcarea)
-        this.dataForm.jcd = dict.jcarea[0].id
-      }
-      if (dict.type.length > 0) {
-        (this.dictOptions.typeList = dict.type)
-        this.dataForm.type = dict.type[0].id
-      }
+      // if (dict.jcStation.length > 0) {
+      //   (this.dictOptions.jczdList = dict.jcStation)
+      //   this.dataForm.jcd = dict.jcStation[0].id
+      // }
+      // if (dict.type.length > 0) {
+      //   (this.dictOptions.typeList = dict.type)
+      //   this.dataForm.type = dict.type[0].id
+      // }
 
     },
     // 点击回调

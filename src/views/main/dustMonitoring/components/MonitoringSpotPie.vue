@@ -10,17 +10,24 @@
 export default {
   data () {
     return {
-      dataList: [
-        {
-          name: '巡查单',
-          value: 80,
-          title: 'pm2.5',
-          company: '62ug/m³',
-          num: 81,
-          center: ['50%', '50%'],
-          color: ['#114991', ' #00DDFF'] // left top
-        }
-      ]
+      data:
+      {
+        // name: '巡查单',
+        // value: 80,
+        // title: 'pm2.5',
+        // company: '62ug/m³',
+        center: ['50%', '50%'],
+        color: ['#114991', ' #00DDFF'] // left top
+      }
+
+    }
+  },
+  props: {
+    pieData: {
+      type: Object,
+      default () {
+        return {}
+      }
     }
   },
   mounted () {
@@ -30,7 +37,7 @@ export default {
   methods: {
     getmap () {
       var myChart = this.$echarts.init(document.getElementById('monitoring_spot'))
-      var item = this.dataList[0]
+      var item = { ...this.data, ...this.pieData }
       var option = {
         title: {
           text: item.value,
