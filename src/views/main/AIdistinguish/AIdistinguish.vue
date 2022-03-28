@@ -185,7 +185,7 @@
       >
       </el-pagination>
     </BeautifulCard>
-    <tabegwg
+    <TableDialog
       ref="TableDialog"
       @onCancel="onCancel"
     />
@@ -196,14 +196,14 @@
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import BeautifulCard from '_com/common/BeautifulCard'
 import BeautifulTableList from '_com/common/BeautifulTableList'
-import tabegwg from './components/tabegwg'
+import TableDialog from './components/TableDialog'
 export default {
   name: 'AIdistinguish',
   components: {
     BeautifulWrapper,
     BeautifulCard,
     BeautifulTableList,
-    tabegwg
+    TableDialog
   },
   data () {
     return {
