@@ -87,6 +87,12 @@ export default {
           },
           axisTick: {
             show: false
+          },
+          splitLine: {
+            lineStyle: {
+              color: '#F2F2F2',
+              opacity: 0.1
+            }
           }
         },
         series: [

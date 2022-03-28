@@ -8,9 +8,10 @@
       >
         <div class="inspect">
           <ul class="inspect_time">
-            <li>本月检查项目：<span>{{ patrolData.inspect.project }}</span></li>
-            <li>本月检查次数：<span>{{ patrolData.inspect.num1 }}</span></li>
-            <li>本月检查次数：<span>{{ patrolData.inspect.num2 }}</span></li>
+            <li
+              v-for="item in patrolData.inspect"
+              :key="item"
+            >{{item.name}} : <span>{{ item.num }}</span></li>
           </ul>
           <div class="inspect_people">
             <div class="first">网络员：</div>
@@ -79,7 +80,7 @@
             v-for="(item, index) in paramslist"
             :key="index + '.'"
           >
-            <span>{{ item.name }}：</span>
+            <span>{{ item.name }}:</span>
             <span>{{ item.value }}</span>
           </li>
         </ul>
@@ -103,7 +104,10 @@
           >
           </el-date-picker>
         </div>
-        <WarningNum></WarningNum>
+        <WarningNum
+          :xAxisData='xAxisData'
+          :seriesData='seriesData'
+        />
         <div class="button">
           <img
             class="left_img"
@@ -122,7 +126,10 @@
         :title="'各县区安装数量统计'"
         class="home_bottom_center"
       >
-        <InstallNum></InstallNum>
+        <InstallNum
+          :xAxisData='xAxisDataInstall'
+          :seriesData='seriesDataInstall'
+        />
         <div class="button">
           <img
             class="left_img"
@@ -145,24 +152,24 @@
           <span>今日</span>
           <span>历史</span>
         </div>
-        <div class="file_img">
+        <div
+          class="file_img"
+          v-for="item in fileData"
+          :key="item.name"
+        >
           <img
-            src="~_ats/img/book.png"
-            alt=""
+            v-if="item.name==='文件'"
+            src="../../../assets/img/book.png"
           />
-          <span>文件</span>
-          <span>132(只读）</span>
-          <span>214324</span>
-        </div>
-        <div class="file_img">
           <img
-            src="~_ats/img/tb.png"
-            alt=""
+            v-else
+            src="../../../assets/img/tb.png"
           />
-          <span>通报</span>
-          <span>132(只读）</span>
-          <span>214324</span>
+          <span>{{item.name}}</span>
+          <span>{{item.num}}{{item.type}}</span>
+          <span>{{item.history}}</span>
         </div>
+
       </BeautifulCard>
     </div>
   </div>
@@ -189,11 +196,11 @@ export default {
       echartDate: [],
       // 巡查整改数据
       patrolData: {
-        inspect: {
-          project: 2245,
-          num1: 2654,
-          num2: 6562
-        },
+        inspect: [{
+          name: '本月检查项目', num: 2654
+        }, { name: '本月检查次数', num: 2353 }, {
+          name: '本月检查次数', num: 12324
+        }],
         people: 45661,
         patrolList: [
           { name: '巡查单', count: 256643, percent: 80 },
@@ -234,7 +241,30 @@ export default {
         { id: '54', name: '参数类型', value: 2134 },
         { id: '45', name: '参数类型', value: 2134 },
         { id: '47', name: '参数类型', value: 2134 }
-      ]
+      ],
+      // 报警统计图
+      xAxisData: ['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07'],
+      seriesData: [20, 50, 10, 35, 35, 47, 20],
+      // 安装区县统计图
+      xAxisDataInstall: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      seriesDataInstall: [{
+        name: 'D',
+        data: [30, 32, 31, 34, 90, 30, 20]
+      },
+      {
+        name: 'Mail Ad',
+        data: [20, 12, 10, 34, 90, 30, 20]
+      },
+      {
+        name: 'Affiliate Ad',
+        data: [10, 22, 21, 54, 10, 30, 40]
+      }, {
+        name: 'Video Ad',
+        data: [10, 22, 21, 54, 10, 30, 40]
+      }],
+      fileData: [{ name: '文件', num: 132, type: '未读', history: 132455, src: '' },
+      { name: '通报', num: 132, type: '未读', history: 132455, src: '../../../assets/img/tb.png' }]
+
     }
   },
   created () {
@@ -250,7 +280,6 @@ export default {
       this.date = res
       let end = res.split('-')
       Number(end[2]) < 31 && (end[2] = (Number(end[2]) + 1).toString())
-      console.log(end.join('-'), Number(end[1]))
       this.startDate = res
       this.endDate = end.join('-')
     }
@@ -577,8 +606,9 @@ export default {
       border-radius: 1rem;
       margin-bottom: 1rem;
       img {
-        width: 4rem;
-        height: 4rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        margin: 0.5rem;
       }
     }
   }

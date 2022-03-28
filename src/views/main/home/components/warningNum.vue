@@ -10,13 +10,13 @@ export default {
     xAxisData: {
       type: Array,
       default () {
-        return ['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07']
+        return []
       }
     },
     seriesData: {
       type: Array,
       default () {
-        return [20, 50, 10, 35, 35, 47, 20]
+        return []
       }
     }
   },
@@ -58,7 +58,8 @@ export default {
           // Y轴全部轴线样式（除开边框Y轴）
           splitLine: {
             lineStyle: {
-              color: '#F2F2F2'
+              color: '#F2F2F2',
+              opacity: 0.1
             }
           },
           // Y轴是否可以穿出底部边框

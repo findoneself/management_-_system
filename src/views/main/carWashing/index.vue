@@ -80,7 +80,15 @@
         <!-- 上半部分 -->
         <div class="map_video">
           <!-- 中间地图部分 -->
-          <div class="map"></div>
+          <div class="map">
+            <AirQualityMap
+              :center='center'
+              :isMarkHandle='false'
+              :coordinateList='coordinateList'
+              :mapColorList='mapColorList'
+            />
+            <div class="map_left_title">地图</div>
+          </div>
           <!-- 右边在线视频 -->
           <BeautifulCard
             :cardStyle='cardStyle'
@@ -269,6 +277,7 @@
 <script>
 import BeautifulCard from '_com/common/BeautifulCard'
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
+import AirQualityMap from '_com/common//AirQualityMap.vue'
 
 import CarInAndOutMap from './index_components/CarInAndOutMap.vue'
 import CarInAndOutPieChart from './index_components/CarInAndOutPieChart.vue'
@@ -282,7 +291,8 @@ export default {
     CarInAndOutMap,
     CarInAndOutPieChart,
     DoubleLineChart,
-    CountyAnalysisBar
+    CountyAnalysisBar,
+    AirQualityMap
   },
   data () {
     return {
@@ -369,7 +379,22 @@ export default {
       borderIcon: ['top', 'right', 'bottom', 'left'],
       wraStyle: { inPadding: '0px' },
       menuList: this.$store.state.global.menuList,
-      cardStyle: { padding: '0px' }
+      cardStyle: { padding: '0px' },
+      // 地图
+      coordinateList: [{ lng: 116.2787, lat: 40.0492, value: 80 },
+      { lng: 116.2787, lat: 40.040, value: 130 },
+      { lng: 116.2887, lat: 40.040, value: 230 },
+      { lng: 116.297047, lat: 39.979542, value: 30 },
+      { lng: 116.321768, lat: 39.88748, value: 30 },
+      { lng: 116.494243, lat: 39.956539, value: 10 },
+      { lng: 116.594243, lat: 40.01, value: 100 }],
+      mapColorList: [{ name: '优', color: '#30D385', section: '0-35' },
+      { name: '良', color: '#FFD902', section: '36-75' },
+      { name: '轻度', color: '#FF9902', section: '76-115' },
+      { name: '中度', color: '#FF0200', section: '116-150' },
+      { name: '重度', color: '#990099', section: '151-250' },
+      { name: '严重', color: '#990000', section: '251-500' }],
+      center: { lng: 116.404, lat: 39.915 }
     }
   },
   created () {
@@ -377,11 +402,13 @@ export default {
     subMenu.map(i => {
       this.paramslist.map((o) => {
         if (i.id === o.id) {
-          o.path = i.path
+          console.log(i.url.slice(1))
+          o.path = i.url.slice(1)
         }
 
       })
     })
+    console.log(subMenu)
   },
   methods: {
     controlHandel (path) {
@@ -421,8 +448,8 @@ export default {
       justify-content: space-between;
       flex-wrap: wrap;
       overflow: hidden;
-      padding: 0 0.2rem;
-      margin-top: 5px;
+      // padding: 0 0.2rem;
+      // margin-top: 5px;
       // height: calc(100% - 80px);
       .item {
         width: 11.2rem;
@@ -472,7 +499,7 @@ export default {
         background-color: #02004d;
         justify-content: space-around;
         align-items: center;
-        line-height: 28px;
+        line-height: 24px;
         font-size: 0.88rem;
         div {
           flex: 1;
@@ -538,6 +565,19 @@ export default {
     height: 64.5%;
     .map {
       flex: 1;
+      position: relative;
+      .map_left_title {
+        width: 139px;
+        height: 51px;
+        background: url("../../../assets/img/tabmenu-active.png") no-repeat 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        text-align: center;
+        line-height: 51px;
+      }
     }
     .online_video {
       width: 25rem;

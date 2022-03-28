@@ -19,15 +19,27 @@ export default {
         { value: 20, name: '准运证过期', color: '#00FFFF' }
       ],
       option: {
-        // title: {
-        //   text: "Nightingale Chart",
-        //   subtext: "Fake Data",
-        //   left: "center",
-        // },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{b} :<br/> {c} ({d}%)'
+
+        emphasis: {
+          label: { show: true, formatter: '{b}: {c}' },
+          labelLine: { show: true },
+          itemStyle: {
+            normal: {
+              fontSize: '0.5rem',
+              shadowBlur: 0,
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            }
+          }
         },
+        // tooltip: {
+        //   trigger: 'item',
+        //   formatter: '{b} :<br/> {c} ({d}%)'
+        // },
         legend: {
           left: 'center',
           top: 'center',

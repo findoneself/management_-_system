@@ -55,9 +55,6 @@ export default {
   methods: {
     handler ({ BMap, map }) {
       let that = this
-      console.log(BMap, map)
-      console.log(this.isMarkHandle)
-      // console.lng(BMap.CanvasLayer)
       // 鼠标缩放
       map.enableScrollWheelZoom(true)
       // 点击事件获取经纬度
@@ -97,7 +94,6 @@ export default {
       let color
       this.mapColorList.map(i => {
         let section = i.section.split('-')
-        console.log(section)
         if (value >= section[0] && value <= section[1]) {
           color = i.color
         }

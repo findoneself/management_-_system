@@ -8,6 +8,11 @@ export default {
   name: 'CarQuasiTransportation',
   data () {
     return {}
+  },
+  methods: {
+    closeClick () {
+
+    }
   }
 }
 </script>

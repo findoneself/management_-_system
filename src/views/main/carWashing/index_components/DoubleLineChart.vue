@@ -48,7 +48,8 @@ export default {
           // Y轴全部轴线样式（除开边框Y轴）
           splitLine: {
             lineStyle: {
-              color: '#F2F2F2'
+              color: '#F2F2F2',
+              opacity: 0.1
             }
           },
           // Y轴是否可以穿出底部边框

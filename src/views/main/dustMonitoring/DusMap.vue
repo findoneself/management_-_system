@@ -130,7 +130,6 @@ export default {
   },
   data () {
     return {
-      center: { lng: 116.404, lat: 39.915 },
       activePage: 0,
       dictOptions: {
         // 行政区域
@@ -185,6 +184,7 @@ export default {
         { name: '二氧化硫', value: '5425' }]
       },
       // 地图标记
+
       coordinateList: [{ lng: 116.2787, lat: 40.0492, value: 80 },
       { lng: 116.2787, lat: 40.040, value: 130 },
       { lng: 116.2887, lat: 40.040, value: 230 },
@@ -192,15 +192,16 @@ export default {
       { lng: 116.321768, lat: 39.88748, value: 30 },
       { lng: 116.494243, lat: 39.956539, value: 10 },
       { lng: 116.594243, lat: 40.01, value: 100 }],
-      // 地图右下角的switch 和相关data
-      switch_value1: '',
-      switch_value2: '',
       mapColorList: [{ name: '优', color: '#30D385', section: '0-35' },
       { name: '良', color: '#FFD902', section: '36-75' },
       { name: '轻度', color: '#FF9902', section: '76-115' },
       { name: '中度', color: '#FF0200', section: '116-150' },
       { name: '重度', color: '#990099', section: '151-250' },
       { name: '严重', color: '#990000', section: '251-500' }],
+      center: { lng: 116.404, lat: 39.915 },
+      // 地图右下角的switch 和相关data
+      switch_value1: '',
+      switch_value2: '',
       mapNumList: [0, 35, 75, 115, 150, 250, 500]
     }
   },

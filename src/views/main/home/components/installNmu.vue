@@ -7,14 +7,28 @@
 </template>
 <script>
 export default {
+  props: {
+    xAxisData: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    seriesData: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
   data () {
     return {
+      colorList: ['#FF460D', '#FFAE00', '#1176FF', '#23DBFC'],
       option: {
         // backgroundColor: "#000",
         // 右上角的色块加title
         legend: [
           {
-            data: ['D', 'Mail Ad'],
             align: 'left',
             right: 0,
             top: -5,
@@ -27,7 +41,6 @@ export default {
             itemGap: 5
           },
           {
-            data: ['Affiliate Ad', 'Video Ad'],
             align: 'left',
             right: 0,
             top: 10,
@@ -58,7 +71,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
           axisLabel: {
             color: '#fff',
             fontSize: '10'
@@ -82,6 +94,13 @@ export default {
           axisLine: {
             lineStyle: {
               color: '#B9C8DB'
+            }
+          },
+          // Y轴全部轴线样式（除开边框Y轴）
+          splitLine: {
+            lineStyle: {
+              color: '#F2F2F2',
+              opacity: 0.1
             }
           },
           axisTick: {
@@ -195,8 +214,49 @@ export default {
   },
   methods: {
     getmap () {
+      let series = []
+      let legendData = [[], []]
+      this.seriesData.map((i, index) => {
+        series.push({
+          name: i.name,
+          type: 'bar',
+          stack: 'total',
+          emphasis: {
+            focus: 'series'
+          },
+          barWidth: 10,
+          data: i.data,
+          itemStyle: {
+            normal: {
+              color: this.colorList[index],
+              shadowColor: '#23DBFC',
+              fontSize: '0.5rem',
+              shadowBlur: 0,
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            }
+          }
+        })
+        if (index === 0 || index === 1) {
+          legendData[0].push(i.name)
+        } else {
+          legendData[1].push(i.name)
+        }
+      })
+      const { legend, xAxis } = this.option
+      xAxis.data = this.xAxisData
+      legend[0].data = legendData[0]
+      legend[1].data = legendData[1]
+      let option = {
+        ...this.option,
+        series
+      }
       var myChart = this.$echarts.init(document.getElementById('installnum'))
-      myChart.setOption(this.option)
+      myChart.setOption(option)
       window.addEventListener('resize', function () {
         myChart.resize()
       })

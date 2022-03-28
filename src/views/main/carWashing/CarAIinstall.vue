@@ -1,13 +1,26 @@
 <template>
   <!--AI识别安装率 -->
-  <div></div>
+  <BeautifulWrapper
+    :wraStyle="wraStyle"
+    :isTitle='true'
+    :borderIcon='borderIcon'
+    @closeClick='closeClick'
+  ></BeautifulWrapper>
 </template>
 
 <script>
+import BeautifulWrapper from '_com/common/BeautifulWrapper'
+
 export default {
   name: 'CarAIinstall',
+  components: {
+    BeautifulWrapper
+  },
   data () {
-    return {}
+    return {
+      borderIcon: ['right', 'bottom', 'left', 'close'],
+      wraStyle: { inPadding: '0px' }
+    }
   }
 }
 </script>
