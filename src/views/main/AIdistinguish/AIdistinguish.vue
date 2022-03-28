@@ -174,6 +174,7 @@
         :index-obj="{isIndex: true, width: '5rem'}"
         :data-list="dataList.xmbjList"
         :columns="columns.xmbjColumns"
+        @rowClick="rowClick"
       />
       <el-pagination
         @current-change="handleCurrentChange"
@@ -184,8 +185,8 @@
       >
       </el-pagination>
     </BeautifulCard>
-    <TableDIalog
-      ref="tableDialog"
+    <TableDialog
+      ref="TableDialog"
       @onCancel="onCancel"
     />
   </BeautifulWrapper>
@@ -195,14 +196,14 @@
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import BeautifulCard from '_com/common/BeautifulCard'
 import BeautifulTableList from '_com/common/BeautifulTableList'
-import TableDIalog from './components/TableDIalog'
+import TableDialog from './components/TableDialog'
 export default {
   name: 'AIdistinguish',
   components: {
     BeautifulWrapper,
     BeautifulCard,
     BeautifulTableList,
-    TableDIalog
+    TableDialog
   },
   data () {
     return {
@@ -229,7 +230,7 @@ export default {
         ],
         xmbjColumns: [
           { name: '项目名称', prop: 'name', key: 1 },
-          { name: '报警数量', prop: 'count', key: 2 }
+          { name: '报警数量', prop: 'count', width: '20%', key: 2 }
         ]
       },
       // 所有列表数据
@@ -274,7 +275,7 @@ export default {
       // 弹窗标题及其按钮文字
       dialogTitle: {
         bjls: '报警记录',
-        xmbj: '项目报警',
+        xmbj: '分类排名',
         title: ''
       }
     }
@@ -313,6 +314,10 @@ export default {
       this.dataForm.pageIndex = val
       this.getXmbjData()
     },
+    // 项目报警统计行点击
+    rowClick ({ row }) {
+      console.log(row)
+    },
     // 弹窗关闭结束回调
     onCancel () {
       console.log('弹窗关闭')
@@ -324,7 +329,7 @@ export default {
       } else if (name === '排名统计') {
         console.log(name)
       }
-      this.$refs.tableDialog.open(name)
+      this.$refs.TableDialog.open(name)
     },
     // 获取所有数据
     getData () {

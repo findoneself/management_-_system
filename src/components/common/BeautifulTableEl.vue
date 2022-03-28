@@ -102,7 +102,7 @@
             class="table-link"
             v-for="(btn, index) in tableOper.operButton"
             :key="btn.key ? btn.key : index"
-            :type="btn.type ? btn.type : ''"
+            :type="btn.type ? btn.type : 'primary'"
             :disabled="btn.disabled ? btn.disabled : false"
             :underline="btn.underline || tableOper.btnUnderline || false"
             :icon="btn.icon ? btn.icon : ''"

@@ -16,7 +16,7 @@
       <i
         class="el-icon-close close-btn"
         @click="closeClick"
-        v-show="borderIcons.includes('close')"
+        v-show="borderIcon.includes('close')"
       ></i>
       <!-- tabs导航 -->
       <div class="menu-tabs">
@@ -99,7 +99,8 @@ export default {
   computed: {
     // 边框过滤
     borderIcons () {
-      return this.isTitle || this.tabsList.length > 0 ? this.borderIcon.filter(val => val !== 'top') : this.borderIcon
+      const list = this.borderIcon.filter(val => val !== 'close')
+      return this.isTitle || this.tabsList.length > 0 ? list.filter(val => val !== 'top') : list
     },
     // 容器样式
     setStyle () {

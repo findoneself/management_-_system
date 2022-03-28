@@ -19,15 +19,15 @@
         <div
           class="cell"
           v-for="item in tabColumns"
-          :style="cellHeight ? {height: cellHeight} : {}"
+          :style="cellHeight ? {height: cellHeight, width: item.width, flex: item.width ? 'none' : 1} : {width: item.width, flex: item.width ? 'none' : 1}"
           :key="item.prop"
         >{{ item.name|| '' }}</div>
         <!-- 操作列 -->
         <div
           class="be-table-oper cell"
-          :style="cellHeight ? {width: tableIndex.width, height: cellHeight} : {width: tableIndex.width}"
+          :style="cellHeight ? {width: tableOper.width, height: cellHeight} : {width: tableOper.width}"
           v-if="dataList.length > 0 && columns.length > 0 && tableOper.isOperation"
-        >操作</div>
+        >{{ tableOper.headName }}</div>
       </div>
       <div
         class="be-table-content"
@@ -40,6 +40,7 @@
           <li
             class="be-table-li be-table-item"
             v-for="(item, iindex) in dataList"
+            @click="rowClick(item, iindex)"
             :key="item.id"
           >
             <!-- 序号列 -->
@@ -52,13 +53,14 @@
             <div
               class="cell"
               v-for="(value, vindex) in columns"
-              :style="cellHeight ? {minHeight: cellHeight} : {}"
+              :style="cellHeight ? {minHeight: cellHeight, width: value.width, flex: value.width ? 'none' : 1} : {width: value.width, flex: value.width ? 'none' : 1}"
               :key="'value-' + vindex"
+              @click="cellClick(value, vindex, item, iindex)"
             >{{ item[value.prop] || '' }}</div>
             <!-- 操作列，传参复杂 -->
             <div
               class="be-table-oper cell"
-              :style="cellHeight ? {width: tableIndex.width, minHeight: cellHeight} : {width: tableIndex.width}"
+              :style="cellHeight ? {width: tableOper.width, minHeight: cellHeight} : {width: tableOper.width}"
               v-if="dataList.length > 0 && columns.length > 0 && tableOper.isOperation"
             >
               <template v-if="tableOper.isUnifiedOper">
@@ -66,11 +68,11 @@
                   class="table-link"
                   v-for="(btn, index) in tableOper.operButton"
                   :key="btn.key ? btn.key : index"
-                  :type="btn.type ? btn.type : ''"
+                  :type="btn.type ? btn.type : 'primary'"
                   :disabled="btn.disabled ? btn.disabled : false"
                   :underline="btn.underline || tableOper.btnUnderline || false"
                   :icon="btn.icon ? btn.icon : ''"
-                  @click.stop="btn.click(scope.row)"
+                  @click.stop="btn.click(item, $event)"
                 >
                   {{ btn.text }}
                 </el-link>
@@ -78,7 +80,7 @@
               <template v-else>
                 <slot
                   name="oper"
-                  v-bind="{ row: scope.row }"
+                  v-bind="{ row: item }"
                 ></slot>
               </template>
             </div>
@@ -170,15 +172,26 @@ export default {
     // 定义默认操作列数据
     // 默认每个按钮都有各自的属性，如果属性不存在，则查看是否存在公共的
     // operButton集合字段：type(类型), text(文本), click(点击), underline(下划线), icon(图标)
-    // isOperation是否需要操作列，isUnifiedOper是否统一操作列，否则自定义
+    // isOperation是否需要操作列，isUnifiedOper是否统一操作列，否则自定义，headName表头名称
     tableOper () {
       return Object.assign({
         operButton: [],
         isOperation: false,
         isUnifiedOper: true,
         btnUnderline: false,
+        headName: '操作',
         width: '6.25rem'
       }, this.operObj)
+    }
+  },
+  methods: {
+    // 行点击
+    rowClick (row, rowIndex) {
+      this.$emit('rowClick', { row, rowIndex })
+    },
+    // 单元格点击，四个参数，单元格信息，单元格索引，行信息，行索引
+    cellClick (cell, cellIndex, row, rowIndex) {
+      this.$emit('cellClick', { cell, cellIndex, row, rowIndex })
     }
   }
 }

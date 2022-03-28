@@ -58,7 +58,7 @@
         v-loading="loading"
         :element-loading-text="loadingText"
         :element-loading-spinner="loadingIcon"
-        v-if="!isTable"
+        v-show="!isTable"
       >
         <slot></slot>
       </div>
@@ -184,6 +184,7 @@ export default {
   height: calc(100% - 100px);
 }
 .is-nohead-tabs {
+  padding-top: 30px;
   height: 100%;
 }
 .el-table {

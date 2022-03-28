@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import {
+  Link,
   Button,
   Form,
   FormItem,
@@ -29,6 +30,7 @@ import {
   DatePicker
 } from 'element-ui'
 
+Vue.use(Link)
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)

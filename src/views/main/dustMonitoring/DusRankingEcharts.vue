@@ -85,7 +85,6 @@
       </el-form-item>
     </el-form>
     <BeEchartBar
-      v-show="tabsType === 'echart'"
       :show-title="false"
       :options="{xAxis: {axisLabel:{ rotate: 45 }}}"
       :xAxis="echartXAxis"

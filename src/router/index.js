@@ -113,10 +113,8 @@ function getMenuData (to, next) {
       { id: '7-1', key: 1, type: 'menu', title: '超期项目', alias: '超过90天未竣工', parentId: '7', url: '@/projectManagement/ProjectOverdue' },
       { id: '8', key: 8, type: 'menu', title: '管理员', alias: '管理员', parentId: '00', url: '@/manageUser/ManageUser' }
     ]
-    // 根据key值排序并储存当前菜单
-    const menuList = $utils.compareSort($utils.treeDataTranslate(list), 'key')
     let temp = []
-    menuList.map(item => {
+    list.map(item => {
       if (item.url && /\S/.test(item.url)) {
         const path = item.url.replace('@', '')
         const name = item.url.replace('@/', '').replace(/\//g, '-')
@@ -155,6 +153,8 @@ function getMenuData (to, next) {
         temp.push(route)
       }
     })
+    // 根据key值排序并储存当前菜单
+    const menuList = $utils.compareSort($utils.treeDataTranslate(list), 'key')
     // 过滤掉作为首页的菜单，不作显示
     const menus = menuList.filter(item => item.type && item.type !== 'home')
     sessionStorage.setItem('menuList', JSON.stringify(menus))
