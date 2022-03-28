@@ -91,7 +91,7 @@
         :title="'报警统计趋势分析'"
         class="home_bottom_left"
       >
-        <div class="picker">
+        <div class="picker dataPicker">
           时间区间：
           <el-date-picker
             v-model="echartDate"
@@ -268,6 +268,7 @@ export default {
   .picker {
     height: 35px;
     text-align: right;
+
     .gkzd-date {
       width: 9rem;
     }
@@ -276,6 +277,11 @@ export default {
   .home_bottom {
     display: flex;
     justify-content: space-between;
+    .dataPicker {
+      position: absolute;
+      right: 5%;
+      top: 20%;
+    }
   }
   .home_top {
     height: 57.5%;
@@ -523,23 +529,6 @@ export default {
         margin-left: 0.5rem;
       }
     }
-    .button {
-      img {
-        width: 0.6rem;
-        height: 1rem;
-        position: absolute;
-      }
-      .left_img {
-        transform: rotate(180deg);
-        position: absolute;
-        bottom: 1.28rem;
-        left: 4.5rem;
-      }
-      .right_img {
-        bottom: 1.28rem;
-        right: 2.8rem;
-      }
-    }
   }
   .home_bottom {
     justify-content: space-between;
@@ -561,18 +550,18 @@ export default {
         transform: rotate(180deg);
         position: absolute;
         bottom: 1.28rem;
-        left: 4.5rem;
+        left: 3.8rem;
       }
       .right_img {
         bottom: 1.28rem;
-        right: 2.8rem;
+        right: 2rem;
       }
     }
     .tipes {
       display: flex;
       justify-content: flex-end;
       text-align: center;
-      margin-top: 2rem;
+      margin: 2rem 0 0.5rem 0;
       span {
         width: 28%;
         color: #39f8ff;
@@ -586,7 +575,7 @@ export default {
       background-color: #12298d;
       // height: 6.5rem;
       border-radius: 1rem;
-      // margin: 0.3rem 0.8rem 2rem 0.5rem;
+      margin-bottom: 1rem;
       img {
         width: 4rem;
         height: 4rem;

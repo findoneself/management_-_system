@@ -1,20 +1,31 @@
 <template>
-  <div>
-    <div
-      id="warningnum"
-      style="width: 95%; height: 12rem"
-    ></div>
-  </div>
+  <div
+    id="warningnum"
+    style="width: 98%; height: 100%"
+  ></div>
 </template>
 <script>
 export default {
-  props: {},
+  props: {
+    xAxisData: {
+      type: Array,
+      default () {
+        return ['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07']
+      }
+    },
+    seriesData: {
+      type: Array,
+      default () {
+        return [20, 50, 10, 35, 35, 47, 20]
+      }
+    }
+  },
   data () {
     return {
       option: {
         xAxis: {
           type: 'category',
-          data: ['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07'],
+          // data: ['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07'],
           // X轴线上标识样式
           axisLabel: {
             color: '#fff',
@@ -58,8 +69,8 @@ export default {
         grid: {
           left: '10rem',
           right: '1rem',
-          top: '30rem',
-          bottom: '40rem',
+          top: '40rem',
+          bottom: '1rem',
           containLabel: true
         },
         tooltip: {
@@ -70,7 +81,7 @@ export default {
         },
         series: [
           {
-            data: [20, 50, 70, 35, 35, 47, 260],
+            // data: [20, 50, 70, 35, 35, 47, 260],
             type: 'line',
             itemStyle: {
               normal: {
@@ -96,6 +107,8 @@ export default {
   },
   methods: {
     getmap () {
+      this.option.xAxis.data = this.xAxisData
+      this.option.series[0].data = this.seriesData
       var myChart = this.$echarts.init(document.getElementById('warningnum'))
       myChart.setOption(this.option)
       window.addEventListener('resize', function () {

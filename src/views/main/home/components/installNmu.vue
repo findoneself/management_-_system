@@ -1,13 +1,9 @@
 <template>
   <!-- 各区县安装数量统计 -->
-  <div>
-    <div>
-      <div
-        id="installnum"
-        style="width: 93%; height: 12rem"
-      ></div>
-    </div>
-  </div>
+  <div
+    id="installnum"
+    style="width: 98%; height: 100%"
+  ></div>
 </template>
 <script>
 export default {
@@ -21,6 +17,7 @@ export default {
             data: ['D', 'Mail Ad'],
             align: 'left',
             right: 0,
+            top: -5,
             textStyle: {
               color: '#fff',
               fontSize: '10'
@@ -33,6 +30,7 @@ export default {
             data: ['Affiliate Ad', 'Video Ad'],
             align: 'left',
             right: 0,
+            top: 10,
             y: '30',
             textStyle: {
               color: '#fff',
@@ -54,8 +52,8 @@ export default {
         grid: {
           left: '10rem',
           right: '1rem',
-          top: '50rem',
-          bottom: '15rem',
+          top: '40rem',
+          bottom: '1rem',
           containLabel: true
         },
         xAxis: {
