@@ -67,26 +67,28 @@ export default {
         // 保存菜单及其路由数据
         const menuList = JSON.parse(sessionStorage.getItem('menuList')) || []
         const menuRoutes = JSON.parse(sessionStorage.getItem('menuRoutes')) || []
-        // 查找默认首页
+        // 获取当前用户的默认首页id是否存在
         const defaultId = this.$store.state.global.userInfo.homeId
+        // 查找默认首页
+        const home = menuRoutes.find(item => item.meta.type === 'home')
         if (defaultId) {
+          // 查找当前用户默认首页的路由
           const isHome = menuRoutes.find(item => item.meta.id === defaultId)
           if (isHome) {
-            // 如果存在默认首页，查找当前用户的菜单权限是否存在此菜单
+            // 查找当前路由是否在用户的菜单权限中
             const isRight = menuList.find(menu => menu.id === isHome.meta.id)
             if (isRight) {
-              // 如果权限菜单存在，则跳转至默认首页
+              // 如果权限菜单存在，则跳转至用户的默认首页
               this.$router.push({ name: isHome.name })
             } else {
               // 如果不存在权限
-              this.routeDefalut(menuRoutes[0], '当前账户默认首页无权限访问！')
+              this.routeDefalut(home, '当前账户首页无权限访问，跳转至默认首页！')
             }
           } else {
-            this.routeDefalut(menuRoutes[0], '当前账户默认首页不存在！')
+            this.routeDefalut(home, '当前账户首页不存在，跳转至默认首页！')
           }
         } else {
-          console.log(menuRoutes[0])
-          this.routeDefalut(menuRoutes[0], '当前账户未设置首页！')
+          this.routeDefalut(home, '当前账户未设置首页，跳转至默认首页！')
         }
       } else if (to.name === 'main' && oldRoute) {
         // 说明是回退到登录页

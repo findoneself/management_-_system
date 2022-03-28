@@ -31,7 +31,7 @@ export default [
   { id: 'tsj', name: '天数据', type: 'type', params: '' },
   { id: 'zsj', name: '周数据', type: 'type', params: '' },
   { id: 'ysj', name: '月数据', type: 'type', params: '' },
-  // 报警分类
+  // 报警/异常分类
   { id: 'bj1', name: '反光衣', type: 'alertType', params: '' },
   { id: 'bj2', name: '行人闯入', type: 'alertType', params: '' },
   { id: 'bj3', name: '打电话', type: 'alertType', params: '' },
@@ -39,5 +39,13 @@ export default [
   { id: 'bj5', name: '火焰', type: 'alertType', params: '' },
   { id: 'bj6', name: '安全帽', type: 'alertType', params: '' },
   { id: 'bj7', name: '人员离岗', type: 'alertType', params: '' },
-  { id: 'bj8', name: '工作服', type: 'alertType', params: '' }
+  { id: 'bj8', name: '工作服', type: 'alertType', params: '' },
+  // 报警分类
+  { id: 'bjfl1', name: '分类1', type: 'warnType', params: '' },
+  { id: 'bjfl2', name: '分类2', type: 'warnType', params: '' },
+  { id: 'bjfl3', name: '分类3', type: 'warnType', params: '' },
+  // 分组名称
+  { id: 'bjfz1', name: '分组1', type: 'groupType', params: '' },
+  { id: 'bjfz2', name: '分组2', type: 'groupType', params: '' },
+  { id: 'bjfz3', name: '分组3', type: 'groupType', params: '' }
 ]

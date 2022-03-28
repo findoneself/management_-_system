@@ -5,37 +5,65 @@
     :border-icon="['top', 'right', 'triangle', 'left']"
     :wraStyle="{ inPadding: '0px' }"
   >
-    <div class="ai-left">
-      <BeautifulCard
-        title="监控点位"
-        class="jkdw-card"
-        :isTriangle='false'
+    <BeautifulCard
+      class="xmfl-card"
+      title="项目分类统计"
+      :isTriangle='false'
+    >
+      <div
+        style="width: 100%; height: 100%"
+        v-loading="loadings.xmflLoading"
+        element-loading-text="数据加载中..."
+        element-loading-spinner="el-icon-loading"
       >
-        <div class="form-select">
-          <el-cascader
-            v-model="dataForm.jkdw"
-            :show-all-levels="false"
-            :options="dictOptions.jkdwList"
-            size="small"
-            :props="{emitPath: false, value: 'id', label: 'name'}"
-            @change="getJkdwVideos"
-          ></el-cascader>
-        </div>
-        <div class="video">
-          <video
-            :src="videoSrc"
-            controls="controls"
+        <div id="xmflEchart"></div>
+        <ul class="echart-legend">
+          <li
+            v-for="(item, bindex) in xmflOption.list"
+            class="echart-legend-item"
+            @click="echartClick(bindex, 'xmflOption')"
+            :class="bindex === xmflOption.curIndex ? 'active-legend' : ''"
+            :key="item.id"
           >
-          </video>
-        </div>
-      </BeautifulCard>
-      <BeautifulCard
+            <i :style="{backgroundColor: xmflOption.colors[bindex]}"></i>
+            <span class="legend-name">{{ item.name }}：{{ item.count }}</span>
+          </li>
+        </ul>
+      </div>
+    </BeautifulCard>
+    <BeautifulCard
+      title="监控点位"
+      class="jkdw-card"
+      :isTriangle='false'
+    >
+      <div class="form-select">
+        <el-cascader
+          v-model="dataForm.jkdw"
+          :show-all-levels="false"
+          :options="dictOptions.jkdwList"
+          size="small"
+          :props="{emitPath: false, value: 'id', label: 'name'}"
+          @change="getJkdwVideos"
+        ></el-cascader>
+      </div>
+      <div class="video">
+        <video
+          :src="videoSrc"
+          controls="controls"
+        >
+        </video>
+      </div>
+    </BeautifulCard>
+    <BeautifulCard
+      class="bjfl-card"
+      title="报警分类统计"
+      :isTriangle='false'
+    >
+      <div
+        style="width: 100%; height: 100%"
         v-loading="loadings.bjflLoading"
         element-loading-text="数据加载中..."
         element-loading-spinner="el-icon-loading"
-        class="bjfl-card"
-        title="报警分类统计"
-        :isTriangle='false'
       >
         <div id="bjflEchart"></div>
         <ul class="echart-legend">
@@ -43,78 +71,88 @@
             v-for="(item, bindex) in bjflOption.list"
             class="echart-legend-item"
             @click="echartClick(bindex, 'bjflOption')"
-            :class="bindex === bjflOption.curIndex ? 'active-legend' : ''"
+            :style="{color: bindex === bjflOption.curIndex ? bjflOption.colors[bindex] : 'inherit'}"
             :key="item.id"
           >
             <i :style="{backgroundColor: bjflOption.colors[bindex]}"></i>
-            <span class="legend-name">{{ item.name }}</span>
-            <span class="legend-value">{{ item.count }}</span>
+            <span class="legend-name">{{ item.name }}：{{ item.count }}</span>
           </li>
         </ul>
-      </BeautifulCard>
-      <BeautifulCard
-        class="sssj-card"
-        title="实时数据"
-        :isTriangle='false'
+      </div>
+    </BeautifulCard>
+    <BeautifulCard
+      class="sssj-card"
+      title="实时数据"
+      :isTriangle='false'
+    >
+      <BeautifulTableList
+        :loading="loadings.sssjLoading"
+        :is-header="false"
+        cell-height="2.2rem"
+        :data-list="dataList.sssjList"
+        :columns="columns.sssjColumns"
+      />
+    </BeautifulCard>
+    <BeautifulCard
+      class="bjls-card"
+      title="报警历史统计"
+      :isTriangle='false'
+    >
+      <el-form
+        class="form-select"
+        inline
       >
-        <BeautifulTableList
-          :loading="loadings.sssjLoading"
-          :is-header="false"
-          cell-height="2.2rem"
-          :data-list="dataList.sssjList"
-          :columns="columns.sssjColumns"
-        />
-      </BeautifulCard>
-      <BeautifulCard
+        <el-button
+          size="small"
+          @click="dialogClick(dialogTitle.bjls)"
+          type="primary"
+        >{{ dialogTitle.bjls }}</el-button>
+        <el-form-item label="时间：">
+          <el-date-picker
+            v-model="dataForm.dateList"
+            type="daterange"
+            @change="getBjlsData"
+            size="small"
+            :clearable="false"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
+        </el-form-item>
+      </el-form>
+      <div
+        class="bjls-content"
         v-loading="loadings.bjlsLoading"
         element-loading-text="数据加载中..."
         element-loading-spinner="el-icon-loading"
-        class="bjls-card"
-        title="报警历史统计"
-        :isTriangle='false'
       >
-        <el-form
-          class="form-select"
-          inline
-        >
-          <el-form-item label="时间：">
-            <el-date-picker
-              v-model="dataForm.dateList"
-              type="daterange"
-              @change="getBjlsData"
-              size="small"
-              :clearable="false"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            >
-            </el-date-picker>
-          </el-form-item>
-        </el-form>
-        <div class="bjls-content">
-          <div id="bjlsEchart"></div>
-          <ul class="echart-legend">
-            <li
-              v-for="(item, bindex) in bjlsOption.list"
-              class="echart-legend-item"
-              @click="echartClick(bindex, 'bjlsOption')"
-              :class="bindex === bjlsOption.curIndex ? 'active-legend' : ''"
-              :key="item.id"
-            >
-              <i :style="{backgroundColor: bjlsOption.colors[bindex]}"></i>
-              <span class="legend-name">{{ item.name }}</span>
-              <span class="legend-value">{{ item.count }}</span>
-            </li>
-          </ul>
-        </div>
-      </BeautifulCard>
-    </div>
+        <div id="bjlsEchart"></div>
+        <ul class="echart-legend">
+          <li
+            v-for="(item, bindex) in bjlsOption.list"
+            class="echart-legend-item"
+            @click="echartClick(bindex, 'bjlsOption')"
+            :class="bindex === bjlsOption.curIndex ? 'active-legend' : ''"
+            :key="item.id"
+          >
+            <i :style="{backgroundColor: bjlsOption.colors[bindex]}"></i>
+            <span class="legend-name">{{ item.name }}：{{ item.count }}</span>
+          </li>
+        </ul>
+      </div>
+    </BeautifulCard>
     <BeautifulCard
       class="xmbj-card"
       title="项目报警统计排行"
       :isTriangle='false'
     >
       <div class="form-select">
+        <el-button
+          size="small"
+          @click="dialogClick(dialogTitle.xmbj)"
+          type="primary"
+        >{{ dialogTitle.xmbj }}</el-button>
         <el-select
           v-model="dataForm.xmbjDate"
           clearable
@@ -146,6 +184,10 @@
       >
       </el-pagination>
     </BeautifulCard>
+    <TableDIalog
+      ref="tableDialog"
+      @onCancel="onCancel"
+    />
   </BeautifulWrapper>
 </template>
 
@@ -153,15 +195,18 @@
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import BeautifulCard from '_com/common/BeautifulCard'
 import BeautifulTableList from '_com/common/BeautifulTableList'
+import TableDIalog from './components/TableDIalog'
 export default {
   name: 'AIdistinguish',
   components: {
     BeautifulWrapper,
     BeautifulCard,
-    BeautifulTableList
+    BeautifulTableList,
+    TableDIalog
   },
   data () {
     return {
+      // 字典数据
       dictOptions: {
         jkdwList: [],
         xmbjList: []
@@ -173,6 +218,7 @@ export default {
         sssjLoading: false,
         xmbjLoading: false,
         bjflLoading: false,
+        xmflLoading: false,
         bjlsLoading: false
       },
       // 所有表头
@@ -200,6 +246,14 @@ export default {
         pageSize: 3,
         total: 0
       },
+      // 项目分类图信息
+      xmflOption: {
+        myChart: null,
+        list: [],
+        // 当前图例点击的index
+        curIndex: null,
+        colors: ['#FCFF20', '#FF9920', '#FF4F01', '#FF3D54', '#2F71FF', '#317FFF', '#B790FF', '#8A4AFF']
+      },
       // 报警分类图信息
       bjflOption: {
         myChart: null,
@@ -216,6 +270,12 @@ export default {
         colors: ['#1CC483', '#9834FF', '#00FFFF', '#FF4F01'],
         // 当前图例点击的index
         curIndex: null
+      },
+      // 弹窗标题及其按钮文字
+      dialogTitle: {
+        bjls: '报警记录',
+        xmbj: '项目报警',
+        title: ''
       }
     }
   },
@@ -248,10 +308,23 @@ export default {
         this.dataForm.xmbjDate = dict.xmbjDate[0].id
       }
     },
-    // 页码改变
+    // 项目报警页码改变
     handleCurrentChange (val) {
       this.dataForm.pageIndex = val
       this.getXmbjData()
+    },
+    // 弹窗关闭结束回调
+    onCancel () {
+      console.log('弹窗关闭')
+    },
+    // 弹窗按钮点击
+    dialogClick (name) {
+      if (name === '报警记录') {
+        console.log(name)
+      } else if (name === '排名统计') {
+        console.log(name)
+      }
+      this.$refs.tableDialog.open(name)
     },
     // 获取所有数据
     getData () {
@@ -284,6 +357,36 @@ export default {
           { id: '152', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
           { id: '1552', address: '和平路南阳花园西侧1号门', date: '2022-11-12' }
         ]
+      })
+      // ---获取项目分类统计数据
+      this.loadings.xmflLoading = true
+      this.$http({ url: '/aixb/getXmflData' }).then(res => {
+        this.loadings.xmflLoading = false
+        if (res.code === 200) {
+          this.xmflOption.list = res.data.list
+          console.log(res)
+        } else {
+          this.$message.error('获取项目分类统计失败！')
+          this.xmflOption.list = []
+        }
+      }, () => {
+        this.loadings.xmflLoading = false
+        // this.$message.error('获取项目分类统计失败！')
+        const list = [
+          { name: '监测站', count: 16 },
+          { name: '燃气站', count: 26 },
+          { name: '加油站', count: 36 },
+          { name: '建筑工地', count: 47 },
+          { name: '其他', count: 49 }
+        ]
+        this.xmflOption.list = list
+        const series = list.map((item, index) => {
+          return {
+            value: item.count,
+            name: item.name
+          }
+        })
+        this.setXmflEchart(series)
       })
       // ---获取报警分类统计数据
       this.loadings.bjflLoading = true
@@ -496,6 +599,48 @@ export default {
         this.setBjlsEchart(allList, xlist)
       })
     },
+    // 初始化项目分类echarts图
+    setXmflEchart (data) {
+      if (!this.xmflOption.myChart) {
+        // 报警分类
+        this.xmflOption.myChart = this.$echarts.init(document.getElementById('xmflEchart'))
+      }
+      let option = {
+        color: this.xmflOption.colors,
+        series: {
+          type: 'pie',
+          radius: ['50%', '80%'],
+          label: { show: false },
+          labelLine: { show: false },
+          emphasis: {
+            label: { show: true, formatter: '{b}: {c}' },
+            labelLine: { show: true }
+          },
+          data: data || []
+        }
+      }
+      this.xmflOption.myChart.setOption(option)
+      // 鼠标移入隐藏点击的高亮---单个元素的移入移出不太友好，最好是对echarts整个图表做移入移出
+      this.xmflOption.myChart.on('mouseover', (v) => {
+        if (this.xmflOption.curIndex !== null && v.dataIndex !== this.xmflOption.curIndex) {
+          this.xmflOption.myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: this.xmflOption.curIndex
+          })
+        }
+      })
+      // 鼠标移出重新高亮当前点击的图例
+      this.xmflOption.myChart.on('mouseout', (v) => {
+        if (this.xmflOption.curIndex !== null && v.dataIndex !== this.xmflOption.curIndex) {
+          this.xmflOption.myChart.dispatchAction({
+            type: 'highlight',
+            seriesIndex: 0,
+            dataIndex: this.xmflOption.curIndex
+          })
+        }
+      })
+    },
     // 初始化报警分类echart图
     setBjflEchart (data) {
       if (!this.bjflOption.myChart) {
@@ -598,6 +743,9 @@ export default {
     },
     // 监听窗口改变，两个echarts刷新
     watchEchart () {
+      if (this.xmflOption.myChart) {
+        this.xmflOption.myChart.resize()
+      }
       if (this.bjflOption.myChart) {
         this.bjflOption.myChart.resize()
       }
@@ -607,7 +755,7 @@ export default {
     },
     // 图例点击事件---obj是data里面定义的图表对象
     echartClick (index, obj) {
-      if (obj === 'bjflOption') {
+      if (obj === 'xmflOption' || obj === 'bjflOption') {
         // 点击回调，如果点击同一个图例，则直接清除高亮
         if (this[obj].curIndex !== null && index === this[obj].curIndex) {
           this[obj].curIndex = null
@@ -648,16 +796,15 @@ export default {
 </script>
 
 <style scoped lang="less">
-// 公共
-.beautiful-wrapper,
-.ai-left {
-  display: flex;
-  justify-content: space-between;
-}
+// ----公共
 /deep/ .beau-content {
   display: flex;
   justify-content: space-between;
-  align-items: stretch;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  .beautiful-card {
+    height: 50%;
+  }
 }
 .be-table-list /deep/ .cell {
   font-size: 14px;
@@ -665,7 +812,6 @@ export default {
 .echart-legend {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
   align-content: flex-start;
 }
 .echart-legend-item {
@@ -677,8 +823,8 @@ export default {
   height: 45px;
   background: #2f71ff33;
   color: #fff;
-  width: calc(25% - 10px);
-  margin: 5px 0;
+  width: calc(33.33% - 10px);
+  margin: 5px;
   cursor: pointer;
   padding: 0 12px;
   transition: background 0.5s;
@@ -703,7 +849,9 @@ export default {
   background: #2f71ffce;
 }
 .form-select {
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding-bottom: 15px;
   .el-select,
   .el-cascader {
@@ -713,22 +861,39 @@ export default {
     width: 270px;
   }
 }
-// 左侧四个模块
-.ai-left {
-  width: 75%;
-  height: 100%;
-  flex-wrap: wrap;
-  .beautiful-card {
-    height: 50%;
-  }
-}
 .jkdw-card,
-.sssj-card {
-  width: 34%;
+.xmfl-card,
+.bjfl-card {
+  width: 33%;
+  flex-grow: 1;
+}
+.sssj-card,
+.xmbj-card {
+  width: 28%;
   flex-shrink: 0;
+  text-align: right;
+}
+.bjls-card {
+  flex: 1;
+  width: 40%;
+}
+// ----单个模块
+.xmfl-card .echart-legend {
+  padding: 0 25px;
+}
+.bjfl-card .echart-legend {
+  padding: 0 30px;
+}
+.bjfl-card .echart-legend-item {
+  background: transparent;
+  height: 20px;
 }
 .jkdw-card .video {
   height: calc(100% - 47px);
+}
+.jkdw-card .form-select::before {
+  // 为了适应flex布局右边
+  content: "";
 }
 .xmbj-card .be-table-list {
   height: calc(100% - 101px);
@@ -736,13 +901,9 @@ export default {
 /deep/ .be-table-ul {
   height: 100%;
 }
-.bjfl-card,
-.bjls-card {
-  width: 66%;
-}
-.xmbj-card {
-  width: 25%;
-  text-align: right;
+#xmflEchart[data-v-7e674e2f] {
+  width: 100%;
+  height: calc(100% - 110px);
 }
 #bjflEchart {
   width: 100%;

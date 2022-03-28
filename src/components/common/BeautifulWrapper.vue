@@ -34,7 +34,7 @@
             v-if="isTitle"
             :style="{zIndex: 10}"
             class="tabmenu-active"
-          >{{ curRoute.alias || '' }}</li>
+          >{{ title || curRoute.alias || '' }}</li>
           <template v-if="isTitle || tabsList.length > 0">
             <li class="tab-shadow tab-shadow1"></li>
             <li class="tab-shadow tab-shadow2"></li>
@@ -82,6 +82,11 @@ export default {
     isTitle: {
       type: Boolean,
       default: false
+    },
+    // 自定义标题
+    title: {
+      type: String,
+      default: ''
     },
     // tabs数据
     tabsList: {
@@ -145,6 +150,7 @@ export default {
     inset 3px 3px 30px var(--shadow-color);
 }
 .beau-content {
+  position: relative;
   width: 100%;
   height: 100%;
 }

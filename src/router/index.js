@@ -64,7 +64,7 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-// 获取动态路由
+// 获取动态路由--数据应该返回两个数组：用户有权限的菜单列表和所有菜单列表，处理逻辑一样但是还没写
 function getMenuData (to, next) {
   mainRoutes.children = []
   $http({ url: `/menu/nav${to.params.userId || ''}` }).then(data => {
@@ -76,7 +76,7 @@ function getMenuData (to, next) {
     // key：用来排序
     // title：菜单名
     // alias：菜单别名，为了菜单和显示在内容中的标题不一致而设立，默认和菜单名一样
-    // type：菜单类型（menu菜单，可点击跳转；cat目录，如果carType是tabs可点击，但是是需要跳转到默认第一个子菜单）
+    // type：菜单类型（hoe首页(不会出现在菜单中),menu菜单，可点击跳转；cat目录，如果carType是tabs可点击，但是是需要跳转到默认第一个子菜单）
     // catType：目录类型，tabs可点击，默认第一个子菜单，sub就是下拉子菜单，当前不可点击
     // url：路由路径，需要和组件路径一致
     // parentId：父节点id
@@ -88,7 +88,8 @@ function getMenuData (to, next) {
     */
     router.options.isLoadMenu = true
     const list = [
-      { id: '1', key: 1, type: 'menu', title: '预警监控', alias: '预警监控', parentId: '00', url: '@/home/Home' },
+      { id: '0', key: 0, type: 'home', title: '首页', alias: '', parentId: '00', url: '@/home/Home' },
+      { id: '1', key: 1, type: 'menu', title: '预警监控', alias: '预警监控', parentId: '00', url: '@/warnMonitor/WarnIndex' },
       { id: '2', key: 2, type: 'menu', title: '扬尘监测', alias: '扬尘监测', parentId: '00', url: '@/dustMonitoring/DusIndex' },
       { id: '2-1', key: 1, type: 'menu', title: '地图', alias: '地图', parentId: '2', url: '@/dustMonitoring/DusMap' },
       { id: '2-2', key: 2, type: 'menu', title: '单设备统计', alias: '单设备统计', parentId: '2', url: '@/dustMonitoring/DusSingleEcharts' },
@@ -115,7 +116,7 @@ function getMenuData (to, next) {
     // 根据key值排序并储存当前菜单
     const menuList = $utils.compareSort($utils.treeDataTranslate(list), 'key')
     let temp = []
-    list.map(item => {
+    menuList.map(item => {
       if (item.url && /\S/.test(item.url)) {
         const path = item.url.replace('@', '')
         const name = item.url.replace('@/', '').replace(/\//g, '-')
@@ -137,9 +138,9 @@ function getMenuData (to, next) {
             catType: item.catType || ''
           }
         }
-        if (item.isHome) {
-          mainRoutes.redirect = { name: route.name }
-        }
+        // if (item.isHome) {
+        //   mainRoutes.redirect = { name: route.name }
+        // }
         // url以http[s]://开头的，通过iframe展示
         if (isURL(item.url)) {
           route.path = `i-${item.id}`
@@ -154,8 +155,9 @@ function getMenuData (to, next) {
         temp.push(route)
       }
     })
-    sessionStorage.setItem('menuList', JSON.stringify(menuList))
-
+    // 过滤掉作为首页的菜单，不作显示
+    const menus = menuList.filter(item => item.type && item.type !== 'home')
+    sessionStorage.setItem('menuList', JSON.stringify(menus))
     mainRoutes.children = temp
     router.addRoutes([mainRoutes])
     // 储存菜单路由

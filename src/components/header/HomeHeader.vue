@@ -1,6 +1,9 @@
 <template>
   <div class="base-header">
-    <h1>{{ systemTitle }}</h1>
+    <h1><span
+        style="cursor: pointer;"
+        @click="logoClick"
+      >{{ systemTitle }}</span></h1>
     <Menu />
   </div>
 </template>
@@ -14,8 +17,14 @@ export default {
   },
   data () {
     return {
-      systemTitle: '大数据统筹管理系统'
+      systemTitle: '大数据统筹管理系统',
+      home: {}
     }
+  },
+  created () {
+    // 查找默认首页
+    const menuRoutes = this.$store.state.global.menuRoutes
+    this.home = menuRoutes.find(item => item.meta.type === 'home') || { name: 'home-Home' }
   },
   methods: {
     // 退出账户
@@ -24,6 +33,10 @@ export default {
       this.$utils.sessionStorageRemove('token')
       // 跳转到登录页
       this.$router.push('/login')
+    },
+    // logo标题点击
+    logoClick () {
+      this.$router.push({ name: this.home.name })
     }
   }
 }
