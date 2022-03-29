@@ -21,32 +21,10 @@
         class="demo-form-inline"
       >
         <el-form-item label="车辆牌号：">
-          <el-select
-            v-model="dataForm.carNum"
-            clearable
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in dictOptions.carNumList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-input v-model="dataForm.carNum"></el-input>
         </el-form-item>
         <el-form-item label="所属公司：">
-          <el-select
-            v-model="dataForm.companyName"
-            clearable
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in dictOptions.companyNameList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-input v-model="dataForm.companyName"></el-input>
         </el-form-item>
         <el-form-item label="车辆型号：">
           <el-select
@@ -84,13 +62,11 @@ export default {
       borderIcon: ['right', 'bottom', 'left', 'close'],
       wraStyle: { inPadding: '0px' },
       dictOptions: {
-        carModelList: [{ name: '沛县', id: '1.1' }, { name: '徐州', id: 2.2 }],
-        companyNameList: [{ name: '云-徐州', id: '2.1' }, { name: '云-沛县', id: '2.2' }],
-        carNumList: [{ name: '浙123244', id: '0' }, { name: '琼333333', id: '2' }]
+        carModelList: [{ name: '沛县', id: '1.1' }, { name: '徐州', id: 2.2 }]
       },
       dataForm: {
-        projectNum: '',
-        projectName: '',
+        carModel: '',
+        companyName: '',
         carNum: ''
       },
       dataLoading: true,
@@ -116,7 +92,7 @@ export default {
 
   methods: {
     closeClick () {
-
+      this.$router.go(-1)
     }
   },
   computed: {

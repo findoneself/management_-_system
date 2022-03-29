@@ -184,7 +184,6 @@ export default {
         { name: '二氧化硫', value: '5425' }]
       },
       // 地图标记
-
       coordinateList: [{ lng: 116.2787, lat: 40.0492, value: 80 },
       { lng: 116.2787, lat: 40.040, value: 130 },
       { lng: 116.2887, lat: 40.040, value: 230 },
@@ -205,10 +204,13 @@ export default {
       mapNumList: [0, 35, 75, 115, 150, 250, 500]
     }
   },
+  created () {
+    // let router =
+    // console.log(this.$route.path)
+  },
   methods: {
     iconSearchHandle () {
       // 拿到下拉框和输入框的值发起请求 let data = this.dataForm
-
     },
     monitoringSpotBack () {
       this.activePage = 0

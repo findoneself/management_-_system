@@ -21,32 +21,10 @@
         class="demo-form-inline"
       >
         <el-form-item label="项目名称：">
-          <el-select
-            v-model="dataForm.projectName"
-            clearable
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in dictOptions.projectNameList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-input v-model="dataForm.projectName"></el-input>
         </el-form-item>
         <el-form-item label="项目编号：">
-          <el-select
-            v-model="dataForm.projectNum"
-            clearable
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in dictOptions.projectNumList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-input v-model="dataForm.projectNum"></el-input>
         </el-form-item>
         <el-button type="primary">查询</el-button>
         <el-button>重置</el-button>
@@ -69,10 +47,6 @@ export default {
     return {
       borderIcon: ['right', 'bottom', 'left', 'close'],
       wraStyle: { inPadding: '0px' },
-      dictOptions: {
-        projectNameList: [{ name: '沛县', id: '1.1' }, { name: '徐州', id: 2.2 }],
-        projectNumList: [{ name: '云-徐州', id: '2.1' }, { name: '云-沛县', id: '2.2' }]
-      },
       dataForm: {
         projectNum: '',
         projectName: ''
