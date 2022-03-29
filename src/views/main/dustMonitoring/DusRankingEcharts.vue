@@ -318,7 +318,4 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/ .tform-contnent {
-  height: calc(100% - 178px);
-}
 </style>

@@ -303,7 +303,7 @@ export default {
       console.log(id)
       this.tabsType = id
       if (id === 'echart') {
-        this.echartsType = this.tformHead.btnList[0].id
+        // this.echartsType = this.tformHead.btnList[0].id
       }
     }
   },
@@ -314,15 +314,6 @@ export default {
       if (this.tabsType === 'table') {
         info.btnType = 'elbtn'
         info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
-      } else if (this.tabsType === 'echart') {
-        // info.btnType = 'custom'
-        // info.btnList = [{
-        //   id: 'jcy',
-        //   name: '检测源'
-        // }, {
-        //   id: 'xm',
-        //   name: '项目'
-        // }]
       }
       return info
     }
@@ -333,7 +324,4 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/ .tform-contnent {
-  height: calc(100% - 178px);
-}
 </style>

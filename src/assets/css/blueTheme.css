@@ -362,7 +362,7 @@ div.el-pagination button:disabled {
 
 /* ===============el-button及其el-link样式=============== */
 .el-button {
-    --border-color: #467BFF
+    --border-color: #467BFF;
 }
 
 a.el-link.el-link--primary {
@@ -376,6 +376,7 @@ button.el-button {
     color: var(--color-text);
     transition: all .2s;
 }
+
 
 button.el-button:focus,
 button.el-button:hover,
@@ -495,4 +496,8 @@ div.el-table thead {
 /* ===============首页样式=============== */
 .home-container {
     --high-color: #4ecaeb;
+}
+
+.tform-contnent {
+    height: calc(100% - 178px);
 }

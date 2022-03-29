@@ -10,7 +10,7 @@
       :loading="dataLoading"
       :data-list="dataList"
       :columns="columns"
-      :is-table="tabsType"
+      :is-table="true"
       :tform-head="tformHead"
     >
       <el-form
@@ -48,7 +48,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-button>查询</el-button>
+        <el-button type="primary">查询</el-button>
         <el-button>重置</el-button>
       </el-form>
     </TableForm>
@@ -77,27 +77,43 @@ export default {
         projectNum: '',
         projectName: ''
       },
-      dataLoading: false,
-      dataList: [],
-      columns: [],
-      tabsType: 'table'
+      dataLoading: true,
+      dataList: [{ order: 1, projectNum: 2423, projectName: '昆明斗南鲜花', area: '云南昆明', status: '完成', id: '10' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' },
+      { order: 2, projectNum: 23, projectName: '淮安医院', area: '江苏', status: '完成', id: '11' }],
+      columns: [{ name: '序号', prop: 'order', key: 1 },
+      { name: '项目名称', prop: 'projectName', key: '2' },
+      { name: '项目编号', prop: 'projectNum', key: '3' },
+      { name: '所属行政区域', prop: 'area', key: '4' },
+      { name: '状态', prop: 'status', key: 5 }]
     }
   },
   methods: {
     closeClick () {
-
+      this.$router.go(-1)
     }
   },
   computed: {
     tformHead () {
       // 需要取参数类型和选择日期的信息
-      const info = { title: '温度', small: '2022-3-01 ( 小时数据 ）' }
-
+      const info = { isTableHead: false }
       return info
     }
+  },
+  mounted () {
+    this.dataLoading = false
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 </style>
