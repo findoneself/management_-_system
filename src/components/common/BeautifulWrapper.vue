@@ -14,7 +14,7 @@
         :class="'border-' + val"
       />
       <i
-        class="el-icon-close close-btn"
+        class="el-icon-close close--icon"
         @click="closeClick"
         v-show="borderIcon.includes('close')"
       ></i>
@@ -145,7 +145,7 @@ export default {
   height: inherit;
   width: 100%;
   border-style: solid;
-  background-color: var(--wraper-bgcolor);
+  background-color: var(--wrapper-bgcolor);
   border-color: var(--wrapper-bdcolor);
   box-shadow: inset -3px -3px 30px var(--shadow-color),
     inset 3px 3px 30px var(--shadow-color);
@@ -238,19 +238,5 @@ export default {
 .menu-tablist .tab-shadow2 {
   z-index: 1;
   opacity: 0.3;
-}
-.close-btn {
-  position: absolute;
-  z-index: 21;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #31bcf2;
-  cursor: pointer;
-}
-.close-btn:hover,
-.close-btn:active {
-  color: var(--triangle-color);
 }
 </style>

@@ -142,53 +142,104 @@
         </ul>
       </div>
     </BeautifulCard>
-    <BeautifulCard
-      class="xmbj-card"
-      title="项目报警统计排行"
-      :isTriangle='false'
-    >
-      <div class="form-select">
-        <el-button
-          size="small"
-          @click="dialogClick(dialogTitle.xmbj)"
-          type="primary"
-        >{{ dialogTitle.xmbj }}</el-button>
-        <el-select
-          v-model="dataForm.xmbjDate"
-          clearable
-          @change="getXmbjData"
-          size="small"
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="item in dictOptions.xmbjList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
-      </div>
-      <BeautifulTableList
-        :loading="loadings.xmbjLoading"
-        cell-height="2.2rem"
-        :index-obj="{isIndex: true, width: '5rem'}"
-        :data-list="dataList.xmbjList"
-        :columns="columns.xmbjColumns"
-        @rowClick="rowClick"
-      />
-      <el-pagination
-        @current-change="handleCurrentChange"
-        :current-page="dataForm.pageIndex"
-        :page-size="dataForm.pageSize"
-        layout="prev, pager, next"
-        :total="dataForm.total"
+    <div class="xmbj-card">
+      <BeautifulCard
+        title="项目报警统计排行"
+        class="xmbj-list"
+        :isTriangle='false'
       >
-      </el-pagination>
-    </BeautifulCard>
+        <div class="form-select">
+          <el-button
+            size="small"
+            @click="dialogClick(dialogTitle.xmbj)"
+            type="primary"
+          >{{ dialogTitle.xmbj }}</el-button>
+          <el-select
+            v-model="dataForm.xmbjDate"
+            clearable
+            @change="getXmbjData"
+            size="small"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in dictOptions.xmbjList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </div>
+        <BeautifulTableList
+          :loading="loadings.xmbjLoading"
+          cell-height="2.2rem"
+          :index-obj="{isIndex: true, width: '5rem'}"
+          :data-list="dataList.xmbjList"
+          :columns="columns.xmbjColumns"
+          @rowClick="rowClick"
+        />
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="dataForm.pageIndex"
+          :page-size="dataForm.pageSize"
+          layout="prev, pager, next"
+          :total="dataForm.total"
+        >
+        </el-pagination>
+      </BeautifulCard>
+      <BeautifulCard
+        title="项目报警详情"
+        class="xmbj-info"
+        v-show="isXmbjInfo"
+        :isTriangle='false'
+      >
+        <div class="form-select">
+          <el-button
+            size="small"
+            @click="dialogClick(dialogTitle.xmbj)"
+            type="primary"
+          >{{ dialogTitle.xmbj }}</el-button>
+          <el-select
+            v-model="dataForm.xmbjInfoDate"
+            clearable
+            @change="getXmbjInfoData"
+            size="small"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in dictOptions.xmbjList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </div>
+        <i
+          class="el-icon-close close--icon"
+          @click="xmbjInfoClose"
+        ></i>
+        <BeautifulTableList
+          :loading="loadings.xmbjInfoLoading"
+          cell-height="2.2rem"
+          :oper-obj="operObj"
+          :index-obj="{isIndex: false}"
+          :data-list="dataList.xmbjInfoList"
+          :columns="columns.xmbjInfoColumns"
+        />
+        <el-pagination
+          @current-change="handleInfoChange"
+          :current-page="dataForm.infopageIndex"
+          :page-size="dataForm.infopageSize"
+          layout="prev, pager, next"
+          :total="dataForm.infoTotal"
+        >
+        </el-pagination>
+      </BeautifulCard>
+    </div>
     <TableDialog
       ref="TableDialog"
       @onCancel="onCancel"
     />
+    <BeImageFixed ref="imageRef" />
   </BeautifulWrapper>
 </template>
 
@@ -196,6 +247,7 @@
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import BeautifulCard from '_com/common/BeautifulCard'
 import BeautifulTableList from '_com/common/BeautifulTableList'
+import BeImageFixed from '_com/common/BeImageFixed'
 import TableDialog from './components/TableDialog'
 export default {
   name: 'AIdistinguish',
@@ -203,7 +255,8 @@ export default {
     BeautifulWrapper,
     BeautifulCard,
     BeautifulTableList,
-    TableDialog
+    TableDialog,
+    BeImageFixed
   },
   data () {
     return {
@@ -218,6 +271,7 @@ export default {
       loadings: {
         sssjLoading: false,
         xmbjLoading: false,
+        xmbjInfoLoading: false,
         bjflLoading: false,
         xmflLoading: false,
         bjlsLoading: false
@@ -231,12 +285,17 @@ export default {
         xmbjColumns: [
           { name: '项目名称', prop: 'name', key: 1 },
           { name: '报警数量', prop: 'count', width: '20%', key: 2 }
+        ],
+        xmbjInfoColumns: [
+          { name: '日期', prop: 'date', key: 1 },
+          { name: '报警分类', prop: 'warnType', key: 2 }
         ]
       },
       // 所有列表数据
       dataList: {
         sssjList: [],
-        xmbjList: []
+        xmbjList: [],
+        xmbjInfoList: []
       },
       // 所有选择框参数
       dataForm: {
@@ -245,7 +304,11 @@ export default {
         dateList: [],
         pageIndex: 1,
         pageSize: 3,
-        total: 0
+        total: 0,
+        xmbjInfoDate: '',
+        infoPageIndex: 1,
+        infopageSize: 3,
+        infoTotal: 0
       },
       // 项目分类图信息
       xmflOption: {
@@ -277,6 +340,19 @@ export default {
         bjls: '报警记录',
         xmbj: '分类排名',
         title: ''
+      },
+      // 是否显示项目报警详情
+      isXmbjInfo: false,
+      // 报警详情操作列
+      operObj: {
+        isOperation: true,
+        headName: '图片',
+        operButton: [
+          {
+            text: '查看',
+            click: this.imgClick
+          }
+        ]
       }
     }
   },
@@ -307,6 +383,7 @@ export default {
       if (dict.xmbjDate && dict.xmbjDate.length > 0) {
         this.dictOptions.xmbjList = dict.xmbjDate
         this.dataForm.xmbjDate = dict.xmbjDate[0].id
+        this.dataForm.xmbjInfoDate = dict.xmbjDate[0].id
       }
     },
     // 项目报警页码改变
@@ -314,9 +391,25 @@ export default {
       this.dataForm.pageIndex = val
       this.getXmbjData()
     },
+    // 项目报警详情页码改变
+    handleInfoChange (val) {
+      this.dataForm.infoPageIndex = val
+      this.getXmbjInfoData()
+    },
+    // 项目报警详情图片点击
+    imgClick (item, e) {
+      this.$refs.imageRef.showImg(e, item)
+    },
+    // 项目报警详情关闭事件
+    xmbjInfoClose () {
+      this.$refs.imageRef.closeClick()
+      this.isXmbjInfo = false
+    },
     // 项目报警统计行点击
     rowClick ({ row }) {
-      console.log(row)
+      this.currentXmbj = row
+      this.isXmbjInfo = true
+      this.getXmbjInfoData()
     },
     // 弹窗关闭结束回调
     onCancel () {
@@ -469,6 +562,52 @@ export default {
         ]
         this.dataForm.total = list.length
         this.dataList.xmbjList = list
+      })
+    },
+    // 获取项目报警详情数据
+    getXmbjInfoData () {
+      if (!this.currentXmbj) return this.$message.warninf('请选择项目报警！')
+      // ---获取项目报警统计排行
+      this.loadings.xmbjInfoLoading = true
+      this.$http({
+        url: '/aixb/getXmbjInfoData',
+        data: {
+          page: this.dataForm.infoPageIndex,
+          pageSize: this.dataForm.infopageSize,
+          date: this.dataForm.xmbjInfoDate || '',
+          xmbjId: this.currentXmbj.id || ''
+        }
+      }).then(res => {
+        this.loadings.xmbjInfoLoading = false
+        if (res.code === 200) {
+          this.dataList.xmbjInfoList = res.data.list
+          this.dataForm.infoTotal = res.data.total
+          console.log(res)
+        } else {
+          this.$message.error('获取项目报警统计排行失败！')
+          this.dataList.xmbjInfoList = []
+          this.dataForm.infoTotal = 0
+        }
+      }, () => {
+        this.loadings.xmbjInfoLoading = false
+        this.$message.error('获取项目报警详情排行失败！')
+        const list = [
+          { id: '1212', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
+          { id: '165', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ0.jpg' },
+          { id: '1215542', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7.png' },
+          { id: '124', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
+          { id: '145452', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
+          { id: '1256', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
+          { id: '1565232', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
+          { id: '15652445', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
+          { id: '156222', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
+          { id: '15652565', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
+          { id: '1565323232', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
+          { id: '152', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
+          { id: '1552', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' }
+        ]
+        this.dataForm.infoTotal = list.length
+        this.dataList.xmbjInfoList = list
       })
     },
     // 获取监控点位树结构数据
@@ -814,7 +953,8 @@ export default {
   justify-content: space-between;
   flex-wrap: wrap;
   align-content: flex-start;
-  .beautiful-card {
+  .beautiful-card,
+  .xmbj-card {
     height: 50%;
   }
 }
@@ -881,6 +1021,7 @@ export default {
 }
 .sssj-card,
 .xmbj-card {
+  position: relative;
   width: 28%;
   flex-shrink: 0;
   text-align: right;
@@ -907,9 +1048,28 @@ export default {
   // 为了适应flex布局右边
   content: "";
 }
-.xmbj-card .be-table-list {
-  height: calc(100% - 101px);
+.xmbj-card {
+  .xmbj-info,
+  .xmbj-list {
+    height: 100%;
+    width: 100%;
+  }
+  .be-table-list {
+    height: calc(100% - 101px);
+  }
 }
+.xmbj-info {
+  position: absolute;
+  top: 0;
+  right: 100%;
+  background-color: var(--wrapper-bgcolor);
+  .close--icon {
+    top: 8px;
+    right: 8px;
+    font-size: 20px;
+  }
+}
+
 /deep/ .be-table-ul {
   height: 100%;
 }

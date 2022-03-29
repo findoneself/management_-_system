@@ -11,7 +11,7 @@
       :class="'border-' + val"
     />
     <i
-      class="el-icon-close close-btn"
+      class="el-icon-close close--icon"
       @click="closeClick"
       v-show="borderIcon.includes('close')"
     ></i>
@@ -67,7 +67,6 @@ export default {
   },
   methods: {
     showImg (e, img) {
-      this.visibale = true
       if (!e) return console.error('必须传入event节点')
       if (!img) return console.error('必须传入图片地址')
       const url = typeof img === 'string' ? img : img.imgUrl
@@ -91,14 +90,14 @@ export default {
       // 最大宽度，因为是容器的最大宽度，不是图片，要喝图片本身比较就得减去两边的padding
       const mawid = parseInt(this.maxWidth) - 20
       // 获取可视窗口的宽高
-      const dwidth = document.documentElement.clientWidth || document.body.clientWidth
+      // const dwidth = document.documentElement.clientWidth || document.body.clientWidth
       const dheight = document.documentElement.clientHeight || document.body.clientHeight
       // 定义如果图片宽度大于最大宽度，则使用最大宽度，否则使用图片宽度
       const iwidth = mawid > img.width ? img.width : mawid
       // 高度根据比例来计算
       const iheight = parseInt(iwidth / img.width * img.height)
       // 如果容器宽度超出了屏幕，则偏左显示
-      const x = dwidth - e.clientX > iwidth ? (e.clientX + 10) : (e.clientX - iwidth - 35)
+      const x = iwidth > e.clientX ? (e.clientX + 10) : (e.clientX - iwidth - 35)
       // 如果容器高度超出了屏幕，则上边显示
       const y = dheight - e.clientY > iheight ? e.clientY : e.clientY - iheight - 15
       sty.width = ((iwidth + 20) / 16).toFixed(2) + 'rem'
@@ -107,6 +106,7 @@ export default {
       sty.top = (y / 16).toFixed(2) + 'rem'
       this.imgStyle = sty
       this.imageInfo.imgUrl = img.src
+      if (!this.visibale) this.visibale = true
     },
     // 关闭弹窗
     closeClick () {
@@ -124,7 +124,7 @@ export default {
   padding: 10px;
   transition: all 0.5s;
   border: 1px solid var(--wrapper-bdcolor);
-  background: #02004d4a;
+  background: var(--wrapper-bgcolor);
   box-shadow: inset -1px -1px 10px var(--shadow-color),
     inset 1px 1px 10px var(--shadow-color);
 }
@@ -168,18 +168,9 @@ export default {
   height: 20px;
   background-image: url("~_ats/img/border-left.png");
 }
-.close-btn {
-  position: absolute;
-  z-index: 21;
+.close--icon {
   top: 6px;
   right: 6px;
   font-size: 16px;
-  font-weight: bold;
-  color: #31bcf2;
-  cursor: pointer;
-}
-.close-btn:hover,
-.close-btn:active {
-  color: var(--triangle-color);
 }
 </style>

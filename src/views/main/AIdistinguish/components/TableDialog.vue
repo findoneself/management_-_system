@@ -291,6 +291,7 @@ export default {
     },
     // 关闭弹窗
     closeClick () {
+      this.$refs.imageRef.closeClick()
       this.$refs.dialog.showDialog(false)
     },
     // 重置表单

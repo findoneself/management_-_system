@@ -11,7 +11,7 @@
       :class="'border-' + val"
     />
     <i
-      class="el-icon-close close-btn"
+      class="el-icon-close close--icon"
       @click="closeClick"
       v-show="borderIcon.includes('close')"
     ></i>
@@ -138,19 +138,10 @@ export default {
   height: 20px;
   background-image: url("~_ats/img/border-left.png");
 }
-.close-btn {
-  position: absolute;
-  z-index: 21;
+.close--icon {
   top: 6px;
   right: 6px;
   font-size: 16px;
-  font-weight: bold;
-  color: #31bcf2;
-  cursor: pointer;
-}
-.close-btn:hover,
-.close-btn:active {
-  color: var(--triangle-color);
 }
 .fade-enter-active,
 .fade-leave-active {

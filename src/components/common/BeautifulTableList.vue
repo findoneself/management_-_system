@@ -40,6 +40,7 @@
           <li
             class="be-table-li be-table-item"
             v-for="(item, iindex) in dataList"
+            :class="curRowIndex === iindex ? 'be-tableli--active' : ''"
             @click="rowClick(item, iindex)"
             :key="item.id"
           >
@@ -156,6 +157,11 @@ export default {
       }
     }
   },
+  data () {
+    return {
+      curRowIndex: null
+    }
+  },
   computed: {
     // 定义默认序号列数据
     tableIndex () {
@@ -184,6 +190,14 @@ export default {
       }, this.operObj)
     }
   },
+  watch: {
+    // 监听数据改变，清空当前点击项
+    dataList: {
+      handler () {
+        this.curRowIndex = null
+      }
+    }
+  },
   methods: {
     // 行点击
     rowClick (row, rowIndex) {
@@ -191,6 +205,7 @@ export default {
     },
     // 单元格点击，四个参数，单元格信息，单元格索引，行信息，行索引
     cellClick (cell, cellIndex, row, rowIndex) {
+      this.curRowIndex = rowIndex
       this.$emit('cellClick', { cell, cellIndex, row, rowIndex })
     }
   }
