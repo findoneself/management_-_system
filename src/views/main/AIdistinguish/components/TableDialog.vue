@@ -28,7 +28,7 @@
             <el-form-item
               label="项目名称："
               key="xmmc"
-              label-width="5.2rem"
+              label-width="5.4rem"
             >
               <el-input
                 placeholder="输入点位名称搜索"
@@ -83,7 +83,7 @@
             <el-form-item
               label="分组名称："
               key="fzmc"
-              label-width="5.2rem"
+              label-width="5.4rem"
             >
               <el-select
                 v-model="dataForm.groupName"
@@ -169,14 +169,14 @@
         </el-pagination>
       </TableForm>
     </BeautifulWrapper>
-    <BeImage ref="imageRef" />
+    <BeImageFixed ref="imageRef" />
   </BeDialog>
 </template>
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import BeDialog from '_com/common/BeDialog'
-import BeImage from '_com/common/BeImage'
+import BeImageFixed from '_com/common/BeImageFixed'
 import TableForm from '_vie/common/TableForm'
 
 export default {
@@ -185,7 +185,7 @@ export default {
     BeautifulWrapper,
     BeDialog,
     TableForm,
-    BeImage
+    BeImageFixed
   },
   data () {
     return {
@@ -312,8 +312,6 @@ export default {
     },
     // 图片点击
     imgClick (item, e) {
-      console.log(item)
-      console.log(e)
       this.$refs.imageRef.showImg(e, item)
     },
     // 页码改变
@@ -365,15 +363,15 @@ export default {
         this.dataLoading = false
         this.$message.error(errmsg)
         const list = [
-          { id: 'geewew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '反光衣', startTime: '2022-03-04', endTime: '2022-03-09' },
-          { id: 'gwg', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '行人闯入', startTime: '2022-03-04', endTime: '2022-03-09' },
-          { id: 'geewhwwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '打电话', startTime: '2022-03-04', endTime: '2022-03-09' },
-          { id: 'geegsdwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '抽烟', startTime: '2022-03-04', endTime: '2022-03-09' },
-          { id: 'geegeewew', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '反光衣', startTime: '2022-03-04', endTime: '2022-03-010' },
-          { id: 'geejwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '行人闯入', startTime: '2022-03-04', endTime: '2022-03-010' },
-          { id: 'geeerwew', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '打电话', startTime: '2022-03-04', endTime: '2022-03-010' },
-          { id: 'geesjjwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '抽烟', startTime: '2022-03-04', endTime: '2022-03-010' },
-          { id: 'geejjjwew', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '反光衣', startTime: '2022-03-04', endTime: '2022-03-011' }
+          { id: 'geewew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '反光衣', startTime: '2022-03-04', endTime: '2022-03-09', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
+          { id: 'gwg', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '行人闯入', startTime: '2022-03-04', endTime: '2022-03-09', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ0.jpg' },
+          { id: 'geewhwwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '打电话', startTime: '2022-03-04', endTime: '2022-03-09', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7.png' },
+          { id: 'geegsdwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '抽烟', startTime: '2022-03-04', endTime: '2022-03-09', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
+          { id: 'geegeewew', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '反光衣', startTime: '2022-03-04', endTime: '2022-03-010', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41K055.jpg' },
+          { id: 'geejwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '行人闯入', startTime: '2022-03-04', endTime: '2022-03-010', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
+          { id: 'geeerwew', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '打电话', startTime: '2022-03-04', endTime: '2022-03-010', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
+          { id: 'geesjjwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '抽烟', startTime: '2022-03-04', endTime: '2022-03-010', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
+          { id: 'geejjjwew', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '反光衣', startTime: '2022-03-04', endTime: '2022-03-011', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' }
         ]
         const list2 = [
           { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },

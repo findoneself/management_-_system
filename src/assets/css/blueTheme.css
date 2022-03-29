@@ -375,7 +375,13 @@ button.el-button {
     border: 1px solid var(--border-color);
     color: var(--color-text);
     transition: all .2s;
+    /* width: 70px; */
 }
+
+/* button.el-button.el-button--small,
+button.el-button.el-button--mini {
+    width: 60px;
+} */
 
 button.el-button:focus,
 button.el-button:hover,

@@ -80,7 +80,7 @@
               <template v-else>
                 <slot
                   name="oper"
-                  v-bind="{ row: item }"
+                  v-bind="{row: item, rowIndex: iindex}"
                 ></slot>
               </template>
             </div>

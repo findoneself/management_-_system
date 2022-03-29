@@ -1,8 +1,8 @@
 <template>
+  <!-- 没做完，为了实现条数据都有一个查看图片的，响应更快 -->
   <div
     class="be-image"
     :style="imgStyle"
-    v-show="visibale"
   >
     <span
       v-for="val in borderIcons"
@@ -15,10 +15,7 @@
       @click="closeClick"
       v-show="borderIcon.includes('close')"
     ></i>
-    <img
-      :src="imageInfo.url"
-      :alt="imageInfo.alt"
-    >
+    <img :src="imgUrl">
   </div>
 </template>
 
@@ -26,31 +23,26 @@
 export default {
   name: 'BeImage',
   props: {
-    // ['top', 'right', 'bottom', 'left', 'triangle', 'close']
     borderIcon: {
       type: Array,
       default () {
         return ['top', 'right', 'bottom', 'left', 'close']
       }
     },
-    // 图片容器的宽度
-    // 传字符串的时候传px
-    wimWidth: {
-      type: [Number, String],
-      default () {
-        return 200
-      }
+    // 图片容器的宽度单位rem
+    // 传字符串的时候传
+    maxWidth: {
+      type: String,
+      default: '18.75rem'
+    },
+    imgUrl: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
-      visibale: false,
-      imgStyle: {},
-      // 图片信息
-      imageInfo: {
-        url: '',
-        alt: ''
-      }
+      imgStyle: {}
     }
   },
   computed: {
@@ -59,44 +51,36 @@ export default {
       return this.borderIcon.filter(val => val !== 'close')
     }
   },
+  watch: {
+    imgUrl: {
+      handler (val) {
+        this.computedStyle(val)
+      },
+      immediate: true
+    }
+  },
   methods: {
-    showImg (e, img) {
-      if (!e) return console.error('必须传入event节点')
-      if (!img) return console.error('必须传入图片地址')
-      if (typeof img === 'string') {
-        this.imageInfo.url = img
-      } else {
-        // 计算位置后再显示
-        this.imageInfo = img
-        this.imageInfo.url = 'http://bj.xpei.ren/zt/work-note/images/head_user.gif'
-      }
-      console.log(e)
-      console.log(img)
-      this.computedStyle(e)
-    },
-    // 计算位置
-    computedStyle (e) {
-      // 位置
-      let sty = {}
-      let wid = parseInt(this.wimWidth)
-      // 设置容器大小
-      const val = (wid / 16).toFixed(2) + 'rem'
-      sty.width = val
-      // 设置容器位置
-      const dwidth = document.documentElement.clientWidth || document.body.clientWidth
-      const dheight = document.documentElement.clientHeight || document.body.clientHeight
-      // 如果容器宽度超出了屏幕，则偏左显示
-      const x = dwidth - e.clientX > wid ? e.clientX : (e.clientX - wid - 20)
-      // 如果容器高度超出了屏幕，则上边显示
-      const y = dheight - e.clientY > wid ? e.clientY : e.clientY - wid
-      sty.left = (x / 16).toFixed(2) + 'rem'
-      sty.top = (y / 16).toFixed(2) + 'rem'
-      this.imgStyle = sty
-      this.visibale = true
-    },
     // 关闭弹窗
     closeClick () {
-      this.visibale = false
+      this.$emit('closeClick')
+    },
+    // 计算位置
+    computedStyle (url) {
+      let sty = {}
+      sty.maxWidth = this.maxWidth
+      let imgNew = new Image()
+      imgNew.src = url
+      // 判断是否有缓存
+      if (imgNew.complete) {
+        sty.width = ((imgNew.width + 20) / 16).toFixed(2) + 'rem'
+        this.imgStyle = sty
+      } else {
+        // 加载完成执行
+        imgNew.onload = () => {
+          sty.width = ((imgNew.width + 20) / 16).toFixed(2) + 'rem'
+          this.imgStyle = sty
+        }
+      }
     }
   }
 }
@@ -105,11 +89,10 @@ export default {
 <style scoped>
 .be-image {
   position: fixed;
-  top: 0;
-  left: 0;
   z-index: 99;
   max-width: 500px;
   padding: 10px;
+  transition: all 0.5s;
   border: 1px solid var(--wrapper-bdcolor);
   background: #02004d4a;
   box-shadow: inset -1px -1px 10px var(--shadow-color),
@@ -118,7 +101,7 @@ export default {
 .be-image img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 .border-icon {
   position: absolute;
@@ -158,9 +141,9 @@ export default {
 .close-btn {
   position: absolute;
   z-index: 21;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
+  top: 6px;
+  right: 6px;
+  font-size: 16px;
   font-weight: bold;
   color: #31bcf2;
   cursor: pointer;
@@ -168,5 +151,13 @@ export default {
 .close-btn:hover,
 .close-btn:active {
   color: var(--triangle-color);
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

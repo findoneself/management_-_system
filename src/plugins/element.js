@@ -27,7 +27,8 @@ import {
   Cascader,
   Alert,
   Upload,
-  DatePicker
+  DatePicker,
+  Image
 } from 'element-ui'
 
 Vue.use(Link)
@@ -57,6 +58,7 @@ Vue.use(Alert)
 Vue.use(Upload)
 Vue.use(DatePicker)
 Vue.use(DatePicker)
+Vue.use(Image)
 
 // 全局注册提示框
 Vue.prototype.$message = Message

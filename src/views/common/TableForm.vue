@@ -50,7 +50,17 @@
           :oper-obj="operObj"
           :data-list="dataList"
           :columns="columns"
-        />
+        >
+          <template
+            slot="oper"
+            slot-scope="{row, rowIndex}"
+          >
+            <slot
+              name="oper"
+              v-bind="{row, rowIndex}"
+            ></slot>
+          </template>
+        </BeautifulTableList>
         <slot name="pagination"></slot>
       </div>
       <div
