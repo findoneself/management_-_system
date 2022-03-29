@@ -1,5 +1,8 @@
 <template>
-  <div style="width:100%;height:100%">
+  <div
+    id="baidu_map"
+    style="width:100%;height:100%"
+  >
     <baidu-map
       style="width:100%;height:100%"
       :center="center"
@@ -103,3 +106,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+#baidu_map {
+  background: #02004d !important;
+}
+</style>

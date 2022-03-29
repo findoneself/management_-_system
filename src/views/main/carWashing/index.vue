@@ -70,7 +70,10 @@
               </div>
               <div class="scale width">{{ item.name }}</div>
               <div class="scale">{{ item.value }}次</div>
-              <div class="lookat">查看</div>
+              <div
+                class="lookat"
+                @click="lookDetail(item.name)"
+              >查看</div>
             </div>
           </div>
         </BeautifulCard>
@@ -421,6 +424,9 @@ export default {
     videoChange (e, val) {
       // e为当前选项 val为哪一个下拉框
       console.log(e, val)
+    },
+    lookDetail (name) {
+      this.$router.push({ name: 'carWashing-CarCompliance', params: { name } })
     }
   }
 }

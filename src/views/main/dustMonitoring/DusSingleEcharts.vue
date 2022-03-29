@@ -214,22 +214,18 @@ export default {
       // }
 
     },
-    // 点击回调
-    buttonClick (item) {
+    // 点击回调-当前组件只有导出
+    buttonClick () {
       if (this.tabsType === 'table') {
         // 表格按钮点击回调--导出表格
 
-      } else {
-        // 图表按钮点击回调--切换检测源或者项目
-        this.echartsType = item.id
       }
     },
     // 设置展示类型
     tabsClick (id) {
-      console.log(id)
       this.tabsType = id
       if (id === 'echart') {
-        this.echartsType = this.tformHead.btnList[0].id
+        // this.echartsType = this.tformHead.btnList[0].id
       }
     },
     // 获取表格和统计数据
@@ -320,15 +316,6 @@ export default {
       if (this.tabsType === 'table') {
         info.btnType = 'elbtn'
         info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
-      } else if (this.tabsType === 'echart') {
-        // info.btnType = 'custom'
-        // info.btnList = [{
-        // id: 'jcy',
-        // name: '检测源'
-        // }, {
-        // id: 'xm',
-        // name: '项目'
-        // }]
       }
       return info
     }
@@ -336,7 +323,4 @@ export default {
 }
 </script>
 <style scoped lang="less">
-/deep/ .tform-contnent {
-  height: calc(100% - 178px);
-}
 </style>
