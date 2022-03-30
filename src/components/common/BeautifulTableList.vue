@@ -11,7 +11,7 @@
       >
         <!-- 序号表头列 -->
         <div
-          v-if="dataList.length > 0 && columns.length > 0 && tableIndex.isIndex"
+          v-if="tableList.length > 0 && columns.length > 0 && tableIndex.isIndex"
           :style="cellHeight ? {width: tableIndex.width, height: cellHeight} : {width: tableIndex.width}"
           class="be-table-index cell"
         >序号</div>
@@ -21,12 +21,29 @@
           v-for="item in tabColumns"
           :style="cellHeight ? {height: cellHeight, width: item.width, flex: item.width ? 'none' : 1} : {width: item.width, flex: item.width ? 'none' : 1}"
           :key="item.prop"
-        >{{ item.name|| '' }}</div>
+        >
+          {{ item.name|| '' }}
+          <span
+            v-if="item.isSort"
+            class="sort-icon"
+          >
+            <i
+              class="el-icon-caret-top"
+              :class="curSort.prop === item.prop && curSort.order === 'asc' ? 'sort-icon-acitve' : ''"
+              @click="sortClick(item.prop, 'asc')"
+            ></i><i
+              class="el-icon-caret-bottom"
+              :class="curSort.prop === item.prop && curSort.order === 'desc' ? 'sort-icon-acitve' : ''"
+              @click="sortClick(item.prop, 'desc')"
+            ></i></span>
+        </div>
         <!-- 操作列 -->
         <div
-          class="be-table-oper cell"
+          class="
+              be-table-oper
+              cell"
           :style="cellHeight ? {width: tableOper.width, height: cellHeight} : {width: tableOper.width}"
-          v-if="dataList.length > 0 && columns.length > 0 && tableOper.isOperation"
+          v-if="tableList.length > 0 && columns.length > 0 && tableOper.isOperation"
         >{{ tableOper.headName }}</div>
       </div>
       <div
@@ -38,14 +55,14 @@
         <ul class="be-table-content">
           <li
             class="be-table-li be-table-item"
-            v-for="(item, iindex) in dataList"
+            v-for="(item, iindex) in tableList"
             :class="highlightCurrow && curRowIndex === iindex ? 'be-tableli--active' : ''"
             @click="rowClick(item, iindex)"
             :key="item.id"
           >
             <!-- 序号列 -->
             <div
-              v-if="dataList.length > 0 && columns.length > 0 && tableIndex.isIndex"
+              v-if="tableList.length > 0 && columns.length > 0 && tableIndex.isIndex"
               :style="cellHeight ? {width: tableIndex.width, minHeight: cellHeight} : {width: tableIndex.width}"
               class="be-table-index cell"
             >{{ iindex + 1 }}</div>
@@ -61,7 +78,7 @@
             <div
               class="be-table-oper cell"
               :style="cellHeight ? {width: tableOper.width, minHeight: cellHeight} : {width: tableOper.width}"
-              v-if="dataList.length > 0 && columns.length > 0 && tableOper.isOperation"
+              v-if="tableList.length > 0 && columns.length > 0 && tableOper.isOperation"
             >
               <template v-if="tableOper.isUnifiedOper">
                 <el-link
@@ -163,7 +180,14 @@ export default {
   },
   data () {
     return {
-      curRowIndex: null
+      curRowIndex: null,
+      // 所有数据
+      tableList: [],
+      // 当前排序的信息
+      curSort: {
+        prop: '',
+        order: ''
+      }
     }
   },
   computed: {
@@ -198,9 +222,24 @@ export default {
     // 监听数据改变，清空当前点击项
     dataList: {
       handler () {
+        const list = this._cloneDeep(this.dataList)
+        if (this.curSort.prop) {
+          this.tableList = this.$utils.compareSort(list, this.curSort.prop, this.curSort.order)
+        } else {
+          this.tableList = list
+        }
         this.curRowIndex = null
-      }
+      },
+      deep: true,
+      immediate: true
     }
+  },
+  beforeDestroy () {
+    this.curSort = {
+      prop: '',
+      order: ''
+    }
+    this.tableList = []
   },
   methods: {
     // 行点击
@@ -211,6 +250,20 @@ export default {
     cellClick (cell, cellIndex, row, rowIndex) {
       this.curRowIndex = rowIndex
       this.$emit('cellClick', { cell, cellIndex, row, rowIndex })
+    },
+    // 排序的点击
+    sortClick (prop, order) {
+      if (this.curSort.prop === prop && this.curSort.order === order) {
+        // 如果点击的是同一个字段和同样顺序，则取消排序
+        this.tableList = this._cloneDeep(this.dataList)
+        this.curSort.prop = ''
+        this.curSort.order = ''
+      } else {
+        // 如果不是则排序
+        this.curSort.prop = prop
+        this.curSort.order = order
+        this.tableList = this.$utils.compareSort(this.tableList, prop, order)
+      }
     }
   }
 }

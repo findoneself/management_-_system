@@ -8,6 +8,7 @@
     :close-on-press-escape="false"
     :close-on-click-modal="false"
     :modal="modal"
+    destroy-on-close
     class="be-dialog"
     @closed="onCancel"
   >

@@ -214,8 +214,8 @@ export default {
         title: '噪声设备预警',
         key: 'zssbyj',
         columns: [
-          { name: '日期', prop: 'datetime', key: 1 },
-          { name: '数值', prop: 'num', key: 3 }
+          { name: '日期', prop: 'datetime', key: 1, isSort: true },
+          { name: '数值', prop: 'num', key: 3, isSort: true }
         ],
         xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
         seriesData: [2, 10, 15, 30, 20, 33, 23],

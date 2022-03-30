@@ -469,6 +469,26 @@ div.el-table thead {
     overflow: scroll;
 }
 
+.be-table-header .cell {
+    display: inline-flex;
+    align-items: center;
+}
+
+.be-table-header .sort-icon i {
+    display: block;
+    cursor: pointer;
+}
+
+.be-table-header .sort-icon i:hover,
+.be-table-header .sort-icon i:focus,
+.sort-icon .sort-icon-acitve {
+    color: #0aadec;
+}
+
+.sort-icon i.el-icon-caret-top {
+    margin-bottom: -6px;
+}
+
 .be-table-li {
     display: flex;
     justify-content: space-between;
