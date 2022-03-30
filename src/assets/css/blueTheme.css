@@ -474,13 +474,18 @@ div.el-table thead {
     align-items: center;
 }
 
-.be-table-header .sort-icon i {
-    display: block;
-    cursor: pointer;
+.sort-icon {
+    margin-left: 2px;
 }
 
-.be-table-header .sort-icon i:hover,
-.be-table-header .sort-icon i:focus,
+.sort-icon i {
+    display: block;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.sort-icon i:hover,
+.sort-icon i:focus,
 .sort-icon .sort-icon-acitve {
     color: #0aadec;
 }
