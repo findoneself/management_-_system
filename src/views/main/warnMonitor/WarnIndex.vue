@@ -14,7 +14,7 @@
       <div class="button_list">
         <el-button
           type="primary"
-          @click="moreClick(item)"
+          @click="moreClick()"
         >更多</el-button>
         <div>
           <el-select
@@ -157,7 +157,7 @@ export default {
         }
       ]
     },
-    moreClick (item) {
+    moreClick (item = {}) {
       this.$refs.moreDialog.open(item)
     }
   }

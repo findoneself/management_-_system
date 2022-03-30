@@ -47,5 +47,9 @@ export default [
   // 分组名称
   { id: 'bjfz1', name: '分组1', type: 'groupType', params: '' },
   { id: 'bjfz2', name: '分组2', type: 'groupType', params: '' },
-  { id: 'bjfz3', name: '分组3', type: 'groupType', params: '' }
+  { id: 'bjfz3', name: '分组3', type: 'groupType', params: '' },
+  // 整改分类
+  { id: 'zgfl1', name: '整改分类1', type: 'modifyType', params: '' },
+  { id: 'zgfl2', name: '整改分类2', type: 'modifyType', params: '' },
+  { id: 'zgfl3', name: '整改分类3', type: 'modifyType', params: '' }
 ]

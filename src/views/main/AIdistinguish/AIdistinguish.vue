@@ -172,6 +172,7 @@
         <BeautifulTableList
           :loading="loadings.xmbjLoading"
           cell-height="2.2rem"
+          highlight-currow
           :index-obj="{isIndex: true, width: '5rem'}"
           :data-list="dataList.xmbjList"
           :columns="columns.xmbjColumns"

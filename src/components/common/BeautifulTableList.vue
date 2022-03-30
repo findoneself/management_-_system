@@ -30,17 +30,16 @@
         >{{ tableOper.headName }}</div>
       </div>
       <div
-        class="be-table-content"
         :class="isHeader ? 'be-ishead-content' : 'be-nohead-content'"
         v-loading="loading"
         :element-loading-text="loadingText"
         :element-loading-spinner="loadingIcon"
       >
-        <ul style="height: 100%">
+        <ul class="be-table-content">
           <li
             class="be-table-li be-table-item"
             v-for="(item, iindex) in dataList"
-            :class="curRowIndex === iindex ? 'be-tableli--active' : ''"
+            :class="highlightCurrow && curRowIndex === iindex ? 'be-tableli--active' : ''"
             @click="rowClick(item, iindex)"
             :key="item.id"
           >
@@ -113,6 +112,11 @@ export default {
     stripe: {
       type: Boolean,
       default: true
+    },
+    // 是否高亮当前行
+    highlightCurrow: {
+      type: Boolean,
+      default: false
     },
     // 表格高度
     height: {

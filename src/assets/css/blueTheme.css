@@ -478,6 +478,7 @@ div.el-table thead {
 /* 减去的是表头高度 */
 .be-table-content {
     overflow: scroll;
+    height: 100%
 }
 
 .be-ishead-content {

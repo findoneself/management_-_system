@@ -43,6 +43,7 @@
           :loading-text="loadingText"
           :loading-icon="loadingIcon"
           :stripe="stripe"
+          :highlight-currow="highlightCurrow"
           :class="$slots.pagination && 'ispage-tablelist'"
           :cell-height="cellHeight"
           :is-header="isHeader"
@@ -112,6 +113,11 @@ export default {
       type: Boolean,
       default: true
     },
+    // 是否高亮当前行
+    highlightCurrow: {
+      type: Boolean,
+      default: false
+    },
     // 表格数据
     dataList: {
       type: Array,
@@ -174,7 +180,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .tform-wrapper {
   width: 100%;
   height: 100%;
@@ -189,6 +195,12 @@ export default {
   flex-shrink: 0;
   background: var(--head-bgcolor);
   border: 1px solid var(--head-bdcolor);
+  /deep/ .el-button {
+    width: 70px;
+  }
+  /deep/ .el-button--small {
+    width: 60px;
+  }
 }
 .tfrom-tabs {
   height: calc(100% - 100px);
