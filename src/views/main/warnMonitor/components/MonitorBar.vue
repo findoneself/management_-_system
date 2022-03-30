@@ -1,8 +1,8 @@
 <template>
   <!-- 各区县安装数量统计 -->
   <div
-    id="installnum"
-    style="width: 98%; height: 100%"
+    :id="id"
+    style="width: 100%; height: 80%"
   ></div>
 </template>
 <script>
@@ -19,15 +19,25 @@ export default {
       default () {
         return []
       }
+    },
+    id: {
+      type: String,
+      default () {
+        return ''
+      }
+    },
+    color: {
+      type: String,
+      default () {
+        return ''
+      }
     }
   },
   data () {
     return {
-      colorList: ['#FF460D', '#FFAE00', '#1176FF', '#23DBFC'],
       option: {
         // backgroundColor: "#000",
         // 右上角的色块加title
-
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -45,8 +55,9 @@ export default {
         xAxis: {
           type: 'category',
           axisLabel: {
-            color: '#fff',
-            fontSize: '10'
+            color: '#C0BFD2',
+            fontSize: '10',
+            rotate: 45
           },
           axisLine: {
             lineStyle: {
@@ -59,9 +70,9 @@ export default {
         },
         yAxis: {
           type: 'value',
-          name: '总数量',
+          name: '',
           axisLabel: {
-            color: '#fff',
+            color: '#C0BFD2',
             fontSize: '10'
           },
           axisLine: {
@@ -79,7 +90,31 @@ export default {
           axisTick: {
             show: false
           }
-        }
+        },
+        series: [{
+          type: 'bar',
+          barMaxWidth: 15,
+          barGap: '10%',
+          label: {
+            show: true
+          },
+          itemStyle: {
+            normal: {
+              color: this.color,
+              label: {
+                show: true,
+                textStyle: {
+                  color: '#fff',
+                  fontSize: '10'
+                },
+                position: 'top',
+                formatter: function (p) {
+                  return p.value > 0 ? (p.value) : ''
+                }
+              }
+            }
+          }
+        }]
       }
     }
   },
@@ -88,49 +123,16 @@ export default {
   },
   methods: {
     getmap () {
-      let series = []
-      let legendData = [[], []]
-      this.seriesData.map((i, index) => {
-        series.push({
-          name: i.name,
-          type: 'bar',
-          stack: 'total',
-          emphasis: {
-            focus: 'series'
-          },
-          barWidth: 10, // 柱状宽度
-          data: i.data,
-          itemStyle: {
-            normal: {
-              color: this.colorList[index],
-              shadowColor: '#23DBFC',
-              fontSize: '0.5rem',
-              shadowBlur: 0,
-              label: {
-                show: false
-              },
-              labelLine: {
-                show: false
-              }
-            }
-          }
-        })
-        if (index === 0 || index === 1) {
-          legendData[0].push(i.name)
-        } else {
-          legendData[1].push(i.name)
-        }
-      })
-      const { legend, xAxis } = this.option
+      const { xAxis, series } = this.option
       xAxis.data = this.xAxisData
-      legend[0].data = legendData[0]
-      legend[1].data = legendData[1]
-      let option = {
-        ...this.option,
-        series
-      }
-      var myChart = this.$echarts.init(document.getElementById('installnum'))
-      myChart.setOption(option)
+      series[0].data = this.seriesData
+      //   let option = {
+      //     ...this.option,
+      //     series
+      //   }
+      console.log(this.id)
+      var myChart = this.$echarts.init(document.getElementById(this.id))
+      myChart.setOption(this.option)
       window.addEventListener('resize', function () {
         myChart.resize()
       })
