@@ -14,7 +14,10 @@
       :key='item.key'
     >
       <div class="button_list">
-        <el-button type="primary">更多</el-button>
+        <el-button
+          @click="moreClick(item)"
+          type="primary"
+        >更多</el-button>
         <div v-if="item.key=='ycscyj'">
           <el-select
             v-if="item.date"
@@ -141,6 +144,7 @@
         :seriesData='item.seriesData'
       />
     </BeautifulCard>
+    <TableDialog ref="moreDialog" />
   </BeautifulWrapper>
 </template>
 
@@ -148,12 +152,16 @@
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import BeautifulCard from '_com/common/BeautifulCard'
 import MonitorBar from './components/MonitorBar.vue'
+import TableDialog from './components/TableDialog'
+
 export default {
   name: '',
   components: {
     BeautifulWrapper,
     BeautifulCard,
+    TableDialog,
     MonitorBar
+
   },
   data () {
     return {
@@ -212,11 +220,14 @@ export default {
   methods: {
     // 获取统计图数据
     getMapData () {
-
+    },
+    moreClick (item) {
+      this.$refs.moreDialog.open(item)
     },
     pickerHandel (key, val) {
       console.log(key, val)
     }
+
   }
 }
 </script>
