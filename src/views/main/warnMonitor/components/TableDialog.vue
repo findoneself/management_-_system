@@ -125,6 +125,7 @@
         <BeautifulTableList
           :loading="infoLoading"
           :data-list="infoDataList"
+          :index-obj="{isIndex: true}"
           :columns="currentItme.columns"
           :oper-obj="currentItme.title === 'AI设备预警' ? infoOperObj : {}"
         ></BeautifulTableList>
@@ -172,15 +173,7 @@ export default {
         modifyList: []
       },
       // 当前点击的类目
-      currentItme: {
-        title: '扬尘设备预警',
-        typeId: 'ycyj',
-        columns: [
-          { name: '日期', prop: 'datetime', key: 1 },
-          { name: '预警分类', prop: 'warnTypeName', tooltip: true, key: 2 },
-          { name: '数值', prop: 'num', key: 3 }
-        ]
-      },
+      currentItme: {},
       // 表单数据
       dataForm: {
         // 点位/项目名称
@@ -259,7 +252,7 @@ export default {
       }
     },
     open (item) {
-      // this.currentItme = item
+      this.currentItme = item
       this.$refs.tableDialog.showDialog(true)
       if (item.title === '整改项目超期' || item.title === '车辆冲洗预警') {
         this.columns = [
@@ -303,7 +296,7 @@ export default {
     getWarnData () {
       this.dataLoading = true
       let params = this._cloneDeep(this.queryAll)
-      params.typeId = this.currentItme.id
+      params.key = this.currentItme.id
       this.$http({
         url: '/warn/getWarnData',
         data: params
@@ -351,7 +344,7 @@ export default {
       this.infoLoading = true
       let params = this._cloneDeep(this.queryInfo)
       params.projectId = this.currentInfo.id
-      params.typeId = this.currentItme.id
+      params.key = this.currentItme.id
       this.$http({
         url: '/warn/getWarnInfo',
         data: params
@@ -370,7 +363,7 @@ export default {
         this.infoLoading = false
         this.$message.error(`获取${this.currentItme.title}记录失败！`)
         const list = [
-          { id: '1212', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' },
+          { id: '1212', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
           { id: '165', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' },
           { id: '1215542', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' },
           { id: '124', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' },
@@ -403,13 +396,17 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .more-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   width: 100%;
   height: 100%;
+  .el-input,
+  .el-select {
+    width: 150px;
+  }
 }
 .info-wrapper,
 .num-wrapper {
@@ -419,7 +416,14 @@ export default {
 .el-form-item {
   margin-bottom: 0;
 }
+
 .be-table-list {
   height: calc(100% - 54px);
+}
+/deep/ .menu-tablist > li {
+  width: 226px;
+}
+/deep/ .menu-tablist .tab-shadow {
+  margin-left: -206px;
 }
 </style>

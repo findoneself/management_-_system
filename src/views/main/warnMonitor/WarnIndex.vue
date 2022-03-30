@@ -197,20 +197,70 @@ export default {
       xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
       seriesData: [20, 50, 10, 35, 35, 47, 20],
       carDataList: [{
-        title: '扬尘设备预警', key: 'ycscyj', columns: [], xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-        seriesData: [20, 50, 10, 35, 35, 47, 20], color: '#3D73F2', picker: ['date', 'pm2.5'], date: true, pm: true
+        title: '扬尘设备预警',
+        key: 'ycscyj',
+        columns: [
+          { name: '日期', prop: 'datetime', key: 1 },
+          { name: '预警分类', prop: 'warnTypeName', key: 2 },
+          { name: '数值', prop: 'num', key: 3, width: '13%' }
+        ],
+        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
+        seriesData: [20, 50, 10, 35, 35, 47, 20],
+        color: '#3D73F2',
+        picker: ['date', 'pm2.5'],
+        date: true,
+        pm: true
       }, {
-        title: '噪声设备预警', key: 'zssbyj', columns: [], xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-        seriesData: [2, 10, 15, 30, 20, 33, 23], color: '#23DBFC', picker: ['date'], date: true
+        title: '噪声设备预警',
+        key: 'zssbyj',
+        columns: [
+          { name: '日期', prop: 'datetime', key: 1 },
+          { name: '数值', prop: 'num', key: 3 }
+        ],
+        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
+        seriesData: [2, 10, 15, 30, 20, 33, 23],
+        color: '#23DBFC',
+        picker: ['date'],
+        date: true
       }, {
-        title: '车辆冲洗设备预警', key: 'clcxsbyj', columns: [], xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-        seriesData: [20, 50, 10, 35, 35, 47, 20], color: '#FFAD2D', picker: ['date'], date: true
+        title: '车辆冲洗设备预警',
+        key: 'clcxsbyj',
+        columns: [
+          { name: '日期', prop: 'datetime', key: 2 },
+          { name: '结果', prop: 'result', key: 3 }
+        ],
+        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
+        seriesData: [20, 50, 10, 35, 35, 47, 20],
+        color: '#FFAD2D',
+        picker: ['date'],
+        date: true
       }, {
-        title: 'AI设备预警', key: 'aisbyj', columns: [], xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-        seriesData: [20, 50, 10, 35, 35, 47, 20], color: '#CD482E', picker: ['aqm', 'pm2.5'], pm: true, aqm: true
+        title: 'AI设备预警',
+        key: 'aisbyj',
+        columns: [
+          { name: '日期', prop: 'datetime', key: 2 },
+          { name: '预警分类', prop: 'warnlx', key: 3 }
+        ],
+        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
+        seriesData: [20, 50, 10, 35, 35, 47, 20],
+        color: '#CD482E',
+        picker: ['aqm', 'pm2.5'],
+        pm: true,
+        aqm: true
       }, {
-        title: '整改设备超期预警', key: 'zgsbcqyj', columns: [], xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-        seriesData: [20, 50, 10, 35, 35, 47, 20], color: '#9662FF', picker: ['aqm', 'pm2.5'], zgtype: true, pm: true
+        title: '整改设备超期预警',
+        key: 'zgsbcqyj',
+        columns: [
+          { name: '日期', prop: 'datetime', key: 1 },
+          { name: '预警分类', prop: 'warnlx', key: 2 },
+          { name: '超期天数', prop: 'overdueDays', key: 3, width: '18%' }
+        ],
+        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
+        seriesData: [20, 50, 10, 35, 35, 47, 20],
+        color: '#9662FF',
+        picker: ['aqm', 'pm2.5'],
+        zgtype: true,
+        pm: true
       }]
     }
   },
@@ -251,7 +301,7 @@ button.el-button {
   border: none;
   transform: scale(0.8);
 }
-/deep/.el-select {
+.waning_item .el-select {
   width: 100px;
   margin-right: -5px;
   padding: 0;

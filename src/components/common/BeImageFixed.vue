@@ -68,7 +68,7 @@ export default {
   methods: {
     showImg (e, img) {
       if (!e) return console.error('必须传入event节点')
-      if (!img) return console.error('必须传入图片地址')
+      if (!img || !img.imgUrl) return console.error('必须传入图片地址')
       const url = typeof img === 'string' ? img : img.imgUrl
       let imgNew = new Image()
       imgNew.src = url
