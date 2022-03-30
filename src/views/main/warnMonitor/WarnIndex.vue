@@ -12,7 +12,10 @@
       class="waning_item"
     >
       <div class="button_list">
-        <el-button type="primary">更多</el-button>
+        <el-button
+          type="primary"
+          @click="moreClick(item)"
+        >更多</el-button>
         <div>
           <el-select
             v-model="dustForm.date"
@@ -68,6 +71,7 @@
       :title="'整改设备超期预警'"
       class="waning_item"
     ></BeautifulCard>
+    <TableDialog ref="moreDialog" />
   </BeautifulWrapper>
 </template>
 
@@ -75,13 +79,15 @@
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import BeautifulCard from '_com/common/BeautifulCard'
 import BeEchartBar from '_com/common/BeEchartBar'
+import TableDialog from './components/TableDialog'
 
 export default {
   name: '',
   components: {
     BeautifulWrapper,
     BeautifulCard,
-    BeEchartBar
+    BeEchartBar,
+    TableDialog
   },
   data () {
     return {
@@ -150,6 +156,9 @@ export default {
           data: series
         }
       ]
+    },
+    moreClick (item) {
+      this.$refs.moreDialog.open(item)
     }
   }
 }
