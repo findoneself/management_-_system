@@ -47,7 +47,7 @@ export default {
         },
         grid: {
           left: '10rem',
-          right: '1rem',
+          right: '10rem',
           top: '40rem',
           bottom: '1rem',
           containLabel: true
@@ -93,7 +93,7 @@ export default {
         },
         series: [{
           type: 'bar',
-          barMaxWidth: 15,
+          barMaxWidth: 25,
           barGap: '10%',
           label: {
             show: true

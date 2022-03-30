@@ -19,7 +19,6 @@ export default {
         { value: 20, name: '准运证过期', color: '#00FFFF' }
       ],
       option: {
-
         emphasis: {
           label: { show: true, formatter: '{b}: {c}' },
           labelLine: { show: true },

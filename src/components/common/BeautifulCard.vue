@@ -3,7 +3,10 @@
     class="beautiful-card"
     :style="{borderWidth: setCardStyle.borderWidth}"
   >
-    <div class="card-header">
+    <div
+      class="card-header"
+      v-if="isShowHead"
+    >
       <h2>{{ title }}</h2>
       <span class="card-title-icon icon1"></span>
       <span class="card-title-icon icon2"></span>
@@ -53,6 +56,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    isShowHead: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

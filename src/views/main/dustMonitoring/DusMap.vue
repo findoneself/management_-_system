@@ -148,7 +148,7 @@ export default {
       // 表格表头
       columns: [
         { name: '监测点', prop: 'jcd', key: 1 },
-        { name: 'PM2.5', prop: 'jcwd', key: 2 }
+        { name: 'PM2.5', prop: 'jcwd', key: 2, isSort: true }
       ],
       // 表格数据
       dataList: [
