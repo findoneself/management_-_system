@@ -66,7 +66,16 @@
         </BeautifulCard>
       </div>
       <!-- 中间地图区域 -->
-      <div class="map"></div>
+      <div class="map">
+        <AirQualityMap
+          :center='center'
+          :isMarkHandle='false'
+          :coordinateList='coordinateList'
+          :mapColorList='mapColorList'
+        />
+        <div class="map_left_title">地图</div>
+
+      </div>
       <!-- 右边列表 -->
       <div class="super_list">
         <BeautifulCard
@@ -154,6 +163,7 @@
     <projectDialog
       :dialogVisible="dialogVisible"
       :title="title"
+      :dataList="DialogDataList"
       @closeDialog='closeDialog'
     > </projectDialog>
   </BeautifulWrapper>
@@ -166,6 +176,8 @@ import ProjectTotalPie from './components/ProjectTotalPie.vue'
 import BusinessSortPie from './components/BusinessSortPie.vue'
 import addMonthChart from './components/addMonthChart.vue'
 import projectDialog from './ProjectOverdue.vue'
+import AirQualityMap from '_com/common//AirQualityMap.vue'
+
 export default {
   name: 'ProjectIndex',
   components: {
@@ -174,11 +186,14 @@ export default {
     ProjectTotalPie,
     BusinessSortPie,
     addMonthChart,
-    projectDialog
+    projectDialog,
+    AirQualityMap
   },
   data () {
     return {
       borderIcon: ['top', 'right', 'bottom', 'left'],
+      wraStyle: { inPadding: '0px' },
+      // 项目总数模块
       paramslist: [
         {
           name: '房建',
@@ -201,6 +216,7 @@ export default {
           color: ' #00FFFF'
         }
       ],
+      // 业务分类模块
       businessSortList: [
         {
           name: 'AI识别',
@@ -248,10 +264,10 @@ export default {
           }
         }
       ],
-      wraStyle: { inPadding: '0px' },
+      // 每月新增模块
       xAxisData: ['1月', '2月', '3月', '4月', '5月', '6月'],
       seriesData: [20, 50, 10, 35, 35, 47],
-      // 表格表头
+      // 表格表头——右边两个表格
       columns: [
         { name: '项目名称', prop: 'jcd', key: 1 },
         { name: '开发单位', prop: 'jcwd', key: 2 },
@@ -276,9 +292,42 @@ export default {
           id: '1', jcwd: '开发单位开发单位开发单位开发单位开发单位', jcd: '项目名称', cqt: '1223',
           sgdw: '施工单位施工单位施工单位施工单位'
         }],
-      // 弹窗
+      // 大弹窗数据
+      DialogDataList: [
+        { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
+        { id: 'gwg', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
+        { id: 'geewhwwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
+        { id: 'geegsdwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
+        { id: 'geegeewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
+        { id: 'geejwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
+        { id: 'geeerwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
+        { id: 'geesjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
+        { id: 'geejjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
+        { id: '242141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
+        { id: '2434', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
+        { id: '2421', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
+        { id: '242149661', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
+        { id: '244642141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
+        { id: '242145641', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' }
+      ],
+      // 大弹窗
       dialogVisible: false,
-      title: ''
+      title: '',
+      // 地图
+      coordinateList: [{ lng: 116.2787, lat: 40.0492, value: 80 },
+      { lng: 116.2787, lat: 40.040, value: 130 },
+      { lng: 116.2887, lat: 40.040, value: 230 },
+      { lng: 116.297047, lat: 39.979542, value: 30 },
+      { lng: 116.321768, lat: 39.88748, value: 30 },
+      { lng: 116.494243, lat: 39.956539, value: 10 },
+      { lng: 116.594243, lat: 40.01, value: 100 }],
+      mapColorList: [{ name: '优', color: '#30D385', section: '0-35' },
+      { name: '良', color: '#FFD902', section: '36-75' },
+      { name: '轻度', color: '#FF9902', section: '76-115' },
+      { name: '中度', color: '#FF0200', section: '116-150' },
+      { name: '重度', color: '#990099', section: '151-250' },
+      { name: '严重', color: '#990000', section: '251-500' }],
+      center: { lng: 116.404, lat: 39.915 }
     }
   },
   methods: {
@@ -301,6 +350,19 @@ export default {
   height: 100%;
   .map {
     flex: 1;
+    position: relative;
+    .map_left_title {
+      width: 139px;
+      height: 51px;
+      background: url("../../../assets/img/tabmenu-active.png") no-repeat 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: center;
+      line-height: 51px;
+    }
   }
   .container_left {
     display: flex;
@@ -331,7 +393,7 @@ export default {
         justify-content: space-around;
         align-items: center;
         font-size: 1rem;
-        padding: 0 1rem 0 1.5rem;
+        padding: 0.2rem 1rem 0.2rem 1.5rem;
         .color {
           width: 1.2rem;
           height: 0.6rem;
@@ -360,7 +422,7 @@ export default {
       justify-content: flex-start;
       .item.business {
         width: 7.8rem;
-        padding: 0 0 0 0.4rem;
+        padding: 0.2rem 0.2rem 0.4rem 0.2rem;
         .span {
           margin-left: 0.1rem;
         }
@@ -380,7 +442,7 @@ export default {
       // flex: 1;
       height: 49%;
     }
-    /deep/.card-content {
+    /deep/.card-content-notitle {
       height: 100%;
       padding: 0 !important;
     }

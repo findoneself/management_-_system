@@ -124,7 +124,7 @@ export default {
           emphasis: {
             focus: 'series'
           },
-          barWidth: 10, // 柱状宽度
+          barWidth: 15, // 柱状宽度
           data: i.data,
           itemStyle: {
             normal: {

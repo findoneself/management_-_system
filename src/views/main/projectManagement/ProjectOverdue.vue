@@ -8,7 +8,7 @@
     <BeautifulWrapper
       :wraStyle="{ inPadding: '0px' }"
       :isTitle='true'
-      style="width:100%;geight:100%,overflow:hidden"
+      style="width:100%;geight:100%"
       :title="title"
       @closeClick="closeClick"
       :borderIcon="['right', 'bottom', 'left', 'close']"
@@ -42,6 +42,7 @@
     </BeautifulWrapper>
     <DialogCenter
       v-if="dialogVisibleCenter"
+      :dialogCenterData='dialogCenterData'
       @closeDialogCenter='closeDialogCenter'
     />
   </el-dialog>
@@ -66,6 +67,12 @@ export default {
     dialogVisible: {
       type: Boolean,
       default: false
+    },
+    dataList: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   data () {
@@ -80,24 +87,6 @@ export default {
         { name: '时间', prop: 'startTime', key: 4 },
         { name: '结束时间', prop: 'endTime', key: 5 }
       ],
-      dataList: [
-        { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'gwg', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geewhwwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geegsdwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geegeewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geejwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geeerwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geesjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geejjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '2434', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '2421', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242149661', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '244642141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242145641', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' }
-
-      ],
       operObj: {
         isOperation: true,
         headName: '操作',
@@ -107,13 +96,42 @@ export default {
             click: this.lookDetail
           }
         ]
+      },
+      dialogCenterData: {
+        dataForm1: {
+          title: '项目信息',
+          data1: [{ name: '监督备案号', value: 'AJ32978658658737435(监督一科)' },
+          { name: '项目编码', value: '124235436546546' },
+          { name: '项目名称', value: '天虹精英汇项目一标段1-3,5,9-14#楼，配' },
+          { name: '项目地址', value: '衢宁县城天虹大道东7823647' }],
+          data2: [{ name: '监督备案号', value: 'AJ329786586587335(监督一科)' },
+          { name: '项目编码', value: '12423543654006' },
+          { name: '项目名称', value: '天虹精英汇项目一标段1-3,5,9-14#楼，配2434253' }]
+        },
+        dataForm2: {
+          title: '五方单位信息',
+          data1: [{ name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
+          { name: '项目负责人', value: '124235436546546' },
+          { name: '联系方式', value: '14932746732' },
+          { name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
+          { name: '项目负责人', value: '124235436546546' },
+          { name: '联系方式', value: '14932746732' }, { name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
+          { name: '项目负责人', value: '124235436546546' },
+          { name: '联系方式', value: '14932746732' }, { name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
+          { name: '项目负责人', value: '124235436546546' },
+          { name: '联系方式', value: '14932746732' }],
+          data2: [{ name: '监督备案号', value: 'AJ329786586587335' },
+          { name: '项目编码', value: '1242354' },
+          { name: '项目名称', value: '天虹精英汇5' },
+          { name: '项目编码', value: '12423543' }]
+        }
       }
     }
   },
   methods: {
     closeClick () {
-      console.log('关闭弹窗')
       this.$emit('closeDialog')
+      this.dialogVisibleCenter = false
     },
     lookDetail (item, e) {
       console.log(item, e)
@@ -179,6 +197,6 @@ export default {
   color: #fff;
 }
 /deep/.be-ishead-content {
-  height: 0;
+  // height: 0;
 }
 </style>

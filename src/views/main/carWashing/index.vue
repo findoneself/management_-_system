@@ -454,9 +454,7 @@ export default {
       justify-content: space-between;
       flex-wrap: wrap;
       overflow: hidden;
-      // padding: 0 0.2rem;
-      // margin-top: 5px;
-      // height: calc(100% - 80px);
+      margin-top: 0.5rem;
       .item {
         width: 11.2rem;
         text-align: center;
@@ -469,16 +467,15 @@ export default {
         flex-direction: column;
         justify-content: space-around;
         font-size: 1rem;
-        padding: 0.2rem 1rem;
+        padding: 0.6rem 1rem;
         align-items: flex-start;
         .span {
           display: flex;
           align-items: center;
-          transform: scale(0.9);
           text-align-last: justify;
           margin-top: 5px;
           .margin {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             width: 2.5rem;
             text-align: left;
           }
@@ -498,6 +495,7 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: center;
+      margin-top: 1.25rem;
       .record_item {
         display: flex;
         width: 22.5rem;
@@ -505,7 +503,7 @@ export default {
         background-color: #02004d;
         justify-content: space-around;
         align-items: center;
-        line-height: 24px;
+        line-height: 2.5rem;
         font-size: 0.88rem;
         div {
           flex: 1;
@@ -555,11 +553,11 @@ export default {
   .left_img {
     transform: rotate(180deg);
     position: absolute;
-    bottom: 0.5rem;
-    left: 3.5rem;
+    bottom: 0.2rem;
+    left: 2.5rem;
   }
   .right_img {
-    bottom: 0.5rem;
+    bottom: 0.2rem;
     right: 1.6rem;
   }
 }
@@ -619,10 +617,9 @@ export default {
         }
         .video_list_data {
           display: flex;
-          // height: 2.65rem;
+          padding: 0.5rem;
           justify-content: space-between;
           align-items: center;
-          padding: 0 1rem;
           div {
             transform: scale(0.8);
           }
@@ -681,11 +678,9 @@ export default {
           top: -1rem;
           right: 0.4rem;
         }
-        .left_img {
-          bottom: 0.5rem;
-        }
+        .left_img,
         .right_img {
-          bottom: 0.5rem;
+          bottom: 0.2rem;
         }
       }
     }
@@ -709,7 +704,7 @@ export default {
   width: 7.8rem;
   /deep/.el-input--suffix .el-input__inner {
     // height: 2.8rem;
-    width: 6.5rem;
+    // width: 6.5rem;
     // transform: scale(0.8);
   }
 }
