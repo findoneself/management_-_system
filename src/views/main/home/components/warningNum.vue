@@ -69,8 +69,8 @@ export default {
         },
         grid: {
           left: '10rem',
-          right: '1rem',
-          top: '40rem',
+          right: '10rem',
+          top: '80rem',
           bottom: '1rem',
           containLabel: true
         },

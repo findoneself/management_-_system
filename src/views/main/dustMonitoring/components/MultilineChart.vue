@@ -39,7 +39,7 @@ export default {
           // X轴线上标识样式
           axisLabel: {
             color: '#fff',
-            fontSize: '10'
+            fontSize: '15'
           },
           // 底部X轴线 样式
           axisLine: {
@@ -57,7 +57,7 @@ export default {
           name: '次数',
           axisLabel: {
             color: '#fff',
-            fontSize: '10'
+            fontSize: '15'
           },
           // 边框Y轴线样式
           axisLine: {
@@ -94,14 +94,14 @@ export default {
         },
         legend: [{
           x: 'center',
-          bottom: '5%',
+          bottom: '2%',
           //   y: '30',
           textStyle: {
             color: '#fff',
-            fontSize: '12'
+            fontSize: '15'
           },
-          itemWidth: 20,
-          itemHeight: 10,
+          itemWidth: 25,
+          itemHeight: 15,
           itemGap: 20
         }]
       }
