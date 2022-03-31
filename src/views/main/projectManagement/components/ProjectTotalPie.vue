@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <div
-      id="project_total"
-      style="width: 100%; height: 13rem"
-    ></div>
-  </div>
+  <div
+    id="project_total"
+    style="width: 100%; height: 80%"
+  ></div>
 </template>
 <script>
 export default {
@@ -49,9 +47,21 @@ export default {
         }
       ],
       option: {
-        tooltip: {
-          trigger: 'item',
-          formatter: '{b} : {c} '
+        emphasis: {
+          label: { show: true, formatter: '{b}: {c}' },
+          labelLine: { show: true },
+          itemStyle: {
+            normal: {
+              fontSize: '0.5rem',
+              shadowBlur: 0,
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            }
+          }
         },
         toolbox: {
         },
@@ -59,8 +69,8 @@ export default {
           {
             name: 'Radius Mode',
             type: 'pie',
-            radius: [40, 70],
-            center: ['50%', '47%'],
+            radius: [40, 60],
+            center: ['50%', '50%'],
             // roseType: 'radius',
             itemStyle: {
               // borderRadius: 5

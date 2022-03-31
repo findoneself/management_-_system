@@ -194,8 +194,6 @@ export default {
         zgtype: '整改分类',
         pm: '温度'
       },
-      xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-      seriesData: [20, 50, 10, 35, 35, 47, 20],
       carDataList: [{
         title: '扬尘设备预警',
         key: 'ycscyj',
@@ -204,8 +202,8 @@ export default {
           { name: '预警分类', prop: 'warnTypeName', key: 2 },
           { name: '数值', prop: 'num', key: 3, width: '13%' }
         ],
-        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-        seriesData: [20, 50, 10, 35, 35, 47, 20],
+        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
+        seriesData: [20, 50, 10, 35, 35, 47, 20, 20, 31, 12],
         color: '#3D73F2',
         picker: ['date', 'pm2.5'],
         date: true,

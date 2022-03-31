@@ -27,7 +27,33 @@ export default {
       option: {
         // backgroundColor: "#000",
         // 右上角的色块加title
-
+        legend: [
+          {
+            align: 'left',
+            right: 0,
+            top: -5,
+            textStyle: {
+              color: '#fff',
+              fontSize: '10'
+            },
+            itemWidth: 10,
+            itemHeight: 5,
+            itemGap: 5
+          },
+          {
+            align: 'left',
+            right: 0,
+            top: 10,
+            y: '30',
+            textStyle: {
+              color: '#fff',
+              fontSize: '10'
+            },
+            itemWidth: 10,
+            itemHeight: 5,
+            itemGap: 5
+          }
+        ],
         tooltip: {
           trigger: 'axis',
           axisPointer: {
