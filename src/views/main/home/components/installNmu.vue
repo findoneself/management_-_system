@@ -43,7 +43,7 @@ export default {
           {
             align: 'left',
             right: 0,
-            top: 10,
+            top: 15,
             y: '30',
             textStyle: {
               color: '#fff',
@@ -63,8 +63,8 @@ export default {
         },
         grid: {
           left: '10rem',
-          right: '1rem',
-          top: '40rem',
+          right: '10rem',
+          top: '80rem',
           bottom: '1rem',
           containLabel: true
         },

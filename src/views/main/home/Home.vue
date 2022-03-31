@@ -579,7 +579,7 @@ export default {
         transform: rotate(180deg);
         position: absolute;
         bottom: 1.28rem;
-        left: 3.8rem;
+        left: 2.8rem;
       }
       .right_img {
         bottom: 1.28rem;
@@ -592,7 +592,7 @@ export default {
       text-align: center;
       margin: 2rem 0 0.5rem 0;
       span {
-        width: 28%;
+        width: 26%;
         color: #39f8ff;
       }
     }
@@ -606,8 +606,8 @@ export default {
       border-radius: 1rem;
       margin-bottom: 1rem;
       img {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 3.5rem;
+        height: 3.5rem;
         margin: 0.5rem;
       }
     }

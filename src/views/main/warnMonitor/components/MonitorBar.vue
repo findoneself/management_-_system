@@ -130,7 +130,6 @@ export default {
       //     ...this.option,
       //     series
       //   }
-      console.log(this.id)
       var myChart = this.$echarts.init(document.getElementById(this.id))
       myChart.setOption(this.option)
       window.addEventListener('resize', function () {

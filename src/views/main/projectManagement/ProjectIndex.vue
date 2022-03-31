@@ -83,7 +83,10 @@
                 <div class="zhongjian scale">超期90天未竣工:</div>
                 <div class="scale num">123</div>
               </div>
-              <div class="scale">更多</div>
+              <div
+                class="scale more"
+                @click="morePage('超期90天未竣工')"
+              >更多</div>
             </div>
             <div class="columns">
               <div
@@ -121,7 +124,10 @@
                 <div class="zhongjian scale unkao">本月未考评:</div>
                 <div class="scale num2">123</div>
               </div>
-              <div class="scale">更多</div>
+              <div
+                class="scale more"
+                @click="morePage('本月考评')"
+              >更多</div>
             </div>
             <div class="columns">
               <div
@@ -145,6 +151,11 @@
         </BeautifulCard>
       </div>
     </div>
+    <projectDialog
+      :dialogVisible="dialogVisible"
+      :title="title"
+      @closeDialog='closeDialog'
+    > </projectDialog>
   </BeautifulWrapper>
 </template>
 
@@ -154,7 +165,7 @@ import BeautifulCard from '_com/common/BeautifulCard'
 import ProjectTotalPie from './components/ProjectTotalPie.vue'
 import BusinessSortPie from './components/BusinessSortPie.vue'
 import addMonthChart from './components/addMonthChart.vue'
-
+import projectDialog from './ProjectOverdue.vue'
 export default {
   name: 'ProjectIndex',
   components: {
@@ -162,7 +173,8 @@ export default {
     BeautifulCard,
     ProjectTotalPie,
     BusinessSortPie,
-    addMonthChart
+    addMonthChart,
+    projectDialog
   },
   data () {
     return {
@@ -263,7 +275,20 @@ export default {
         {
           id: '1', jcwd: '开发单位开发单位开发单位开发单位开发单位', jcd: '项目名称', cqt: '1223',
           sgdw: '施工单位施工单位施工单位施工单位'
-        }]
+        }],
+      // 弹窗
+      dialogVisible: false,
+      title: ''
+    }
+  },
+  methods: {
+    morePage (val) {
+      console.log(val)
+      this.dialogVisible = true
+      this.title = val
+    },
+    closeDialog () {
+      this.dialogVisible = false
     }
   }
 }
@@ -390,6 +415,10 @@ export default {
         }
         .scale {
           transform: scale(0.9);
+        }
+        .more {
+          cursor: pointer;
+          z-index: 20;
         }
       }
       .columns {
