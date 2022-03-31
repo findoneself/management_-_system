@@ -6,8 +6,8 @@
     v-model="currentTabs"
   >
     <PatrolEchart v-if="currentTabs === '1'" />
-    <Rectification v-else-if="currentTabs === '2'" />
-    <Partrol v-else-if="currentTabs === '3'" />
+    <Rectification v-else-if="currentTabs === '3'" />
+    <Partrol v-else-if="currentTabs === '2'" />
   </BeautifulWrapper>
 </template>
 

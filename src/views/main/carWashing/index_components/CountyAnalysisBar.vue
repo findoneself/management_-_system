@@ -4,7 +4,7 @@
     <div>
       <div
         id="countyBar"
-        style="width: 98%; height: 11rem"
+        style="width: 98%; height: 14rem"
       ></div>
     </div>
   </div>
@@ -14,35 +14,6 @@ export default {
   data () {
     return {
       option: {
-        // backgroundColor: "#000",
-        // legend: [
-        //   {
-        //     data: ['D', 'Mail Ad'],
-        //     align: 'left',
-        //     right: 0,
-        //     textStyle: {
-        //       color: '#fff',
-        //       fontSize: '10'
-        //     },
-        //     itemWidth: 10,
-        //     itemHeight: 5,
-        //     itemGap: 5
-        //   },
-        //   {
-        //     data: ['Affiliate Ad', 'Video Ad'],
-        //     align: 'left',
-        //     right: 0,
-        //     y: '30',
-        //     textStyle: {
-        //       color: '#fff',
-        //       fontSize: '10'
-        //     },
-        //     itemWidth: 10,
-        //     itemHeight: 5,
-        //     itemGap: 5
-        //   }
-        // ],
-
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -53,7 +24,7 @@ export default {
         grid: {
           left: '20rem',
           right: '10rem',
-          top: '30rem',
+          top: '60rem',
           bottom: '5rem',
           containLabel: true
         },

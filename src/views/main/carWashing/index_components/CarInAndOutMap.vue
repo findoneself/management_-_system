@@ -3,7 +3,7 @@
   <div>
     <div
       id="car_in_out"
-      style="width: 100%; height: 12rem"
+      style="width: 100%; height: 13rem"
     ></div>
   </div>
 </template>
@@ -12,11 +12,41 @@ export default {
   data () {
     return {
       data: [
-        { value: 40, name: '合规车次', color: '#FCFF20' },
-        { value: 22, name: '无证黑车', color: '#FF9920' },
-        { value: 33, name: '文明状态异常', color: '#FF4F01' },
-        { value: 28, name: '道路许可证过期', color: '#FF3D54' },
-        { value: 20, name: '准运证过期', color: '#00FFFF' }
+        {
+          value: 40, name: '合规车次', color: '#FCFF20', itemStyle: {
+            normal: {
+              color: '#FCFF20'
+            }
+          }
+        },
+        {
+          value: 22, name: '无证黑车', color: '#FF9920', itemStyle: {
+            normal: {
+              color: '#FF9920'
+            }
+          }
+        },
+        {
+          value: 33, name: '文明状态异常', color: '#FF4F01', itemStyle: {
+            normal: {
+              color: '#FF4F01'
+            }
+          }
+        },
+        {
+          value: 28, name: '道路许可证过期', color: '#FF3D54', itemStyle: {
+            normal: {
+              color: '#FF3D54'
+            }
+          }
+        },
+        {
+          value: 20, name: '准运证过期', color: '#00FFFF', itemStyle: {
+            normal: {
+              color: '#00FFFF'
+            }
+          }
+        }
       ],
       option: {
         emphasis: {
@@ -67,8 +97,8 @@ export default {
           {
             name: 'Radius Mode',
             type: 'pie',
-            radius: [35, 45],
-            center: ['50%', '48%'],
+            radius: [55, 85],
+            center: ['50%', '50%'],
             // roseType: 'radius',
             itemStyle: {
               // borderRadius: 5

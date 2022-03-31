@@ -1,20 +1,16 @@
 <template>
-  <div
-    :modal='false'
-    class="dialogVisibleCenter"
-  >
-
+  <div class="dialogVisibleCenter">
     <i
       class="el-icon-close"
       @click="closeIcon"
     ></i>
     <div class="title">
-      <span>{{dataForm1.title}}</span>
+      <span>{{dialogCenterData.dataForm1.title}}</span>
     </div>
     <div class="content">
       <div class="data">
         <div
-          v-for="item in dataForm1.data1"
+          v-for="item in   dialogCenterData.dataForm1.data1"
           :key="item.value"
         >
           {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}
@@ -22,18 +18,18 @@
       </div>
       <div class="data">
         <div
-          v-for="item in dataForm1.data2"
+          v-for="item in     dialogCenterData.dataForm1.data2"
           :key="item.value"
         >
           {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}
         </div>
       </div>
       <div class="dataForm2_title">
-        <div>{{dataForm2.title}}</div>
+        <div>{{dialogCenterData.dataForm2.title}}</div>
       </div>
       <div class="data">
         <div
-          v-for="item in dataForm2.data1"
+          v-for="item in dialogCenterData.dataForm2.data1"
           :key="item.value"
         >
           {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}
@@ -41,7 +37,7 @@
       </div>
       <div class="data1">
         <div
-          v-for="item in dataForm2.data2"
+          v-for="item in dialogCenterData.dataForm2.data2"
           :key="item.value"
         >
           {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}
@@ -59,37 +55,17 @@ export default {
     dialogVisibleCenter: {
       typr: Boolean,
       default: false
+    },
+    dialogCenterData: {
+      type: Object,
+      default () {
+        return {}
+      }
     }
   },
   data () {
     return {
-      dataForm1: {
-        title: '项目信息',
-        data1: [{ name: '监督备案号', value: 'AJ32978658658737435(监督一科)' },
-        { name: '项目编码', value: '124235436546546' },
-        { name: '项目名称', value: '天虹精英汇项目一标段1-3,5,9-14#楼，配' },
-        { name: '项目地址', value: '衢宁县城天虹大道东7823647' }],
-        data2: [{ name: '监督备案号', value: 'AJ329786586587335(监督一科)' },
-        { name: '项目编码', value: '12423543654006' },
-        { name: '项目名称', value: '天虹精英汇项目一标段1-3,5,9-14#楼，配2434253' }]
-      },
-      dataForm2: {
-        title: '五方单位信息',
-        data1: [{ name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
-        { name: '项目负责人', value: '124235436546546' },
-        { name: '联系方式', value: '14932746732' },
-        { name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
-        { name: '项目负责人', value: '124235436546546' },
-        { name: '联系方式', value: '14932746732' }, { name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
-        { name: '项目负责人', value: '124235436546546' },
-        { name: '联系方式', value: '14932746732' }, { name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
-        { name: '项目负责人', value: '124235436546546' },
-        { name: '联系方式', value: '14932746732' }],
-        data2: [{ name: '监督备案号', value: 'AJ329786586587335' },
-        { name: '项目编码', value: '1242354' },
-        { name: '项目名称', value: '天虹精英汇5' },
-        { name: '项目编码', value: '12423543' }]
-      }
+
     }
   },
   methods: {

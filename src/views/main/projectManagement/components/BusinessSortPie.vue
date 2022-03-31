@@ -1,7 +1,7 @@
 <template>
   <div
     id="business_sort"
-    style="width: 100%; height: 80%"
+    style="width: 100%; height: 75%"
   ></div>
 </template>
 <script>
@@ -82,7 +82,7 @@ export default {
           {
             name: 'Radius Mode',
             type: 'pie',
-            radius: [40, 60],
+            radius: [45, 65],
             center: ['50%', '50%'],
             // roseType: 'radius',
             itemStyle: {

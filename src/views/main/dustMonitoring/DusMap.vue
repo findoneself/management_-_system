@@ -54,10 +54,6 @@
         cell-height='2rem'
         class="tableList"
       >
-        <div class="order_sj">
-          <div class="up"></div>
-          <div class="down"></div>
-        </div>
       </BeautifulTableList>
 
     </BeautifulCard>
@@ -67,7 +63,6 @@
       @monitoringSpotBack='monitoringSpotBack'
       :monitoringSspotData='monitoringSspotData'
     />
-    <!-- <div @click="changeActivePage">改变</div> -->
     <div class="map">
       <AirQualityMap
         :center='center'

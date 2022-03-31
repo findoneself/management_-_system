@@ -248,4 +248,7 @@ export default {
 .ispage-tablelist {
   height: calc(100% - 54px);
 }
+/deep/.el-link {
+  margin: 0 0.3rem;
+}
 </style>
