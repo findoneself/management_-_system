@@ -62,13 +62,14 @@
           <li
             v-for="(val, bindex) in item.list"
             class="echart-legend-item"
-            @click="echartClick(val, bindex)"
+            @click="echartClick(item, bindex)"
             :class="bindex === item.curIndex ? 'active-legend' : ''"
+            :style="{color: iindex === 3 && bindex === item.curIndex ? item.colors[bindex] : 'inherit'}"
             :key="val.id"
           >
             <i :style="{backgroundColor: item.colors[bindex]}"></i>
             <span class="legend-name">{{ val.name }}</span>
-            <span v-show="iindex !== 3">：{{ val.count }}</span>
+            <span v-show="iindex !== 3">{{ val.count }}</span>
           </li>
         </ul>
       </div>
@@ -421,7 +422,7 @@ export default {
 .echart-legend-item:nth-of-type(even) {
   background: transparent;
 }
-.active-legend {
+.echart-legend-item.active-legend {
   background: #2f71ffce;
 }
 // 无标题的统计图模块

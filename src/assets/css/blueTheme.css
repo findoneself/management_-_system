@@ -507,7 +507,7 @@ div.el-table thead {
 }
 
 .be-ishead-content {
-    height: calc(100% - 46px);
+    height: calc(100% - 52px);
 }
 
 .be-nohead-content {
