@@ -155,14 +155,14 @@
             type="primary"
           >{{ dialogTitle.xmbj }}</el-button>
           <el-select
-            v-model="dataForm.xmbjDate"
+            v-model="dataForm.dayDate"
             clearable
             @change="getXmbjData"
             size="small"
             placeholder="请选择"
           >
             <el-option
-              v-for="item in dictOptions.xmbjList"
+              v-for="item in dictOptions.dayList"
               :key="item.id"
               :label="item.name"
               :value="item.id"
@@ -207,7 +207,7 @@
             placeholder="请选择"
           >
             <el-option
-              v-for="item in dictOptions.xmbjList"
+              v-for="item in dictOptions.dayList"
               :key="item.id"
               :label="item.name"
               :value="item.id"
@@ -264,7 +264,7 @@ export default {
       // 字典数据
       dictOptions: {
         jkdwList: [],
-        xmbjList: []
+        dayList: []
       },
       // 监控点位视频地址
       videoSrc: '',
@@ -301,7 +301,7 @@ export default {
       // 所有选择框参数
       dataForm: {
         jkdw: '',
-        xmbjDate: '',
+        dayDate: '',
         dateList: [],
         pageIndex: 1,
         pageSize: 3,
@@ -381,10 +381,10 @@ export default {
     // 初始化字典数据
     initDict () {
       const dict = this.$store.state.global.dictData
-      if (dict.xmbjDate && dict.xmbjDate.length > 0) {
-        this.dictOptions.xmbjList = dict.xmbjDate
-        this.dataForm.xmbjDate = dict.xmbjDate[0].id
-        this.dataForm.xmbjInfoDate = dict.xmbjDate[0].id
+      if (dict.dayDate && dict.dayDate.length > 0) {
+        this.dictOptions.dayList = dict.dayDate
+        this.dataForm.dayDate = dict.dayDate[0].id
+        this.dataForm.xmbjInfoDate = dict.dayDate[0].id
       }
     },
     // 项目报警页码改变
@@ -530,7 +530,7 @@ export default {
         data: {
           page: this.dataForm.pageIndex,
           pageSize: this.dataForm.pageSize,
-          date: this.dataForm.xmbjDate || ''
+          date: this.dataForm.dayDate || ''
         }
       }).then(res => {
         this.loadings.xmbjLoading = false
@@ -764,6 +764,7 @@ export default {
           data: data || []
         }
       }
+      console.log(option)
       this.xmflOption.myChart.setOption(option)
       // 鼠标移入隐藏点击的高亮---单个元素的移入移出不太友好，最好是对echarts整个图表做移入移出
       this.xmflOption.myChart.on('mouseover', (v) => {
@@ -1074,7 +1075,7 @@ export default {
 /deep/ .be-table-ul {
   height: 100%;
 }
-#xmflEchart[data-v-7e674e2f] {
+#xmflEchart {
   width: 100%;
   height: calc(100% - 110px);
 }

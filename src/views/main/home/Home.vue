@@ -177,7 +177,7 @@
 
 <script>
 import BeautifulCard from '_com/common/BeautifulCard'
-import PatrolMap from './components/patrolMap'
+import PatrolMap from '_vie/common/patrolMap'
 import WarningNum from './components/warningNum'
 import InstallNum from './components/installNmu'
 export default {

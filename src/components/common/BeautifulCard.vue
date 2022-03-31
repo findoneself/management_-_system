@@ -13,7 +13,7 @@
       <span class="card-title-line"></span>
     </div>
     <div
-      class="card-content"
+      :class="isShowHead ? 'card-content' : 'card-content-notitle'"
       :style="{padding: setCardStyle.padding}"
     >
       <slot></slot>
@@ -57,6 +57,7 @@ export default {
       type: String,
       default: ''
     },
+    // 是否显示标题
     isShowHead: {
       type: Boolean,
       default: true
@@ -146,6 +147,10 @@ export default {
 .card-content {
   width: 100%;
   height: calc(100% - 32px);
+}
+.card-content-notitle {
+  width: 100%;
+  height: 100%;
 }
 .triangle-icon {
   position: absolute;
