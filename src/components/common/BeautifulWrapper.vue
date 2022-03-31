@@ -25,8 +25,8 @@
             <li
               v-for="(item, index) in tabsList"
               :style="{zIndex: 10 - index, cursor: 'pointer'}"
-              @click="tabClick(item)"
-              :class="currentTabs.id === item.id ? 'tabmenu-active' : ''"
+              @click="tabsClick(item)"
+              :class="currentTabs === item.id ? 'tabmenu-active' : ''"
               :key="item.id"
             >{{ item.title }}</li>
           </template>
@@ -78,6 +78,8 @@ export default {
         return ['top', 'right', 'bottom', 'left']
       }
     },
+    // v-model的值
+    value: {},
     // 是否显示标题
     isTitle: {
       type: Boolean,
@@ -94,6 +96,12 @@ export default {
       default () {
         return []
       }
+    }
+  },
+  data () {
+    return {
+      // 当前点击的tabs
+      currentTabs: ''
     }
   },
   computed: {
@@ -115,17 +123,31 @@ export default {
       get () {
         return this.$route.meta || false
       }
-    },
-    // 当前点击的tabs
-    currentTabs () {
-      const obj = this.$store.state.global.currentTab
-      return obj.id ? obj : this.tabsList[0]
+    }
+  },
+  watch: {
+    value: {
+      handler (val) {
+        this.setCurrentTabs(val)
+      },
+      immediate: true
+    }
+  },
+  created () {
+    if (!this.currentTabs && this.tabsList.length > 0) {
+      this.currentTabs = this.tabsList[0].id
     }
   },
   methods: {
+    // 设置当前点击项目
+    setCurrentTabs (val) {
+      this.currentTabs = val
+      this.$emit('input', val)
+    },
     // tabs点击
-    tabClick (item) {
-      this.$store.commit('global/setCurrentTab', item)
+    tabsClick (item) {
+      this.setCurrentTabs(item.id)
+      this.$emit('tabsClick', item)
     },
     // 关闭按钮点击回调
     closeClick () {

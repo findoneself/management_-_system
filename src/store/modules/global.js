@@ -8,8 +8,6 @@ export default {
     menuRoutes: [],
     // 用户信息
     userInfo: {},
-    // 当前点击的tab
-    currentTab: {},
     // 所有字典数据
     dictData: {}
   },
@@ -42,14 +40,6 @@ export default {
     // 清空菜单数据
     clearMenuRouteLis (state) {
       state.menuRoutes = []
-    },
-    // 设置当前点击的tab
-    setCurrentTab (state, item) {
-      state.currentTab = item
-    },
-    // 清除当前点击的tab
-    clearCurrentTab (state) {
-      state.currentTab = {}
     },
     // 存储字典数据
     setDictData (state, obj) {

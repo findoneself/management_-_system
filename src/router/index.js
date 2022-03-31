@@ -105,10 +105,7 @@ function getMenuData (to, next) {
       { id: '4-6', key: 6, type: 'menu', title: '准运渣土车', alias: '准运渣土车', parentId: '4', url: '@/carWashing/CarQuasiTransportation' },
       { id: '4-7', key: 7, type: 'menu', title: '合规视频', alias: '合规车次+点击弹窗视频', parentId: '4', url: '@/carWashing/CarVideo' },
       { id: '5', key: 5, type: 'menu', title: 'AI识别', alias: 'AI识别', parentId: '00', url: '@/AIdistinguish/AIdistinguish' },
-      { id: '6', key: 6, type: 'cat', title: '巡查整改', alias: '巡查整改', parentId: '00', catType: 'tabs' },
-      { id: '6-1', key: 1, type: 'menu', title: '统计', alias: '统计', parentId: '6', url: '@/patrolRectification/PatroEcharts' },
-      { id: '6-2', key: 2, type: 'menu', title: '整改', alias: '整改', parentId: '6', url: '@/patrolRectification/Rectification' },
-      { id: '6-3', key: 3, type: 'menu', title: '巡查', alias: '巡查', parentId: '6', url: '@/patrolRectification/Patro' },
+      { id: '6', key: 6, type: 'menu', title: '巡查整改', alias: '巡查整改', parentId: '00', url: '@/patrolRectification/PatrolIndex' },
       { id: '7', key: 7, type: 'menu', title: '项目管理', alias: '项目管理', parentId: '00', url: '@/projectManagement/ProjectIndex', catType: 'sub' },
       { id: '7-1', key: 1, type: 'menu', title: '超期项目', alias: '超过90天未竣工', parentId: '7', url: '@/projectManagement/ProjectOverdue' },
       { id: '8', key: 8, type: 'menu', title: '管理员', alias: '管理员', parentId: '00', url: '@/manageUser/ManageUser' }

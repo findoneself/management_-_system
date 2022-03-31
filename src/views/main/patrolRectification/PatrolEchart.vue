@@ -1,14 +1,11 @@
 <template>
-  <!--巡查统计 -->
+  <!-- 统计 -->
   <div></div>
 </template>
 
 <script>
 export default {
-  name: 'PatroEcharts',
-  data () {
-    return {}
-  }
+  name: 'PatrolEchart'
 }
 </script>
 

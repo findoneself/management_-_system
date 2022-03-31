@@ -1,14 +1,11 @@
 <template>
-  <!--巡查 -->
+  <!-- 巡查 -->
   <div></div>
 </template>
 
 <script>
 export default {
-  name: 'Patro',
-  data () {
-    return {}
-  }
+  name: 'Partrol'
 }
 </script>
 

@@ -1,13 +1,14 @@
 <template>
   <!--扬尘检测首-地图 -->
   <BeautifulWrapper
-    :wraStyle="currentTabs.id === '1' ? { inPadding: '0px' } : {}"
+    :wraStyle="currentTabs === '1' ? { inPadding: '0px' } : {}"
     :tabsList="tabsList"
+    v-model="currentTabs"
   >
-    <DusMap v-if="currentTabs.id === '1'" />
-    <DusSingleEcharts v-else-if="currentTabs.id === '2'" />
-    <DusMultipleEcharts v-else-if="currentTabs.id === '3'" />
-    <DusRankingEcharts v-else-if="currentTabs.id === '4'" />
+    <DusMap v-if="currentTabs === '1'" />
+    <DusSingleEcharts v-else-if="currentTabs === '2'" />
+    <DusMultipleEcharts v-else-if="currentTabs === '3'" />
+    <DusRankingEcharts v-else-if="currentTabs === '4'" />
   </BeautifulWrapper>
 </template>
 
@@ -18,7 +19,7 @@ import DusRankingEcharts from './DusRankingEcharts'
 import DusSingleEcharts from './DusSingleEcharts'
 import DusMap from './DusMap'
 export default {
-  name: 'DustMonitoring',
+  name: 'DustIndex',
   components: {
     BeautifulWrapper,
     DusMultipleEcharts,
@@ -34,24 +35,7 @@ export default {
         { id: '3', title: '多设备统计' },
         { id: '4', title: '排名统计' }
       ],
-      wraStyle: { inPadding: '0px' }
-    }
-  },
-  computed: {
-    // 当前点击的tab
-    currentTabs () {
-      const obj = this.$store.state.global.currentTab
-      return obj.id ? obj : this.tabsList[0]
-    }
-  },
-  watch: {
-    $route: {
-      handler (val) {
-        this.$store.commit('global/setCurrentTab', {})
-        console.log(val.name)
-      },
-      immediate: true,
-      deep: true
+      currentTabs: '1'
     }
   }
 }
