@@ -1,6 +1,7 @@
 <template>
   <!-- 统计 -->
   <div class="echart-wrapper">
+    <!-- 第一个统计图 -->
     <BeautifulCard
       title="网络员统计"
       :isTriangle='false'
@@ -21,6 +22,7 @@
       </div>
       <PatrolMap :data-list="patrolData.patrolList"></PatrolMap>
     </BeautifulCard>
+    <!-- 四个统计图 -->
     <BeautifulCard
       :title="item.title"
       v-for="(item, key, iindex) in echartsList"
@@ -73,6 +75,26 @@
           </li>
         </ul>
       </div>
+    </BeautifulCard>
+    <!-- 视频区域 -->
+    <BeautifulCard
+      title="隐患随手拍"
+      class="echart-bottom echart-video"
+      :cardStyle="{padding: '1.2rem 2.5rem'}"
+      :isTriangle='false'
+    >
+      <ul class="video-ul">
+        <li
+          class="video-item"
+          v-for="item in videoList"
+          :key="item.id"
+        >
+          <video
+            :src="item.src"
+            controls="controls"
+          ></video>
+        </li>
+      </ul>
     </BeautifulCard>
   </div>
 </template>
@@ -151,7 +173,17 @@ export default {
           list: [],
           getData: null
         }
-      }
+      },
+      // 视频列表
+      videoList: [
+        { id: 'gweg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'wgwh', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'greweg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gwhejeg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gwshseg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gwejrjeg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gweeaeg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' }
+      ]
     }
   },
   created () {
@@ -161,6 +193,11 @@ export default {
     this.$nextTick(() => {
       this.initEchart()
     })
+    window.addEventListener('resize', this.watchEchart)
+  },
+  destroyed () {
+    // 销毁监听
+    window.removeEventListener('resize', this.watchEchart)
   },
   methods: {
     // 初始化字典数据
@@ -172,6 +209,14 @@ export default {
           item.formValue = dict.dayDate[0].id
         })
       }
+    },
+    // 监听窗口改变，两个echarts刷新
+    watchEchart () {
+      Object.values(this.echartsList).forEach((item) => {
+        if (item.myChart) {
+          item.myChart.resize()
+        }
+      })
     },
     // 下拉框值改变
     pickerHandel (item, key) {
@@ -223,10 +268,22 @@ export default {
               }
             })
             let option = {
+              title: {
+                text: info.list.reduce((val, pre) => {
+                  return val + pre.count
+                }, 0),
+                left: '45%',
+                top: '45%',
+                textStyle: {
+                  fontWeight: 'bold',
+                  fontSize: this.$utils.fontSize(24),
+                  color: '#fff'
+                }
+              },
               color: info.colors,
               series: {
                 type: 'pie',
-                radius: ['50%', '80%'],
+                radius: ['60%', '80%'],
                 label: { show: false },
                 labelLine: { show: false },
                 emphasis: {
@@ -301,6 +358,9 @@ export default {
 .echart-top {
   height: 60%;
 }
+.echart-bottom {
+  height: 40%;
+}
 .echart-top-first {
   width: 20%;
 }
@@ -311,8 +371,8 @@ export default {
 .echart-notitle {
   width: 27%;
 }
-.echart-bottom {
-  height: 40%;
+.echart-video {
+  width: 73%;
 }
 .echart-content {
   width: 100%;
@@ -445,6 +505,24 @@ export default {
   }
   .active-legend {
     background: transparent;
+  }
+}
+// 视频区域
+.video-ul {
+  display: flex;
+  align-items: stretch;
+  overflow-x: scroll;
+  .video-item {
+    width: 420px;
+    flex-shrink: 0;
+    margin-right: 20px;
+    &:last-of-type {
+      margin-right: 0;
+    }
+    video {
+      height: 100%;
+      width: 100%;
+    }
   }
 }
 </style>

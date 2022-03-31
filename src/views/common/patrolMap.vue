@@ -50,7 +50,6 @@ export default {
             normal: {
               color: colors[index],
               shadowColor: 'red',
-              fontSize: this.$utils.fontSize(16),
               shadowBlur: 0,
               label: {
                 show: false
@@ -74,6 +73,7 @@ export default {
                   padding: [0, 0, 5, 0],
                   show: true,
                   textStyle: {
+                    fontSize: this.$utils.fontSize(14),
                     fontWeight: 'bold'
                   }
                 }

@@ -102,16 +102,16 @@ export default {
 <style scoped>
 .menu-list {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  width: 500px;
 }
 .menu-item {
   position: relative;
-  width: 110px;
+  width: 100px;
   height: 36px;
   line-height: 36px;
   cursor: pointer;
-  margin: 0 7px;
+  margin: 0 8px;
 }
 .menu-value {
   position: relative;

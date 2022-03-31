@@ -1,6 +1,7 @@
 <template>
   <!-- 巡查 -->
-  <div></div>
+  <div class="box">
+  </div>
 </template>
 
 <script>

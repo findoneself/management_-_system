@@ -1,7 +1,11 @@
 <template>
   <div class="menu">
-    <MenuItem :menu-list="menuList.slice(0, 4)" />
     <MenuItem
+      style="justify-content: flex-end;"
+      :menu-list="menuList.slice(0, 4)"
+    />
+    <MenuItem
+      style="justify-content: flex-start;"
       :menu-list="menuList.slice(4)"
       is-scale
     />
@@ -48,7 +52,7 @@ export default {
   display: flex;
   justify-content: space-between;
   position: relative;
-  top: -10px;
+  top: -8px;
   padding: 0 12px;
   z-index: 99;
 }

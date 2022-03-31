@@ -412,17 +412,8 @@ export default {
       this.isXmbjInfo = true
       this.getXmbjInfoData()
     },
-    // 弹窗关闭结束回调
-    onCancel () {
-      console.log('弹窗关闭')
-    },
     // 弹窗按钮点击
     dialogClick (name) {
-      if (name === '报警记录') {
-        console.log(name)
-      } else if (name === '排名统计') {
-        console.log(name)
-      }
       this.$refs.TableDialog.open(name)
     },
     // 获取所有数据

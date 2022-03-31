@@ -217,8 +217,8 @@ Utils.debounce = function (fn, delay) {
 // 获取当前字体大小
 Utils.fontSize = function (res) {
   const width = document.documentElement.clinetWidth || document.body.clientWidth
-  const size = width / 1920
-  return (size * res).toFixed(0) + 'px'
+  const size = Math.floor(width / 1920)
+  return size * res
 }
 /*
 * 获取echart默认的参数配置
