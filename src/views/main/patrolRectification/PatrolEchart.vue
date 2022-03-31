@@ -35,7 +35,7 @@
           clearable
           size="mini"
           placeholder="请选择"
-          @change="pickerHandel(item)"
+          @change="pickerHandel(item, key)"
         >
           <el-option
             v-for="item in dictOptions.dayList"
@@ -173,36 +173,38 @@ export default {
         })
       }
     },
-    getEchartData () {
-
+    // 下拉框值改变
+    pickerHandel (item, key) {
+      item.getData(item, key)
     },
     // 初始化echarts图
-    initEchart (data) {
+    initEchart () {
       Object.entries(this.echartsList).forEach(([key, item]) => {
         if (!item.myChart) {
           item.myChart = this.$echarts.init(document.getElementById(key + '-echart'))
         }
-        item.loading = true
         // 调用接口获取数据
-        item.getData = () => {
+        item.getData = (info, type) => {
+          info.loading = true
+          const params = {
+            date: info.formValue,
+            type: type
+          }
           this.$http({
             url: '/xczg/getEchartData',
-            data: {
-              date: item.formValue,
-              type: key
-            }
+            data: params
           }).then(res => {
             // 如果获取到数据
-            item.loading = false
+            info.loading = false
             if (res.code === 200) {
-              item.list = res.data.list
+              info.list = res.data.list
               console.log(res)
             } else {
               // this.$message.error('获取实时数据失败！')
-              item.list = []
+              info.list = []
             }
           }, () => {
-            item.loading = false
+            info.loading = false
             const list1 = [
               { name: '噪声检查', count: 16 },
               { name: '污染检查', count: 26 },
@@ -212,16 +214,16 @@ export default {
               { name: '施工隐患', count: 16 },
               { name: '污染环境', count: 26 }
             ]
-            item.list = key === 'yhtj' ? list2 : list1
+            info.list = key === 'yhtj' ? list2 : list1
             // 处理echarts的数据
-            const series = item.list.map((item) => {
+            const series = info.list.map((info) => {
               return {
-                value: item.count,
-                name: item.name
+                value: info.count,
+                name: info.name
               }
             })
             let option = {
-              color: item.colors,
+              color: info.colors,
               series: {
                 type: 'pie',
                 radius: ['50%', '80%'],
@@ -234,10 +236,10 @@ export default {
                 data: series
               }
             }
-            item.myChart.setOption(option)
+            info.myChart.setOption(option)
           })
         }
-        item.getData()
+        item.getData(item, key)
         // 鼠标移入隐藏点击的高亮-- - 单个元素的移入移出不太友好，最好是对echarts整个图表做移入移出
         item.myChart.on('mouseover', (v) => {
           if (item.curIndex !== null && v.dataIndex !== item.curIndex) {

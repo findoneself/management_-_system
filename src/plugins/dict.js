@@ -23,8 +23,8 @@ export default [
   { id: 'tsp', name: 'TSP', type: 'paramsType', params: '' },
   { id: 'yy', name: '油烟', type: 'paramsType', params: '' },
   // 项目报警统计排行
-  { id: 'zr', name: '今日', type: 'dayDate', params: '' },
-  { id: 'jz', name: '昨日', type: 'dayDate', params: '' },
+  { id: 'jr', name: '今日', type: 'dayDate', params: '' },
+  { id: 'zr', name: '昨日', type: 'dayDate', params: '' },
   { id: 'bz', name: '本周', type: 'dayDate', params: '' },
   // 类型
   { id: 'ssj', name: '时数据', type: 'type', params: '' },
