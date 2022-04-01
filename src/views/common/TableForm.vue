@@ -49,6 +49,7 @@
           :is-header="isHeader"
           :index-obj="indexObj"
           :oper-obj="operObj"
+          :columns-num="columnsNum"
           :data-list="dataList"
           :columns="columns"
         >
@@ -101,6 +102,11 @@ export default {
     isHeader: {
       type: Boolean,
       default: true
+    },
+    // 表头数量
+    columnsNum: {
+      type: Number,
+      default: 1
     },
     // cell高度，单位为rem
     cellHeight: String,
