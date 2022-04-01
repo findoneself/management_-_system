@@ -700,7 +700,7 @@ export default {
         let allList = []
         let xlist = []
         // 处理成需要的数据结构
-        list.map((item, iindex) => {
+        list.map((item) => {
           if (!xlist.includes(item.date)) xlist.push(item.date)
           const isName = allList.find(t => t.name === item.name)
           if (isName) {

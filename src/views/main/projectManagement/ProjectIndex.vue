@@ -12,7 +12,10 @@
           :isTriangle="false"
         >
           <div class="project_total">
-            <ProjectTotalPie></ProjectTotalPie>
+            <ProjectTotalPie
+              :paramslist='paramslist'
+              :total='projectTotal'
+            />
             <div class="params">
               <div
                 class="item"
@@ -36,7 +39,10 @@
           :isTriangle="false"
         >
           <div class="project_total">
-            <BusinessSortPie></BusinessSortPie>
+            <BusinessSortPie
+              :dataList="businessSortList"
+              :total='businessTotal'
+            />
             <div class="params business">
               <div
                 class="item business"
@@ -194,6 +200,7 @@ export default {
       borderIcon: ['top', 'right', 'bottom', 'left'],
       wraStyle: { inPadding: '0px' },
       // 项目总数模块
+      projectTotal: 131244,
       paramslist: [
         {
           name: '房建',
@@ -202,7 +209,7 @@ export default {
         },
         {
           name: '市政',
-          value: 3434,
+          value: 34,
           color: '#FF4F01'
         },
         {
@@ -217,51 +224,32 @@ export default {
         }
       ],
       // 业务分类模块
+      businessTotal: 1432143,
       businessSortList: [
         {
           name: 'AI识别',
           value: 45,
-          color: '#FCFF20', itemStyle: {
-            normal: {
-              color: '#FCFF20'
-            }
-          }
+          color: '#FCFF20'
         },
         {
           name: ' 水质',
           value: 34,
-          color: '#FF4F01', itemStyle: {
-            normal: {
-              color: '#FF4F01'
-            }
-          }
+          color: '#FF4F01'
         },
         {
           name: ' 噪声',
           value: 21,
-          color: '#FF3D54', itemStyle: {
-            normal: {
-              color: '#FF3D54'
-            }
-          }
+          color: '#FF3D54'
         },
         {
           name: ' 扬尘',
           value: 50,
-          color: ' #00FFFF', itemStyle: {
-            normal: {
-              color: '#00FFFF'
-            }
-          }
+          color: ' #00FFFF'
         },
         {
           name: '智慧工地',
           value: 50,
-          color: ' #FFAE00', itemStyle: {
-            normal: {
-              color: '#FFAE00'
-            }
-          }
+          color: ' #FFAE00'
         }
       ],
       // 每月新增模块

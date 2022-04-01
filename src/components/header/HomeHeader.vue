@@ -48,7 +48,7 @@ export default {
   },
   data () {
     return {
-      systemTitle: '大数据统筹管理系统',
+      systemTitle: '江苏本初一体化管理平台',
       // 默认首页
       home: {},
       userInfo: this.$store.state.global.userInfo

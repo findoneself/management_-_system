@@ -3,7 +3,7 @@ const pxtorem = require('postcss-pxtorem')
 function resolve (dir) {
   return path.join(__dirname, dir)
 }
-const sysTitle = '大数据统筹管理系统'
+const sysTitle = '江苏本初一体化管理平台'
 module.exports = {
   outputDir: 'dist',
   devServer: {

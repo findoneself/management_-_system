@@ -29,7 +29,7 @@ export default {
           // X轴线上标识样式
           axisLabel: {
             color: '#fff',
-            fontSize: '10'
+            fontSize: '14'
           },
           // 底部X轴线 样式
           axisLine: {
@@ -47,7 +47,7 @@ export default {
           name: '数量',
           axisLabel: {
             color: '#fff',
-            fontSize: '10'
+            fontSize: '12'
           },
           // 边框Y轴线样式
           axisLine: {
@@ -84,10 +84,13 @@ export default {
           {
             // data: [20, 50, 70, 35, 35, 47, 260],
             type: 'line',
+            //  折线图线上的原点
+            symbol: 'circle',
+            symbolSize: 10,
             itemStyle: {
               normal: {
                 color: '#23DBFC',
-                // shadowColor: item.color[1],
+                borderColor: '#fff',
                 fontSize: '1rem',
                 shadowBlur: 0,
                 label: {
@@ -96,6 +99,12 @@ export default {
                 labelLine: {
                   show: false
                 }
+              }
+            },
+            // 折线 宽度
+            lineStyle: {
+              normal: {
+                width: 3
               }
             }
           }

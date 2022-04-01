@@ -1,7 +1,7 @@
 <template>
   <!-- 整改 -->
   <TableForm
-    :loading="dataLoading"
+    :loading="false"
     :data-list="dataList"
     :columns="columns"
     :is-table="true"
@@ -37,6 +37,7 @@ export default {
   },
   data () {
     return {
+      projectName: '',
       columns: [
         { name: '分组名称', prop: 'groupName', key: 1 },
         { name: '点位名称', prop: 'projectName', tooltip: true, key: 2 },

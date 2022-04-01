@@ -72,7 +72,7 @@ export default {
           type: 'category',
           axisLabel: {
             color: '#fff',
-            fontSize: '10'
+            fontSize: '14'
           },
           axisLine: {
             lineStyle: {
@@ -88,7 +88,7 @@ export default {
           name: '总数量',
           axisLabel: {
             color: '#fff',
-            fontSize: '10'
+            fontSize: '12'
           },
           axisLine: {
             lineStyle: {
@@ -124,7 +124,7 @@ export default {
           emphasis: {
             focus: 'series'
           },
-          barWidth: 15, // 柱状宽度
+          barWidth: 20, // 柱状宽度
           data: i.data,
           itemStyle: {
             normal: {
