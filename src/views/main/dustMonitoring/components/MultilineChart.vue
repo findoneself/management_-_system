@@ -122,12 +122,12 @@ export default {
           data: i.data,
           type: 'line',
           //  折线图线上的原点
-          symbol: 'emptyCircle',
-          symbolSize: 10,
+          symbol: 'circle',
+          symbolSize: 15,
           itemStyle: {
             normal: {
               color: i.color,
-              // shadowColor: item.color[1],
+              borderColor: '#fff',
               fontSize: '1rem',
               shadowBlur: 0,
               label: {
@@ -141,7 +141,7 @@ export default {
           lineStyle: {
             normal: {
               color: i.color,
-              width: 3
+              width: 5
             }
           }
         })

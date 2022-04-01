@@ -6,6 +6,20 @@
 </template>
 <script>
 export default {
+  props: {
+    paramslist: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    total: {
+      type: Number,
+      default () {
+        return ''
+      }
+    }
+  },
   data () {
     return {
       data: [
@@ -47,6 +61,18 @@ export default {
         }
       ],
       option: {
+        title: {
+          text: this.total,
+          left: '49%',
+          top: '40%',
+          textAlign: 'center',
+          subtext: '项目总数',
+          textStyle: {
+            fontWeight: 'bold',
+            fontSize: 16,
+            color: '#fff'
+          }
+        },
         emphasis: {
           label: { show: true, formatter: '{b}: {c}' },
           labelLine: { show: true },
@@ -94,8 +120,17 @@ export default {
   // 橘黄色//红色//亮蓝//黄色
   methods: {
     getmap () {
+      let data = []
+      this.paramslist.map(i => {
+        data.push({
+          ...i,
+          itemStyle: {
+            color: i.color
+          }
+        })
+      })
       var myChart = this.$echarts.init(document.getElementById('project_total'))
-      this.option.series[0].data = this.data
+      this.option.series[0].data = data
       myChart.setOption(this.option)
       window.addEventListener('resize', function () {
         myChart.resize()
