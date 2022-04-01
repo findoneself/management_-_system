@@ -17,11 +17,6 @@
     --input-bdcolor: #1843ad;
 }
 
-.card-content video {
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
-}
 
 /* ===============滚动条样式=============== */
 /* 谷歌滚动条样式 */
@@ -465,8 +460,31 @@ div.el-table thead {
     height: 100%;
 }
 
+.be-table-li {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
 .be-table-header {
     overflow: scroll;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.be-table-list .cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    color: var(--color-text);
+}
+
+.be-table-list .be-table-index.cell,
+.be-table-list .be-table-oper.cell {
+    flex: none;
 }
 
 .be-table-header .cell {
@@ -474,6 +492,34 @@ div.el-table thead {
     align-items: center;
 }
 
+/* 减去的是表头高度 */
+.be-ishead-content {
+    height: calc(100% - 52px);
+}
+
+.be-nohead-content {
+    height: inherit;
+}
+
+.be-table-content {
+    overflow: scroll;
+    height: 100%;
+    display: flex;
+    align-content: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.be-table-header .cell {
+    height: 46px;
+    color: #00ffff;
+}
+
+.be-list-item .cell {
+    min-height: 46px;
+}
+
+/* 排序按钮 */
 .sort-icon {
     margin-left: 2px;
 }
@@ -494,55 +540,21 @@ div.el-table thead {
     margin-bottom: -6px;
 }
 
-.be-table-li {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-}
-
-/* 减去的是表头高度 */
-.be-table-content {
-    overflow: scroll;
-    height: 100%
-}
-
-.be-ishead-content {
-    height: calc(100% - 52px);
-}
-
-.be-nohead-content {
-    height: inherit;
-}
-
-.be-table--stripe li.be-table-item:nth-of-type(odd) {
+/* 统一设置列表宽度及其背景 */
+.be-list--bgcolor {
     background-color: #0b1771;
 }
 
-.be-table-list li.be-table-item.be-tableli--active {
+li.be-list--active {
     background-color: #1324a3;
 }
 
-.be-table-list .cell {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 10px;
-    color: inherit;
+.be-item--1 {
+    width: 100%;
 }
 
-.be-table-list .be-table-index.cell,
-.be-table-list .be-table-oper.cell {
-    flex: none;
-}
-
-.be-table-header .cell {
-    height: 46px;
-    color: #00ffff;
-}
-
-.be-table-item .cell {
-    min-height: 46px;
+.be-item--2 {
+    width: calc(50% - 10px);
 }
 
 /* ===============首页样式=============== */
@@ -552,4 +564,41 @@ div.el-table thead {
 
 .tform-contnent {
     height: calc(100% - 178px);
+}
+
+/* ===============视频插件=============== */
+
+.card-content video {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+video.video-js .vjs-tech {
+    position: unset;
+    width: auto;
+    height: 100%;
+}
+
+div.video-js.vjs-fluid,
+div.video-js.vjs-16-9,
+div.video-js.vjs-4-3 {
+    height: 100%;
+    padding-top: 0;
+    overflow: hidden;
+}
+
+div.video-js .vjs-big-play-button {
+    border-radius: 50%;
+    border-width: 2px;
+    width: 48px;
+    height: 48px;
+    left: 50%;
+    top: 50%;
+    margin: -24px 0 0 -24px;
+}
+
+div.vjs-poster {
+    height: 101%;
+    width: 101%;
 }

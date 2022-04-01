@@ -3,49 +3,54 @@
   <div class="be-table-list">
     <div
       class="be-table-ul"
-      :class="stripe && 'be-table--stripe'"
+      v-if="columnsNum <= 3 && columnsNum > 0"
     >
-      <div
-        class="be-table-li be-table-header"
+      <ul
+        class="be-table-header"
         v-if="isHeader"
       >
-        <!-- 序号表头列 -->
-        <div
-          v-if="tableList.length > 0 && columns.length > 0 && tableIndex.isIndex"
-          :style="cellHeight ? {width: tableIndex.width, height: cellHeight} : {width: tableIndex.width}"
-          class="be-table-index cell"
-        >序号</div>
-        <!-- 所有表头列 -->
-        <div
-          class="cell"
-          v-for="item in tabColumns"
-          :style="cellHeight ? {height: cellHeight, width: item.width, flex: item.width ? 'none' : 1} : {width: item.width, flex: item.width ? 'none' : 1}"
-          :key="item.prop"
+        <li
+          class="be-table-li be-head-item"
+          :class="'be-item--' + columnsNum"
+          v-for="headindex in columnsNum"
+          :key="headindex"
         >
-          {{ item.name|| '' }}
-          <span
-            v-if="item.isSort"
-            class="sort-icon"
+          <!-- 序号表头列 -->
+          <div
+            v-if="tableList.length > 0 && columns.length > 0 && tableIndex.isIndex"
+            :style="cellHeight ? {width: tableIndex.width, height: cellHeight} : {width: tableIndex.width}"
+            class="be-table-index cell"
+          >序号</div>
+          <!-- 所有表头列 -->
+          <div
+            class="cell"
+            v-for="item in tabColumns"
+            :style="cellHeight ? {height: cellHeight, width: item.width, flex: item.width ? 'none' : 1} : {width: item.width, flex: item.width ? 'none' : 1}"
+            :key="item.prop"
           >
-            <i
-              class="el-icon-caret-top"
-              :class="curSort.prop === item.prop && curSort.order === 'asc' ? 'sort-icon-acitve' : ''"
-              @click="sortClick(item.prop, 'asc')"
-            ></i><i
-              class="el-icon-caret-bottom"
-              :class="curSort.prop === item.prop && curSort.order === 'desc' ? 'sort-icon-acitve' : ''"
-              @click="sortClick(item.prop, 'desc')"
-            ></i></span>
-        </div>
-        <!-- 操作列 -->
-        <div
-          class="
-              be-table-oper
-              cell"
-          :style="cellHeight ? {width: tableOper.width, height: cellHeight} : {width: tableOper.width}"
-          v-if="tableList.length > 0 && columns.length > 0 && tableOper.isOperation"
-        >{{ tableOper.headName }}</div>
-      </div>
+            {{ item.name|| '' }}
+            <span
+              v-if="item.isSort"
+              class="sort-icon"
+            >
+              <i
+                class="el-icon-caret-top"
+                :class="curSort.prop === item.prop && curSort.order === 'asc' ? 'sort-icon-acitve' : ''"
+                @click="sortClick(item.prop, 'asc')"
+              ></i><i
+                class="el-icon-caret-bottom"
+                :class="curSort.prop === item.prop && curSort.order === 'desc' ? 'sort-icon-acitve' : ''"
+                @click="sortClick(item.prop, 'desc')"
+              ></i></span>
+          </div>
+          <!-- 操作列 -->
+          <div
+            class="be-table-oper cell"
+            :style="cellHeight ? {width: tableOper.width, height: cellHeight} : {width: tableOper.width}"
+            v-if="tableList.length > 0 && columns.length > 0 && tableOper.isOperation"
+          >{{ tableOper.headName }}</div>
+        </li>
+      </ul>
       <div
         :class="isHeader ? 'be-ishead-content' : 'be-nohead-content'"
         v-loading="loading"
@@ -54,9 +59,9 @@
       >
         <ul class="be-table-content">
           <li
-            class="be-table-li be-table-item"
+            class="be-table-li be-list-item"
             v-for="(item, iindex) in tableList"
-            :class="highlightCurrow && curRowIndex === iindex ? 'be-tableli--active' : ''"
+            :class="[{'be-list--active': highlightCurrow && curRowIndex === iindex}, 'be-item--' + columnsNum, {'be-list--bgcolor': stripe && ((columnsNum === 1 && iindex % 2 === 0) || (columnsNum === 2 && (iindex % 4 === 0 || iindex % 4 === 1)) || (columnsNum === 3 && (iindex % 6 === 0 || iindex % 6 === 1 || iindex % 6 === 2)))}]"
             @click="rowClick(item, iindex)"
             :key="item.id"
           >
@@ -124,6 +129,14 @@ export default {
     loadingIcon: {
       type: String,
       default: 'el-icon-loading'
+    },
+    // 表头数量
+    columnsNum: {
+      type: Number,
+      default: 1,
+      validator: function (val) {
+        return val <= 3 && val > 0
+      }
     },
     // 是否斑马纹
     stripe: {

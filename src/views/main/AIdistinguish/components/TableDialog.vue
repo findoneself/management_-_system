@@ -309,7 +309,7 @@ export default {
     onCancel () {
       this.refreshClick()
       this.dataList = []
-      this.$emit('onCancel')
+      // this.$emit('onCancel')
     },
     // 图片点击
     imgClick (item, e) {

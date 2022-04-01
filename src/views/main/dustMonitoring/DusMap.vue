@@ -229,7 +229,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.card-content .tableList .be-table-header {
+/deep/.card-content .tableList .be-head-item {
   color: red;
   position: relative;
 }

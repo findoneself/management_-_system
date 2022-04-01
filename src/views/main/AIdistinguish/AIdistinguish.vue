@@ -236,10 +236,7 @@
         </el-pagination>
       </BeautifulCard>
     </div>
-    <TableDialog
-      ref="TableDialog"
-      @onCancel="onCancel"
-    />
+    <TableDialog ref="TableDialog" />
     <BeImageFixed ref="imageRef" />
   </BeautifulWrapper>
 </template>
@@ -703,7 +700,7 @@ export default {
         let allList = []
         let xlist = []
         // 处理成需要的数据结构
-        list.map((item) => {
+        list.map((item, iindex) => {
           if (!xlist.includes(item.date)) xlist.push(item.date)
           const isName = allList.find(t => t.name === item.name)
           if (isName) {
@@ -717,13 +714,14 @@ export default {
               name: item.name,
               type: 'line',
               smooth: false,
+              symbol: 'circle',
+              symbolSize: 12,
               itemStyle: {
                 normal: {
-                  borderWidth: 2
+                  borderWidth: 2,
+                  borderColor: '#fff'
                 }
               },
-              symbol: 'emptyCircle',
-              symbolSize: 14,
               data: [item.count]
             })
           }

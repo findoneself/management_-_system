@@ -193,9 +193,6 @@ export default {
 .el-input {
   width: 20rem;
 }
-/deep/.be-table-item .cell {
-  color: #fff;
-}
 /deep/.be-ishead-content {
   // height: 0;
 }

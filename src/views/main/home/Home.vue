@@ -40,6 +40,7 @@
             <span>项目总数</span>
             <span></span>
           </div>
+
         </div>
         <div class="images">
           <img
@@ -394,6 +395,9 @@ export default {
   // --------
   .home_top_center {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     .totalnum {
       position: relative;
       top: -1.5rem;
@@ -490,6 +494,7 @@ export default {
       display: flex;
       justify-content: space-evenly;
       padding: 0 2.5rem;
+      margin-top: 10px;
       .total_y {
         width: 14.56rem;
         position: absolute;
