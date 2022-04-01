@@ -89,10 +89,11 @@
           v-for="item in videoList"
           :key="item.id"
         >
-          <video
-            :src="item.src"
-            controls="controls"
-          ></video>
+          <BeVideo :src="item.src" />
+          <div class="video-title">
+            <span>{{ item.datetime }}</span>
+            <span>{{ item.title }}</span>
+          </div>
         </li>
       </ul>
     </BeautifulCard>
@@ -102,11 +103,13 @@
 <script>
 import BeautifulCard from '_com/common/BeautifulCard'
 import PatrolMap from '_vie/common/patrolMap'
+import BeVideo from '_com/common/BeVideo'
 export default {
   name: 'PatrolEchart',
   components: {
     BeautifulCard,
-    PatrolMap
+    PatrolMap,
+    BeVideo
   },
   data () {
     return {
@@ -176,13 +179,13 @@ export default {
       },
       // 视频列表
       videoList: [
-        { id: 'gweg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
-        { id: 'wgwh', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
-        { id: 'greweg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
-        { id: 'gwhejeg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
-        { id: 'gwshseg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
-        { id: 'gwejrjeg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
-        { id: 'gweeaeg', title: '测试视频', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' }
+        { id: 'gweg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'wgwh', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'greweg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gwhejeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gwshseg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gwejrjeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gweeaeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' }
       ]
     }
   },
@@ -272,10 +275,11 @@ export default {
                 text: info.list.reduce((val, pre) => {
                   return val + pre.count
                 }, 0),
-                left: '45%',
-                top: '45%',
+                left: 'center',
+                top: 'center',
                 textStyle: {
                   fontWeight: 'bold',
+                  fontFamily: 'DS-Digital',
                   fontSize: this.$utils.fontSize(24),
                   color: '#fff'
                 }
@@ -283,7 +287,7 @@ export default {
               color: info.colors,
               series: {
                 type: 'pie',
-                radius: ['60%', '80%'],
+                radius: ['55%', '80%'],
                 label: { show: false },
                 labelLine: { show: false },
                 emphasis: {
@@ -512,17 +516,31 @@ export default {
   display: flex;
   align-items: stretch;
   overflow-x: scroll;
+  width: 100%;
+  height: 100%;
   .video-item {
-    width: 420px;
     flex-shrink: 0;
     margin-right: 20px;
+    border: 1px solid #0e5dfb;
+    background: #2045ae;
+    box-shadow: inset -0.0625rem -0.0625rem 30px #305cb3,
+      inset 0.0625rem 0.0625rem 30px #2563e3;
     &:last-of-type {
       margin-right: 0;
     }
-    video {
-      height: 100%;
+    .video-player {
+      height: calc(100% - 44px);
       width: 100%;
     }
+  }
+  .video-title {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 14px;
   }
 }
 </style>

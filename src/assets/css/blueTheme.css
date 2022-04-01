@@ -557,6 +557,10 @@ li.be-list--active {
     width: calc(50% - 10px);
 }
 
+.be-item--3 {
+    width: calc(33.33% - 10px);
+}
+
 /* ===============首页样式=============== */
 .home-container {
     --high-color: #4ecaeb;
@@ -574,7 +578,7 @@ li.be-list--active {
     object-fit: fill;
 }
 
-video.video-js .vjs-tech {
+.video-player .video-js .vjs-tech {
     position: unset;
     width: auto;
     height: 100%;
@@ -601,4 +605,5 @@ div.video-js .vjs-big-play-button {
 div.vjs-poster {
     height: 101%;
     width: 101%;
+    background-size: 100%;
 }

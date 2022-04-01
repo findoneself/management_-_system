@@ -7,6 +7,9 @@ import format from './libs/format'
 import http from './network'
 import echarts from 'echarts'
 import BaiduMap from 'vue-baidu-map'
+import VideoPlayer from 'vue-video-player'
+import 'video.js/dist/video-js.css'
+Vue.use(VideoPlayer)
 Vue.use(BaiduMap, {
   ak: 'y5vpGn7gL7QdbNBrc6GEbizGuaQezXiy'
 })
