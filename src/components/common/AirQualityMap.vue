@@ -7,13 +7,14 @@
       style="width:100%;height:100%"
       :center="center"
       :zoom="map.zoom"
+      ak="y5vpGn7gL7QdbNBrc6GEbizGuaQezXiy"
       @ready="handler"
     >
     </baidu-map>
   </div>
 </template>
 <script>
-
+import BaiduMap from 'vue-baidu-map/components/map/Map'
 export default {
   data () {
     return {
@@ -23,6 +24,9 @@ export default {
         dragging: true
       }
     }
+  },
+  components: {
+    BaiduMap
   },
   props: {
     // 中心坐标

@@ -9,8 +9,12 @@
 </template>
 
 <script>
+import VideoPlayer from 'vue-video-player/src/player'
 export default {
   name: 'BeVideo',
+  components: {
+    VideoPlayer
+  },
   props: {
     // 自定义配置参数
     options: {
