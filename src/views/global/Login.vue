@@ -95,8 +95,8 @@ export default {
         url: '/login',
         methods: 'post',
         data: {
-          username: 'admin',
-          password: '1'
+          username: '18994585055',
+          password: 'admin123'
         }
       }).then(res => {
         const userId = res.id || '1'

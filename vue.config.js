@@ -84,18 +84,18 @@ module.exports = {
   },
   devServer: {
     open: true, // 设置自动打开
-    port: 8081 // 设置端口
-    // proxy: {
-    //   // 设置代理
-    //   '/axios': {
-    //     target: 'http://101.15.22.98',
-    //     changeOrigin: true,
-    //     // 如果是http接口，需要配置该参数
-    //     secure: false,
-    //     pathRewrite: {
-    //       '^/axios': ''
-    //     }
-    //   }
-    // }
+    port: 8081, // 设置端口
+    proxy: {
+      // 设置代理
+      '/api': {
+        target: 'http://8.142.178.139:8080/integration',
+        changeOrigin: true,
+        // 如果是http接口，需要配置该参数
+        secure: false,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
   }
 }
