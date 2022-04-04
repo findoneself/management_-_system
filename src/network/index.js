@@ -1,15 +1,15 @@
+import VueCookie from 'vue-cookie'
 import axios from 'axios'
 import NProgress from 'nprogress'
 NProgress.configure({ showSpinner: false })
 import router from '../router'
-const debug = process.env.NODE_ENV !== 'production'
+// const debug = process.env.NODE_ENV !== 'production'
 const http = axios.create({
   timeout: 1000 * 5,
-  baseURL: debug ? 'api' : 'http://8.142.178.139:8080/integration/',
+  baseURL: 'api',
   withCredentials: false,
   headers: {
-    'Content-Type': 'application/json; charset=utf-8',
-    'token':'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX3R5cGUiOiJHUklETUVNQkVSIiwidXNlcl9pZCI6MSwidXNlcl9rZXkiOiI3YzIzN2YyYi1hNTM4LTRiYTgtOGUyMC00YmNhYTJjMzg5ZGYiLCJ1c2VybmFtZSI6IjE4OTk0NTg1MDU1In0.Gy0JndgheEyGsYdovwOWgS7mzzK_TplRNcpQ5Qy7ZK0zis-pSIeygvNJcUNHMZ9Arq5RVvd5F8owPpPkfRJIWA'
+    'Content-Type': 'application/json; charset=utf-8'
   }
 })
 // 请求拦截
@@ -17,24 +17,21 @@ http.interceptors.request.use(config => {
   if (config.responseType && config.toLowerCase().indexOf('blob') > -1) {
     config.timeout = 10 * 60 * 1000
   }
-  // 设置Authorization字段为token指令
-  // config.headers.Authorization = window.Vue.$cookie.get('token') || ''
-  // 展示进度条，NProgress.start()
+  config.headers.token = VueCookie.get('token') || 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX3R5cGUiOiJHUklETUVNQkVSIiwidXNlcl9pZCI6MSwidXNlcl9rZXkiOiI2OGU2MzU2My00ZTE4LTQyNmMtYTI2OS0wZWQxNTMxZmNlN2IiLCJ1c2VybmFtZSI6IjE4OTk0NTg1MDU1In0.DUfWyBZIFS0z5XJnbpizBks190jqaY6L-l2UgCX1uj8DiFj_YRjti7hEg7svN5XBMaKSgj5sGHCZWF5x7sC3tg'
   NProgress.start()
   return config
 }, err => {
   return Promise.reject(err)
-}
-)
+})
 // 响应拦截
 http.interceptors.response.use(response => {
   // 隐藏进度条，NProgress.done()
   NProgress.done()
-  if (response.data && response.data.code === 401) { // 401, token失效
-    // 此处应该清除登录信息
-    // clearLoginInfo()
-    router.push({ name: 'login' })
-  }
+  // if (response.data && response.data.code === 401) { // 401, token失效
+  //   // 此处应该清除登录信息
+  //   // clearLoginInfo()
+  //   router.push({ name: 'login' })
+  // }
   return response
 }, error => {
   NProgress.done()
