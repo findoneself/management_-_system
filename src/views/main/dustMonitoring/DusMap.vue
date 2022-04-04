@@ -196,10 +196,14 @@ export default {
       // 地图右下角的switch 和相关data
       switch_value1: '',
       switch_value2: '',
-      mapNumList: [0, 35, 75, 115, 150, 250, 500]
+      mapNumList: [0, 35, 75, 115, 150, 250, 500],
+      api:{
+        areaApi:'area/tree'
+      }
     }
   },
   created () {
+    this.getArea()
     // let router =
     // console.log(this.$route.path)
   },
@@ -223,6 +227,13 @@ export default {
       } else {
         // 喷淋switxh
       }
+    },
+    getArea (){
+       this.$http({
+        url: this.api.areaApi
+      }).then(res => {
+        console.log(res)
+      })
     }
   }
 }

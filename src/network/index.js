@@ -2,12 +2,14 @@ import axios from 'axios'
 import NProgress from 'nprogress'
 NProgress.configure({ showSpinner: false })
 import router from '../router'
+const debug = process.env.NODE_ENV !== 'production'
 const http = axios.create({
   timeout: 1000 * 5,
-  baseURL: 'http://192.168.8.88:8081',
-  withCredentials: true,
+  baseURL: debug ? 'api' : 'http://8.142.178.139:8080/integration/',
+  withCredentials: false,
   headers: {
-    'Content-Type': 'application/json; charset=utf-8'
+    'Content-Type': 'application/json; charset=utf-8',
+    'token':'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX3R5cGUiOiJHUklETUVNQkVSIiwidXNlcl9pZCI6MSwidXNlcl9rZXkiOiI3YzIzN2YyYi1hNTM4LTRiYTgtOGUyMC00YmNhYTJjMzg5ZGYiLCJ1c2VybmFtZSI6IjE4OTk0NTg1MDU1In0.Gy0JndgheEyGsYdovwOWgS7mzzK_TplRNcpQ5Qy7ZK0zis-pSIeygvNJcUNHMZ9Arq5RVvd5F8owPpPkfRJIWA'
   }
 })
 // 请求拦截
