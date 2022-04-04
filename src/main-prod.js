@@ -7,6 +7,7 @@ import Utils from './libs/utils'
 import format from './libs/format'
 import http from './network'
 import echarts from 'echarts'
+import VueCookie from 'vue-cookie'
 import './libs/pxtoRem'
 Vue.prototype._cloneDeep = cloneDeep
 Vue.config.productionTip = false
@@ -14,6 +15,7 @@ Vue.prototype.$utils = Utils
 Vue.prototype.$echarts = echarts
 Vue.prototype.$format = format
 Vue.prototype.$http = http
+Vue.use(VueCookie)
 new Vue({
   router,
   store,
