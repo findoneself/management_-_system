@@ -277,7 +277,7 @@ export default {
       // 所有表头
       columns: {
         sssjColumns: [
-          { name: '位置', prop: 'address', key: 1 },
+          { name: '位置', prop: 'address', key: 1, tooltip: 12 },
           { name: '日期', prop: 'date', key: 2 }
         ],
         xmbjColumns: [
@@ -430,7 +430,7 @@ export default {
         this.loadings.sssjLoading = false
         this.$message.error('获取实时数据失败！')
         this.dataList.sssjList = [
-          { id: '1212', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+          { id: '1212', address: '和平路南阳花园西侧1号门和平路南阳花园西侧1号门和平路南阳花园西侧1号门', date: '2022-11-12' },
           { id: '165', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
           { id: '1215542', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
           { id: '124', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },

@@ -571,6 +571,55 @@ li.be-list--active {
     margin-right: 0;
 }
 
+/* ===============tooltip=============== */
+.el-tooltip__popper.is-light {
+    --tooltip-bdcolor: #0e5dfb;
+    --tooltip-bgcolor: #2a68e4
+}
+
+.list-tooltip {
+    width: 20rem;
+}
+
+div.el-tooltip__popper.is-light {
+    background: var(--tooltip-bgcolor);
+    border: 1px solid var(--tooltip-bdcolor);
+    color: var(--color-text);
+}
+
+
+div.el-tooltip__popper.is-light[x-placement^="top"] .popper__arrow {
+    border-top-color: var(--tooltip-bdcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="bottom"] .popper__arrow {
+    border-bottom-color: var(--tooltip-bdcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="left"] .popper__arrow {
+    border-left-color: var(--tooltip-bdcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="right"] .popper__arrow {
+    border-right-color: var(--tooltip-bdcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="top"] .popper__arrow::after {
+    border-top-color: var(--tooltip-bgcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="bottom"] .popper__arrow::after {
+    border-bottom-color: var(--tooltip-bgcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="left"] .popper__arrow::after {
+    border-left-color: var(--tooltip-bgcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="right"] .popper__arrow::after {
+    border-right-color: var(--tooltip-bgcolor);
+}
+
 /* ===============首页样式=============== */
 .home-container {
     --high-color: #4ecaeb;
