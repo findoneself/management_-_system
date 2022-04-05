@@ -83,6 +83,7 @@
                 v-if="value.tooltip && value.tooltip > 0 && item[value.prop] && item[value.prop].length > value.tooltip"
                 :content="item[value.prop]"
                 placement="top"
+                :enterable="false"
                 popper-class="list-tooltip"
                 effect="light"
               ><span>{{ item[value.prop].slice(0, value.tooltip) }}…</span></el-tooltip>
