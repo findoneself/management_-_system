@@ -143,7 +143,11 @@ export default {
       cardStyle: { padding: '0px' },
       // 表格表头
       columns: [
+<<<<<<< HEAD
         { name: '监测点', prop: 'name', key: 1},
+=======
+        { name: '监测点', prop: 'name', key: 1, tooltip: 9 },
+>>>>>>> d4f54b878222d0b31584fb5891bc6b88f2dc7cd4
         { name: 'PM2.5', prop: 'value', key: 2, isSort: true }
       ],
       // 检测源 表格数据
@@ -164,6 +168,14 @@ export default {
       monitoringSspotData: {
         title: '云-徐州传染病医院',
         pieData: {
+<<<<<<< HEAD
+=======
+          //         name: "PM2.5"
+          // prop: "a34004"
+          // title: "睢-铸本混凝土1号点"
+          // : "μg/m³"
+          // value: null
+>>>>>>> d4f54b878222d0b31584fb5891bc6b88f2dc7cd4
           title: '监测点数据',
           value: 80,
           name: 'pm2.5',
@@ -193,12 +205,23 @@ export default {
       { name: '中度', color: '#FF0200', section: '116-150' },
       { name: '重度', color: '#990099', section: '151-250' },
       { name: '严重', color: '#990000', section: '251-500' }],
+<<<<<<< HEAD
       center: {lng: 116.413315, lat: 39.927636},
+=======
+      center: { lng: 58.4711515, lat: 17.386449 },
+>>>>>>> d4f54b878222d0b31584fb5891bc6b88f2dc7cd4
       // 地图右下角的switch 和相关data
       switch_value1: '',
       switch_value2: '',
       mapNumList: [0, 35, 75, 115, 150, 250, 500],
+<<<<<<< HEAD
       api:{}
+=======
+      api: {
+        areaApi: 'area/tree',
+        monitoringSourceApi: 'dustMonitoringSource/list'
+      }
+>>>>>>> d4f54b878222d0b31584fb5891bc6b88f2dc7cd4
     }
   },
   created () {
@@ -225,7 +248,7 @@ export default {
     },
     markHandle (e) {
       console.log(e.point.lng)
-      let item = this.dataList.find(i => i.mapLngLat.lng===e.point.lng && i.mapLngLat.lag===e.point.lag)
+      let item = this.dataList.find(i => i.mapLngLat.lng === e.point.lng && i.mapLngLat.lag === e.point.lag)
       this.monitoringSspotData = item.monitoringSspotData
       console.log(item)
       this.activePage = 1
@@ -238,47 +261,47 @@ export default {
       }
     },
     // 行政区域
-    getArea (){
-       this.$http({
+    getArea () {
+      this.$http({
         url: this.api.areaApi
       }).then(res => {
         // console.log(res)
-        const { data, status} = res
-        if(status===200){
+        const { data, status } = res
+        if (status === 200) {
           this.dictOptions.areaList = data.data || []
           sessionStorage.setItem('areaList', JSON.stringify(data.data))
           this.dataForm.areaId = data.data[0].id
           this.getDataList()
-        }else{
+        } else {
           this.$message.error('获取行政数据错误')
         }
       })
     },
-    getDataList (){
+    getDataList () {
       this.$http({
         url: this.api.monitoringSourceApi,
-        method:'post',
-        data:this.dataForm
+        method: 'post',
+        data: this.dataForm
       }).then(res => {
         //  console.log(res)
         const { data, status } = res
-        if(status===200){
-          const {center, list} = data.data
-            // console.log(center)
+        if (status === 200) {
+          const { center, list } = data.data
+          // console.log(center)
           this.center = center
           this.dataList = list
-          let coordinateList =[]
+          let coordinateList = []
           list.map(i => {
-            coordinateList.push({...i.mapLngLat, value:i.value, status:i.status})
+            coordinateList.push({ ...i.mapLngLat, value: i.value, status: i.status })
           })
           this.coordinateList = coordinateList
-        }else{
+        } else {
           this.$message.error('获取数据错误')
         }
       })
 
     },
-    areaChange (){
+    areaChange () {
       this.getDataList()
     }
   }
