@@ -4,43 +4,51 @@
       <!-- 头像区域 -->
       <div class="avatar-box">
         <img
-          src="~_ats/img/login-logo.png"
+          src="~_ats/img/form.jpg"
           alt=""
         />
       </div>
       <!-- 登录表单区域 -->
-      <el-form
+      <div class="login-form">
+        <div class="title">本初一体化平台</div>
+        <el-form
         ref="loginForm"
         :model="loginForm"
         :rules="rules"
-        class="login-form demo-ruleForm"
+        class="demo-ruleForm"
       >
         <el-form-item prop="username">
           <el-input
             placeholder="请输入用户名"
-            prefix-icon="iconfont iconuser"
+            prefix-icon="el-icon-user"
             v-model="loginForm.username"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input
             placeholder="请输入密码"
-            prefix-icon="iconfont icon3702mima"
+            prefix-icon="el-icon-unlock"
             v-model="loginForm.password"
             type="password"
           ></el-input>
+        </el-form-item>
+        <el-form-item prop="yzm" class="yam_box">
+          <el-input
+            placeholder="请输入验证码"
+            prefix-icon="el-icon-unlock"
+            v-model="loginForm.yzm"
+            type="yzm"
+          ></el-input>
+          <img class="yzm_img" src="../../assets/img/book.png" alt="">
         </el-form-item>
         <el-form-item class="login-button">
           <el-button
             type="primary"
             @click="loginClick"
           >登录</el-button>
-          <el-button
-            type="info"
-            @click="resetForm"
-          >重置</el-button>
         </el-form-item>
       </el-form>
+      </div>
     </div>
   </div>
 </template>
@@ -55,7 +63,8 @@ export default {
       // 登录表单数据绑定对象
       loginForm: {
         username: 'admin',
-        password: '123456'
+        password: '123456',
+        yzm:''
       },
       // 表单的验证规则
       rules: {
@@ -82,6 +91,11 @@ export default {
             pattern: /^(\w){6,15}$/,
             message: '密码由6-15个字母、数字、下划线组成',
             trigger: 'blur'
+          }
+        ],
+        yzm: [
+          {
+            required: false
           }
         ]
       }
@@ -136,41 +150,76 @@ export default {
   display: grid;
   place-items: center;
   height: 100%;
-  background-color: #2b4b6b;
+  background:#eee url('../../assets/img/back.jpg') no-repeat center top;
+  background-size: 100% 100%;
 }
 .login-box {
   position: relative;
-  width: 450px;
-  height: 300px;
+  width: 60%;
+  height: 60%;
   border-radius: 3px;
   background-color: #fff;
+  display: flex;
 }
 .avatar-box {
-  position: absolute;
-  left: 50%;
-  width: 130px;
-  height: 130px;
-  transform: translate(-50%, -50%);
-  padding: 10px;
+  width: 60%;
+  height: 100%;
   border-radius: 50%;
-  border: 1px solid #eee;
-  box-shadow: 0 0 10px #ddd;
   background-color: inherit;
   img {
     display: block;
     width: 100%;
-    border-radius: 50%;
+    height: 100%;
     background-color: #eee;
   }
 }
 .login-form {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+  width: 40%;
   padding: 0 20px;
+  .title{
+    height: 30%;
+    font-size:2.5rem;
+    line-height: 200px;
+    color: #2B9AFC;
+    font-weight: 600;
+    text-align: center;
+  }
+  .el-form{
+    width: 70%;
+    margin: auto;
+  }
+}
+/deep/.el-input__icon{
+    font-size: 25px;
+    margin-right: 10px;
+  }
+  /deep/.el-form-item__content{
+    width:100%;
+    height: 50px;
+    display: flex;
+  }
+  /deep/button.el-button{
+    background: #2B9AFC;
+    border-radius: 5px;
+    font-size: 20px;
+    width: 100%;
+    // margin: 15px 0;
+  }
+/deep/.el-input .el-input__inner, .el-date-editor.el-input__inner, div.el-select-dropdown, div.el-picker-panel, div.el-picker-panel [slot=sidebar], div.el-picker-panel__sidebar{
+    background: #fff;
+    box-shadow: none;
+    border-color:#EEEEEE;
+    color:#9F9F9F;
+    height: 50px;
+    font-size: 20px;
+    padding-left: 13%;
+
 }
 .login-button {
   display: flex;
   justify-content: flex-end;
+}
+.yzm_img{
+  width: 45%;
 }
 </style>

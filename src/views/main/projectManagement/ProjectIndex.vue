@@ -7,7 +7,7 @@
     <div class="container">
       <div class="container_left">
         <!-- 项目总数 -->
-        <BeautifulCard
+        <!-- <BeautifulCard
           :title="'项目总数'"
           :isTriangle="false"
         >
@@ -32,9 +32,9 @@
               </div>
             </div>
           </div>
-        </BeautifulCard>
+        </BeautifulCard> -->
         <!-- 业务分类 -->
-        <BeautifulCard
+        <!-- <BeautifulCard
           :title="'业务分类'"
           :isTriangle="false"
         >
@@ -59,9 +59,9 @@
               </div>
             </div>
           </div>
-        </BeautifulCard>
+        </BeautifulCard> -->
         <!-- 每月新增 -->
-        <BeautifulCard
+        <!-- <BeautifulCard
           :title="'每月新增'"
           :isTriangle="false"
         >
@@ -69,10 +69,10 @@
             :xAxisData='xAxisData'
             :seriesData='seriesData'
           />
-        </BeautifulCard>
+        </BeautifulCard> -->
       </div>
       <!-- 中间地图区域 -->
-      <div class="map">
+      <!-- <div class="map">
         <AirQualityMap
           :center='center'
           :isMarkHandle='false'
@@ -81,9 +81,9 @@
         />
         <div class="map_left_title">地图</div>
 
-      </div>
+      </div> -->
       <!-- 右边列表 -->
-      <div class="super_list">
+      <!-- <div class="super_list">
         <BeautifulCard
           :isShowHead="false"
           :isTriangle="false"
@@ -164,7 +164,7 @@
             </div>
           </div>
         </BeautifulCard>
-      </div>
+      </div> -->
     </div>
     <projectDialog
       :dialogVisible="dialogVisible"
@@ -177,23 +177,23 @@
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
-import BeautifulCard from '_com/common/BeautifulCard'
-import ProjectTotalPie from './components/ProjectTotalPie.vue'
-import BusinessSortPie from './components/BusinessSortPie.vue'
-import addMonthChart from './components/addMonthChart.vue'
-import projectDialog from './ProjectOverdue.vue'
-import AirQualityMap from '_com/common//AirQualityMap.vue'
+// import BeautifulCard from '_com/common/BeautifulCard'
+// import ProjectTotalPie from './components/ProjectTotalPie.vue'
+// import BusinessSortPie from './components/BusinessSortPie.vue'
+// import addMonthChart from './components/addMonthChart.vue'
+// import projectDialog from './ProjectOverdue.vue'
+// import AirQualityMap from '_com/common//AirQualityMap.vue'
 
 export default {
   name: 'ProjectIndex',
   components: {
-    BeautifulWrapper,
-    BeautifulCard,
-    ProjectTotalPie,
-    BusinessSortPie,
-    addMonthChart,
-    projectDialog,
-    AirQualityMap
+    BeautifulWrapper
+    // BeautifulCard,
+    // ProjectTotalPie,
+    // BusinessSortPie,
+    // addMonthChart,
+    // projectDialog,
+    // AirQualityMap
   },
   data () {
     return {
@@ -502,8 +502,6 @@ export default {
           border: none;
         }
       }
-    }
-    .super_list_bottom {
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <!-- 巡查 -->
   <div style="height:100%">
-    <TableForm
+    <!-- <TableForm
       :loading="dataLoading"
       :data-list="dataList"
       :columns="columns"
@@ -32,18 +32,18 @@
       :title="title"
       :dataList="DialogDataList"
       @closeDialog='closeDialog'
-    ></DetailDialog>
+    ></DetailDialog> -->
   </div>
 </template>
 
 <script>
-import TableForm from '_vie/common/TableForm'
-import DetailDialog from './components/DetailDialog.vue'
+// import TableForm from '_vie/common/TableForm'
+// import DetailDialog from './components/DetailDialog.vue'
 export default {
   name: 'Partrol',
   components: {
-    TableForm,
-    DetailDialog
+    // TableForm,
+    // DetailDialog
   },
   data () {
     return {

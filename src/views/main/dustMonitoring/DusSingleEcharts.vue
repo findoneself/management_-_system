@@ -101,10 +101,12 @@
         </div>
       </el-form-item>
     </el-form>
+
     <MultilineChart
      v-if="tabsType !== 'table'"
      :seriesData ='seriesDatas'
      :xAxisData ='xAxisDatas'/>
+
   </TableForm>
 </template>
 
@@ -189,24 +191,34 @@ export default {
       tabsType: '',
       // ehcart----数据
       // x轴
-      xAxisDatas: [],
+      xAxisDatas:['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07', '3.08', '3.09', '3.10', '3.11', '3.12'],
       // 数据
       seriesDatas: [],
-      api:{
-        jczdListApi:'/dustMonitoringSource/list/', // 监测站点
-        paramTypesApi:'/dustMonitoringSource/paramList', // 参数类型
-        dataListApi:'/dustMonitoringSource/deviceData/one' // 列表
-      }
+      api:{},
+      dusindex:false
     }
   },
   created () {
     this.initDict()
-    this.tabsClick(this.dictOptions.tabsTypes[0].id)
-    this.dataForm.date = this.$format.getTwodaysDate()
     this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList'))||[]
     this.dataForm.area = this.dictOptions.areaList[0].id ||''
+     let router = this.$route.path.slice(16)
+    if(router==='DusIndex'){
+      this.dusindex = true
+      this.api = {
+        jczdListApi:'/dustMonitoringSource/list/', // 监测站点
+        paramTypesApi:'/dustMonitoringSource/paramList', // 参数类型
+        dataListApi:'/dustMonitoringSource/deviceData/one' // 列表
+      }
+
     this.getJczdList()
     this.getParamsType()
+    this.getDataList()
+    }else{
+      this.api = {}
+    }
+    this.tabsClick(this.dictOptions.tabsTypes[0].id)
+    this.dataForm.date = this.$format.getTwodaysDate()
   },
   methods: {
     initDict () {
@@ -259,9 +271,17 @@ export default {
           })
           this.columns = arr
           this.dataList = data.data.table || []
+          console.log(this.seriesDatas)
+          this.seriesDatas.forEach((i, index) => {
+            if (index>=0){
+              delete this.seriesDatas[index]
+            }
+          })
+          this.seriesDatas = []
+          console.log(this.seriesDatas)
           this.seriesDatas = seriesdata
           this.xAxisDatas = xaxisdata
-          console.log(this.dataList)
+          console.log(this.seriesDatas)
         } else {
           this.$message.error('获取统计数据失败！')
           this.dataList = []
@@ -293,6 +313,7 @@ export default {
         if(status===200){
           this.dictOptions.jczdList = data.data || []
           this.dataForm.monitoringSourceId = this.dictOptions.jczdList[0].id|| ''
+          sessionStorage.setItem('jczdList', JSON.stringify(data.data))
           this.getInfo()
           }else{
           this.$message.error('获取行政数据错误')
@@ -309,6 +330,7 @@ export default {
         if(status===200){
           this.dictOptions.paramTypesList = data.data || []
           this.dataForm.paramTypes = [this.dictOptions.paramTypesList[0].prop] || []
+          sessionStorage.setItem('paramTypesList', JSON.stringify(data.data))
           this.getDataList()
           }else{
           this.$message.error('获取行政数据错误')
@@ -327,12 +349,13 @@ export default {
       }else{
         res=this.$format.getYearStartDatetime()
       }
-       console.log(res)
+      console.log(res)
       this.dataForm.date = res
+      this.getDataList()
     },
     getInfo (){
       let item = this.dictOptions.jczdList.find(i => i.id===this.dataForm.monitoringSourceId)
-      this.info = { title: item.name, small: '2022-03-01 ( 小时数据 ）' }
+      this.info = { title: item.name, small: '2022-03-01 ( 小时数据 )' }
     }
   },
   computed: {

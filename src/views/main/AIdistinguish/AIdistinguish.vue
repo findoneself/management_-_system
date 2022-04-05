@@ -5,7 +5,7 @@
     :border-icon="['top', 'right', 'triangle', 'left']"
     :wraStyle="{ inPadding: '0px' }"
   >
-    <BeautifulCard
+    <!-- <BeautifulCard
       class="xmfl-card"
       title="项目分类统计"
       :isTriangle='false'
@@ -237,24 +237,24 @@
       </BeautifulCard>
     </div>
     <TableDialog ref="TableDialog" />
-    <BeImageFixed ref="imageRef" />
+    <BeImageFixed ref="imageRef" /> -->
   </BeautifulWrapper>
 </template>
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
-import BeautifulCard from '_com/common/BeautifulCard'
-import BeautifulTableList from '_com/common/BeautifulTableList'
-import BeImageFixed from '_com/common/BeImageFixed'
-import TableDialog from './components/TableDialog'
+// import BeautifulCard from '_com/common/BeautifulCard'
+// import BeautifulTableList from '_com/common/BeautifulTableList'
+// import BeImageFixed from '_com/common/BeImageFixed'
+// import TableDialog from './components/TableDialog'
 export default {
   name: 'AIdistinguish',
   components: {
-    BeautifulWrapper,
-    BeautifulCard,
-    BeautifulTableList,
-    TableDialog,
-    BeImageFixed
+    BeautifulWrapper
+    // BeautifulCard,
+    // BeautifulTableList,
+    // TableDialog,
+    // BeImageFixed
   },
   data () {
     return {

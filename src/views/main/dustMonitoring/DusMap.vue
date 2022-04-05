@@ -143,32 +143,27 @@ export default {
       cardStyle: { padding: '0px' },
       // 表格表头
       columns: [
-        { name: '监测点', prop: 'name', key: 1, tooltip:11},
+        { name: '监测点', prop: 'name', key: 1},
         { name: 'PM2.5', prop: 'value', key: 2, isSort: true }
       ],
       // 检测源 表格数据
       dataList: [
-        { id: '1', jcwd: '21', jcd: '云-徐州传染病医院' },
-        { id: '2', jcwd: '12', jcd: '云-徐州传染病医院', sj: '2022-03-11 00:00:00' },
-        { id: '3', jcwd: '24', jcd: '云-徐州传染病医院', sj: '2022-03-12 00:00:00' },
-        { id: '4', jcwd: '15', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00' },
-        { id: '5', jcwd: '15', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00' },
-        { id: '6', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00' },
-        { id: '7', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00' },
-        { id: '8', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
-        { id: '9', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
-        { id: '10', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
-        { id: '11', jcwd: '21', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' }
+        { id: '1', value: '21', name: '云-徐州传染病医院' },
+        { id: '2', value: '12', name: '云-徐州传染病医院', sj: '2022-03-11 00:00:00' },
+        { id: '3', value: '24', name: '云-徐州传染病医院', sj: '2022-03-12 00:00:00' },
+        { id: '4', value: '15', name: '云-徐州传染病医院', sj: '2022-03-13 00:00:00' },
+        { id: '5', value: '15', name: '云-徐州传染病医院', sj: '2022-03-14 00:00:00' },
+        { id: '6', value: '21', name: '云-徐州传染病医院', sj: '2022-03-15 00:00:00' },
+        { id: '7', value: '21', name: '云-徐州传染病医院', sj: '2022-03-16 00:00:00' },
+        { id: '8', value: '21', name: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
+        { id: '9', value: '21', name: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
+        { id: '10', value: '21', name: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
+        { id: '11', value: '21', name: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' }
       ],
       // 监测点数据
       monitoringSspotData: {
         title: '云-徐州传染病医院',
         pieData: {
-          //         name: "PM2.5"
-// prop: "a34004"
-// title: "睢-铸本混凝土1号点"
-// : "μg/m³"
-// value: null
           title: '监测点数据',
           value: 80,
           name: 'pm2.5',
@@ -198,21 +193,25 @@ export default {
       { name: '中度', color: '#FF0200', section: '116-150' },
       { name: '重度', color: '#990099', section: '151-250' },
       { name: '严重', color: '#990000', section: '251-500' }],
-      center: {lng: 58.4711515, lat: 17.386449},
+      center: {lng: 116.413315, lat: 39.927636},
       // 地图右下角的switch 和相关data
       switch_value1: '',
       switch_value2: '',
       mapNumList: [0, 35, 75, 115, 150, 250, 500],
-      api:{
-        areaApi:'area/tree',
-        monitoringSourceApi:'dustMonitoringSource/list'
-      }
+      api:{}
     }
   },
   created () {
-    this.getArea()
-    // let router =
-    // console.log(this.$route.path)
+    let router = this.$route.path.slice(16)
+    if(router==='DusIndex'){
+      this.api = {
+        areaApi:'area/tree',
+        monitoringSourceApi:'dustMonitoringSource/list'
+      }
+       this.getArea()
+    }else{
+      this.api = {}
+    }
   },
   methods: {
     iconSearchHandle () {
