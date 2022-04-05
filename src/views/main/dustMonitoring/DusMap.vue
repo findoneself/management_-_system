@@ -17,12 +17,13 @@
         >
           <el-form-item class="el_form_county">
             <el-select
-              v-model="dataForm.xzqy"
+              v-model="dataForm.areaId"
               clearable
               placeholder="请选择"
+              @change="areaChange"
             >
               <el-option
-                v-for="item in dictOptions.xzqyList"
+                v-for="item in dictOptions.areaList"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"
@@ -34,7 +35,7 @@
             class="el_form_search"
           >
             <el-input
-              v-model="dataForm.searchValue"
+              v-model="dataForm.monitoringSourceName"
               placeholder="请输入关键字搜索"
             >
             </el-input>
@@ -128,7 +129,7 @@ export default {
       activePage: 0,
       dictOptions: {
         // 行政区域
-        xzqyList: [
+        areaList: [
           { id: 'xz-1', name: '区域1' },
           { id: 'xz-2', name: '区域2' },
           { id: 'xz-3', name: '区域3' },
@@ -136,16 +137,16 @@ export default {
         ]
       },
       dataForm: {
-        xzqy: 'xz-1',
-        searchValue: ''
+        areaId: '',
+        monitoringSourceName: ''
       },
       cardStyle: { padding: '0px' },
       // 表格表头
       columns: [
-        { name: '监测点', prop: 'jcd', key: 1 },
-        { name: 'PM2.5', prop: 'jcwd', key: 2, isSort: true }
+        { name: '监测点', prop: 'name', key: 1, tooltip:11},
+        { name: 'PM2.5', prop: 'value', key: 2, isSort: true }
       ],
-      // 表格数据
+      // 检测源 表格数据
       dataList: [
         { id: '1', jcwd: '21', jcd: '云-徐州传染病医院' },
         { id: '2', jcwd: '12', jcd: '云-徐州传染病医院', sj: '2022-03-11 00:00:00' },
@@ -163,10 +164,15 @@ export default {
       monitoringSspotData: {
         title: '云-徐州传染病医院',
         pieData: {
-          name: '监测点数据',
+          //         name: "PM2.5"
+// prop: "a34004"
+// title: "睢-铸本混凝土1号点"
+// : "μg/m³"
+// value: null
+          title: '监测点数据',
           value: 80,
-          title: 'pm2.5',
-          company: '62ug/m³'
+          name: 'pm2.5',
+          unit: '62ug/m³'
         },
         detailList: [{ name: '温度', value: '75 ℃' },
         { name: 'pm2.5', value: '62ug/m³' },
@@ -179,8 +185,8 @@ export default {
         { name: '二氧化硫', value: '5425' }]
       },
       // 地图标记
-      coordinateList: [{ lng: 116.2787, lat: 40.0492, value: 80 },
-      { lng: 116.2787, lat: 40.040, value: 130 },
+      coordinateList: [{ lat: 34.701373, lng: 116.596327, status: '2', value: null },
+      { lat: 34.691447, lng: 116.66433, value: 130, status: '2' },
       { lng: 116.2887, lat: 40.040, value: 230 },
       { lng: 116.297047, lat: 39.979542, value: 30 },
       { lng: 116.321768, lat: 39.88748, value: 30 },
@@ -192,13 +198,14 @@ export default {
       { name: '中度', color: '#FF0200', section: '116-150' },
       { name: '重度', color: '#990099', section: '151-250' },
       { name: '严重', color: '#990000', section: '251-500' }],
-      center: { lng: 116.404, lat: 39.915 },
+      center: {lng: 58.4711515, lat: 17.386449},
       // 地图右下角的switch 和相关data
       switch_value1: '',
       switch_value2: '',
       mapNumList: [0, 35, 75, 115, 150, 250, 500],
       api:{
-        areaApi:'area/tree'
+        areaApi:'area/tree',
+        monitoringSourceApi:'dustMonitoringSource/list'
       }
     }
   },
@@ -218,22 +225,62 @@ export default {
       this.activePage = 1
     },
     markHandle (e) {
-      console.log(e)
+      console.log(e.point.lng)
+      let item = this.dataList.find(i => i.mapLngLat.lng===e.point.lng && i.mapLngLat.lag===e.point.lag)
+      this.monitoringSspotData = item.monitoringSspotData
+      console.log(item)
       this.activePage = 1
     },
     switchChange (value) {
       if (value === 'value1') {
         // 视频switch
       } else {
-        // 喷淋switxh
+        // 喷淋switch
       }
     },
+    // 行政区域
     getArea (){
        this.$http({
         url: this.api.areaApi
       }).then(res => {
-        console.log(res)
+        // console.log(res)
+        const { data, status} = res
+        if(status===200){
+          this.dictOptions.areaList = data.data || []
+          sessionStorage.setItem('areaList', JSON.stringify(data.data))
+          this.dataForm.areaId = data.data[0].id
+          this.getDataList()
+        }else{
+          this.$message.error('获取行政数据错误')
+        }
       })
+    },
+    getDataList (){
+      this.$http({
+        url: this.api.monitoringSourceApi,
+        method:'post',
+        data:this.dataForm
+      }).then(res => {
+        //  console.log(res)
+        const { data, status } = res
+        if(status===200){
+          const {center, list} = data.data
+            // console.log(center)
+          this.center = center
+          this.dataList = list
+          let coordinateList =[]
+          list.map(i => {
+            coordinateList.push({...i.mapLngLat, value:i.value, status:i.status})
+          })
+          this.coordinateList = coordinateList
+        }else{
+          this.$message.error('获取数据错误')
+        }
+      })
+
+    },
+    areaChange (){
+      this.getDataList()
     }
   }
 }
@@ -267,9 +314,6 @@ export default {
     width: 25rem;
     height: 100%;
     overflow: hidden;
-    .tableList {
-      // padding: 0 5px;
-    }
     .demo-form-inline {
       display: flex;
       padding: 2rem 0 0 1rem;
@@ -313,8 +357,6 @@ export default {
         div {
           margin: 0 0.625rem 0.1rem 0;
           transform: scale(0.9);
-          span {
-          }
         }
       }
     }

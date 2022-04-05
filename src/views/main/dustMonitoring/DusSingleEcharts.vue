@@ -21,6 +21,7 @@
           v-model="dataForm.area"
           clearable
           placeholder="请选择"
+          @change="areaChange"
         >
           <el-option
             v-for="item in dictOptions.areaList"
@@ -32,9 +33,10 @@
       </el-form-item>
       <el-form-item label="监测站点：">
         <el-select
-          v-model="dataForm.jcd"
+          v-model="dataForm.monitoringSourceId"
           clearable
           placeholder="请选择"
+          @change="pickerChange('jkzd')"
         >
           <el-option
             v-for="item in dictOptions.jczdList"
@@ -58,6 +60,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
+          @change="pickerChange"
         >
         </el-date-picker>
       </el-form-item>
@@ -65,7 +68,7 @@
         label="类型："
         label-width="5rem"
       >
-        <el-select v-model="dataForm.type">
+        <el-select v-model="dataForm.type" @change="typeChange">
           <el-option
             v-for="item in dictOptions.typeList"
             :key="item.id"
@@ -78,11 +81,11 @@
         label="参数类型："
         style="width: 100%;"
       >
-        <el-checkbox-group v-model="dataForm.paramType">
+        <el-checkbox-group v-model="dataForm.paramTypes" @change="pickerChange">
           <el-checkbox
-            :label="item.id"
-            v-for="item in dictOptions.paramTypes"
-            :key="item.id"
+            :label="item.prop"
+            v-for="item in dictOptions.paramTypesList"
+            :key="item.prop"
           >{{ item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
@@ -98,7 +101,10 @@
         </div>
       </el-form-item>
     </el-form>
-    <MultilineChart v-if="tabsType !== 'table'" />
+    <MultilineChart
+     v-if="tabsType !== 'table'"
+     :seriesData ='seriesDatas'
+     :xAxisData ='xAxisDatas'/>
   </TableForm>
 </template>
 
@@ -121,9 +127,9 @@ export default {
         // 监测站点
         jczdList: [],
         // 类型
-        typeList: [],
+        typeList: [{id:'zt', name:'昨天数据'}, {id:'jqt', name:'近七天数据'}, {id:'dy', name:'当月数据'}, {id:'dn', name:'当年数据'}],
         // 参数类型
-        paramTypes: [],
+        paramTypesList: [],
         // 数据图表
         tabsTypes: [
           { id: 'echart', name: '图形' },
@@ -133,10 +139,10 @@ export default {
       // 查询表单
       dataForm: {
         area: 'xz-1',
-        date: ['2022-01-01', '2022-05-02'],
-        paramType: ['wd'],
-        jcd: '',
-        type: ''
+        date: '',
+        paramTypes: ['wd'],
+        monitoringSourceId: '',
+        type: 'zt'
       },
       // 加载
       dataLoading: false,
@@ -148,6 +154,7 @@ export default {
         { name: '温度', prop: 'wd', key: 2 },
         { name: '气压', prop: 'qy', key: 4 }
       ],
+      info:{},
       // echarts的参数类型
       echartsType: '',
       // 时间快捷选项
@@ -182,37 +189,37 @@ export default {
       tabsType: '',
       // ehcart----数据
       // x轴
-      echartXAxis: [],
+      xAxisDatas: [],
       // 数据
-      echartSeries: []
+      seriesDatas: [],
+      api:{
+        jczdListApi:'/dustMonitoringSource/list/', // 监测站点
+        paramTypesApi:'/dustMonitoringSource/paramList', // 参数类型
+        dataListApi:'/dustMonitoringSource/deviceData/one' // 列表
+      }
     }
   },
   created () {
     this.initDict()
     this.tabsClick(this.dictOptions.tabsTypes[0].id)
-    this.getDataList()
+    this.dataForm.date = this.$format.getTwodaysDate()
+    this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList'))||[]
+    this.dataForm.area = this.dictOptions.areaList[0].id ||''
+    this.getJczdList()
+    this.getParamsType()
   },
   methods: {
     initDict () {
       const dict = this.$store.state.global.dictData
       console.log(dict)
       if (dict.paramsType && dict.paramsType.length > 0) {
-        this.dictOptions.paramTypes = dict.paramsType
-        this.dataForm.paramType = [dict.paramsType[0].id]
+        this.dictOptions.paramTypesList = dict.paramsType
+        this.dataForm.paramTypes = [dict.paramsType[0].id]
       }
       if (dict.xzarea && dict.xzarea.length > 0) {
         this.dictOptions.areaList = dict.xzarea
         this.dataForm.area = dict.xzarea[0].id
       }
-      // if (dict.jcStation.length > 0) {
-      //   (this.dictOptions.jczdList = dict.jcStation)
-      //   this.dataForm.jcd = dict.jcStation[0].id
-      // }
-      // if (dict.type.length > 0) {
-      //   (this.dictOptions.typeList = dict.type)
-      //   this.dataForm.type = dict.type[0].id
-      // }
-
     },
     // 点击回调-当前组件只有导出
     buttonClick () {
@@ -231,24 +238,30 @@ export default {
     // 获取表格和统计数据
     getDataList () {
       this.dataLoading = true
-      const params = this._cloneDeep(this.dataForm)
-      if (params.date.length > 0) {
-        params.startTime = params.date[0]
-        params.endTime = params.date[1]
-        delete params.date
-      }
-      if (this.echartsType !== '') {
-        // echart图表获取数据参数
-        params.echartsType = this.echartsType
-      }
+      let {date} = this.dataForm
       this.$http({
-        url: 'dusQuery/getDusrankData',
-        data: params
+        url: this.api.dataListApi,
+        method: 'post',
+        data:{
+          'dateStart': date[0],
+          'dateEnd': date[1],
+           ...this.dataForm
+        }
       }).then(res => {
         this.dataLoading = false
-        if (res.code === 200) {
-          this.dataList = res.data.list
-          console.log(res)
+        const {data, status} = res
+        console.log(data)
+        if (status === 200) {
+          const {columns, seriesdata, xaxisdata} = data.data.chart
+          let arr = []
+          columns.map(i => {
+            arr.push({...i, key:i.KEY})
+          })
+          this.columns = arr
+          this.dataList = data.data.table || []
+          this.seriesDatas = seriesdata
+          this.xAxisDatas = xaxisdata
+          console.log(this.dataList)
         } else {
           this.$message.error('获取统计数据失败！')
           this.dataList = []
@@ -256,67 +269,81 @@ export default {
       }, () => {
         this.dataLoading = false
         this.$message.error('获取统计数据失败！')
-        // 下面逻辑放在正常返回里面
-        const list = [
-          { id: '1', jcd: '云-徐州传染病医院', sj: '2022-03-10 00:00:00', wd: '21' },
-          { id: '2', jcd: '云-徐州传染病医院', sj: '2022-03-11 00:00:00', wd: '12' },
-          { id: '3', jcd: '云-徐州传染病医院', sj: '2022-03-12 00:00:00', wd: '24' },
-          { id: '4', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00', wd: '15' },
-          { id: '5', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00', wd: '21' },
-          { id: '6', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00', wd: '16' },
-          { id: '7', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00', wd: '21' },
-          { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '9', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '10', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '11', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '12', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '13', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' }
-        ]
-        this.dataList = list
-        let xAxis = []
-        let series = []
-        list.map(item => {
-          xAxis.push(item.jcd)
-          series.push(item.wd)
-        })
-        this.echartXAxis = xAxis
-        this.echartSeries = [
-          {
-            type: 'bar',
-            barMaxWidth: 23,
-            barGap: '10%',
-            label: {
-              show: true
-            },
-            itemStyle: {
-              normal: {
-                color: '#486AFF',
-                label: {
-                  show: true,
-                  textStyle: {
-                    color: '#fff'
-                  },
-                  position: 'top',
-                  formatter: function (p) {
-                    return p.value > 0 ? (p.value) : ''
-                  }
-                }
-              }
-            },
-            data: series
-          }
-        ]
       })
+    },
+    // 行政区域变化
+    areaChange (){
+      this.getJczdList()
+      this.getDataList()
+    },
+    pickerChange (value){
+      if(value === 'jkzd'){
+      this.getInfo()
+      }
+      this.getDataList()
+    },
+    // 检测站点
+    getJczdList (){
+      this.$http({
+        url: this.api.jczdListApi+this.dataForm.area,
+         method:'post'
+      }).then(res => {
+        console.log(res)
+        const { data, status} = res
+        if(status===200){
+          this.dictOptions.jczdList = data.data || []
+          this.dataForm.monitoringSourceId = this.dictOptions.jczdList[0].id|| ''
+          this.getInfo()
+          }else{
+          this.$message.error('获取行政数据错误')
+        }
+      })
+    },
+    // 参数
+    getParamsType (){
+      this.$http({
+        url: this.api.paramTypesApi
+      }).then(res => {
+        console.log(res)
+        const { data, status} = res
+        if(status===200){
+          this.dictOptions.paramTypesList = data.data || []
+          this.dataForm.paramTypes = [this.dictOptions.paramTypesList[0].prop] || []
+          this.getDataList()
+          }else{
+          this.$message.error('获取行政数据错误')
+        }
+      })
+    },
+    typeChange (value){
+      console.log(value)
+      let res
+      if(value==='zt'){
+        res = this.$format.getTwodaysDate()
+      }else if(value==='jqt'){
+        res = this.$format.getDefaultWorkDatetime()
+      }else if(value==='dy'){
+        res = this.$format.getMonthStartDatetime()
+      }else{
+        res=this.$format.getYearStartDatetime()
+      }
+       console.log(res)
+      this.dataForm.date = res
+    },
+    getInfo (){
+      let item = this.dictOptions.jczdList.find(i => i.id===this.dataForm.monitoringSourceId)
+      this.info = { title: item.name, small: '2022-03-01 ( 小时数据 ）' }
     }
   },
   computed: {
     tformHead () {
       // 需要取参数类型和选择日期的信息
-      const info = { title: '云-徐州传染病医院', small: '2022-3-01 ( 小时数据 ）' }
+      const info = {...this.info}
       if (this.tabsType === 'table') {
         info.btnType = 'elbtn'
         info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
       }
+       console.log(info)
       return info
     }
   }

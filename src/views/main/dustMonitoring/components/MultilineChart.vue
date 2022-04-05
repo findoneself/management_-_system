@@ -32,6 +32,7 @@ export default {
   },
   data () {
     return {
+      color:['#19B17E', '#9834FF', '#23DBFC', '#FA6B16'],
       option: {
         xAxis: {
           type: 'category',
@@ -107,6 +108,14 @@ export default {
       }
     }
   },
+    watch:{
+    seriesData:{
+      handler () {
+        this.getmap()
+      },
+      deep:true
+    }
+  },
   mounted () {
     this.getmap()
   },
@@ -116,7 +125,8 @@ export default {
       this.option.legend.data = this.legendData
       this.option.xAxis.data = this.xAxisData
       let series = []
-      this.seriesData.map(i => {
+      if(this.seriesData){
+       this.seriesData.map((i, index) => {
         series.push({
           name: i.title,
           data: i.data,
@@ -126,7 +136,7 @@ export default {
           symbolSize: 15,
           itemStyle: {
             normal: {
-              color: i.color,
+              color: this.color[index],
               borderColor: '#fff',
               fontSize: '1rem',
               shadowBlur: 0,
@@ -146,7 +156,8 @@ export default {
           }
         })
       })
-      let option = {
+      }
+     let option = {
         ...this.option,
         series
       }

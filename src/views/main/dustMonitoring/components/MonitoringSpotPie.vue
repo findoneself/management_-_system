@@ -32,6 +32,7 @@ export default {
   },
   mounted () {
     this.getmap()
+    console.log(this.pieData)
   },
   // 橘黄色//红色//亮蓝//黄色
   methods: {
@@ -45,7 +46,7 @@ export default {
           // top: '20%',
           x: 'center',
           y: 'center',
-          subtext: item.company + '\n' + item.title + '\n\n\n',
+          subtext: item.unit + '\n' + item.name + '\n\n\n',
           textStyle: {
             fontWeight: 'normal',
             fontSize: '25',

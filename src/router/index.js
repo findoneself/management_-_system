@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import $http from '../network'
+// import $http from '../network'
 import $utils from '../libs/utils'
 import { isURL } from '../libs/validate'
 // 重写路由push方法,阻止重复点击报错
