@@ -13,25 +13,31 @@
       @closeClick="closeClick"
       :borderIcon="['right', 'bottom', 'left', 'close']"
     >
-      <BeautifulTableList
+      <TableForm
         :loading="dataLoading"
         :oper-obj="operObj"
-        :columns-num="3"
+        :columns-num="2"
         :data-list="dataList"
         :columns="columns"
-      />
+        :tform-head="tformHead"
+      >
+        <el-button
+          slot="headform"
+          type="primary"
+        >新增</el-button>
+      </TableForm>
     </BeautifulWrapper>
   </el-dialog>
 </template>
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
-import BeautifulTableList from '_com/common/BeautifulTableList'
+import TableForm from '_vie/common/TableForm'
 export default {
   name: 'ProjectOverdue',
   components: {
     BeautifulWrapper,
-    BeautifulTableList
+    TableForm
   },
   props: {
     title: {
@@ -59,10 +65,19 @@ export default {
       ],
       operObj: {
         isOperation: true,
-        headName: '图片',
+        headName: '操作',
+        width: '10rem',
         operButton: [
           {
             text: '查看',
+            click: this.lookDetail
+          },
+          {
+            text: '修改',
+            click: this.lookDetail
+          },
+          {
+            text: '删除',
             click: this.lookDetail
           }
         ]

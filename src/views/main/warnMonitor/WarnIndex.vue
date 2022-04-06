@@ -1,5 +1,5 @@
 <template>
-  <!-- 预警监控首页 -->
+  <!-- 预警管控首页 -->
   <BeautifulWrapper
     :isMenuTab='false'
     :borderIcon='borderIcon'

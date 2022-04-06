@@ -89,7 +89,7 @@ function getMenuData (to, next) {
     router.options.isLoadMenu = true
     const list = [
       { id: '0', key: 0, type: 'home', title: '首页', alias: '', parentId: '00', url: '@/home/Home' },
-      { id: '1', key: 1, type: 'menu', title: '预警监控', alias: '预警监控', parentId: '00', url: '@/warnMonitor/WarnIndex' },
+      { id: '1', key: 1, type: 'menu', title: '预警管控', alias: '预警管控', parentId: '00', url: '@/warnMonitor/WarnIndex' },
       { id: '2', key: 2, type: 'menu', title: '扬尘监测', alias: '扬尘监测', parentId: '00', url: '@/dustMonitoring/DusIndex' },
       { id: '2-1', key: 1, type: 'menu', title: '地图', alias: '地图', parentId: '2', url: '@/dustMonitoring/DusMap' },
       { id: '2-2', key: 2, type: 'menu', title: '单设备统计', alias: '单设备统计', parentId: '2', url: '@/dustMonitoring/DusSingleEcharts' },
