@@ -113,7 +113,7 @@ export default {
     // 登录按钮
     loginClick () {
       this.$http({
-        url: '/auth/gridmember/login',
+        url: '/gridmember/login',
         method: 'post',
         data: this.loginForm
       }).then(res => {
