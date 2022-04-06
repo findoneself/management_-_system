@@ -18,7 +18,8 @@ export default {
         // company: '62ug/m³',
         center: ['50%', '50%'],
         color: ['#114991', ' #00DDFF'] // left top
-      }
+      },
+      myChart:null
 
     }
   },
@@ -32,11 +33,18 @@ export default {
   },
   mounted () {
     this.getmap()
+    console.log(this.pieData)
+  },
+  activated () {
+    // 由于给echart添加了resize事件, 在组件激活时需要重新resize绘画一次, 否则出现空白bug
+    if (this.myChart) {
+      this.myChart.resize()
+    }
   },
   // 橘黄色//红色//亮蓝//黄色
   methods: {
     getmap () {
-      var myChart = this.$echarts.init(document.getElementById('monitoring_spot'))
+      this.myChart = this.$echarts.init(document.getElementById('monitoring_spot'))
       var item = { ...this.data, ...this.pieData }
       var option = {
         title: {
@@ -45,7 +53,7 @@ export default {
           // top: '20%',
           x: 'center',
           y: 'center',
-          subtext: item.company + '\n' + item.title + '\n\n\n',
+          subtext: item.unit + '\n' + item.name + '\n\n\n',
           textStyle: {
             fontWeight: 'normal',
             fontSize: '25',
@@ -128,11 +136,17 @@ export default {
       }
 
       console.log(option)
-      myChart.setOption(option)
+
+      this.myChart.setOption(option)
       window.addEventListener('resize', function () {
-        myChart.resize()
+        this.myChart.resize()
       })
     }
+  },
+  destroyed () {
+    window.removeEventListener('resize', () => {
+      this.myChart.resize()
+    })
   }
 }
 </script>

@@ -466,12 +466,14 @@ div.el-table thead {
     align-items: stretch;
 }
 
+
 .be-table-header {
     overflow: scroll;
     display: flex;
     align-items: stretch;
     justify-content: space-between;
 }
+
 
 .be-table-list .cell {
     display: flex;
@@ -506,7 +508,6 @@ div.el-table thead {
     height: 100%;
     display: flex;
     align-content: flex-start;
-    justify-content: space-between;
     flex-wrap: wrap;
 }
 
@@ -557,6 +558,68 @@ li.be-list--active {
     width: calc(50% - 10px);
 }
 
+.be-item--2:nth-of-type(2n+1) {
+    margin-right: 20px;
+}
+
+.be-item--3 {
+    margin-right: 15px;
+    width: calc(33.33% - 10px);
+}
+
+.be-item--3:nth-of-type(3n+3) {
+    margin-right: 0;
+}
+
+/* ===============tooltip=============== */
+.el-tooltip__popper.is-light {
+    --tooltip-bdcolor: #0e5dfb;
+    --tooltip-bgcolor: #2a68e4
+}
+
+.list-tooltip {
+    width: 20rem;
+}
+
+div.el-tooltip__popper.is-light {
+    background: var(--tooltip-bgcolor);
+    border: 1px solid var(--tooltip-bdcolor);
+    color: var(--color-text);
+}
+
+
+div.el-tooltip__popper.is-light[x-placement^="top"] .popper__arrow {
+    border-top-color: var(--tooltip-bdcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="bottom"] .popper__arrow {
+    border-bottom-color: var(--tooltip-bdcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="left"] .popper__arrow {
+    border-left-color: var(--tooltip-bdcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="right"] .popper__arrow {
+    border-right-color: var(--tooltip-bdcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="top"] .popper__arrow::after {
+    border-top-color: var(--tooltip-bgcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="bottom"] .popper__arrow::after {
+    border-bottom-color: var(--tooltip-bgcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="left"] .popper__arrow::after {
+    border-left-color: var(--tooltip-bgcolor);
+}
+
+div.el-tooltip__popper.is-light[x-placement^="right"] .popper__arrow::after {
+    border-right-color: var(--tooltip-bgcolor);
+}
+
 /* ===============首页样式=============== */
 .home-container {
     --high-color: #4ecaeb;
@@ -574,7 +637,7 @@ li.be-list--active {
     object-fit: fill;
 }
 
-video.video-js .vjs-tech {
+.video-player .video-js .vjs-tech {
     position: unset;
     width: auto;
     height: 100%;
@@ -601,4 +664,5 @@ div.video-js .vjs-big-play-button {
 div.vjs-poster {
     height: 101%;
     width: 101%;
+    background-size: 100%;
 }

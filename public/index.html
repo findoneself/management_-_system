@@ -7,28 +7,17 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>logo.ico">
 
-    <title><%= htmlWebpackPlugin.options.title%></title>
-    <% if(htmlWebpackPlugin.options.isProd){ %>
-
-        <!-- nprogress 的样式表文件 -->
-        <link rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
-        <!-- element-ui 的样式表文件 -->
-        <link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.2/lib/theme-chalk/index.css">
-
-        <script src="http://api.map.baidu.com/api?v=3.0&ak=n3U8OT9b5COsP61ayOdOtjHK6rVOWwci"></script>
-
-        <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/extension/bmap.min.js"></script>
-
-        <script src="https://cdn.staticfile.org/vue/2.6.12/vue.min.js"></script>
-        <script src="https://cdn.staticfile.org/vue-router/3.4.7/vue-router.min.js"></script>
-        <script src="https://cdn.bootcss.com/vuex/3.5.1/vuex.min.js"></script>
-        <script src="https://cdn.staticfile.org/axios/0.20.0/axios.min.js"></script>
-        <script src="https://cdn.staticfile.org/lodash.js/4.17.20/lodash.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/dist/echarts.min.js"></script>
-        <script src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js"></script>
-        <!-- element-ui 的 js 文件 -->
-        <script src="https://cdn.staticfile.org/element-ui/2.13.2/index.js"></script>
-        <% } %>
+    <title><%= htmlWebpackPlugin.options.title || '云初一体化'%></title>
+    <!-- <% if(htmlWebpackPlugin.options.isProd){%> -->
+      <!-- css资源 -->
+      <% for(var i in htmlWebpackPlugin.options.cdnCss){ %>
+        <link rel="stylesheet" href="<%= htmlWebpackPlugin.options.cdnCss[i] %>" />
+      <% } %>
+      <!-- js资源 -->
+      <% for(var i in htmlWebpackPlugin.options.cdnJs){ %>
+        <script src="<%= htmlWebpackPlugin.options.cdnJs[i]%>"></script>
+      <% } %>
+    <!-- <% } %> -->
 </head>
 
 <body>

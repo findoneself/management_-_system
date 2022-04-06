@@ -131,6 +131,26 @@ format.getDefaultWorkDatetime = function (defaultFormat = 'yyyy-MM-dd') {
   var times = [preDate, date]
   return times
 }
+// 获取当前月第一天到今天
+format.getMonthStartDatetime = function (defaultFormat = 'yyyy-MM-dd') {
+  var date = new Date()
+  var nowMonth = date.getMonth() // 当前月
+  var nowYear = date.getFullYear() // 当前年
+  var monthStartDate = new Date(nowYear, nowMonth, 1) // 本月开始的时间
+  var timeStar= format.convertDateToString(monthStartDate, defaultFormat)
+  date = format.convertDateToString(date, defaultFormat)
+  var times = [timeStar, date]
+  return times
+}
+// 获取当前年第一天到今天
+format.getYearStartDatetime = function (defaultFormat = 'yyyy-MM-dd') {
+  var date = new Date()
+  var nowYear = date.getFullYear() // 当前年
+  var timeStar = nowYear +'-01-01'
+  date = format.convertDateToString(date, defaultFormat)
+  var times = [timeStar, date]
+  return times
+}
 /** *
  * 获取日期所在年的年第一天
  * @param date

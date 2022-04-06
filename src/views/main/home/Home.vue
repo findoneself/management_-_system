@@ -264,7 +264,10 @@ export default {
         data: [10, 22, 21, 54, 10, 30, 40]
       }],
       fileData: [{ name: '文件', num: 132, type: '未读', history: 132455, src: '' },
-      { name: '通报', num: 132, type: '未读', history: 132455, src: '../../../assets/img/tb.png' }]
+      { name: '通报', num: 132, type: '未读', history: 132455, src: '../../../assets/img/tb.png' }],
+      api:{
+        patrolDataApi:'/check/getCount'
+      }
 
     }
   },
@@ -274,6 +277,7 @@ export default {
     this.projectInfo.year = cdate.getFullYear()
     this.projectInfo.month = cdate.getMonth()
     this.projectInfo.count = this.projectInfo.count.split('')
+    // this.getPatrolData()
   },
   methods: {
     getdate () {
@@ -283,6 +287,19 @@ export default {
       Number(end[2]) < 31 && (end[2] = (Number(end[2]) + 1).toString())
       this.startDate = res
       this.endDate = end.join('-')
+    },
+    getPatrolData (){
+     this.$http({
+        url:this.api.patrolDataApi
+      }).then(res => {
+        console.log(res)
+        const { data, status} = res
+        if(status===200){
+          this.patrolData = data
+          }else{
+          this.$message.error('获取行政数据错误')
+        }
+      })
     }
   }
 }

@@ -83,7 +83,7 @@ export default {
 .base-header {
   position: relative;
   height: 110px;
-  background: url("~_ats/img/head.png") no-repeat center center;
+ 
   background-size: 100% 100%;
   // position: relative;
   z-index: 100;
@@ -94,6 +94,8 @@ export default {
   text-align: center;
   font-size: 33px;
   line-height: 80px;
+  background: url("~_ats/img/head_two.png") no-repeat center center;
+  background-size: 100% 100%;
 }
 
 .base-header h1 img {

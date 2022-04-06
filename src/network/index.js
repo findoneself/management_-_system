@@ -1,11 +1,13 @@
+import VueCookie from 'vue-cookie'
 import axios from 'axios'
 import NProgress from 'nprogress'
 NProgress.configure({ showSpinner: false })
 import router from '../router'
+// const debug = process.env.NODE_ENV !== 'production'
 const http = axios.create({
   timeout: 1000 * 5,
-  baseURL: 'http://192.168.8.88:8081',
-  withCredentials: true,
+  baseURL: 'api',
+  withCredentials: false,
   headers: {
     'Content-Type': 'application/json; charset=utf-8'
   }
@@ -15,24 +17,21 @@ http.interceptors.request.use(config => {
   if (config.responseType && config.toLowerCase().indexOf('blob') > -1) {
     config.timeout = 10 * 60 * 1000
   }
-  // 设置Authorization字段为token指令
-  // config.headers.Authorization = window.Vue.$cookie.get('token') || ''
-  // 展示进度条，NProgress.start()
+  config.headers.Authorization = VueCookie.get('token') || 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX3R5cGUiOiJHUklETUVNQkVSIiwidXNlcl9pZCI6MSwidXNlcl9rZXkiOiI1MzdkNGZmYy1mYzQ5LTQxNTctOTkxZC1mZTk3YzExOTAzNjMiLCJ1c2VybmFtZSI6IjE4OTk0NTg1MDU1In0.849BzyuYKDNvLoIUyz4Sf_vZOzR1OK1aMVbThrm_NfUDe73Se-2ttqT4WT02VX-j82kf6_849gvNu3k2qxAw9Q'
   NProgress.start()
   return config
 }, err => {
   return Promise.reject(err)
-}
-)
+})
 // 响应拦截
 http.interceptors.response.use(response => {
   // 隐藏进度条，NProgress.done()
   NProgress.done()
-  if (response.data && response.data.code === 401) { // 401, token失效
-    // 此处应该清除登录信息
-    // clearLoginInfo()
-    router.push({ name: 'login' })
-  }
+  // if (response.data && response.data.code === 401) { // 401, token失效
+  //   // 此处应该清除登录信息
+  //   // clearLoginInfo()
+  //   router.push({ name: 'login' })
+  // }
   return response
 }, error => {
   NProgress.done()
