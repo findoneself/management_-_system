@@ -221,9 +221,9 @@ export default {
     if (router === 'DusIndex') {
       this.dusindex = true
       this.api = {
-        jczdListApi: '/dustMonitoringSource/list/', // 监测站点
-        paramTypesApi: '/dustMonitoringSource/paramList', // 参数类型
-        dataListApi: '/dustMonitoringSource/deviceData/one' // 列表
+        jczdListApi: 'integration/dustMonitoringSource/list/', // 监测站点
+        paramTypesApi: 'integration/dustMonitoringSource/paramList', // 参数类型
+        dataListApi: 'integration/dustMonitoringSource/deviceData/one' // 列表
       }
     } else {
       this.api = {}

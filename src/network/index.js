@@ -6,7 +6,7 @@ import router from '../router'
 // const debug = process.env.NODE_ENV !== 'production'
 const http = axios.create({
   timeout: 1000 * 5,
-  baseURL: 'api/integration',
+  baseURL: 'api/',
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json; charset=utf-8'
@@ -17,9 +17,9 @@ http.interceptors.request.use(config => {
   if (config.responseType && config.toLowerCase().indexOf('blob') > -1) {
     config.timeout = 10 * 60 * 1000
   }
-  if (config.url && config.url.includes('gridmember/')) {
-    config.baseURL = 'api/auth'
-  }
+  // if (config.url && config.url.includes('gridmember/')) {
+  //   config.baseURL = 'api/auth'
+  // }
   config.headers.Authorization = VueCookie.get('token') || 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX3R5cGUiOiJHUklETUVNQkVSIiwidXNlcl9pZCI6MSwidXNlcl9rZXkiOiI0MzVlMzU2YS1kNGYxLTQ4OTMtOGEyNi0wYzlkMmFmNGM0YzkiLCJ1c2VybmFtZSI6IjE4OTk0NTg1MDU1In0.UJ6DY5riB3IVsSIKxA9OFmYNT_iAZ8ogsmpZy2p3VqMBteE67wD8fp2PWN9k9ISlfFGW24XbcHHqZ-JA8Cb6rQ'
   NProgress.start()
   return config
