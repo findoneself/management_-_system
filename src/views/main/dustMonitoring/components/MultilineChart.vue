@@ -109,7 +109,6 @@ export default {
   watch: {
     seriesData: {
       handler () {
-        this.getmap()
       },
       deep: true
     }
@@ -147,12 +146,6 @@ export default {
               labelLine: {
                 show: false
               }
-            }
-          },
-          lineStyle: {
-            normal: {
-              color: i.color,
-              width: 5
             }
           }
         })

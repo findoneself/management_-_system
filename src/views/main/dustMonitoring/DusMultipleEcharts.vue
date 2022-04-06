@@ -21,7 +21,7 @@
           v-model="dataForm.area"
           clearable
           placeholder="请选择"
-          @change="areaChange"
+          @change="pickerChange('area')"
         >
           <el-option
             v-for="item in dictOptions.areaList"
@@ -37,7 +37,7 @@
           clearable
           multiple
           placeholder="请选择"
-            @change="pickerChange('jkzd')"
+          @change="pickerChange('jkzd')"
         >
           <el-option
             v-for="item in dictOptions.jczdList"
@@ -69,7 +69,10 @@
         label="类型："
         label-width="5rem"
       >
-        <el-select v-model="dataForm.type"  @change="typeChange">
+        <el-select
+          v-model="dataForm.type"
+          @change="typeChange"
+        >
           <el-option
             v-for="item in dictOptions.typeList"
             :key="item.id"
@@ -82,7 +85,10 @@
         label="参数类型："
         style="width: 100%;"
       >
-        <el-radio-group v-model="dataForm.paramTypes" @change="pickerChange">
+        <el-radio-group
+          v-model="dataForm.paramTypes"
+          @change="pickerChange"
+        >
           <el-radio
             :label="item.prop"
             v-for="item in dictOptions.paramTypesList"
@@ -103,15 +109,17 @@
       </el-form-item>
     </el-form>
     <MultilineChart
-    v-if="tabsType !== 'table'"
-     :seriesData ='seriesDatas'
-     :xAxisData ='xAxisDatas' />
+      v-if="tabsType !== 'table'"
+      :seriesData='seriesDatas'
+      :xAxisData='xAxisDatas'
+    />
   </TableForm>
 </template>
 
 <script>
 import TableForm from '_vie/common/TableForm'
 import MultilineChart from './components/MultilineChart'
+import { typeGetTime } from '_vie/common/commonApi.js'
 export default {
   name: 'DusMultipleEcharts',
   components: {
@@ -134,14 +142,14 @@ export default {
         date: [],
         type: 'zt',
         paramTypes: 'wd',
-        monitoringSourceIds:[]
+        monitoringSourceIds: []
       },
       // 字典数据
       dictOptions: {
         // 行政区域
         areaList: [],
         // 排序
-        typeList: [{id:'zt', name:'昨天数据'}, {id:'jqt', name:'近七天数据'}, {id:'dy', name:'当月数据'}, {id:'dn', name:'当年数据'}],
+        typeList: [{ id: 'zt', name: '昨天数据' }, { id: 'jqt', name: '近七天数据' }, { id: 'dy', name: '当月数据' }, { id: 'dn', name: '当年数据' }],
         // 参数类型
         paramTypesList: [],
         jczdList: [{ id: 'jc-1', name: '站点1' }, { id: 'jc-2', name: '站点2' }, { id: 'jc-3', name: '站点3' }, { id: 'jd-4', name: '站点4' }],
@@ -181,30 +189,30 @@ export default {
       tabsType: '', // 当前表格组件内 显示表格还是图表
       // ehcart----数据
       // x轴
-      xAxisDatas:[],
+      xAxisDatas: [],
       // 数据
       seriesDatas: [],
-      info:{}
+      info: {}
     }
   },
   created () {
     // this.initDict()
     // 设置默认展示类型和默认echart类型
-    this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList'))||[]
-    this.dictOptions.paramTypesList = JSON.parse(sessionStorage.getItem('paramTypesList'))||[]
-    this.dataForm.area = this.dictOptions.areaList[0].id ||''
+    this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
+    this.dictOptions.paramTypesList = JSON.parse(sessionStorage.getItem('paramTypesList')) || []
+    this.dataForm.area = this.dictOptions.areaList[0].id || ''
     this.dataForm.paramTypes = this.dictOptions.paramTypesList[0].prop
     let router = this.$route.path.slice(16)
-        this.dataForm.date = this.$format.getTwodaysDate()
-     if(router==='DusIndex'){
+    this.dataForm.date = this.$format.getTwodaysDate()
+    if (router === 'DusIndex') {
       this.dusindex = true
       this.api = {
-        jczdListApi:'/dustMonitoringSource/list/', // 监测站点
-        dataListApi:'/dustMonitoringSource/deviceData/more' // 列表
+        jczdListApi: '/dustMonitoringSource/list/', // 监测站点
+        dataListApi: '/dustMonitoringSource/deviceData/more' // 列表
       }
-    this.getJczdList()
-    this.getDataList()
-    }else{
+      this.getJczdList()
+      this.getDataList()
+    } else {
       this.api = {}
     }
     this.tabsType = this.dictOptions.tabsTypes[0].id
@@ -256,30 +264,30 @@ export default {
         params.echartsType = this.echartsType
       }
       let date = this.dataForm.date
-       console.log(date)
+      console.log(date)
       this.$http({
         url: this.api.dataListApi,
         method: 'post',
-        data:{
+        data: {
           'dateStart': date[0],
           'dateEnd': date[1],
-           ...this.dataForm
+          ...this.dataForm
         }
       }).then(res => {
         this.dataLoading = false
-        const {data, status} = res
+        const { data, status } = res
         console.log(data)
         if (status === 200) {
-          const {columns, seriesdata, xaxisdata} = data.data.chart
+          const { columns, seriesdata, xaxisdata } = data.data.chart
           let arr = []
           columns.map(i => {
-            arr.push({...i, key:i.KEY})
+            arr.push({ ...i, key: i.KEY })
           })
           this.columns = arr
           this.dataList = data.data.table || []
           console.log(this.seriesDatas)
           this.seriesDatas.forEach((i, index) => {
-            if (index>=0){
+            if (index >= 0) {
               delete this.seriesDatas[index]
             }
           })
@@ -357,59 +365,57 @@ export default {
         // this.echartsType = this.tformHead.btnList[0].id
       }
     },
-    typeChange (value){
+    typeChange (value) {
       console.log(value)
-      let res
-      if(value==='zt'){
-        res = this.$format.getTwodaysDate()
-      }else if(value==='jqt'){
-        res = this.$format.getDefaultWorkDatetime()
-      }else if(value==='dy'){
-        res = this.$format.getMonthStartDatetime()
-      }else{
-        res=this.$format.getYearStartDatetime()
-      }
+      let res = typeGetTime(value)
+      // let res
+      // if (value === 'zt') {
+      //   res = this.$format.getTwodaysDate()
+      // } else if (value === 'jqt') {
+      //   res = this.$format.getDefaultWorkDatetime()
+      // } else if (value === 'dy') {
+      //   res = this.$format.getMonthStartDatetime()
+      // } else {
+      //   res = this.$format.getYearStartDatetime()
+      // }
       console.log(res)
       this.dataForm.date = res
       this.getDataList()
     },
-    pickerChange (value){
-      if(value === 'jkzd'){
-      this.getInfo()
+    pickerChange (value) {
+      if (value === 'jkzd') {
+        this.getInfo()
+      } else if (value === 'area') {
+        this.getJczdList()
       }
-      console.log(123)
-      this.getDataList()
-    },
-     areaChange (){
-      this.getJczdList()
       this.getDataList()
     },
     // 检测站点
-    getJczdList (){
+    getJczdList () {
       this.$http({
-        url: this.api.jczdListApi+this.dataForm.area,
-         method:'post'
+        url: this.api.jczdListApi + this.dataForm.area,
+        method: 'post'
       }).then(res => {
         console.log(res)
-        const { data, status} = res
-        if(status===200){
+        const { data, status } = res
+        if (status === 200) {
           this.dictOptions.jczdList = data.data || []
           this.dataForm.monitoringSourceIds = [this.dictOptions.jczdList[0].id]
           this.getInfo()
-          }else{
+        } else {
           this.$message.error('获取行政数据错误')
         }
       })
     },
-     getInfo (){
+    getInfo () {
       // let item = this.dictOptions.jczdList.find(i => i.id===this.dataForm.monitoringSourceId)
-      this.info = { title: '测试标题', small: '2022-03-01 ( 小时数据 )' }
+      this.info = { title: '测试标题', small: '2022-03-01 ( 分钟数据 )' }
     }
   },
   computed: {
     tformHead () {
       // 需要取参数类型和选择日期的信息
-      const info = {...this.info }
+      const info = { ...this.info }
       if (this.tabsType === 'table') {
         info.btnType = 'elbtn'
         info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]

@@ -9,8 +9,8 @@
         <div class="inspect">
           <ul class="inspect_time">
             <li
-              v-for="item in patrolData.inspect"
-              :key="item"
+              v-for="(item, index) in patrolData.inspect"
+              :key="index"
             >{{item.name}} : <span>{{ item.num }}</span></li>
           </ul>
           <div class="inspect_people">
@@ -210,6 +210,7 @@ export default {
           { name: '整改单', count: 256643, percent: 50 }
         ]
       },
+
       // 中间当前时间
       projectInfo: {
         year: '',
@@ -265,19 +266,19 @@ export default {
       }],
       fileData: [{ name: '文件', num: 132, type: '未读', history: 132455, src: '' },
       { name: '通报', num: 132, type: '未读', history: 132455, src: '../../../assets/img/tb.png' }],
-      api:{
-        patrolDataApi:'/check/getCount'
+      api: {
+        patrolDataApi: '/check/getCount'
       }
 
     }
   },
   created () {
+    this.getPatrolData()
     this.getdate()
     const cdate = new Date()
     this.projectInfo.year = cdate.getFullYear()
     this.projectInfo.month = cdate.getMonth()
     this.projectInfo.count = this.projectInfo.count.split('')
-    // this.getPatrolData()
   },
   methods: {
     getdate () {
@@ -288,16 +289,16 @@ export default {
       this.startDate = res
       this.endDate = end.join('-')
     },
-    getPatrolData (){
-     this.$http({
-        url:this.api.patrolDataApi
+    getPatrolData () {
+      this.$http({
+        url: this.api.patrolDataApi
       }).then(res => {
         console.log(res)
-        const { data, status} = res
-        if(status===200){
+        const { data, code, msg } = res.data
+        if (code === 200) {
           this.patrolData = data
-          }else{
-          this.$message.error('获取行政数据错误')
+        } else {
+          this.$message.error(msg || '获取巡察整改数据错误')
         }
       })
     }
