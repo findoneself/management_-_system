@@ -109,6 +109,7 @@ export default {
   watch: {
     seriesData: {
       handler () {
+        this.getmap()
       },
       deep: true
     }

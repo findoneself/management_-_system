@@ -12,42 +12,49 @@
       <div class="login-form">
         <div class="title">本初一体化平台</div>
         <el-form
-        ref="loginForm"
-        :model="loginForm"
-        :rules="rules"
-        class="demo-ruleForm"
-      >
-        <el-form-item prop="username">
-          <el-input
-            placeholder="请输入用户名"
-            prefix-icon="el-icon-user"
-            v-model="loginForm.username"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            placeholder="请输入密码"
-            prefix-icon="el-icon-unlock"
-            v-model="loginForm.password"
-            type="password"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="yzm" class="yam_box">
-          <el-input
-            placeholder="请输入验证码"
-            prefix-icon="el-icon-unlock"
-            v-model="loginForm.yzm"
-            type="yzm"
-          ></el-input>
-          <img class="yzm_img" src="../../assets/img/book.png" alt="">
-        </el-form-item>
-        <el-form-item class="login-button">
-          <el-button
-            type="primary"
-            @click="loginClick"
-          >登录</el-button>
-        </el-form-item>
-      </el-form>
+          ref="loginForm"
+          :model="loginForm"
+          :rules="rules"
+          class="demo-ruleForm"
+        >
+          <el-form-item prop="username">
+            <el-input
+              placeholder="请输入用户名"
+              prefix-icon="el-icon-user"
+              v-model="loginForm.username"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input
+              placeholder="请输入密码"
+              prefix-icon="el-icon-unlock"
+              v-model="loginForm.password"
+              type="password"
+            ></el-input>
+          </el-form-item>
+          <!-- <el-form-item
+            prop="yzm"
+            class="yam_box"
+          >
+            <el-input
+              placeholder="请输入验证码"
+              prefix-icon="el-icon-unlock"
+              v-model="loginForm.yzm"
+              type="yzm"
+            ></el-input>
+            <img
+              class="yzm_img"
+              src="../../assets/img/book.png"
+              alt=""
+            >
+          </el-form-item> -->
+          <el-form-item class="login-button">
+            <el-button
+              type="primary"
+              @click="loginClick"
+            >登录</el-button>
+          </el-form-item>
+        </el-form>
       </div>
     </div>
   </div>
@@ -62,9 +69,9 @@ export default {
     return {
       // 登录表单数据绑定对象
       loginForm: {
-        username: 'admin',
-        password: '123456',
-        yzm:''
+        username: '18994585055',
+        password: 'admin123',
+        yzm: ''
       },
       // 表单的验证规则
       rules: {
@@ -106,13 +113,17 @@ export default {
     // 登录按钮
     loginClick () {
       this.$http({
-        url: '/login',
-        methods: 'post',
-        data: {
-          username: '18994585055',
-          password: 'admin123'
-        }
+        url: '/auth/gridmember/login',
+        method: 'post',
+        data: this.loginForm
       }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          let token = data.access_token
+          this.$cookie.setItem(token)
+        } else {
+          this.$message.error(msg || '登录失败')
+        }
         const userId = res.id || '1'
         // 登录成功获取用户信息
         this.getUserInfo(userId).then((user) => {
@@ -126,7 +137,7 @@ export default {
         })
       }, () => {
         // 登录失败
-        this.$message.error('toke验证失效或不存在此账户！')
+        this.$message.error('toke验证失效或不存在此账户!')
         // ----以下逻辑仅为测试
         // 登录成功获取用户信息
         this.getUserInfo('1').then((user) => {
@@ -150,7 +161,7 @@ export default {
   display: grid;
   place-items: center;
   height: 100%;
-  background:#eee url('../../assets/img/back.jpg') no-repeat center top;
+  background: #eee url("../../assets/img/back.jpg") no-repeat center top;
   background-size: 100% 100%;
 }
 .login-box {
@@ -176,50 +187,62 @@ export default {
 .login-form {
   width: 40%;
   padding: 0 20px;
-  .title{
-    height: 30%;
-    font-size:2.5rem;
+  .title {
+    height: 200px;
+    font-size: 2.5rem;
     line-height: 200px;
-    color: #2B9AFC;
+    color: #2b9afc;
     font-weight: 600;
     text-align: center;
   }
-  .el-form{
+  .el-form {
     width: 70%;
     margin: auto;
   }
 }
-/deep/.el-input__icon{
-    font-size: 25px;
-    margin-right: 10px;
-  }
-  /deep/.el-form-item__content{
-    width:100%;
-    height: 50px;
-    display: flex;
-  }
-  /deep/button.el-button{
-    background: #2B9AFC;
-    border-radius: 5px;
-    font-size: 20px;
-    width: 100%;
-    // margin: 15px 0;
-  }
-/deep/.el-input .el-input__inner, .el-date-editor.el-input__inner, div.el-select-dropdown, div.el-picker-panel, div.el-picker-panel [slot=sidebar], div.el-picker-panel__sidebar{
-    background: #fff;
-    box-shadow: none;
-    border-color:#EEEEEE;
-    color:#9F9F9F;
-    height: 50px;
-    font-size: 20px;
-    padding-left: 13%;
-
+/deep/.el-input__icon {
+  font-size: 25px;
+  margin-right: 10px;
+}
+/deep/.el-form-item__content {
+  width: 100%;
+  height: 50px;
+  display: flex;
+}
+/deep/button.el-button {
+  background: #2b9afc;
+  border-radius: 5px;
+  font-size: 20px;
+  width: 100%;
+  // margin: 15px 0;
+}
+/deep/.el-form .el-form-item:last-of-type {
+  margin-top: 50px;
+}
+/deep/.el-button.el-button--primary:hover,
+.el-button.el-button--primary:focus {
+  background: #228eee;
+}
+/deep/.el-input .el-input__inner,
+.el-date-editor.el-input__inner,
+div.el-select-dropdown,
+div.el-picker-panel,
+div.el-picker-panel [slot="sidebar"],
+div.el-picker-panel__sidebar {
+  background: #fff;
+  box-shadow: none;
+  border-color: #eeeeee;
+  color: #9f9f9f;
+  height: 50px;
+  font-size: 20px;
+  padding-left: 2.5rem;
 }
 .login-button {
   display: flex;
   justify-content: flex-end;
 }
-.yzm_img{
+
+.yzm_img {
   width: 45%;
 }
 </style>

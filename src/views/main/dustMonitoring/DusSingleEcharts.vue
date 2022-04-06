@@ -34,7 +34,6 @@
       <el-form-item label="监测站点：">
         <el-select
           v-model="dataForm.monitoringSourceId"
-          clearable
           placeholder="请选择"
           @change="getDataList"
         >
@@ -114,7 +113,6 @@
       :seriesData='seriesDatas'
       :xAxisData='xAxisDatas'
     />
-
   </TableForm>
 </template>
 
@@ -249,13 +247,8 @@ export default {
     getDataList () {
       this.dataLoading = true
       const params = this._cloneDeep(this.dataForm)
-      if (params.date.length > 0) {
-        params.dateStart = params.date[0]
-        params.dateEnd = params.date[1]
-      } else {
-        params.dateStart = ''
-        params.dateEnd = ''
-      }
+      params.dateStart = params.date[0]
+      params.dateEnd = params.date[1]
       delete params.date
       this.$http({
         url: this.api.dataListApi,
@@ -340,6 +333,7 @@ export default {
             this.dataForm.paramTypes = [data[0].prop] || []
           }
           this.getJczdList()
+          sessionStorage.setItem('paramTypesList', JSON.stringify(data))
         } else {
           this.$message.error(msg || '获取行政数据错误')
           this.dictOptions.paramTypesList = []
