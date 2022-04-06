@@ -83,7 +83,6 @@ export default {
 .base-header {
   position: relative;
   height: 110px;
- 
   background-size: 100% 100%;
   // position: relative;
   z-index: 100;
