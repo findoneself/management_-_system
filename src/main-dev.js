@@ -8,7 +8,7 @@ import format from './libs/format'
 import http from './network'
 import echarts from 'echarts'
 import VueCookie from 'vue-cookie'
-// import 'video.js/dist/video-js.css'
+import 'video.js/dist/video-js.css'
 // 引入element组件配置
 import './plugins/element'
 // 引入pxtorem配置
