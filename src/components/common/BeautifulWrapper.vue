@@ -40,6 +40,7 @@
             <li class="tab-shadow tab-shadow2"></li>
           </template>
         </ul>
+        <slot name="menuRight"></slot>
       </div>
       <!-- 内容部分 -->
       <div
@@ -226,6 +227,9 @@ export default {
 }
 /* menu-tab */
 .menu-tabs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   overflow: hidden;
 }
 .menu-tablist {
