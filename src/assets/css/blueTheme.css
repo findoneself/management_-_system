@@ -89,6 +89,11 @@ div.el-range-editor.is-active:hover,
     border-color: var(--wrapper-bdcolor);
 }
 
+div.el-select .el-tag {
+    background-color: #3a83ff;
+    color: var(--color-text);
+}
+
 .el-date-editor span.el-range-separator {
     width: auto;
     color: #c0c4cc;
@@ -108,8 +113,13 @@ li.el-select-dropdown__item {
     color: var(--color-text);
 }
 
-li.el-select-dropdown__item.hover {
+li.el-select-dropdown__item.hover,
+.el-select-dropdown.is-multiple li.el-select-dropdown__item.selected.hover {
     background-color: #000146;
+}
+
+.el-select-dropdown.is-multiple li.el-select-dropdown__item.selected {
+    background: transparent;
 }
 
 div.el-popper[x-placement^=bottom] .popper__arrow::after {

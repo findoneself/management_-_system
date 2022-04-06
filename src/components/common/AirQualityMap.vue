@@ -58,12 +58,12 @@ export default {
       }
     }
   },
-  watch:{
-    center:{
+  watch: {
+    center: {
       handler () {
         this.flagHandle(BMaps, maps)
       },
-      deep:true
+      deep: true
     }
   },
   mounted () {
@@ -82,20 +82,19 @@ export default {
       this.flagHandle(BMap, map)
     },
     flagHandle (BMap, map) {
-       let that = this
-      map.clearOverlays()
+      let that = this
       for (var i = 0; i < this.coordinateList.length; i++) {
         let item = this.coordinateList[i]
         var opts = {
           position: new BMap.Point(item.lng, item.lat), // 指定文本标注所在的地理位置
           offset: new BMap.Size(30, -30) // 设置文本偏移量
         }
-        const {value, status} = item
+        const { value, status } = item
         let color = this.getColor(value, status)
         var labelvValue
-        if(status!=='1'){
+        if (status !== '1') {
           labelvValue = '-'
-        }else{
+        } else {
           labelvValue = value
         }
         var label = new BMap.Label(labelvValue, opts)
@@ -112,26 +111,26 @@ export default {
           fontFamily: '微软雅黑'
         })
         label.addEventListener('click', function () {
-        if (that.isMarkHandle) {
-          that.$emit('markHandle', label)
-        }
+          if (that.isMarkHandle) {
+            that.$emit('markHandle', label)
+          }
 
-      })
+        })
         map.addOverlay(label)
       }
     },
     getColor (value, status) {
-      if(status!=='1'){
+      if (status !== '1') {
         return 'gray'
-      }else{
-      let color
-      this.mapColorList.map(i => {
-        let section = i.section.split('-')
-        if (value >= section[0] && value <= section[1]) {
-          color = i.color
-        }
-      })
-       return color
+      } else {
+        let color
+        this.mapColorList.map(i => {
+          let section = i.section.split('-')
+          if (value >= section[0] && value <= section[1]) {
+            color = i.color
+          }
+        })
+        return color
       }
     }
   }
