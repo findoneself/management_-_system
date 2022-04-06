@@ -19,12 +19,21 @@ export default {
     return {
     }
   },
+  watch: {
+    dataList: {
+      handler () {
+        this.getmap()
+      },
+      deep: true
+    }
+  },
   mounted () {
     this.getmap()
   },
   // 橘黄色//红色//亮蓝//黄色
   methods: {
     getmap () {
+      console.log(this.dataList)
       const colors = ['#FF7E00', '#FFD820', '#FF5656', '#59E6FF']
       const myChart = this.$echarts.init(document.getElementById('patrol'))
       let titleArr = []

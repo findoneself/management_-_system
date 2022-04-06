@@ -32,8 +32,8 @@ export default {
   },
   data () {
     return {
-      myChart:null,
-      color:['#19B17E', '#9834FF', '#23DBFC', '#FA6B16'],
+      myChart: null,
+      color: ['#19B17E', '#9834FF', '#23DBFC', '#FA6B16'],
       option: {
         xAxis: {
           type: 'category',
@@ -109,18 +109,17 @@ export default {
       }
     }
   },
-    watch:{
-    seriesData:{
+  watch: {
+    seriesData: {
       handler () {
-        this.getmap()
       },
-      deep:true
+      deep: true
     }
   },
   mounted () {
     this.getmap()
   },
-    activated () {
+  activated () {
     // 由于给echart添加了resize事件, 在组件激活时需要重新resize绘画一次, 否则出现空白bug
     if (this.myChart) {
       this.myChart.resize()
@@ -131,76 +130,76 @@ export default {
       this.option.legend.data = this.legendData
       this.option.xAxis.data = this.xAxisData
       let series = []
-      if(this.seriesData.length>0){
+      if (this.seriesData.length > 0) {
         console.log(123)
-       this.seriesData.map((i, index) => {
-        series.push({
-          name: i.title,
-          data: i.data,
-          type: 'line',
-          //  折线图线上的原点
-          symbol: 'circle',
-          symbolSize: 15,
-          itemStyle: {
-            normal: {
-              color: this.color[index],
-              borderColor: '#fff',
-              fontSize: '1rem',
-              shadowBlur: 0,
-              label: {
-                show: false
-              },
-              labelLine: {
-                show: false
+        this.seriesData.map((i, index) => {
+          series.push({
+            name: i.title,
+            data: i.data,
+            type: 'line',
+            //  折线图线上的原点
+            symbol: 'circle',
+            symbolSize: 15,
+            itemStyle: {
+              normal: {
+                color: this.color[index],
+                borderColor: '#fff',
+                fontSize: '1rem',
+                shadowBlur: 0,
+                label: {
+                  show: false
+                },
+                labelLine: {
+                  show: false
+                }
+              }
+            },
+            lineStyle: {
+              normal: {
+                color: i.color,
+                width: 5
               }
             }
-          },
-          lineStyle: {
-            normal: {
-              color: i.color,
-              width: 5
-            }
-          }
+          })
         })
-      })
-      }else{
+      } else {
         console.log('没有data')
         let arr = [{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], color: '#19B17E', title: '云-徐州传染病医院' },
         { data: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], color: '#9834FF', title: '云-淮安传染病医院' },
         { data: [13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35], color: '#23DBFC', title: '云-延安传染病医院' },
         { data: [16, 18, 20, 22, 24, 26, 28, 30, 31, 33, 35, 37], color: '#FA6B16', title: '云-常州传染病医院' }]
-       arr.map((i, index) => {
-        series.push({
-          name: i.title,
-          data: i.data,
-          type: 'line',
-          //  折线图线上的原点
-          symbol: 'circle',
-          symbolSize: 15,
-          itemStyle: {
-            normal: {
-              color: this.color[index],
-              borderColor: '#fff',
-              fontSize: '1rem',
-              shadowBlur: 0,
-              label: {
-                show: false
-              },
-              labelLine: {
-                show: false
+        arr.map((i, index) => {
+          series.push({
+            name: i.title,
+            data: i.data,
+            type: 'line',
+            //  折线图线上的原点
+            symbol: 'circle',
+            symbolSize: 15,
+            itemStyle: {
+              normal: {
+                color: this.color[index],
+                borderColor: '#fff',
+                fontSize: '1rem',
+                shadowBlur: 0,
+                label: {
+                  show: false
+                },
+                labelLine: {
+                  show: false
+                }
+              }
+            },
+            lineStyle: {
+              normal: {
+                color: i.color,
+                width: 5
               }
             }
-          },
-          lineStyle: {
-            normal: {
-              color: i.color,
-              width: 5
-            }
-          }
+          })
         })
-      })
       }
-     let option = {
+      let option = {
         ...this.option,
         series
       }

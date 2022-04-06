@@ -37,6 +37,7 @@
           clearable
           placeholder="请选择"
           @change="pickerChange('jkzd')"
+          collapse-tags
         >
           <el-option
             v-for="item in dictOptions.jczdList"
@@ -68,7 +69,10 @@
         label="类型："
         label-width="5rem"
       >
-        <el-select v-model="dataForm.type" @change="typeChange">
+        <el-select
+          v-model="dataForm.type"
+          @change="typeChange"
+        >
           <el-option
             v-for="item in dictOptions.typeList"
             :key="item.id"
@@ -81,7 +85,10 @@
         label="参数类型："
         style="width: 100%;"
       >
-        <el-checkbox-group v-model="dataForm.paramTypes" @change="pickerChange">
+        <el-checkbox-group
+          v-model="dataForm.paramTypes"
+          @change="pickerChange"
+        >
           <el-checkbox
             :label="item.prop"
             v-for="item in dictOptions.paramTypesList"
@@ -103,9 +110,10 @@
     </el-form>
 
     <MultilineChart
-     v-if="tabsType !== 'table'"
-     :seriesData ='seriesDatas'
-     :xAxisData ='xAxisDatas'/>
+      v-if="tabsType !== 'table'"
+      :seriesData='seriesDatas'
+      :xAxisData='xAxisDatas'
+    />
 
   </TableForm>
 </template>
@@ -129,7 +137,7 @@ export default {
         // 监测站点
         jczdList: [],
         // 类型
-        typeList: [{id:'zt', name:'昨天数据'}, {id:'jqt', name:'近七天数据'}, {id:'dy', name:'当月数据'}, {id:'dn', name:'当年数据'}],
+        typeList: [{ id: 'zt', name: '昨天数据' }, { id: 'jqt', name: '近七天数据' }, { id: 'dy', name: '当月数据' }, { id: 'dn', name: '当年数据' }],
         // 参数类型
         paramTypesList: [],
         // 数据图表
@@ -156,7 +164,7 @@ export default {
         { name: '温度', prop: 'wd', key: 2 },
         { name: '气压', prop: 'qy', key: 4 }
       ],
-      info:{},
+      info: {},
       // echarts的参数类型
       echartsType: '',
       // 时间快捷选项
@@ -191,30 +199,30 @@ export default {
       tabsType: '',
       // ehcart----数据
       // x轴
-      xAxisDatas:['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07', '3.08', '3.09', '3.10', '3.11', '3.12'],
+      xAxisDatas: ['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07', '3.08', '3.09', '3.10', '3.11', '3.12'],
       // 数据
       seriesDatas: [],
-      api:{},
-      dusindex:false
+      api: {},
+      dusindex: false
     }
   },
   created () {
     this.initDict()
-    this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList'))||[]
-    this.dataForm.area = this.dictOptions.areaList[0].id ||''
-     let router = this.$route.path.slice(16)
-    if(router==='DusIndex'){
+    this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
+    this.dataForm.area = this.dictOptions.areaList[0].id || ''
+    let router = this.$route.path.slice(16)
+    if (router === 'DusIndex') {
       this.dusindex = true
       this.api = {
-        jczdListApi:'/dustMonitoringSource/list/', // 监测站点
-        paramTypesApi:'/dustMonitoringSource/paramList', // 参数类型
-        dataListApi:'/dustMonitoringSource/deviceData/one' // 列表
+        jczdListApi: '/dustMonitoringSource/list/', // 监测站点
+        paramTypesApi: '/dustMonitoringSource/paramList', // 参数类型
+        dataListApi: '/dustMonitoringSource/deviceData/one' // 列表
       }
 
-    this.getJczdList()
-    this.getParamsType()
-    this.getDataList()
-    }else{
+      this.getJczdList()
+      this.getParamsType()
+      this.getDataList()
+    } else {
       this.api = {}
     }
     this.tabsClick(this.dictOptions.tabsTypes[0].id)
@@ -250,30 +258,30 @@ export default {
     // 获取表格和统计数据
     getDataList () {
       this.dataLoading = true
-      let {date} = this.dataForm
+      let { date } = this.dataForm
       this.$http({
         url: this.api.dataListApi,
         method: 'post',
-        data:{
+        data: {
           'dateStart': date[0],
           'dateEnd': date[1],
-           ...this.dataForm
+          ...this.dataForm
         }
       }).then(res => {
         this.dataLoading = false
-        const {data, status} = res
+        const { data, status } = res
         console.log(data)
         if (status === 200) {
-          const {columns, seriesdata, xaxisdata} = data.data.chart
+          const { columns, seriesdata, xaxisdata } = data.data.chart
           let arr = []
           columns.map(i => {
-            arr.push({...i, key:i.KEY})
+            arr.push({ ...i, key: i.KEY })
           })
           this.columns = arr
           this.dataList = data.data.table || []
           console.log(this.seriesDatas)
           this.seriesDatas.forEach((i, index) => {
-            if (index>=0){
+            if (index >= 0) {
               delete this.seriesDatas[index]
             }
           })
@@ -292,81 +300,81 @@ export default {
       })
     },
     // 行政区域变化
-    areaChange (){
+    areaChange () {
       this.getJczdList()
       this.getDataList()
     },
-    pickerChange (value){
-      if(value === 'jkzd'){
-      this.getInfo()
+    pickerChange (value) {
+      if (value === 'jkzd') {
+        this.getInfo()
       }
       this.getDataList()
     },
     // 检测站点
-    getJczdList (){
+    getJczdList () {
       this.$http({
-        url: this.api.jczdListApi+this.dataForm.area,
-         method:'post'
+        url: this.api.jczdListApi + this.dataForm.area,
+        method: 'post'
       }).then(res => {
         console.log(res)
-        const { data, status} = res
-        if(status===200){
+        const { data, status } = res
+        if (status === 200) {
           this.dictOptions.jczdList = data.data || []
-          this.dataForm.monitoringSourceId = this.dictOptions.jczdList[0].id|| ''
+          this.dataForm.monitoringSourceId = this.dictOptions.jczdList[0].id || ''
           sessionStorage.setItem('jczdList', JSON.stringify(data.data))
           this.getInfo()
-          }else{
+        } else {
           this.$message.error('获取行政数据错误')
         }
       })
     },
     // 参数
-    getParamsType (){
+    getParamsType () {
       this.$http({
         url: this.api.paramTypesApi
       }).then(res => {
         console.log(res)
-        const { data, status} = res
-        if(status===200){
+        const { data, status } = res
+        if (status === 200) {
           this.dictOptions.paramTypesList = data.data || []
           this.dataForm.paramTypes = [this.dictOptions.paramTypesList[0].prop] || []
           sessionStorage.setItem('paramTypesList', JSON.stringify(data.data))
           this.getDataList()
-          }else{
+        } else {
           this.$message.error('获取行政数据错误')
         }
       })
     },
-    typeChange (value){
+    typeChange (value) {
       console.log(value)
       let res
-      if(value==='zt'){
+      if (value === 'zt') {
         res = this.$format.getTwodaysDate()
-      }else if(value==='jqt'){
+      } else if (value === 'jqt') {
         res = this.$format.getDefaultWorkDatetime()
-      }else if(value==='dy'){
+      } else if (value === 'dy') {
         res = this.$format.getMonthStartDatetime()
-      }else{
-        res=this.$format.getYearStartDatetime()
+      } else {
+        res = this.$format.getYearStartDatetime()
       }
       console.log(res)
       this.dataForm.date = res
       this.getDataList()
     },
-    getInfo (){
-      let item = this.dictOptions.jczdList.find(i => i.id===this.dataForm.monitoringSourceId)
+    getInfo () {
+      let item = this.dictOptions.jczdList.find(i => i.id === this.dataForm.monitoringSourceId)
       this.info = { title: item.name, small: '2022-03-01 ( 小时数据 )' }
     }
   },
   computed: {
     tformHead () {
       // 需要取参数类型和选择日期的信息
-      const info = {...this.info}
+      const info = { ...this.info }
       if (this.tabsType === 'table') {
         info.btnType = 'elbtn'
         info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
       }
-       console.log(info)
+      console.log(info)
       return info
     }
   }

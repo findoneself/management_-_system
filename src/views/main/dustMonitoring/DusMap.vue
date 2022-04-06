@@ -193,23 +193,12 @@ export default {
       { name: '中度', color: '#FF0200', section: '116-150' },
       { name: '重度', color: '#990099', section: '151-250' },
       { name: '严重', color: '#990000', section: '251-500' }],
-<<<<<<< HEAD
       center: { lng: 116.413315, lat: 39.927636 },
-=======
-      center: { lng: 58.4711515, lat: 17.386449 },
->>>>>>> 7c5ec5266583cc59c6dc6b0f5b28eab6f8a5e62d
       // 地图右下角的switch 和相关data
       switch_value1: '',
       switch_value2: '',
       mapNumList: [0, 35, 75, 115, 150, 250, 500],
-<<<<<<< HEAD
       api: {}
-=======
-      api: {
-        areaApi: 'area/tree',
-        monitoringSourceApi: 'dustMonitoringSource/list'
-      }
->>>>>>> 7c5ec5266583cc59c6dc6b0f5b28eab6f8a5e62d
     }
   },
   created () {

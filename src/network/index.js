@@ -17,7 +17,7 @@ http.interceptors.request.use(config => {
   if (config.responseType && config.toLowerCase().indexOf('blob') > -1) {
     config.timeout = 10 * 60 * 1000
   }
-  config.headers.Authorization = VueCookie.get('token') || 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX3R5cGUiOiJHUklETUVNQkVSIiwidXNlcl9pZCI6MSwidXNlcl9rZXkiOiI1MzdkNGZmYy1mYzQ5LTQxNTctOTkxZC1mZTk3YzExOTAzNjMiLCJ1c2VybmFtZSI6IjE4OTk0NTg1MDU1In0.849BzyuYKDNvLoIUyz4Sf_vZOzR1OK1aMVbThrm_NfUDe73Se-2ttqT4WT02VX-j82kf6_849gvNu3k2qxAw9Q'
+  config.headers.Authorization = VueCookie.get('token') || 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX3R5cGUiOiJHUklETUVNQkVSIiwidXNlcl9pZCI6MSwidXNlcl9rZXkiOiI0MzVlMzU2YS1kNGYxLTQ4OTMtOGEyNi0wYzlkMmFmNGM0YzkiLCJ1c2VybmFtZSI6IjE4OTk0NTg1MDU1In0.UJ6DY5riB3IVsSIKxA9OFmYNT_iAZ8ogsmpZy2p3VqMBteE67wD8fp2PWN9k9ISlfFGW24XbcHHqZ-JA8Cb6rQ'
   NProgress.start()
   return config
 }, err => {
