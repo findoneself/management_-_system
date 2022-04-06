@@ -1,7 +1,7 @@
 <template>
-  <!--扬尘检测首-地图 -->
+  <!--视频管控 -->
   <BeautifulWrapper
-    :wraStyle="currentTabs === '1' ? { inPadding: '0px' } : {}"
+    :wraStyle="{ inPadding: '0px' }"
     :tabsList="tabsList"
     v-model="currentTabs"
   >
@@ -18,15 +18,35 @@
         @click="menuBtnClick(val)"
       ></i>
     </div>
+    <div class="video-content">
+      <template v-if="currentBtn === 'el-icon-one'">
+        <BeVideo :src="currentSrc" />
+        <BeautifulCard
+          title="点位操作"
+          :isTriangle='false'
+          class="console-card"
+          :card-style="{borderWidth: '0.125rem 0 0 0.125rem'}"
+        >
+          <div class="console-panel">
+
+          </div>
+        </BeautifulCard>
+      </template>
+    </div>
   </BeautifulWrapper>
 </template>
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
+import BeVideo from '_com/common/BeVideo'
+import BeautifulCard from '_com/common/BeautifulCard'
+
 export default {
   name: 'VideoIndex',
   components: {
-    BeautifulWrapper
+    BeautifulWrapper,
+    BeautifulCard,
+    BeVideo
   },
   data () {
     return {
@@ -38,9 +58,17 @@ export default {
       ],
       // 当前选择的tabs
       currentTabs: '1',
+      // 当前点击的右侧按钮
       currentBtn: 'el-icon-one',
       // 右侧按钮列表
-      menuButtons: ['el-icon-one', 'el-icon-menu', 'el-icon-s-grid']
+      menuButtons: ['el-icon-one', 'el-icon-menu', 'el-icon-s-grid'],
+      // 当前视频的src地址
+      currentSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4'
+    }
+  },
+  methods: {
+    menuBtnClick (val) {
+      this.currentBtn = val
     }
   }
 }
@@ -57,15 +85,40 @@ export default {
   .menubtn-item {
     margin-left: 10px;
     font-size: 26px;
-    color: #289cff;
+    color: #0e5dfb;
+    transition: all 0.2s;
     cursor: pointer;
   }
   .el-icon-one {
     width: 20px;
     height: 20px;
     display: block;
-    background-color: #289cff;
+    background-color: #0e5dfb;
     border-radius: 2px;
+  }
+  .menubtn-active {
+    color: #289cff;
+  }
+  .menubtn-active.el-icon-one {
+    background-color: #289cff;
+  }
+}
+.video-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  height: 100%;
+  .video-player {
+    flex: 1;
+    height: 100%;
+  }
+  /deep/ .video-js {
+    display: flex;
+    justify-content: center;
+  }
+  .console-card {
+    width: 21%;
+    height: 100%;
   }
 }
 </style>

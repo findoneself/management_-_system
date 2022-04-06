@@ -88,7 +88,7 @@ module.exports = {
     proxy: {
       // 设置代理
       '/api': {
-        target: 'http://8.142.178.139:8080/integration',
+        target: 'http://8.142.178.139:8080',
         changeOrigin: true,
         // 如果是http接口，需要配置该参数
         secure: false,

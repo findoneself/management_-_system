@@ -106,8 +106,8 @@ export default {
 .user-info {
   position: absolute;
   z-index: 99;
-  top: 73px;
-  right: 20px;
+  top: 6px;
+  right: 12px;
   .logout {
     display: flex;
     align-items: center;
@@ -158,7 +158,7 @@ export default {
     border-radius: 10% 50% 50% 50%;
     padding: 5px;
     background: url("~_ats/img/user-photo.png") no-repeat center / 100% 100%
-      #02004d;
+      #0934ae;
   }
   .user-phopo-img {
     width: 100%;
