@@ -651,6 +651,8 @@ div.el-tooltip__popper.is-light[x-placement^="right"] .popper__arrow::after {
     position: unset;
     width: auto;
     height: 100%;
+    max-width: 100%;
+    object-fit: fill;
 }
 
 div.video-js.vjs-fluid,
