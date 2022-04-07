@@ -7,6 +7,7 @@
       class="map_monitoring_source"
       :isTriangle='false'
       :cardStyle='cardStyle'
+      v-loading="loading"
     >
       <div>
         <el-form
@@ -64,7 +65,10 @@
       @monitoringSpotBack='monitoringSpotBack'
       :monitoringSspotData='monitoringSspotData'
     />
-    <div class="map">
+    <div
+      class="map"
+      v-loading="mapLoading"
+    >
       <AirQualityMap
         :center='center'
         :isMarkHandle='true'
@@ -126,6 +130,8 @@ export default {
   },
   data () {
     return {
+      loading: true,
+      mapLoading: true,
       activePage: 0,
       dictOptions: {
         // 行政区域
@@ -147,19 +153,7 @@ export default {
         { name: 'PM2.5', prop: 'value', key: 2, isSort: true }
       ],
       // 检测源 表格数据
-      dataList: [
-        { id: '1', value: '21', name: '云-徐州传染病医院' },
-        { id: '2', value: '12', name: '云-徐州传染病医院', sj: '2022-03-11 00:00:00' },
-        { id: '3', value: '24', name: '云-徐州传染病医院', sj: '2022-03-12 00:00:00' },
-        { id: '4', value: '15', name: '云-徐州传染病医院', sj: '2022-03-13 00:00:00' },
-        { id: '5', value: '15', name: '云-徐州传染病医院', sj: '2022-03-14 00:00:00' },
-        { id: '6', value: '21', name: '云-徐州传染病医院', sj: '2022-03-15 00:00:00' },
-        { id: '7', value: '21', name: '云-徐州传染病医院', sj: '2022-03-16 00:00:00' },
-        { id: '8', value: '21', name: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
-        { id: '9', value: '21', name: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
-        { id: '10', value: '21', name: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' },
-        { id: '11', value: '21', name: '云-徐州传染病医院', sj: '2022-03-17 00:00:00' }
-      ],
+      dataList: [],
       // 监测点数据
       monitoringSspotData: {
         title: '云-徐州传染病医院',
@@ -198,20 +192,15 @@ export default {
       switch_value1: '',
       switch_value2: '',
       mapNumList: [0, 35, 75, 115, 150, 250, 500],
-      api: {}
+      api: {
+        areaApi: 'integration/area/tree',
+        monitoringSourceApi: 'integration/dustMonitoringSource/list',
+        paramTypesApi: 'integration/dustMonitoringSource/paramList' // 参数类型
+      }
     }
   },
   created () {
-    let router = this.$route.path.slice(16)
-    if (router === 'DusIndex') {
-      this.api = {
-        areaApi: 'integration/area/tree',
-        monitoringSourceApi: 'integration/dustMonitoringSource/list'
-      }
-      this.getArea()
-    } else {
-      this.api = {}
-    }
+    this.getArea()
   },
   methods: {
     iconSearchHandle () {
@@ -249,7 +238,9 @@ export default {
           sessionStorage.setItem('areaList', JSON.stringify(data.data))
           this.dataForm.areaId = data.data[0].id
           this.getDataList()
+          this.loading = false
         } else {
+          this.loading = false
           this.$message.error('获取行政数据错误')
         }
       })
@@ -264,7 +255,7 @@ export default {
         const { data, status } = res
         if (status === 200) {
           const { center, list } = data.data
-          // console.log(center)
+          this.mapLoading = false
           this.center = center
           this.dataList = list
           let coordinateList = []
@@ -272,7 +263,9 @@ export default {
             coordinateList.push({ ...i.mapLngLat, value: i.value, status: i.status })
           })
           this.coordinateList = coordinateList
+          this.getParamsType()
         } else {
+          this.mapLoading = false
           this.$message.error('获取数据错误')
         }
       })
@@ -280,6 +273,21 @@ export default {
     },
     areaChange () {
       this.getDataList()
+    },
+    // 参数
+    getParamsType () {
+      this.$http({
+        url: this.api.paramTypesApi
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          sessionStorage.setItem('paramTypesList', JSON.stringify(data))
+        } else {
+          this.$message.error(msg || '获取参数类型数据错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || '获取参数类型数据错误')
+      })
     }
   }
 }
@@ -292,6 +300,7 @@ export default {
 }
 .tableList {
   position: relative;
+  height: calc(100% - 100px);
   .order_sj {
     position: absolute;
     top: 10px;

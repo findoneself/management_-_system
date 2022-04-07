@@ -204,10 +204,7 @@ export default {
         ],
         xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
         seriesData: [20, 50, 10, 35, 35, 47, 20, 20, 31, 12],
-        color: '#3D73F2',
-        picker: ['date', 'pm2.5'],
-        date: true,
-        pm: true
+        color: '#3D73F2'
       }, {
         title: '噪声设备预警',
         key: 'zssbyj',
@@ -217,9 +214,7 @@ export default {
         ],
         xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
         seriesData: [2, 10, 15, 30, 20, 33, 23],
-        color: '#23DBFC',
-        picker: ['date'],
-        date: true
+        color: '#23DBFC'
       }, {
         title: '车辆冲洗设备预警',
         key: 'clcxsbyj',
@@ -229,9 +224,7 @@ export default {
         ],
         xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
         seriesData: [20, 50, 10, 35, 35, 47, 20],
-        color: '#FFAD2D',
-        picker: ['date'],
-        date: true
+        color: '#FFAD2D'
       }, {
         title: 'AI设备预警',
         key: 'aisbyj',
@@ -241,10 +234,7 @@ export default {
         ],
         xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
         seriesData: [20, 50, 10, 35, 35, 47, 20],
-        color: '#CD482E',
-        picker: ['aqm', 'pm2.5'],
-        pm: true,
-        aqm: true
+        color: '#CD482E'
       }, {
         title: '整改设备超期预警',
         key: 'zgsbcqyj',
@@ -255,10 +245,7 @@ export default {
         ],
         xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
         seriesData: [20, 50, 10, 35, 35, 47, 20],
-        color: '#9662FF',
-        picker: ['aqm', 'pm2.5'],
-        zgtype: true,
-        pm: true
+        color: '#9662FF'
       }]
     }
   },

@@ -194,8 +194,10 @@ export default {
       xAxisDatas: [],
       // 数据
       seriesDatas: [],
-      api: {},
-      dusindex: false
+      api: {
+        jczdListApi: 'integration/dustMonitoringSource/listAllArea', // 监测站点
+        dataListApi: 'integration/dustMonitoringSource/deviceData/one' // 列表
+      }
     }
   },
   computed: {
@@ -211,26 +213,21 @@ export default {
         info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
       }
       return info
+    },
+    currentRoute () {
+      let router = this.$route.path.slice(16)
+      if (router === 'DusIndex') {
+        return true
+      } else {
+        return false
+      }
     }
   },
   created () {
-    this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
-    this.dataForm.area = this.dictOptions.areaList[0].id || ''
-    // 判断当前路由
-    let router = this.$route.path.slice(16)
-    if (router === 'DusIndex') {
-      this.dusindex = true
-      this.api = {
-        jczdListApi: 'integration/dustMonitoringSource/listAllArea', // 监测站点
-        paramTypesApi: 'integration/dustMonitoringSource/paramList', // 参数类型
-        dataListApi: 'integration/dustMonitoringSource/deviceData/one' // 列表
-      }
-    } else {
-      this.api = {}
-    }
     this.tabsClick(this.dictOptions.tabsTypes[0].id)
     this.dataForm.date = this.$format.getTwodaysDate()
-    this.getDictData()
+    this.getParams()
+    this.getJczdList()
   },
   methods: {
     // 点击回调-当前组件只有导出
@@ -307,60 +304,54 @@ export default {
       this.getDataList()
     },
     // 参数
-    getDictData () {
-      // 参数类型
-      const p1 = new Promise((resolve) => {
-        this.$http({ url: this.api.paramTypesApi }).then(data => {
-          data = data || { rows: [] }
-          resolve(data)
-        }, () => {
-          resolve({ rows: [] })
-        })
-      })
-      // 检测站点
-      const p2 = new Promise((resolve) => {
-        this.$http({
-          url: this.api.jczdListApi,
-          method: 'post',
-          data: {
-            areaIds: [],
-            monitoringSourceName: ''
-          }
-        }).then(data => {
-          data = data || { rows: [] }
-          resolve(data)
-        }, () => {
-          resolve({ rows: [] })
-        })
-      })
-      Promise.all([p1, p2]).then((posts) => {
-        if (posts.every(item => item.data.code === 200)) {
-          // 参数类型数据
-          const parData = posts[0].data.data || []
-          this.dictOptions.paramTypesList = parData
-          if (parData.length > 0) {
-            this.dataForm.paramTypes = [parData[0].prop] || []
-          }
-          // 检测站点数据，和行政区域数据一起处理成树结构
-          const staData = posts[1].data.data || []
+    getJczdList () {
+      // 监测站点
+      this.$http({
+        url: this.api.jczdListApi,
+        method: 'post',
+        data: {
+          areaIds: [],
+          monitoringSourceName: ''
+        }
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          // 监测站点数据，和行政区域数据一起处理成树结构
+          const staData = data || []
           this.dictOptions.areaList.map(item => {
             const list = staData.filter(s => s.areaId === item.id)
             item.children = list
           })
           const tree = this.dictOptions.areaList
-          // 默认检测站点数据
+          // 默认监测站点数据
           this.dictOptions.jczdList = tree[0].children || []
           if (tree[0].children && tree[0].children.length > 0) {
             this.dataForm.monitoringSourceId = tree[0].children[0].id
           }
           this.getDataList()
         } else {
-          this.dictOptions.paramTypesList = []
-          this.dataForm.paramTypes = []
+          this.$message.error(msg || '监测站点获取失败！')
           this.dictOptions.jczdList = []
           this.dataForm.monitoringSourceId = ''
         }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+        this.dictOptions.jczdList = []
+        this.dataForm.monitoringSourceId = ''
       })
+    },
+    getParams () {
+      this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
+      this.dataForm.area = this.dictOptions.areaList[0].id || ''
+      let data = JSON.parse(sessionStorage.getItem('paramTypesList'))
+      if (!this.currentRoute) {
+        this.dictOptions.paramTypesList = [data.find(i => i.name === '噪声')] || []
+      } else {
+        this.dictOptions.paramTypesList = data || []
+      }
+      if (this.dictOptions.paramTypesList.length > 0) {
+        this.dataForm.paramTypes = [this.dictOptions.paramTypesList[0].prop] || []
+      }
     }
   }
 }
