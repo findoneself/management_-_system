@@ -267,7 +267,7 @@ export default {
       fileData: [{ name: '文件', num: 132, type: '未读', history: 132455, src: '' },
       { name: '通报', num: 132, type: '未读', history: 132455, src: '../../../assets/img/tb.png' }],
       api: {
-        patrolDataApi: '/check/getCount'
+        patrolDataApi: 'integration/check/getCount'
       }
 
     }

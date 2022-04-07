@@ -201,8 +201,8 @@ export default {
     if (router === 'DusIndex') {
       this.dusindex = true
       this.api = {
-        jczdListApi: '/dustMonitoringSource/list/', // 监测站点
-        dataListApi: '/dustMonitoringSource/deviceData/more' // 列表
+        jczdListApi: 'integration/dustMonitoringSource/list/', // 监测站点
+        dataListApi: 'integration/dustMonitoringSource/deviceData/more' // 列表
       }
       this.getJczdList()
     } else {
@@ -317,7 +317,7 @@ export default {
   computed: {
     tformHead () {
       // 需要取参数类型和选择日期的信息
-      let item = this.dictOptions.jczdList.find(i => i.id === this.dataForm.monitoringSourceId) || { name: '测试标题' }
+      let item = this.dictOptions.paramTypesList.find(i => i.prop === this.dataForm.paramTypes) || { name: '测试标题' }
       const info = {
         title: item.name,
         small: (this.dataForm.date.length > 0 ? `${this.dataForm.date[0]}-${this.dataForm.date[1]}` : '') + '（分钟数据）'

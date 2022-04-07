@@ -63,7 +63,7 @@ export default {
     // 退出账户
     loginOut () {
       // 清除token
-      this.$utils.sessionStorageRemove('token')
+      this.$cookie.delete('token')
       // 跳转到登录页
       this.$router.push('/login')
     },

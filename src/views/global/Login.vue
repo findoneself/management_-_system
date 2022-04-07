@@ -32,22 +32,22 @@
               type="password"
             ></el-input>
           </el-form-item>
-          <!-- <el-form-item
+          <el-form-item
             prop="yzm"
             class="yam_box"
           >
             <el-input
               placeholder="请输入验证码"
               prefix-icon="el-icon-unlock"
-              v-model="loginForm.yzm"
+              v-model="loginForm.code"
               type="yzm"
             ></el-input>
             <img
+              @click="getCode"
               class="yzm_img"
-              src="../../assets/img/book.png"
-              alt=""
+              :src="'data:image/png;base64,'+src"
             >
-          </el-form-item> -->
+          </el-form-item>
           <el-form-item class="login-button">
             <el-button
               type="primary"
@@ -71,8 +71,10 @@ export default {
       loginForm: {
         username: '18994585055',
         password: 'admin123',
-        yzm: ''
+        code: '',
+        uuid: ''
       },
+      src: '',
       // 表单的验证规则
       rules: {
         username: [
@@ -108,33 +110,26 @@ export default {
       }
     }
   },
+  created () {
+    this.getCode()
+  },
   methods: {
     ...mapActions({ getUserInfo: 'global/getUserInfo' }),
     // 登录按钮
     loginClick () {
       this.$http({
-        url: '/gridmember/login',
+        url: '/auth/gridmember/login',
         method: 'post',
         data: this.loginForm
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
           let token = data.access_token
-          this.$cookie.setItem(token)
+          this.$cookie.set('token', token)
+          this.$router.push({ name: 'main' })
         } else {
           this.$message.error(msg || '登录失败')
         }
-        const userId = res.id || '1'
-        // 登录成功获取用户信息
-        this.getUserInfo(userId).then((user) => {
-          if (user.isUser) {
-            // 获取信息成功跳转至主页
-            this.$router.push({ name: 'main', props: { userId: userId } })
-          } else {
-            // 获取用户信息失败
-            if (!user.isUser) this.$message.error(user.message)
-          }
-        })
       }, () => {
         // 登录失败
         this.$message.error('toke验证失效或不存在此账户!')
@@ -151,6 +146,24 @@ export default {
     resetForm () {
       // resetFields是element-ui的表单组件方法
       this.$refs.loginForm.resetFields()
+    },
+    getCode () {
+      this.$http({
+        url: '/code'
+      }).then(res => {
+        const { img, code, msg, uuid } = res.data
+        if (code === 200) {
+          this.loginForm.uuid = uuid
+          this.src = img
+        } else {
+          this.$message.error(msg || '登录失败')
+        }
+      }, () => {
+        // 登录失败
+        this.$message.error('toke验证失效或不存在此账户!')
+        // ----以下逻辑仅为测试
+        // 登录成功获取用户信息
+      })
     }
   }
 }
@@ -234,7 +247,7 @@ div.el-picker-panel__sidebar {
   border-color: #eeeeee;
   color: #9f9f9f;
   height: 50px;
-  font-size: 20px;
+  font-size: 1rem;
   padding-left: 2.5rem;
 }
 .login-button {
@@ -244,5 +257,6 @@ div.el-picker-panel__sidebar {
 
 .yzm_img {
   width: 45%;
+  cursor: pointer;
 }
 </style>

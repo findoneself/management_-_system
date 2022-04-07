@@ -205,8 +205,8 @@ export default {
     let router = this.$route.path.slice(16)
     if (router === 'DusIndex') {
       this.api = {
-        areaApi: 'area/tree',
-        monitoringSourceApi: 'dustMonitoringSource/list'
+        areaApi: 'integration/area/tree',
+        monitoringSourceApi: 'integration/dustMonitoringSource/list'
       }
       this.getArea()
     } else {

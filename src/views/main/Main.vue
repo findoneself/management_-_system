@@ -54,7 +54,7 @@ export default {
   mounted () {
     this.$nextTick(() => {
       // 获取所有字典数据，处理后存储在vuex
-      this.initAllDict()
+      // this.initAllDict()
     })
   },
   methods: {
