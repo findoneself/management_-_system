@@ -1,3 +1,4 @@
+import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import $http from '../network'
@@ -36,11 +37,11 @@ const mainRoutes = {
   children: routeMenu,
   beforeEnter (to, from, next) {
     // 为了验证token，如果失效跳转至登录页
-    // let token = Vue.cookie.get('token')
-    // if (!token || !/\S/.test(token)) {
-    //   next({ name: 'login' })
-    //   return
-    // }
+    let token = VueCookie.get('token')
+    if (!token || !/\S/.test(token)) {
+      next({ name: 'login' })
+      return
+    }
     next()
   }
 }
@@ -57,6 +58,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     router.options.isLoadMenu = false
+    $utils.clearLoginInfo()
     next()
   } else if (!router.options.isLoadMenu) {
     getMenuData(to, next)
@@ -158,16 +160,7 @@ function getMenuData (to, next) {
   //   data = data || []
   //   console.log(data)
   // }, () => {
-
+  //  获取菜单数据
   // })
 }
-// 全局挂载路由导航守卫--暂时没token不用放开
-// router.beforeEach((to, from, next) => {
-//   // to 将要访问的路劲
-//   // from 代表从哪个路径跳转而来
-//   // next是一个函数，表示放行
-//   // 获取token
-//   const tokenStr = window.sessionStorage.getItem('token')
-//   to.path === '/login' ? next() : !tokenStr ? next('/login') : next()
-// })
 export default router

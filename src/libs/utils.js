@@ -1,3 +1,5 @@
+import VueCookie from 'vue-cookie'
+import store from '../store'
 let Utils = {}
 // // 清除sessionStorage
 // Utils.sessionStorageRemove = function (key) {
@@ -188,10 +190,9 @@ Utils.deleteChild = function (arr, children = 'children') {
  * 清除登录信息
  */
 Utils.clearLoginInfo = function () {
-  // window.Vue.$cookie.delete('token')
-  // store.commit('resetStore')
-  // router.options.isAddDynamicMenuRoutes = false
-  // setAllData('dynamicMenuRoutes', '[]')
+  VueCookie.delete('token')
+  store.commit('resetStore')
+  localStorage.removeItem('userInfo')
 }
 // 节流(规定时间内，只触发一次事件)
 Utils.throttle = function (fn, delay) {

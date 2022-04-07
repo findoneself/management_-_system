@@ -51,10 +51,10 @@ export default {
       systemTitle: '江苏本初一体化管理平台',
       // 默认首页
       home: {},
-      userInfo: this.$store.state.global.userInfo
+      userInfo: {} || this.$store.state.global.userInfo
     }
   },
-  created () {
+  mounted () {
     // 查找默认首页
     const menuRoutes = this.$store.state.global.menuRoutes
     this.home = menuRoutes.find(item => item.meta.type === 'home') || { name: 'home-Home' }

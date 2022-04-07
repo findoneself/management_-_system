@@ -21,7 +21,7 @@
           v-model="dataForm.area"
           clearable
           placeholder="请选择"
-          @change="getJczdList"
+          @change="areaChange"
         >
           <el-option
             v-for="item in dictOptions.areaList"
@@ -221,7 +221,7 @@ export default {
     if (router === 'DusIndex') {
       this.dusindex = true
       this.api = {
-        jczdListApi: 'integration/dustMonitoringSource/list/', // 监测站点
+        jczdListApi: 'integration/dustMonitoringSource/listAllArea', // 监测站点
         paramTypesApi: 'integration/dustMonitoringSource/paramList', // 参数类型
         dataListApi: 'integration/dustMonitoringSource/deviceData/one' // 列表
       }
@@ -230,7 +230,7 @@ export default {
     }
     this.tabsClick(this.dictOptions.tabsTypes[0].id)
     this.dataForm.date = this.$format.getTwodaysDate()
-    this.getParamsType()
+    this.getDictData()
   },
   methods: {
     // 点击回调-当前组件只有导出
@@ -242,6 +242,15 @@ export default {
     // 设置展示类型
     tabsClick (id) {
       this.tabsType = id
+    },
+    // 行政区域改变
+    areaChange (val) {
+      const isJczd = this.dictOptions.areaList.find(item => item.id === val)
+      if (isJczd) this.dictOptions.jczdList = isJczd.children || []
+      if (isJczd.children && isJczd.children.length > 0) {
+        this.dataForm.monitoringSourceId = isJczd.children[0].id
+        this.getDataList()
+      }
     },
     // 获取表格和统计数据
     getDataList () {
@@ -297,52 +306,60 @@ export default {
       this.dataForm.date = res
       this.getDataList()
     },
-    // 检测站点
-    getJczdList () {
-      this.$http({
-        url: this.api.jczdListApi + this.dataForm.area,
-        method: 'post'
-      }).then(res => {
-        const { data, code, msg } = res.data
-        if (code === 200) {
-          this.dictOptions.jczdList = data || []
-          if (this.dictOptions.jczdList.length > 0) {
-            this.dataForm.monitoringSourceId = data[0].id || ''
-            this.getDataList()
-          }
-        } else {
-          this.dictOptions.jczdList = []
-          this.dataForm.monitoringSourceId = ''
-          this.$message.error(msg || '获取检测站点数据失败！')
-        }
-      }, (err) => {
-        this.$message.error(err.data.msg || '获取检测站点数据失败！')
-        this.dictOptions.jczdList = []
-        this.dataForm.monitoringSourceId = ''
-      })
-    },
     // 参数
-    getParamsType () {
-      this.$http({
-        url: this.api.paramTypesApi
-      }).then(res => {
-        const { data, code, msg } = res.data
-        if (code === 200) {
-          this.dictOptions.paramTypesList = data || []
-          if (this.dictOptions.paramTypesList.length > 0) {
-            this.dataForm.paramTypes = [data[0].prop] || []
+    getDictData () {
+      // 参数类型
+      const p1 = new Promise((resolve) => {
+        this.$http({ url: this.api.paramTypesApi }).then(data => {
+          data = data || { rows: [] }
+          resolve(data)
+        }, () => {
+          resolve({ rows: [] })
+        })
+      })
+      // 检测站点
+      const p2 = new Promise((resolve) => {
+        this.$http({
+          url: this.api.jczdListApi,
+          method: 'post',
+          data: {
+            areaIds: [],
+            monitoringSourceName: ''
           }
-          this.getJczdList()
-          sessionStorage.setItem('paramTypesList', JSON.stringify(data))
+        }).then(data => {
+          data = data || { rows: [] }
+          resolve(data)
+        }, () => {
+          resolve({ rows: [] })
+        })
+      })
+      Promise.all([p1, p2]).then((posts) => {
+        if (posts.every(item => item.data.code === 200)) {
+          // 参数类型数据
+          const parData = posts[0].data.data || []
+          this.dictOptions.paramTypesList = parData
+          if (parData.length > 0) {
+            this.dataForm.paramTypes = [parData[0].prop] || []
+          }
+          // 检测站点数据，和行政区域数据一起处理成树结构
+          const staData = posts[1].data.data || []
+          this.dictOptions.areaList.map(item => {
+            const list = staData.filter(s => s.areaId === item.id)
+            item.children = list
+          })
+          const tree = this.dictOptions.areaList
+          // 默认检测站点数据
+          this.dictOptions.jczdList = tree[0].children || []
+          if (tree[0].children && tree[0].children.length > 0) {
+            this.dataForm.monitoringSourceId = tree[0].children[0].id
+          }
+          this.getDataList()
         } else {
-          this.$message.error(msg || '获取行政数据错误')
           this.dictOptions.paramTypesList = []
           this.dataForm.paramTypes = []
+          this.dictOptions.jczdList = []
+          this.dataForm.monitoringSourceId = ''
         }
-      }, (err) => {
-        this.$message.error(err.data.msg || '获取行政数据错误')
-        this.dictOptions.paramTypesList = []
-        this.dataForm.paramTypes = []
       })
     }
   }

@@ -62,7 +62,7 @@
 
 <script>
 // 导入Vuex
-import { mapActions } from 'vuex'
+// import { mapActions } from 'vuex'
 export default {
   name: 'Login',
   data () {
@@ -114,7 +114,7 @@ export default {
     this.getCode()
   },
   methods: {
-    ...mapActions({ getUserInfo: 'global/getUserInfo' }),
+    // ...mapActions({ getUserInfo: 'global/getUserInfo' }),
     // 登录按钮
     loginClick () {
       this.$http({
@@ -127,19 +127,19 @@ export default {
           let token = data.access_token
           this.$cookie.set('token', token)
           this.$router.push({ name: 'main' })
+          // ----以下逻辑仅为测试
+          // 登录成功获取用户信息
+          // this.getUserInfo('1').then((user) => {
+          //   // 获取用户信息失败
+          //   this.$router.push({ name: 'main', params: { userId: '1' } })
+          //   if (!user.isUser) this.$message.error(user.message)
+          // })
         } else {
           this.$message.error(msg || '登录失败')
         }
       }, () => {
         // 登录失败
         this.$message.error('toke验证失效或不存在此账户!')
-        // ----以下逻辑仅为测试
-        // 登录成功获取用户信息
-        this.getUserInfo('1').then((user) => {
-          // 获取用户信息失败
-          this.$router.push({ name: 'main', params: { userId: '1' } })
-          if (!user.isUser) this.$message.error(user.message)
-        })
       })
     },
     // 重置按钮

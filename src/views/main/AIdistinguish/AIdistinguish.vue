@@ -5,7 +5,7 @@
     :border-icon="['top', 'right', 'triangle', 'left']"
     :wraStyle="{ inPadding: '0px' }"
   >
-    <!-- <BeautifulCard
+    <BeautifulCard
       class="xmfl-card"
       title="项目分类统计"
       :isTriangle='false'
@@ -237,24 +237,24 @@
       </BeautifulCard>
     </div>
     <TableDialog ref="TableDialog" />
-    <BeImageFixed ref="imageRef" /> -->
+    <BeImageFixed ref="imageRef" />
   </BeautifulWrapper>
 </template>
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
-// import BeautifulCard from '_com/common/BeautifulCard'
-// import BeautifulTableList from '_com/common/BeautifulTableList'
-// import BeImageFixed from '_com/common/BeImageFixed'
-// import TableDialog from './components/TableDialog'
+import BeautifulCard from '_com/common/BeautifulCard'
+import BeautifulTableList from '_com/common/BeautifulTableList'
+import BeImageFixed from '_com/common/BeImageFixed'
+import TableDialog from './components/TableDialog'
 export default {
   name: 'AIdistinguish',
   components: {
-    BeautifulWrapper
-    // BeautifulCard,
-    // BeautifulTableList,
-    // TableDialog,
-    // BeImageFixed
+    BeautifulWrapper,
+    BeautifulCard,
+    BeautifulTableList,
+    TableDialog,
+    BeImageFixed
   },
   data () {
     return {
@@ -424,26 +424,25 @@ export default {
           console.log(res)
         } else {
           this.$message.error('获取实时数据失败！')
-          this.dataList.sssjList = []
+          this.dataList.sssjList = [
+            { id: '1212', address: '和平路南阳花园西侧1号门和平路南阳花园西侧1号门和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '165', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '1215542', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '124', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '145452', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '1256', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '1565232', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '15652445', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '156222', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '15652565', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '1565323232', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '152', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
+            { id: '1552', address: '和平路南阳花园西侧1号门', date: '2022-11-12' }
+          ]
         }
       }, () => {
         this.loadings.sssjLoading = false
         this.$message.error('获取实时数据失败！')
-        this.dataList.sssjList = [
-          { id: '1212', address: '和平路南阳花园西侧1号门和平路南阳花园西侧1号门和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '165', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '1215542', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '124', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '145452', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '1256', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '1565232', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '15652445', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '156222', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '15652565', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '1565323232', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '152', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-          { id: '1552', address: '和平路南阳花园西侧1号门', date: '2022-11-12' }
-        ]
       })
       // ---获取项目分类统计数据
       this.loadings.xmflLoading = true
@@ -454,26 +453,25 @@ export default {
           console.log(res)
         } else {
           this.$message.error('获取项目分类统计失败！')
-          this.xmflOption.list = []
+          const list = [
+            { name: '监测站', count: 16 },
+            { name: '燃气站', count: 26 },
+            { name: '加油站', count: 36 },
+            { name: '建筑工地', count: 47 },
+            { name: '其他', count: 49 }
+          ]
+          this.xmflOption.list = list
+          const series = list.map((item) => {
+            return {
+              value: item.count,
+              name: item.name
+            }
+          })
+          this.setXmflEchart(series)
         }
       }, () => {
         this.loadings.xmflLoading = false
         // this.$message.error('获取项目分类统计失败！')
-        const list = [
-          { name: '监测站', count: 16 },
-          { name: '燃气站', count: 26 },
-          { name: '加油站', count: 36 },
-          { name: '建筑工地', count: 47 },
-          { name: '其他', count: 49 }
-        ]
-        this.xmflOption.list = list
-        const series = list.map((item) => {
-          return {
-            value: item.count,
-            name: item.name
-          }
-        })
-        this.setXmflEchart(series)
       })
       // ---获取报警分类统计数据
       this.loadings.bjflLoading = true

@@ -19,11 +19,6 @@ export default {
       }
       localStorage.setItem('userInfo', JSON.stringify(data))
     },
-    // 清除用户信息
-    clearUserInfo (state) {
-      state.userInfo = {}
-      localStorage.removeItem('userInfo')
-    },
     // ----菜单
     // 保存菜单数据
     saveMenuList (state, list) {

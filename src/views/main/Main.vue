@@ -33,18 +33,18 @@ export default {
       isRouterAlive: true
     }
   },
-  computed: {
-    userId: {
-      get () {
-        return 'a'
-        // return this.$store.state.user.id
-      },
-      set (val) {
-        console.log(val)
-        // this.$store.commit('updateUserId', val)
-      }
-    }
-  },
+  // computed: {
+  //   userId: {
+  //     get () {
+  //       return 'a'
+  //       // return this.$store.state.user.id
+  //     },
+  //     set (val) {
+  //       console.log(val)
+  //       // this.$store.commit('updateUserId', val)
+  //     }
+  //   }
+  // },
   watch: {
     $route: {
       handler: 'routeHandle',
@@ -52,17 +52,17 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(() => {
-      // 获取所有字典数据，处理后存储在vuex
-      // this.initAllDict()
-    })
+    // this.$nextTick(() => {
+    // 获取所有字典数据，处理后存储在vuex
+    // this.initAllDict()
+    // })
   },
   methods: {
     // 路由操作
     routeHandle (to, oldRoute) {
       if (to.name === 'main' && !oldRoute) {
-        if (!this.userId) {
-          // this.getUserInfo()
+        /* if (!this.userId) {
+        this.getUserInfo()
         }
         // 保存菜单及其路由数据
         const menuList = JSON.parse(sessionStorage.getItem('menuList')) || []
@@ -89,15 +89,18 @@ export default {
           }
         } else {
           this.routeDefalut(home, '当前账户未设置首页，跳转至默认首页！')
-        }
+        } */
+        const menuRoutes = JSON.parse(sessionStorage.getItem('menuRoutes')) || []
+        const home = menuRoutes.find(item => item.meta.type === 'home')
+        this.routeDefalut(home)
       } else if (to.name === 'main' && oldRoute) {
         // 说明是回退到登录页
-        this.$router.push({ name: 'login' })
+        this.routeDefalut()
       }
     },
     // 跳转默认页面
     routeDefalut (item = { name: 'login' }, msg = '') {
-      this.$message.info(msg)
+      if (msg) this.$message.info(msg)
       this.$router.push({ name: item.name })
     },
     // 获取所有字典数据
