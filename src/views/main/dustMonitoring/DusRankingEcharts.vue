@@ -64,11 +64,11 @@
         label="参数类型："
         style="width: 100%;"
       >
-        <el-radio-group v-model="dataForm.paramType">
+        <el-radio-group v-model="dataForm.paramTypes">
           <el-radio
-            :label="item.id"
-            v-for="item in dictOptions.paramTypes"
-            :key="item.id"
+            :label="item.prop"
+            v-for="item in dictOptions.paramTypesList"
+            :key="item.prop"
           >{{ item.name}}</el-radio>
         </el-radio-group>
       </el-form-item>
@@ -114,7 +114,7 @@ export default {
           { id: 'asc', name: '升序' }
         ],
         // 参数类型
-        paramTypes: [],
+        paramTypesList: [],
         tabsTypes: [
           { id: 'echart', name: '图形' },
           { id: 'table', name: '表格' }
@@ -155,7 +155,7 @@ export default {
         area: 'xz-1',
         date: ['2022-01-01', '2022-05-02'],
         order: 'asc',
-        paramType: 'wd'
+        paramTypes: 'wd'
       },
       // 展示数据类型
       tabsType: '',
@@ -194,6 +194,14 @@ export default {
         }]
       }
       return info
+    },
+    currentRoute () {
+      let router = this.$route.path.slice(16)
+      if (router === 'DusIndex') {
+        return true
+      } else {
+        return false
+      }
     }
   },
   created () {
@@ -207,14 +215,17 @@ export default {
   methods: {
     // 初始化字典数据
     initDict () {
-      const dict = this.$store.state.global.dictData
-      if (dict.paramsType && dict.paramsType.length > 0) {
-        this.dictOptions.paramTypes = dict.paramsType
-        this.dataForm.paramType = dict.paramsType[0].id
+      this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
+      this.dataForm.area = this.dictOptions.areaList[0].id || ''
+      let data = JSON.parse(sessionStorage.getItem('paramTypesList')) || []
+      if (!this.currentRoute) {
+        this.dictOptions.paramTypesList = [data.find(i => i.name === '噪声')] || []
+      } else {
+        this.dictOptions.paramTypesList = data || []
       }
-      if (dict.xzarea && dict.xzarea.length > 0) {
-        this.dictOptions.areaList = dict.xzarea
-        this.dataForm.area = dict.xzarea[0].id
+      if (this.dictOptions.paramTypesList.length > 0) {
+        this.dataForm.paramTypes = this.dictOptions.paramTypesList[0].prop
+        console.log(this.dictOptions.paramTypesList, this.dataForm.paramTypes)
       }
     },
     // 获取表格和统计数据

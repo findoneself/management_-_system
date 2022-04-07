@@ -144,7 +144,7 @@
         :seriesData='item.seriesData'
       />
     </BeautifulCard>
-    <TableDialog ref="moreDialog" />
+    <!-- <TableDialog ref="moreDialog" /> -->
   </BeautifulWrapper>
 </template>
 
@@ -152,14 +152,14 @@
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import BeautifulCard from '_com/common/BeautifulCard'
 import MonitorBar from './components/MonitorBar.vue'
-import TableDialog from './components/TableDialog'
+// import TableDialog from './components/TableDialog'
 
 export default {
   name: '',
   components: {
     BeautifulWrapper,
     BeautifulCard,
-    TableDialog,
+    // TableDialog,
     MonitorBar
 
   },
