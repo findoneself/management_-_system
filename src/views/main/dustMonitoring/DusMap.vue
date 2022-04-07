@@ -21,7 +21,7 @@
               v-model="dataForm.areaId"
               clearable
               placeholder="请选择"
-              @change="areaChange"
+              @change="getDataList"
             >
               <el-option
                 v-for="item in dictOptions.areaList"
@@ -195,12 +195,18 @@ export default {
       api: {
         areaApi: 'integration/area/tree',
         monitoringSourceApi: 'integration/dustMonitoringSource/list',
-        paramTypesApi: 'integration/dustMonitoringSource/paramList' // 参数类型
+        paramTypesApi: 'integration/dustMonitoringSource/paramList', // 参数类型
+        jczdListApi: 'integration/dustMonitoringSource/listAllArea' // 监测站点
       }
     }
   },
   created () {
     this.getArea()
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.getDictData()
+    })
   },
   methods: {
     iconSearchHandle () {
@@ -263,19 +269,15 @@ export default {
             coordinateList.push({ ...i.mapLngLat, value: i.value, status: i.status })
           })
           this.coordinateList = coordinateList
-          this.getParamsType()
         } else {
           this.mapLoading = false
           this.$message.error('获取数据错误')
         }
       })
-
-    },
-    areaChange () {
-      this.getDataList()
     },
     // 参数
-    getParamsType () {
+    getDictData () {
+      // 参数类型
       this.$http({
         url: this.api.paramTypesApi
       }).then(res => {
@@ -286,7 +288,24 @@ export default {
           this.$message.error(msg || '获取参数类型数据错误')
         }
       }, (err) => {
-        this.$message.error(err.data.msg || '获取参数类型数据错误')
+        this.$message.error(err.data.msg || err.data.error)
+      })
+      // 检测站点
+      this.$http({
+        url: this.api.jczdListApi,
+        method: 'post',
+        data: { areaIds: [], monitoringSourceName: '' }
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.$store.commit('global/setDusDictData', { type: 'station', list: data })
+        } else {
+          this.$store.commit('global/setDusDictData', { type: 'station', list: [] })
+          this.$message.error(msg || '监测站点获取失败！')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+        this.$store.commit('global/setDusDictData', { type: 'station', list: [] })
       })
     }
   }
