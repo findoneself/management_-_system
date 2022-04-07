@@ -194,8 +194,10 @@ export default {
       xAxisDatas: [],
       // 数据
       seriesDatas: [],
-      api: {},
-      dusindex: false
+      api: {
+        jczdListApi: 'integration/dustMonitoringSource/listAllArea', // 监测站点
+        dataListApi: 'integration/dustMonitoringSource/deviceData/one' // 列表
+      }
     }
   },
   computed: {
@@ -211,26 +213,21 @@ export default {
         info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
       }
       return info
+    },
+    currentRoute () {
+      let router = this.$route.path.slice(16)
+      if (router === 'DusIndex') {
+        return true
+      } else {
+        return false
+      }
     }
   },
   created () {
-    this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
-    this.dataForm.area = this.dictOptions.areaList[0].id || ''
-    // 判断当前路由
-    let router = this.$route.path.slice(16)
-    if (router === 'DusIndex') {
-      this.dusindex = true
-      this.api = {
-        jczdListApi: 'integration/dustMonitoringSource/list/', // 监测站点
-        paramTypesApi: 'integration/dustMonitoringSource/paramList', // 参数类型
-        dataListApi: 'integration/dustMonitoringSource/deviceData/one' // 列表
-      }
-    } else {
-      this.api = {}
-    }
     this.tabsClick(this.dictOptions.tabsTypes[0].id)
     this.dataForm.date = this.$format.getTwodaysDate()
-    this.getParamsType()
+    this.getParams()
+    this.getJczdList()
   },
   methods: {
     // 点击回调-当前组件只有导出
@@ -300,8 +297,12 @@ export default {
     // 检测站点
     getJczdList () {
       this.$http({
-        url: this.api.jczdListApi + this.dataForm.area,
-        method: 'post'
+        url: this.api.jczdListApi,
+        method: 'post',
+        data: {
+          areaIds: [],
+          monitoringSourceName: ''
+        }
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
@@ -321,30 +322,20 @@ export default {
         this.dataForm.monitoringSourceId = ''
       })
     },
-    // 参数
-    getParamsType () {
-      this.$http({
-        url: this.api.paramTypesApi
-      }).then(res => {
-        const { data, code, msg } = res.data
-        if (code === 200) {
-          this.dictOptions.paramTypesList = data || []
-          if (this.dictOptions.paramTypesList.length > 0) {
-            this.dataForm.paramTypes = [data[0].prop] || []
-          }
-          this.getJczdList()
-          sessionStorage.setItem('paramTypesList', JSON.stringify(data))
-        } else {
-          this.$message.error(msg || '获取行政数据错误')
-          this.dictOptions.paramTypesList = []
-          this.dataForm.paramTypes = []
-        }
-      }, (err) => {
-        this.$message.error(err.data.msg || '获取行政数据错误')
-        this.dictOptions.paramTypesList = []
-        this.dataForm.paramTypes = []
-      })
+    getParams () {
+      this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
+      this.dataForm.area = this.dictOptions.areaList[0].id || ''
+      let data = JSON.parse(sessionStorage.getItem('paramTypesList'))
+      if (!this.currentRoute) {
+        this.dictOptions.paramTypesList = [data.find(i => i.name === '噪声')] || []
+      } else {
+        this.dictOptions.paramTypesList = data || []
+      }
+      if (this.dictOptions.paramTypesList.length > 0) {
+        this.dataForm.paramTypes = [this.dictOptions.paramTypesList[0].prop] || []
+      }
     }
+
   }
 }
 </script>

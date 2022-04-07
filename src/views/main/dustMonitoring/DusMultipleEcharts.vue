@@ -19,7 +19,6 @@
       <el-form-item label="行政区域：">
         <el-select
           v-model="dataForm.area"
-          clearable
           placeholder="请选择"
           @change="pickerChange('area')"
         >
@@ -34,7 +33,6 @@
       <el-form-item label="监测站点：">
         <el-select
           v-model="dataForm.monitoringSourceIds"
-          clearable
           multiple
           collapse-tags
           placeholder="请选择"
@@ -191,31 +189,31 @@ export default {
       xAxisDatas: [],
       // 数据
       seriesDatas: [],
-      info: {}
+      api: {
+        jczdListApi: 'integration/dustMonitoringSource/list/', // 监测站点
+        dataListApi: 'integration/dustMonitoringSource/deviceData/more' // 列表
+      }
     }
   },
   created () {
     this.initDict()
     // 设置默认展示类型和默认echart类型
-    let router = this.$route.path.slice(16)
-    if (router === 'DusIndex') {
-      this.dusindex = true
-      this.api = {
-        jczdListApi: 'integration/dustMonitoringSource/list/', // 监测站点
-        dataListApi: 'integration/dustMonitoringSource/deviceData/more' // 列表
-      }
-      this.getJczdList()
-    } else {
-      this.api = {}
-    }
+    this.getJczdList()
     this.tabsType = this.dictOptions.tabsTypes[0].id
   },
   methods: {
     initDict () {
       this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
-      this.dictOptions.paramTypesList = JSON.parse(sessionStorage.getItem('paramTypesList')) || []
+      let data = JSON.parse(sessionStorage.getItem('paramTypesList')) || []
+      if (!this.currentRoute) {
+        this.dictOptions.paramTypesList = [data.find(i => i.name === '噪声')] || []
+      } else {
+        this.dictOptions.paramTypesList = data || []
+      }
+      if (this.dictOptions.paramTypesList.length > 0) {
+        this.dataForm.paramTypes = this.dictOptions.paramTypesList[0].prop
+      }
       this.dataForm.area = this.dictOptions.areaList[0].id || ''
-      this.dataForm.paramTypes = this.dictOptions.paramTypesList[0].prop
       this.dataForm.date = this.$format.getTwodaysDate()
     },
     buttonClick (item) { // 当前页面 只有图表和表格两个选项
@@ -262,8 +260,6 @@ export default {
         this.dataLoading = false
         this.$message.error('获取统计数据失败！')
       })
-      console.log(this.dataLoading)
-      this.dataLoading = false
     },
     // 设置展示类型
     tabsClick (id) {
@@ -327,6 +323,14 @@ export default {
         info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
       }
       return info
+    },
+    currentRoute () {
+      let router = this.$route.path.slice(16)
+      if (router === 'DusIndex') {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }

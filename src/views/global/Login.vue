@@ -142,11 +142,6 @@ export default {
         })
       })
     },
-    // 重置按钮
-    resetForm () {
-      // resetFields是element-ui的表单组件方法
-      this.$refs.loginForm.resetFields()
-    },
     getCode () {
       this.$http({
         url: '/code'
@@ -156,13 +151,11 @@ export default {
           this.loginForm.uuid = uuid
           this.src = img
         } else {
-          this.$message.error(msg || '登录失败')
+          this.$message.error(msg || '获取验证码失败')
         }
       }, () => {
         // 登录失败
-        this.$message.error('toke验证失效或不存在此账户!')
-        // ----以下逻辑仅为测试
-        // 登录成功获取用户信息
+        this.$message.error('获取验证码失败!')
       })
     }
   }
@@ -227,7 +220,7 @@ export default {
   border-radius: 5px;
   font-size: 20px;
   width: 100%;
-  // margin: 15px 0;
+  border: none;
 }
 /deep/.el-form .el-form-item:last-of-type {
   margin-top: 50px;
