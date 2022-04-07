@@ -195,7 +195,6 @@ export default {
       // 数据
       seriesDatas: [],
       api: {
-        jczdListApi: 'integration/dustMonitoringSource/listAllArea', // 监测站点
         dataListApi: 'integration/dustMonitoringSource/deviceData/one' // 列表
       }
     }
@@ -226,8 +225,9 @@ export default {
   created () {
     this.tabsClick(this.dictOptions.tabsTypes[0].id)
     this.dataForm.date = this.$format.getTwodaysDate()
-    this.getParams()
-    this.getJczdList()
+  },
+  mounted () {
+    this.initDict()
   },
   methods: {
     // 点击回调-当前组件只有导出
@@ -303,46 +303,11 @@ export default {
       this.dataForm.date = res
       this.getDataList()
     },
-    // 参数
-    getJczdList () {
-      // 监测站点
-      this.$http({
-        url: this.api.jczdListApi,
-        method: 'post',
-        data: {
-          areaIds: [],
-          monitoringSourceName: ''
-        }
-      }).then(res => {
-        const { data, code, msg } = res.data
-        if (code === 200) {
-          // 监测站点数据，和行政区域数据一起处理成树结构
-          const staData = data || []
-          this.dictOptions.areaList.map(item => {
-            const list = staData.filter(s => s.areaId === item.id)
-            item.children = list
-          })
-          const tree = this.dictOptions.areaList
-          // 默认监测站点数据
-          this.dictOptions.jczdList = tree[0].children || []
-          if (tree[0].children && tree[0].children.length > 0) {
-            this.dataForm.monitoringSourceId = tree[0].children[0].id
-          }
-          this.getDataList()
-        } else {
-          this.$message.error(msg || '监测站点获取失败！')
-          this.dictOptions.jczdList = []
-          this.dataForm.monitoringSourceId = ''
-        }
-      }, (err) => {
-        this.$message.error(err.data.msg || err.data.error)
-        this.dictOptions.jczdList = []
-        this.dataForm.monitoringSourceId = ''
-      })
-    },
-    getParams () {
+    initDict () {
+      // 行政区域数据
       this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
       this.dataForm.area = this.dictOptions.areaList[0].id || ''
+      // 参数类型数据
       let data = JSON.parse(sessionStorage.getItem('paramTypesList'))
       if (!this.currentRoute) {
         this.dictOptions.paramTypesList = [data.find(i => i.name === '噪声')] || []
@@ -352,6 +317,19 @@ export default {
       if (this.dictOptions.paramTypesList.length > 0) {
         this.dataForm.paramTypes = [this.dictOptions.paramTypesList[0].prop] || []
       }
+      // 将检测站点和行政区域处理成树结构
+      let stations = this.$store.state.global.dusDicts.station
+      this.dictOptions.areaList.map(item => {
+        const list = stations.filter(s => s.areaId === item.id)
+        item.children = list
+      })
+      const tree = this.dictOptions.areaList
+      // 默认监测站点数据
+      this.dictOptions.jczdList = tree[0].children || []
+      if (tree[0].children && tree[0].children.length > 0) {
+        this.dataForm.monitoringSourceId = tree[0].children[0].id
+      }
+      this.getDataList()
     }
   }
 }

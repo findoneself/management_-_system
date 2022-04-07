@@ -20,7 +20,7 @@
         <el-select
           v-model="dataForm.area"
           placeholder="请选择"
-          @change="pickerChange('area')"
+          @change="areaChange"
         >
           <el-option
             v-for="item in dictOptions.areaList"
@@ -36,7 +36,7 @@
           multiple
           collapse-tags
           placeholder="请选择"
-          @change="pickerChange('jkzd')"
+          @change="getDataList"
         >
           <el-option
             v-for="item in dictOptions.jczdList"
@@ -60,7 +60,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
-          @change="pickerChange"
+          @change="getDataList"
         >
         </el-date-picker>
       </el-form-item>
@@ -86,7 +86,7 @@
       >
         <el-radio-group
           v-model="dataForm.paramTypes"
-          @change="pickerChange"
+          @change="getDataList"
         >
           <el-radio
             :label="item.prop"
@@ -195,35 +195,70 @@ export default {
       }
     }
   },
+  computed: {
+    tformHead () {
+      // 需要取参数类型和选择日期的信息
+      let item = this.dictOptions.paramTypesList.find(i => i.prop === this.dataForm.paramTypes) || { name: '测试标题' }
+      const info = {
+        title: item.name,
+        small: (this.dataForm.date.length > 0 ? `${this.dataForm.date[0]}-${this.dataForm.date[1]}` : '') + '（分钟数据）'
+      }
+      if (this.tabsType === 'table') {
+        info.btnType = 'elbtn'
+        info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
+      }
+      return info
+    },
+    currentRoute () {
+      let router = this.$route.path.slice(16)
+      if (router === 'DusIndex') {
+        return true
+      } else {
+        return false
+      }
+    }
+  },
   created () {
+    this.tabsClick(this.dictOptions.tabsTypes[0].id)
+    this.dataForm.date = this.$format.getTwodaysDate()
+  },
+  mounted () {
     this.initDict()
-    // 设置默认展示类型和默认echart类型
-    this.getJczdList()
-    this.tabsType = this.dictOptions.tabsTypes[0].id
   },
   methods: {
+    // 初始化表单
     initDict () {
+      // 行政区域数据
       this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
-      let data = JSON.parse(sessionStorage.getItem('paramTypesList')) || []
+      this.dataForm.area = this.dictOptions.areaList[0].id || ''
+      // 参数类型数据
+      let data = JSON.parse(sessionStorage.getItem('paramTypesList'))
       if (!this.currentRoute) {
         this.dictOptions.paramTypesList = [data.find(i => i.name === '噪声')] || []
       } else {
         this.dictOptions.paramTypesList = data || []
       }
       if (this.dictOptions.paramTypesList.length > 0) {
-        this.dataForm.paramTypes = this.dictOptions.paramTypesList[0].prop
+        this.dataForm.paramTypes = this.dictOptions.paramTypesList[0].prop || ''
       }
-      this.dataForm.area = this.dictOptions.areaList[0].id || ''
-      this.dataForm.date = this.$format.getTwodaysDate()
+      // 将检测站点和行政区域处理成树结构
+      let stations = this.$store.state.global.dusDicts.station
+      this.dictOptions.areaList.map(item => {
+        const list = stations.filter(s => s.areaId === item.id)
+        item.children = list
+      })
+      const tree = this.dictOptions.areaList
+      // 默认监测站点数据
+      this.dictOptions.jczdList = tree[0].children || []
+      if (tree[0].children && tree[0].children.length > 0) {
+        this.dataForm.monitoringSourceIds = [tree[0].children[0].id]
+      }
+      this.getDataList()
     },
     buttonClick (item) { // 当前页面 只有图表和表格两个选项
       if (this.tabsType === 'table') {
         // 表格按钮点击回调--导出表格
         console.log(item)
-      } else {
-        console.log(item)
-        // 图表按钮点击回调--切换检测源或者项目
-        // this.echartsType = item.id
       }
     },
     // 获取表格和统计数据
@@ -239,7 +274,6 @@ export default {
       }).then(res => {
         this.dataLoading = false
         const { data, code, msg } = res.data
-        console.log(data)
         if (code === 200) {
           this.dataList = data.table || []
           if (data.chart) {
@@ -263,14 +297,9 @@ export default {
     },
     // 设置展示类型
     tabsClick (id) {
-      console.log(id)
       this.tabsType = id
-      if (id === 'echart') {
-        // this.echartsType = this.tformHead.btnList[0].id
-      }
     },
     typeChange (value) {
-      console.log(value)
       let res
       if (value === 'zt') {
         res = this.$format.getTwodaysDate()
@@ -281,55 +310,16 @@ export default {
       } else {
         res = this.$format.getYearStartDatetime()
       }
-      console.log(res)
       this.dataForm.date = res
       this.getDataList()
     },
-    pickerChange (value) {
-      if (value === 'jkzd') {
+    // 行政区域改变
+    areaChange (val) {
+      const isJczd = this.dictOptions.areaList.find(item => item.id === val)
+      if (isJczd) this.dictOptions.jczdList = isJczd.children || []
+      if (isJczd.children && isJczd.children.length > 0) {
+        this.dataForm.monitoringSourceIds = [isJczd.children[0].id]
         this.getDataList()
-      } else if (value === 'area') {
-        this.getJczdList()
-      }
-    },
-    // 检测站点
-    getJczdList () {
-      this.$http({
-        url: this.api.jczdListApi + this.dataForm.area,
-        method: 'post'
-      }).then(res => {
-        console.log(res)
-        const { data, status } = res
-        if (status === 200) {
-          this.dictOptions.jczdList = data.data || []
-          this.dataForm.monitoringSourceIds = [this.dictOptions.jczdList[0].id]
-          this.getDataList()
-        } else {
-          this.$message.error('获取行政数据错误')
-        }
-      })
-    }
-  },
-  computed: {
-    tformHead () {
-      // 需要取参数类型和选择日期的信息
-      let item = this.dictOptions.paramTypesList.find(i => i.prop === this.dataForm.paramTypes) || { name: '测试标题' }
-      const info = {
-        title: item.name,
-        small: (this.dataForm.date.length > 0 ? `${this.dataForm.date[0]}-${this.dataForm.date[1]}` : '') + '（分钟数据）'
-      }
-      if (this.tabsType === 'table') {
-        info.btnType = 'elbtn'
-        info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
-      }
-      return info
-    },
-    currentRoute () {
-      let router = this.$route.path.slice(16)
-      if (router === 'DusIndex') {
-        return true
-      } else {
-        return false
       }
     }
   }

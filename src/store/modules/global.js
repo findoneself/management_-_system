@@ -9,7 +9,9 @@ export default {
     // 用户信息
     userInfo: {},
     // 所有字典数据
-    dictData: {}
+    dictData: {},
+    // 扬尘检测下拉框
+    dusDicts: {}
   },
   mutations: {
     // ----用户
@@ -39,6 +41,11 @@ export default {
     // 存储字典数据
     setDictData (state, obj) {
       state.dictData = obj
+    },
+    // 储存扬尘监测下拉框数据
+    setDusDictData (state, obj) {
+      state.dusDicts[obj.type] = obj.list
+
     }
   },
   actions: {
