@@ -30,7 +30,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: ['沛-铜山', '沛-云龙', '沛-铜山', '沛-铜山', '沛-云龙', '沛-铜山'],
           axisLabel: {
             color: '#fff',
             fontSize: '10'
@@ -75,7 +74,6 @@ export default {
               focus: 'series'
             },
             barWidth: 10,
-            data: [30, 32, 31, 34, 60, 30, 20],
             itemStyle: {
               normal: {
                 color: '#3D73F2',
@@ -96,11 +94,41 @@ export default {
       }
     }
   },
+  props: {
+    xAxisData: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    seriesData: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
+  watch: {
+    xAxisData: {
+      handler () {
+        this.getmap()
+      },
+      deep: true
+    },
+    seriesData: {
+      handler () {
+        this.getmap()
+      },
+      deep: true
+    }
+  },
   mounted () {
     this.getmap()
   },
   methods: {
     getmap () {
+      this.option.series[0].data = this.seriesData
+      this.option.xAxis.data = this.xAxisData
       var myChart = this.$echarts.init(document.getElementById('countyBar'))
       myChart.setOption(this.option)
       window.addEventListener('resize', function () {

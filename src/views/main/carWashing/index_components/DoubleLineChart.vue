@@ -9,13 +9,25 @@
 </template>
 <script>
 export default {
-  props: {},
+  props: {
+    xAxisData: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    seriesData: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
   data () {
     return {
       option: {
         xAxis: {
           type: 'category',
-          data: ['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07'],
           // X轴线上标识样式
           axisLabel: {
             color: '#fff',
@@ -72,7 +84,7 @@ export default {
         },
         series: [
           {
-            data: [2, 10, 14, 19, 23, 26, 29],
+            // data: [2, 10, 14, 19, 23, 26, 29],
             type: 'line',
             itemStyle: {
               normal: {
@@ -90,7 +102,7 @@ export default {
             }
           },
           {
-            data: [5, 15, 15, 25, 30, 29, 39],
+            // data: [5, 15, 15, 25, 30, 29, 39],
             type: 'line',
             itemStyle: {
               normal: {
@@ -116,6 +128,10 @@ export default {
   },
   methods: {
     getmap () {
+      this.option.xAxis.data = this.xAxisData
+      this.seriesData.map((i, index) => {
+        this.option.series[index].data = i.data
+      })
       var myChart = this.$echarts.init(document.getElementById('double_line'))
       myChart.setOption(this.option)
       window.addEventListener('resize', function () {

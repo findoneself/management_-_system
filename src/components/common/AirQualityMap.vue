@@ -64,10 +64,15 @@ export default {
         this.flagHandle(BMaps, maps)
       },
       deep: true
+    },
+    coordinateList: {
+      handler () {
+      },
+      deep: true
     }
   },
   mounted () {
-    this.getColor()
+    // this.getColor()
   },
   methods: {
     handler ({ BMap, map }) {
@@ -121,26 +126,27 @@ export default {
       }
     },
     getColor (value, status) {
-      if (status !== '1') {
-        return 'gray'
+      let color
+      if (!value || !status || status !== '1') {
+        color = 'gray'
       } else {
-        let color
-        this.mapColorList.map(i => {
-          let section = i.section.split('-')
-          console.log(value, section)
-          if (value >= section[0] && value <= section[1]) {
-            color = i.color
-            console.log(value)
-          }
-        })
-        return color
+        const isColor = this.mapColorList.find(item => {
+          let section = item.section.split('-')
+          return parseInt(value) >= parseInt(section[0]) && parseInt(value) <= parseInt(section[1])
+        }) || { color: 'gray' }
+        color = isColor.color
       }
+      return color
     }
   }
 }
 </script>
-<style scoped>
-#baidu_map {
-  background: #02004d !important;
+<style lang="less" scoped>
+/deep/ #baidu_map {
+  > div {
+    > div {
+      background: #02004d !important;
+    }
+  }
 }
 </style>
