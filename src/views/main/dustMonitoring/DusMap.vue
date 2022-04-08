@@ -174,13 +174,7 @@ export default {
         { name: '二氧化硫', value: '5425' }]
       },
       // 地图标记
-      coordinateList: [{ lat: 34.701373, lng: 116.596327, status: '2', value: null },
-      { lat: 34.691447, lng: 116.66433, value: 130, status: '2' },
-      { lng: 116.2887, lat: 40.040, value: 230 },
-      { lng: 116.297047, lat: 39.979542, value: 30 },
-      { lng: 116.321768, lat: 39.88748, value: 30 },
-      { lng: 116.494243, lat: 39.956539, value: 10 },
-      { lng: 116.594243, lat: 40.01, value: 100 }],
+      coordinateList: [],
       mapColorList: [{ name: '优', color: '#30D385', section: '0-35' },
       { name: '良', color: '#FFD902', section: '36-75' },
       { name: '轻度', color: '#FF9902', section: '76-115' },

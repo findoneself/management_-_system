@@ -63,28 +63,32 @@
           ></el-date-picker>
 
         </el-form-item>
-        <el-button type="primary">查询</el-button>
-        <el-button>重置</el-button>
+        <el-button
+          type="primary"
+          @click="searchList"
+        >查询</el-button>
+        <el-button @click="resetForm">重置</el-button>
       </el-form>
     </TableForm>
-    <BeImage ref="imageRef" />
+    <BeImageFixed ref="imageRef" />
   </BeautifulWrapper>
 </template>
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import TableForm from '_vie/common/TableForm'
-import BeImage from '_com/common/BeImage'
+import BeImageFixed from '_com/common/BeImageFixed'
 
 export default {
   name: 'CarCompliance',
   components: {
     BeautifulWrapper,
     TableForm,
-    BeImage
+    BeImageFixed
   },
   data () {
     return {
+      dataLoading: false,
       borderIcon: ['right', 'bottom', 'left', 'close'],
       wraStyle: { inPadding: '0px' },
       title: '',
@@ -133,6 +137,19 @@ export default {
     }
   },
   methods: {
+    searchList () {
+      // 获取列表信息
+    },
+    resetForm () {
+      this.dataForm = {
+        carNum: '',
+        projectName: '',
+        carModel: '',
+        date1: '',
+        date2: ''
+      }
+      // 再次获取列表
+    },
     closeClickWrapper () {
       this.$router.go(-1)
     },

@@ -40,8 +40,11 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-button type="primary">查询</el-button>
-        <el-button>重置</el-button>
+        <el-button
+          type="primary"
+          @click="searchList"
+        >查询</el-button>
+        <el-button @click="resetForm">重置</el-button>
       </el-form>
     </TableForm>
   </BeautifulWrapper>
@@ -90,6 +93,17 @@ export default {
     }
   },
   methods: {
+    searchList () {
+      // 获取列表信息
+    },
+    resetForm () {
+      this.dataForm = {
+        projectNum: '',
+        projectName: '',
+        carNum: ''
+      }
+      // 再次获取列表
+    },
     closeClick () {
       this.$router.go(-1)
     }

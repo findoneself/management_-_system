@@ -54,7 +54,7 @@
               </el-option>
             </el-select>
           </div>
-          <CarInAndOutMap></CarInAndOutMap>
+          <CarInAndOutMap :dataList="recordList"></CarInAndOutMap>
           <div class="recordlist">
             <div
               class="record_item"
@@ -183,7 +183,7 @@
           >
             <div class="car_analysis_content">
               <div class="car_analysis_left">
-                <CarInAndOutPieChart></CarInAndOutPieChart>
+                <CarInAndOutPieChart :dataList="pieChartList"></CarInAndOutPieChart>
                 <div class="pie_chart_List">
                   <div
                     class="pie_chart_item"
@@ -216,7 +216,10 @@
                     </el-option>
                   </el-select>
                 </div>
-                <DoubleLineChart></DoubleLineChart>
+                <DoubleLineChart
+                  :xAxisData="doubleXaxisData"
+                  :seriesData="doubleSeriesData"
+                ></DoubleLineChart>
                 <div class="button">
                   <img
                     class="left_img"
@@ -256,7 +259,10 @@
                 </el-select>
               </div>
               <!-- 柱状图区域 -->
-              <CountyAnalysisBar></CountyAnalysisBar>
+              <CountyAnalysisBar
+                :seriesData="seriesDataCounty"
+                :xAxisData="xAxisDataCounty"
+              ></CountyAnalysisBar>
               <div class="button">
                 <img
                   class="left_img"
@@ -299,6 +305,7 @@ export default {
   },
   data () {
     return {
+      // 管控信息
       paramslist: [
         { name: '在监工程总数', id: '4-5', value: '16', company: '项', color: '#39FFEF' },
         { name: '备案渣土车', id: '4-4', value: '16', company: '辆', color: '#3DB6FC' },
@@ -312,6 +319,7 @@ export default {
         },
         { name: '违规渣土车', id: '4-2', value: '0', company: '辆', color: '#B94AFF' }
       ],
+      // 车辆出入记录-下拉框
       carTImeList: [
         {
           value: '选项1',
@@ -327,13 +335,14 @@ export default {
         }
       ],
       value: '选项1',
-      recordList: [
+      recordList: [ // 车辆出入记录环状统计图和小列表
         { value: 40, name: '合规车次', color: '#FCFF20' },
         { value: 22, name: '无证黑车', color: '#FF9920' },
         { value: 33, name: '文明状态异常', color: '#FF4F01' },
         { value: 28, name: '道路许可证过期', color: '#FF3D54' },
         { value: 20, name: '准运证过期', color: '#00FFFF' }
       ],
+      recordColorList: ['#FCFF20', '#FF9920', '#FF4F01', '#FF3D54', '#00FFFF'],
       // 行政区域
       regionValue: '1',
       regionList: [
@@ -362,6 +371,7 @@ export default {
         { value: '5', label: '成都' }
       ],
       videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
+      // 在线视频下面的小列表
       carList: [
         { carnum: '浙123244', time: '2021-02-02', status: '无证黑车', type: '其他' },
         { carnum: '浙123244', time: '2021-02-02', status: '无证黑车', type: '其他' },
@@ -369,6 +379,7 @@ export default {
         { carnum: '浙123244', time: '2021-02-02', status: '无证黑车', type: '其他' },
         { carnum: '浙123244', time: '2021-02-02', status: '无证黑车', type: '其他' }
       ],
+      // 车辆出入分析左边饼图
       pieChartList: [
         { value: 1048, name: '干净', color: '#FFE827' }, //
         { value: 484, name: '不干净', color: '#DF4C4C' },
@@ -377,6 +388,12 @@ export default {
         { value: 580, name: '证件合规', color: ' #FFAD2D' },
         { value: 300, name: '证件违规', color: '#68A4FF' }
       ],
+      // 右边双折线图
+      doubleXaxisData: ['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07'],
+      doubleSeriesData: [{ data: [2, 10, 14, 19, 23, 26, 29] }, { data: [5, 15, 15, 25, 30, 29, 39] }],
+      // 区域报警分析
+      xAxisDataCounty: ['沛-铜山', '沛-云龙', '沛-铜山', '沛-铜山', '沛-云龙', '沛-铜山'],
+      seriesDataCounty: [30, 32, 31, 34, 60, 30, 20],
       doubleLineValue: '选项1',
       carCountyValue: '选项1',
       borderIcon: ['top', 'right', 'bottom', 'left'],
