@@ -219,8 +219,8 @@ export default {
       this.activePage = 1
     },
     markHandle (e) {
-      console.log(e.point.lng)
-      let item = this.dataList.find(i => i.mapLngLat.lng === e.point.lng && i.mapLngLat.lag === e.point.lag)
+      console.log(e)
+      let item = this.dataList.find(i => i.id === e)
       this.monitoringSspotData = item.monitoringSspotData
       console.log(item)
       this.activePage = 1
@@ -266,7 +266,7 @@ export default {
           this.dataList = list
           let coordinateList = []
           list.map(i => {
-            coordinateList.push({ ...i.mapLngLat, value: i.value, status: i.status })
+            coordinateList.push({ ...i.mapLngLat, value: i.value, status: i.status, id: i.id })
           })
           this.coordinateList = coordinateList
         } else {

@@ -74,7 +74,7 @@ export default {
       align-items: center;
       padding-left: 1.5rem;
       // margin: 0 1rem 0 0;
-      font-size: 10px;
+      font-size: 1rem;
       width: 11.25rem;
       height: 2rem;
       div {

@@ -19,8 +19,17 @@ export default {
         center: ['50%', '50%'],
         color: ['#114991', ' #00DDFF'] // left top
       },
-      myChart:null
+      myChart: null
 
+    }
+  },
+  watch: {
+    pieData: {
+      handler () {
+        console.log(this.pieData)
+        this.getmap()
+      },
+      deep: true
     }
   },
   props: {

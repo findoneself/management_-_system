@@ -20,7 +20,6 @@
         >更多</el-button>
         <div v-if="item.key=='ycscyj'">
           <el-select
-            v-if="item.date"
             v-model="dustForm.date"
             clearable
             placeholder="请选择"
@@ -34,7 +33,6 @@
             ></el-option>
           </el-select>
           <el-select
-            v-if="item.pm"
             v-model="dustForm.pm"
             clearable
             placeholder="请选择"
@@ -50,7 +48,6 @@
         </div>
         <div v-if="item.key=='zssbyj'">
           <el-select
-            v-if="item.date"
             v-model="noiseForm.date"
             clearable
             placeholder="请选择"
@@ -63,7 +60,6 @@
               :value="item.id"
             ></el-option>
           </el-select>
-
         </div>
         <div v-if="item.key=='clcxsbyj'">
           <el-select

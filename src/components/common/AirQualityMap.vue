@@ -91,6 +91,7 @@ export default {
         }
         const { value, status } = item
         let color = this.getColor(value, status)
+        console.log(color)
         var labelvValue
         if (status !== '1') {
           labelvValue = '-'
@@ -112,7 +113,7 @@ export default {
         })
         label.addEventListener('click', function () {
           if (that.isMarkHandle) {
-            that.$emit('markHandle', label)
+            that.$emit('markHandle', item.id)
           }
 
         })
@@ -126,8 +127,10 @@ export default {
         let color
         this.mapColorList.map(i => {
           let section = i.section.split('-')
+          console.log(value, section)
           if (value >= section[0] && value <= section[1]) {
             color = i.color
+            console.log(value)
           }
         })
         return color
