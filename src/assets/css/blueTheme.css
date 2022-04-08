@@ -661,6 +661,8 @@ div.video-js.vjs-4-3 {
     height: 100%;
     padding-top: 0;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
 }
 
 div.video-js .vjs-big-play-button {
@@ -676,5 +678,16 @@ div.video-js .vjs-big-play-button {
 div.vjs-poster {
     height: 101%;
     width: 101%;
-    background-size: 100%;
+    background-size: 101% auto;
+    background-position: center;
+}
+
+/* ===============视频插件=============== */
+#baidu_map>div>div {
+    background: rgb(8 48 75) !important;
+}
+
+.anchorBL,
+.BMap_cpyCtrl {
+    display: none;
 }

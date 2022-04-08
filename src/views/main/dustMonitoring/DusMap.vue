@@ -7,7 +7,6 @@
       class="map_monitoring_source"
       :isTriangle='false'
       :cardStyle='cardStyle'
-      v-loading="loading"
     >
       <div>
         <el-form
@@ -51,6 +50,7 @@
         :stripe="true"
         :data-list="dataList"
         :columns="columns"
+        :loading="loading"
         :index-obj="{isIndex: false}"
         :operObj='{isOperation: false}'
         cell-height='2rem'
@@ -130,8 +130,8 @@ export default {
   },
   data () {
     return {
-      loading: true,
-      mapLoading: true,
+      loading: false,
+      mapLoading: false,
       activePage: 0,
       dictOptions: {
         // 行政区域
@@ -244,19 +244,19 @@ export default {
           sessionStorage.setItem('areaList', JSON.stringify(data.data))
           this.dataForm.areaId = data.data[0].id
           this.getDataList()
-          this.loading = false
         } else {
-          this.loading = false
           this.$message.error('获取行政数据错误')
         }
       })
     },
     getDataList () {
+      this.loading = true
       this.$http({
         url: this.api.monitoringSourceApi,
         method: 'post',
         data: this.dataForm
       }).then(res => {
+        this.loading = false
         //  console.log(res)
         const { data, status } = res
         if (status === 200) {
@@ -273,6 +273,8 @@ export default {
           this.mapLoading = false
           this.$message.error('获取数据错误')
         }
+      }, () => {
+        this.loading = false
       })
     },
     // 参数

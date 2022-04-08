@@ -199,7 +199,9 @@ export default {
       default () {
         return []
       }
-    }
+    },
+    // 默认点击的数据索引
+    defaultRowIndex: Number
   },
   data () {
     return {
@@ -251,7 +253,7 @@ export default {
         } else {
           this.tableList = list
         }
-        this.curRowIndex = null
+        this.curRowIndex = this.defaultRowIndex === undefined ? null : this.defaultRowIndex
       },
       deep: true,
       immediate: true

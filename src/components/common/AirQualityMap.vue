@@ -139,8 +139,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-#baidu_map {
-  background: #02004d !important;
-}
-</style>

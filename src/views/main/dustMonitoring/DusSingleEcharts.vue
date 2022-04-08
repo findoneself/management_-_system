@@ -318,7 +318,7 @@ export default {
         this.dataForm.paramTypes = [this.dictOptions.paramTypesList[0].prop] || []
       }
       // 将检测站点和行政区域处理成树结构
-      let stations = this.$store.state.global.dusDicts.station
+      let stations = this.$store.state.global.dusDicts.station || []
       this.dictOptions.areaList.map(item => {
         const list = stations.filter(s => s.areaId === item.id)
         item.children = list

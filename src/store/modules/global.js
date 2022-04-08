@@ -44,6 +44,7 @@ export default {
     },
     // 储存扬尘监测下拉框数据
     setDusDictData (state, obj) {
+      state.dusDicts = {}
       state.dusDicts[obj.type] = obj.list
 
     }
