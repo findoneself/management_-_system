@@ -259,7 +259,7 @@ export default {
       }
       this.getDataList()
     },
-    buttonClick (item) { // 当前页面 只有图表和表格两个选项
+    buttonClick () { // 当前页面 只有图表和表格两个选项
       if (this.tabsType === 'table') {
         // 表格按钮点击回调--导出表格
         let params = this.getTimeParams()
@@ -270,16 +270,7 @@ export default {
         }).then(res => {
           console.log(res)
           this.dataLoading = false
-
-
-          // const { data, code, msg } = res.data
-
-          // if (code === 200) {
-          //   console.log(data)
-          // } else {
-          //   this.$message.error(msg || '获取统计数据失败！')
-          //   this.dataList = []
-          // }
+          this.downloadBlodFile(res.data)
         }, () => {
           this.dataLoading = false
           this.$message.error('获取统计数据失败！')
@@ -378,6 +369,18 @@ export default {
       params.dateStart = params.date[0]
       params.dateEnd = params.date[1]
       return params
+    },
+    downloadBlodFile (data) {
+      var csvData = new Blob([data], { type: 'application/octet-stream;chartset=UTF-8' })
+      // 创建a标签给它赋值
+      var a = document.createElement('a')
+      a.href = URL.createObjectURL(csvData)
+      a.target = '_blank'
+      // 文件名
+      a.download = 'export.csv'
+      // 模拟点击下载excel
+      document.body.appendChild(a)
+      a.click()
     }
   }
 }
