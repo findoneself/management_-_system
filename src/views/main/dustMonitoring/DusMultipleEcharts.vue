@@ -286,11 +286,9 @@ export default {
         method: 'post',
         data: params
       }).then(res => {
-        console.log(res.data)
         this.dataLoading = false
         const { data, code, msg } = res.data
         if (code === 200) {
-          this.dataList = data.table || []
           if (data) {
             const { columns, seriesdata, xaxisdata } = data
             let arr = []
@@ -302,8 +300,8 @@ export default {
             console.log(arr)
             this.seriesDatas = seriesdata
             this.xAxisDatas = xaxisdata
-            this.getTableData()
           }
+          this.getTableData()
         } else {
           this.$message.error(msg || '获取统计数据失败！')
           this.dataList = []

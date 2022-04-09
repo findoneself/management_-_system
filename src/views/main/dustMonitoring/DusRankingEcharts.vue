@@ -21,6 +21,7 @@
           v-model="dataForm.area"
           clearable
           placeholder="请选择"
+          @change="pinckerChange('area')"
         >
           <el-option
             v-for="item in dictOptions.areaList"
@@ -51,7 +52,10 @@
         label="排序："
         label-width="5rem"
       >
-        <el-select v-model="dataForm.order">
+        <el-select
+          v-model="dataForm.orderBy"
+          @change="pinckerChange"
+        >
           <el-option
             v-for="item in dictOptions.orderList"
             :key="item.id"
@@ -64,7 +68,10 @@
         label="参数类型："
         style="width: 100%;"
       >
-        <el-radio-group v-model="dataForm.paramTypes">
+        <el-radio-group
+          v-model="dataForm.paramType"
+          @change="pinckerChange"
+        >
           <el-radio
             :label="item.prop"
             v-for="item in dictOptions.paramTypesList"
@@ -110,8 +117,8 @@ export default {
         areaList: [],
         // 排序
         orderList: [
-          { id: 'desc', name: '降序' },
-          { id: 'asc', name: '升序' }
+          { id: '降序', name: '降序' },
+          { id: '升序', name: '升序' }
         ],
         // 参数类型
         paramTypesList: [],
@@ -154,8 +161,9 @@ export default {
       dataForm: {
         area: 'xz-1',
         date: ['2022-01-01', '2022-05-02'],
-        order: 'asc',
-        paramTypes: 'wd'
+        orderBy: 'asc',
+        paramType: 'wd',
+        monitoringSourceIds: []
       },
       // 展示数据类型
       tabsType: '',
@@ -173,7 +181,12 @@ export default {
       // x轴
       echartXAxis: [],
       // 数据
-      echartSeries: []
+      echartSeries: [],
+      api: {
+        echartsDataApi: 'integration/dustMonitoringSource/deviceData/order/chart',
+        exportExcelApi: 'integration/dustMonitoringSource/deviceData/order/export',
+        tableDataApi: 'integration/dustMonitoringSource/deviceData/order/table'
+      }
     }
   },
   computed: {
@@ -224,88 +237,42 @@ export default {
         this.dictOptions.paramTypesList = data || []
       }
       if (this.dictOptions.paramTypesList.length > 0) {
-        this.dataForm.paramTypes = this.dictOptions.paramTypesList[0].prop
-        console.log(this.dictOptions.paramTypesList, this.dataForm.paramTypes)
+        this.dataForm.paramType = this.dictOptions.paramTypesList[0].prop
+        console.log(this.dictOptions.paramTypesList, this.dataForm.paramType)
       }
     },
     // 获取表格和统计数据
     getDataList () {
       this.dataLoading = true
-      const params = this._cloneDeep(this.dataForm)
-      if (params.date.length > 0) {
-        params.startTime = params.date[0]
-        params.endTime = params.date[1]
-        delete params.date
-      }
-      if (this.echartsType !== '') {
-        // echart图表获取数据参数
-        params.echartsType = this.echartsType
-      }
+      let params = this.getTimeParams()
       this.$http({
-        url: 'dusQuery/getDusrankData',
+        url: this.api.echartsDataApi,
+        method: 'post',
         data: params
       }).then(res => {
         this.dataLoading = false
-        if (res.code === 200) {
-          this.dataList = res.data.list
-          console.log(res)
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          if (data) {
+            const { columns, seriesdata, xaxisdata } = data
+            let arr = []
+            columns.map(i => {
+              arr.push({ ...i, key: i.KEY })
+            })
+
+            this.columns = [{ prop: 'dataTime', name: '时间', key: 0 }, ...arr]
+            console.log(arr)
+            this.seriesDatas = seriesdata
+            this.xAxisDatas = xaxisdata
+          }
+          this.getTableData()
         } else {
-          this.$message.error('获取统计数据失败！')
+          this.$message.error(msg || '获取统计数据失败！')
           this.dataList = []
         }
       }, () => {
         this.dataLoading = false
         this.$message.error('获取统计数据失败！')
-        // 下面逻辑放在正常返回里面
-        const list = [
-          { id: '1', jcd: '云-徐州传染病医院', sj: '2022-03-10 00:00:00', wd: '21' },
-          { id: '2', jcd: '云-徐州传染病医院', sj: '2022-03-11 00:00:00', wd: '12' },
-          { id: '3', jcd: '云-徐州传染病医院', sj: '2022-03-12 00:00:00', wd: '24' },
-          { id: '4', jcd: '云-徐州传染病医院', sj: '2022-03-13 00:00:00', wd: '15' },
-          { id: '5', jcd: '云-徐州传染病医院', sj: '2022-03-14 00:00:00', wd: '21' },
-          { id: '6', jcd: '云-徐州传染病医院', sj: '2022-03-15 00:00:00', wd: '16' },
-          { id: '7', jcd: '云-徐州传染病医院', sj: '2022-03-16 00:00:00', wd: '21' },
-          { id: '8', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '9', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '10', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '11', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '12', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' },
-          { id: '13', jcd: '云-徐州传染病医院', sj: '2022-03-17 00:00:00', wd: '20' }
-        ]
-        this.dataList = list
-        let xAxis = []
-        let series = []
-        list.map(item => {
-          xAxis.push(item.jcd)
-          series.push(item.wd)
-        })
-        this.echartXAxis = xAxis
-        this.echartSeries = [
-          {
-            type: 'bar',
-            barMaxWidth: 23,
-            barGap: '10%',
-            label: {
-              show: true
-            },
-            itemStyle: {
-              normal: {
-                color: '#486AFF',
-                label: {
-                  show: true,
-                  textStyle: {
-                    color: '#fff'
-                  },
-                  position: 'top',
-                  formatter: function (p) {
-                    return p.value > 0 ? (p.value) : ''
-                  }
-                }
-              }
-            },
-            data: series
-          }
-        ]
       })
     },
     // 设置展示类型
@@ -322,6 +289,17 @@ export default {
       } else {
         // 图表按钮点击回调--切换检测源或者项目
         this.echartsType = item.id
+      }
+    },
+    getTimeParams () {
+      const params = this._cloneDeep(this.dataForm)
+      params.dateStart = params.date[0]
+      params.dateEnd = params.date[1]
+      return params
+    },
+    pinckerChange (val) {
+      if (val === 'area') {
+        // 变更监测站点数据
       }
     }
   }

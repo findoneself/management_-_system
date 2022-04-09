@@ -236,6 +236,19 @@ export default {
     buttonClick () {
       if (this.tabsType === 'table') {
         // 表格按钮点击回调--导出表格
+        let params = this.getTimeParams()
+        this.$http({
+          url: this.api.exportExcelApi,
+          method: 'post',
+          data: params
+        }).then(res => {
+          console.log(res)
+          this.dataLoading = false
+          this.downloadBlodFile(res.data)
+        }, () => {
+          this.dataLoading = false
+          this.$message.error('获取统计数据失败！')
+        })
       }
     },
     // 设置展示类型
@@ -254,10 +267,7 @@ export default {
     // 获取表格和统计数据
     getDataList () {
       this.dataLoading = true
-      const params = this._cloneDeep(this.dataForm)
-      params.dateStart = params.date[0]
-      params.dateEnd = params.date[1]
-      delete params.date
+      let params = this.getTimeParams()
       this.$http({
         url: this.api.dataListApi,
         method: 'post',
@@ -266,16 +276,18 @@ export default {
         this.dataLoading = false
         const { data, code, msg } = res.data
         if (code === 200) {
-          this.dataList = data.table || []
           // 图表数据
-          if (data.chart) {
-            this.columns = data.chart.columns.map(i => {
+          if (data) {
+            const { columns, seriesdata, xaxisdata } = data
+            let arr = columns.map(i => {
               i.key = i.KEY
               return i
             })
-            this.seriesDatas = data.chart.seriesdata || []
-            this.xAxisDatas = data.chart.xaxisdata || []
+            this.columns = [{ prop: 'dataTime', name: '时间', key: 0 }, ...arr]
+            this.seriesDatas = seriesdata || []
+            this.xAxisDatas = xaxisdata || []
           }
+          this.getTableData()
         } else {
           this.$message.error(msg || '获取统计数据失败！')
           this.dataList = []
@@ -288,6 +300,28 @@ export default {
         this.dataList = []
         this.seriesDatas = []
         this.xAxisDatas = []
+      })
+    },
+    getTableData () {
+      this.dataLoading = true
+      let params = this.getTimeParams()
+      this.$http({
+        url: this.api.tableListApi,
+        method: 'post',
+        data: params
+      }).then(res => {
+        console.log(res.data)
+        this.dataLoading = false
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.dataList = data || []
+        } else {
+          this.$message.error(msg || '获取数据失败！')
+          this.dataList = []
+        }
+      }, () => {
+        this.dataLoading = false
+        this.$message.error('获取数据失败！')
       })
     },
     // 事件类型改变
@@ -332,6 +366,12 @@ export default {
         this.dataForm.monitoringSourceId = tree[0].children[0].id
       }
       this.getDataList()
+    },
+    getTimeParams () {
+      const params = this._cloneDeep(this.dataForm)
+      params.dateStart = params.date[0]
+      params.dateEnd = params.date[1]
+      return params
     }
   }
 }
