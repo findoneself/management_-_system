@@ -14,7 +14,7 @@ const http = axios.create({
 })
 // 请求拦截
 http.interceptors.request.use(config => {
-  if (config.responseType && config.toLowerCase().indexOf('blob') > -1) {
+  if (config.responseType && config.responseType.toLowerCase().indexOf('blob') > -1) {
     config.timeout = 10 * 60 * 1000
   }
   config.headers.Authorization = VueCookie.get('token') || ''

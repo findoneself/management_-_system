@@ -263,17 +263,8 @@ export default {
       if (this.tabsType === 'table') {
         // 表格按钮点击回调--导出表格
         let params = this.getTimeParams()
-        this.$http({
-          url: this.api.exportExcelApi,
-          method: 'post',
-          data: params
-        }).then(res => {
-          console.log(res)
-          this.dataLoading = false
-          this.downloadBlodFile(res.data)
-        }, () => {
-          this.dataLoading = false
-          this.$message.error('获取统计数据失败！')
+        this.$api.downloadBlob(this.api.exportExcelApi, params, '多设备统计', function (data) {
+          console.log(data)
         })
       }
     },
@@ -367,18 +358,6 @@ export default {
       params.dateStart = params.date[0]
       params.dateEnd = params.date[1]
       return params
-    },
-    downloadBlodFile (data) {
-      var csvData = new Blob([data], { type: 'application/octet-stream;chartset=UTF-8' })
-      // 创建a标签给它赋值
-      var a = document.createElement('a')
-      a.href = URL.createObjectURL(csvData)
-      a.target = '_blank'
-      // 文件名
-      a.download = 'export.csv'
-      // 模拟点击下载excel
-      document.body.appendChild(a)
-      a.click()
     }
   }
 }
