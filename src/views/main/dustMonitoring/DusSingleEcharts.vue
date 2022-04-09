@@ -195,7 +195,9 @@ export default {
       // 数据
       seriesDatas: [],
       api: {
-        dataListApi: 'integration/dustMonitoringSource/deviceData/one' // 列表
+        dataListApi: 'integration//dustMonitoringSource/deviceData/one/chart',
+        tableListApi: 'integration/dustMonitoringSource/deviceData/one/table', // 列表
+        exportExcelApi: 'integration/dustMonitoringSource/deviceData/one/export'
       }
     }
   },

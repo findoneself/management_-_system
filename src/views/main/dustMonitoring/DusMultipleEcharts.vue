@@ -192,7 +192,10 @@ export default {
       seriesDatas: [],
       api: {
         jczdListApi: 'integration/dustMonitoringSource/list/', // 监测站点
-        dataListApi: 'integration/dustMonitoringSource/deviceData/more' // 列表
+        dataListApi: 'integration/dustMonitoringSource/deviceData/more', // 列表
+        echartsDataApi: 'integration/dustMonitoringSource/deviceData/more/chart', // 图表
+        tableListApi: 'integration/dustMonitoringSource/deviceData/more/table', // table
+        exportExcelApi: 'integration/dustMonitoringSource/deviceData/more/export' // 导出
       }
     }
   },
@@ -259,33 +262,56 @@ export default {
     buttonClick (item) { // 当前页面 只有图表和表格两个选项
       if (this.tabsType === 'table') {
         // 表格按钮点击回调--导出表格
-        console.log(item)
+        let params = this.getTimeParams()
+        this.$http({
+          url: this.api.exportExcelApi,
+          method: 'post',
+          data: params
+        }).then(res => {
+          console.log(res)
+          this.dataLoading = false
+
+
+          // const { data, code, msg } = res.data
+
+          // if (code === 200) {
+          //   console.log(data)
+          // } else {
+          //   this.$message.error(msg || '获取统计数据失败！')
+          //   this.dataList = []
+          // }
+        }, () => {
+          this.dataLoading = false
+          this.$message.error('获取统计数据失败！')
+        })
       }
     },
     // 获取表格和统计数据
     getDataList () {
       this.dataLoading = true
-      const params = this._cloneDeep(this.dataForm)
-      params.dateStart = params.date[0]
-      params.dateEnd = params.date[1]
+      let params = this.getTimeParams()
       this.$http({
-        url: this.api.dataListApi,
+        url: this.api.echartsDataApi,
         method: 'post',
         data: params
       }).then(res => {
+        console.log(res.data)
         this.dataLoading = false
         const { data, code, msg } = res.data
         if (code === 200) {
           this.dataList = data.table || []
-          if (data.chart) {
-            const { columns, seriesdata, xaxisdata } = data.chart
+          if (data) {
+            const { columns, seriesdata, xaxisdata } = data
             let arr = []
             columns.map(i => {
               arr.push({ ...i, key: i.KEY })
             })
-            this.columns = arr
+
+            this.columns = [{ prop: 'dataTime', name: '时间', key: 0 }, ...arr]
+            console.log(arr)
             this.seriesDatas = seriesdata
             this.xAxisDatas = xaxisdata
+            this.getTableData()
           }
         } else {
           this.$message.error(msg || '获取统计数据失败！')
@@ -294,6 +320,29 @@ export default {
       }, () => {
         this.dataLoading = false
         this.$message.error('获取统计数据失败！')
+      })
+    },
+    getTableData () {
+      this.dataLoading = true
+      let params = this.getTimeParams()
+      this.$http({
+        url: this.api.tableListApi,
+        method: 'post',
+        data: params
+      }).then(res => {
+        console.log(res.data)
+        this.dataLoading = false
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.dataList = data || []
+
+        } else {
+          this.$message.error(msg || '获取数据失败！')
+          this.dataList = []
+        }
+      }, () => {
+        this.dataLoading = false
+        this.$message.error('获取数据失败！')
       })
     },
     // 设置展示类型
@@ -313,6 +362,7 @@ export default {
       }
       this.dataForm.date = res
       this.getDataList()
+
     },
     // 行政区域改变
     areaChange (val) {
@@ -322,6 +372,12 @@ export default {
         this.dataForm.monitoringSourceIds = [isJczd.children[0].id]
         this.getDataList()
       }
+    },
+    getTimeParams () {
+      const params = this._cloneDeep(this.dataForm)
+      params.dateStart = params.date[0]
+      params.dateEnd = params.date[1]
+      return params
     }
   }
 }
