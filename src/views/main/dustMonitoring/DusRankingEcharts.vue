@@ -19,7 +19,6 @@
       <el-form-item label="行政区域：">
         <el-select
           v-model="dataForm.area"
-          clearable
           placeholder="请选择"
           @change="pinckerChange('area')"
         >
@@ -161,7 +160,7 @@ export default {
       dataForm: {
         area: 'xz-1',
         date: ['2022-01-01', '2022-05-02'],
-        orderBy: 'asc',
+        orderBy: '升序',
         paramType: 'wd',
         monitoringSourceIds: []
       },
@@ -171,9 +170,9 @@ export default {
       echartsType: '',
       // 表格表头
       columns: [
-        { name: '监测点', prop: 'jcd', key: 4 },
-        { name: '时间', prop: 'sj', tooltip: true, key: 2 },
-        { name: '温度', prop: 'wd', key: 3 }
+        { name: '监测点', prop: 'monitoringSourceName', key: 4 },
+        { name: '时间', prop: 'dataTime', key: 2 },
+        { name: '温度', prop: 'paramValue', key: 3 }
       ],
       // 表格数据---echart原始数据
       dataList: [],
@@ -185,14 +184,20 @@ export default {
       api: {
         echartsDataApi: 'integration/dustMonitoringSource/deviceData/order/chart',
         exportExcelApi: 'integration/dustMonitoringSource/deviceData/order/export',
-        tableDataApi: 'integration/dustMonitoringSource/deviceData/order/table'
+        tableListApi: 'integration/dustMonitoringSource/deviceData/order/table'
       }
     }
   },
+
   computed: {
     tformHead () {
       // 需要取参数类型和选择日期的信息
-      const info = { title: '温度', small: '2022-3-01 ( 小时数据 ）' }
+      let params = this.dictOptions.paramTypesList.find(i => i.prop === this.dataForm.paramType)
+      let item = this.dictOptions.areaList.find(i => i.id === this.dataForm.area) || { name: '' }
+      let info = {
+        title: item.name + params.name + '排名',
+        small: (this.dataForm.date.length > 0 ? `${this.dataForm.date[0]}-${this.dataForm.date[1]}` : '') + '（分钟数据）'
+      }
       if (this.tabsType === 'table') {
         info.btnType = 'elbtn'
         info.btnList = [{ id: 'export', name: '导出Excel', type: 'primary', size: 'medium' }]
@@ -217,6 +222,18 @@ export default {
       }
     }
   },
+  watch: {
+    dataForm: {
+      handler () {
+        console.log(this.dictOptions.paramTypesList, this.dataForm.paramType)
+        let res = this.dictOptions.paramTypesList.find(i => i.prop === this.dataForm.paramType)
+        console.log(res.name)
+        this.columns.find(i => i.prop === 'paramValue').name = res.name
+        console.log(this.columns[2])
+      },
+      deep: true
+    }
+  },
   created () {
     this.initDict()
     // 设置默认展示类型和默认echart类型
@@ -238,8 +255,8 @@ export default {
       }
       if (this.dictOptions.paramTypesList.length > 0) {
         this.dataForm.paramType = this.dictOptions.paramTypesList[0].prop
-        console.log(this.dictOptions.paramTypesList, this.dataForm.paramType)
       }
+      this.getjczdList()
     },
     // 获取表格和统计数据
     getDataList () {
@@ -254,16 +271,40 @@ export default {
         const { data, code, msg } = res.data
         if (code === 200) {
           if (data) {
-            const { columns, seriesdata, xaxisdata } = data
-            let arr = []
-            columns.map(i => {
-              arr.push({ ...i, key: i.KEY })
-            })
+            const { dataY, dataX } = data
+            // let arr = []
+            // columns.map(i => {
+            //   arr.push({ ...i, key: i.KEY })
+            // })
 
-            this.columns = [{ prop: 'dataTime', name: '时间', key: 0 }, ...arr]
-            console.log(arr)
-            this.seriesDatas = seriesdata
-            this.xAxisDatas = xaxisdata
+            // this.columns = [{ prop: 'dataTime', name: '时间', key: 0 }, ...arr]
+            this.echartSeries = [
+              {
+                type: 'bar',
+                barMaxWidth: 23,
+                barGap: '10%',
+                label: {
+                  show: true
+                },
+                itemStyle: {
+                  normal: {
+                    color: '#486AFF',
+                    label: {
+                      show: true,
+                      textStyle: {
+                        color: '#fff'
+                      },
+                      position: 'top',
+                      formatter: function (p) {
+                        return p.value > 0 ? (p.value) : ''
+                      }
+                    }
+                  }
+                },
+                data: dataY
+              }
+            ]
+            this.echartXAxis = dataX
           }
           this.getTableData()
         } else {
@@ -273,6 +314,28 @@ export default {
       }, () => {
         this.dataLoading = false
         this.$message.error('获取统计数据失败！')
+      })
+    },
+    getTableData () {
+      this.dataLoading = true
+      let params = this.getTimeParams()
+      this.$http({
+        url: this.api.tableListApi,
+        method: 'post',
+        data: params
+      }).then(res => {
+        console.log(res.data)
+        this.dataLoading = false
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.dataList = data || []
+        } else {
+          this.$message.error(msg || '获取数据失败！')
+          this.dataList = []
+        }
+      }, () => {
+        this.dataLoading = false
+        this.$message.error('获取数据失败！')
       })
     },
     // 设置展示类型
@@ -286,9 +349,14 @@ export default {
     buttonClick (item) {
       if (this.tabsType === 'table') {
         // 表格按钮点击回调--导出表格
+        let params = this.getTimeParams()
+        this.$api.downloadBlob(this.api.exportExcelApi, params, '排名统计', function (data) {
+          console.log(data)
+        })
       } else {
         // 图表按钮点击回调--切换检测源或者项目
         this.echartsType = item.id
+        console.log(item.id)
       }
     },
     getTimeParams () {
@@ -300,7 +368,32 @@ export default {
     pinckerChange (val) {
       if (val === 'area') {
         // 变更监测站点数据
+        this.getMonitoringSourceIds()
       }
+      this.getDataList()
+    },
+    getjczdList () {
+      // 将检测站点和行政区域处理成树结构
+      let stations = this.$store.state.global.dusDicts.station || []
+      this.dictOptions.areaList.map(item => {
+        const list = stations.filter(s => s.areaId === item.id)
+        item.children = list
+      })
+      this.getMonitoringSourceIds()
+    },
+    getMonitoringSourceIds () {
+      let arr = []
+      let list = this.dictOptions.areaList
+      let area = this.dataForm.area
+      list.map(i => {
+        if (i.id === area) {
+          i.children.map(i => {
+            arr.push(i.id)
+          })
+        }
+      })
+      this.dataForm.monitoringSourceIds = arr
+      console.log(list, area, arr)
     }
   }
 }

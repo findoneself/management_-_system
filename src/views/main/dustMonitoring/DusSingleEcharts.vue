@@ -237,17 +237,8 @@ export default {
       if (this.tabsType === 'table') {
         // 表格按钮点击回调--导出表格
         let params = this.getTimeParams()
-        this.$http({
-          url: this.api.exportExcelApi,
-          method: 'post',
-          data: params
-        }).then(res => {
-          console.log(res)
-          this.dataLoading = false
-          this.downloadBlodFile(res.data)
-        }, () => {
-          this.dataLoading = false
-          this.$message.error('获取统计数据失败！')
+        this.$api.downloadBlob(this.api.exportExcelApi, params, '单设备统计', function (data) {
+          console.log(data)
         })
       }
     },
