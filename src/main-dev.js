@@ -6,6 +6,7 @@ import Utils from './libs/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import format from './libs/format'
 import http from './network'
+import apiObj from './network/api'
 import echarts from 'echarts'
 import VueCookie from 'vue-cookie'
 import 'video.js/dist/video-js.css'
@@ -18,6 +19,7 @@ import 'nprogress/nprogress.css'
 Vue.prototype._cloneDeep = cloneDeep
 Vue.config.productionTip = false
 Vue.prototype.$utils = Utils
+Vue.prototype.$api = apiObj
 Vue.prototype.$echarts = echarts
 Vue.prototype.$http = http
 Vue.prototype.$format = format

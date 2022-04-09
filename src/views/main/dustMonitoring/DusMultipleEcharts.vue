@@ -259,30 +259,12 @@ export default {
       }
       this.getDataList()
     },
-    buttonClick (item) { // 当前页面 只有图表和表格两个选项
+    buttonClick () { // 当前页面 只有图表和表格两个选项
       if (this.tabsType === 'table') {
         // 表格按钮点击回调--导出表格
         let params = this.getTimeParams()
-        this.$http({
-          url: this.api.exportExcelApi,
-          method: 'post',
-          data: params
-        }).then(res => {
-          console.log(res)
-          this.dataLoading = false
-
-
-          // const { data, code, msg } = res.data
-
-          // if (code === 200) {
-          //   console.log(data)
-          // } else {
-          //   this.$message.error(msg || '获取统计数据失败！')
-          //   this.dataList = []
-          // }
-        }, () => {
-          this.dataLoading = false
-          this.$message.error('获取统计数据失败！')
+        this.$api.downloadBlob(this.api.exportExcelApi, params, '多设备统计', function (data) {
+          console.log(data)
         })
       }
     },
