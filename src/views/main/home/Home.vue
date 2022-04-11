@@ -24,9 +24,9 @@
       <!-- 中间项目总数 -->
       <div class="home_top_center">
         <div class="totalnum">
-          <div class="time">
+          <!-- <div class="time">
             <span class="span">{{ projectInfo.year }}年</span> <span>{{ projectInfo.month }}月</span>
-          </div>
+          </div> -->
           <div class="bignum">
             <div class="bginum-text">
               <span

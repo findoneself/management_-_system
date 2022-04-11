@@ -184,7 +184,8 @@ export default {
       api: {
         echartsDataApi: 'integration/dustMonitoringSource/deviceData/order/chart',
         exportExcelApi: 'integration/dustMonitoringSource/deviceData/order/export',
-        tableListApi: 'integration/dustMonitoringSource/deviceData/order/table'
+        tableListApi: 'integration/dustMonitoringSource/deviceData/order/table',
+        projectEchartsApi: 'integration/dustMonitoringSource/deviceData/order/chart/project'
       }
     }
   },
@@ -229,7 +230,6 @@ export default {
         let res = this.dictOptions.paramTypesList.find(i => i.prop === this.dataForm.paramType)
         console.log(res.name)
         this.columns.find(i => i.prop === 'paramValue').name = res.name
-        console.log(this.columns[2])
       },
       deep: true
     }
@@ -259,11 +259,11 @@ export default {
       this.getjczdList()
     },
     // 获取表格和统计数据
-    getDataList () {
+    getDataList (api) {
       this.dataLoading = true
       let params = this.getTimeParams()
       this.$http({
-        url: this.api.echartsDataApi,
+        url: api ? api : this.api.echartsDataApi,
         method: 'post',
         data: params
       }).then(res => {
@@ -272,12 +272,6 @@ export default {
         if (code === 200) {
           if (data) {
             const { dataY, dataX } = data
-            // let arr = []
-            // columns.map(i => {
-            //   arr.push({ ...i, key: i.KEY })
-            // })
-
-            // this.columns = [{ prop: 'dataTime', name: '时间', key: 0 }, ...arr]
             this.echartSeries = [
               {
                 type: 'bar',
@@ -357,6 +351,12 @@ export default {
         // 图表按钮点击回调--切换检测源或者项目
         this.echartsType = item.id
         console.log(item.id)
+        if (item.id === 'xm') {
+          this.getDataList(this.api.projectEchartsApi)
+        } else {
+          this.getDataList()
+
+        }
       }
     },
     getTimeParams () {

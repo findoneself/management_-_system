@@ -77,7 +77,7 @@
       </div>
     </BeautifulCard>
     <!-- 视频区域 -->
-    <BeautifulCard
+    <!-- <BeautifulCard
       title="隐患随手拍"
       class="echart-bottom echart-video"
       :cardStyle="{padding: '1.2rem 2.5rem'}"
@@ -99,20 +99,20 @@
           </div>
         </li>
       </ul>
-    </BeautifulCard>
+    </BeautifulCard> -->
   </div>
 </template>
 
 <script>
 import BeautifulCard from '_com/common/BeautifulCard'
 import PatrolMap from '_vie/common/patrolMap'
-import BeVideo from '_com/common/BeVideo'
+// import BeVideo from '_com/common/BeVideo'
 export default {
   name: 'PatrolEchart',
   components: {
     BeautifulCard,
-    PatrolMap,
-    BeVideo
+    PatrolMap
+    // BeVideo
   },
   data () {
     return {

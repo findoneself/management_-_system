@@ -6,7 +6,7 @@
     v-model="currentTabs"
   >
     <!-- 右侧按钮 -->
-    <div
+    <!-- <div
       slot="menuRight"
       class="menu-btn"
     >
@@ -161,23 +161,23 @@
           ></div>
         </li>
       </ul>
-    </div>
+    </div> -->
   </BeautifulWrapper>
 </template>
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
-import BeVideo from '_com/common/BeVideo'
-import BeautifulCard from '_com/common/BeautifulCard'
-import BeautifulTableList from '_com/common/BeautifulTableList'
+// import BeVideo from '_com/common/BeVideo'
+// import BeautifulCard from '_com/common/BeautifulCard'
+// import BeautifulTableList from '_com/common/BeautifulTableList'
 
 export default {
   name: 'VideoIndex',
   components: {
-    BeautifulWrapper,
-    BeautifulCard,
-    BeVideo,
-    BeautifulTableList
+    BeautifulWrapper
+    // BeautifulCard,
+    // BeVideo,
+    // BeautifulTableList
   },
   data () {
     return {

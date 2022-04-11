@@ -34,11 +34,13 @@ const winConfig = {
     'https://cdn.staticfile.org/element-ui/2.13.2/index.js'
   ]
 }
+console.log(winConfig.isProd)
 module.exports = {
   outputDir: 'dist',
   // productionSourceMap：{ type:Bollean,default:true } 生产源映射，如果您不需要生产时的源映射，那么将此设置为false可以加速生产构建
   productionSourceMap: false,
   publicPath: winConfig.isProd ? '/ment/' : '/',
+
   // 配置规则
   chainWebpack: config => {
     // 自定义打包入口，发布模式

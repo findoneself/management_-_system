@@ -64,18 +64,7 @@ export default {
               // borderRadius: 5
             },
             label: {
-              normal: {
-                formatter: function () {
-                  return ''
-                },
-                position: 'center',
-                padding: [0, 0, 5, 0],
-                show: true,
-                textStyle: {
-                  fontSize: 16,
-                  fontWeight: 'bold'
-                }
-              }
+              show: false
             },
             emphasis: {
               label: {
