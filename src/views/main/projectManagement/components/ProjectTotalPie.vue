@@ -20,6 +20,21 @@ export default {
       }
     }
   },
+  watch: {
+    total: {
+      handler () {
+        this.option.title.text = this.total
+        this.getmap()
+      },
+      deep: true
+    },
+    paramslist: {
+      handler () {
+        this.getmap()
+      },
+      deep: true
+    }
+  },
   data () {
     return {
       data: [

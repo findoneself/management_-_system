@@ -301,6 +301,8 @@ export default {
               }
             }
             info.myChart.setOption(option)
+          }).catch(err => {
+            console.log(err)
           })
         }
         item.getData(item, key)

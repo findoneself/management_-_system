@@ -20,6 +20,20 @@ export default {
       }
     }
   },
+  watch: {
+    xAxisData: {
+      handler () {
+        this.getmap()
+      },
+      deep: true
+    },
+    seriesData: {
+      handler () {
+        this.getmap()
+      },
+      deep: true
+    }
+  },
   data () {
     return {
       option: {

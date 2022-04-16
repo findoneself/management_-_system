@@ -6,7 +6,7 @@
   >
     <div class="container">
       <div class="container_left">
-        <!-- 项目总数
+        <!-- 项目总数 -->
         <BeautifulCard
           :title="'项目总数'"
           :isTriangle="false"
@@ -32,9 +32,9 @@
               </div>
             </div>
           </div>
-        </BeautifulCard> -->
+        </BeautifulCard>
         <!-- 业务分类 -->
-        <!-- <BeautifulCard
+        <BeautifulCard
           :title="'业务分类'"
           :isTriangle="false"
         >
@@ -59,9 +59,9 @@
               </div>
             </div>
           </div>
-        </BeautifulCard> -->
+        </BeautifulCard>
         <!-- 每月新增 -->
-        <!-- <BeautifulCard
+        <BeautifulCard
           :title="'每月新增'"
           :isTriangle="false"
         >
@@ -69,22 +69,35 @@
             :xAxisData='xAxisData'
             :seriesData='seriesData'
           />
-        </BeautifulCard> -->
+        </BeautifulCard>
       </div>
       <!-- 中间地图区域 -->
       <div class="map">
-        <!-- <AirQualityMap
+        <AirQualityMap
           :center='center'
-          :isMarkHandle='false'
+          :isMarkHandle='true'
+          @markHandle='markHandle'
           :coordinateList='coordinateList'
           :mapColorList='mapColorList'
+          :title="'project'"
         />
-        <div class="map_left_title">地图</div> -->
-
+        <div class="map_left_title">地图</div>
+        <div class="map-input">
+          <el-input
+            type="text"
+            v-model="searchValue"
+            placeholder="地点名称"
+            clearable
+          > </el-input>
+          <i
+            class="el-icon-search"
+            @click="getMapData"
+          ></i>
+        </div>
       </div>
       <!-- 右边列表 -->
       <div class="super_list">
-        <!-- <BeautifulCard
+        <BeautifulCard
           :isShowHead="false"
           :isTriangle="false"
         >
@@ -96,14 +109,20 @@
                   alt=""
                 >
                 <div class="zhongjian scale">超期90天未竣工:</div>
-                <div class="scale num">123</div>
+                <div class="scale num">{{more90day}}</div>
               </div>
               <div
                 class="scale more"
                 @click="morePage('超期90天未竣工')"
               >更多</div>
             </div>
-            <div class="columns">
+            <BeautifulTableList
+              cell-height="2.2rem"
+              highlight-currow
+              :data-list="dataList"
+              :columns="columns"
+            />
+            <!-- <div class="columns">
               <div
                 v-for="item in columns"
                 :key='item.id'
@@ -120,10 +139,10 @@
                 <div>{{item.sgdw}}</div>
                 <div>{{item.cqt}}</div>
               </div>
-            </div>
+            </div> -->
           </div>
-        </BeautifulCard> -->
-        <!-- <BeautifulCard
+        </BeautifulCard>
+        <BeautifulCard
           :isShowHead="false"
           :isTriangle="false"
         >
@@ -135,16 +154,16 @@
                   alt=""
                 >
                 <div class="zhongjian scale">本月已考评:</div>
-                <div class="scale num">123</div>
+                <div class="scale num">0</div>
                 <div class="zhongjian scale unkao">本月未考评:</div>
-                <div class="scale num2">123</div>
+                <div class="scale num2">0</div>
               </div>
               <div
                 class="scale more"
                 @click="morePage('本月考评')"
               >更多</div>
             </div>
-            <div class="columns">
+            <!-- <div class="columns">
               <div
                 v-for="item in columns"
                 :key='item.id'
@@ -161,9 +180,9 @@
                 <div>{{item.sgdw}}</div>
                 <div>{{item.cqt}}</div>
               </div>
-            </div>
+            </div> -->
           </div>
-        </BeautifulCard> -->
+        </BeautifulCard>
       </div>
     </div>
     <projectDialog
@@ -172,114 +191,62 @@
       :dataList="DialogDataList"
       @closeDialog='closeDialog'
     > </projectDialog>
+    <DialogCenter
+      v-if="dialogVisibleCenter"
+      :dialogCenterData='dataColumns'
+      @closeDialogCenter='closeDialogCenter'
+    />
   </BeautifulWrapper>
 </template>
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
-// import BeautifulCard from '_com/common/BeautifulCard'
-// import ProjectTotalPie from './components/ProjectTotalPie.vue'
-// import BusinessSortPie from './components/BusinessSortPie.vue'
-// import addMonthChart from './components/addMonthChart.vue'
+import BeautifulCard from '_com/common/BeautifulCard'
+import ProjectTotalPie from './components/ProjectTotalPie.vue'
+import BusinessSortPie from './components/BusinessSortPie.vue'
+import addMonthChart from './components/addMonthChart.vue'
 import projectDialog from './ProjectOverdue.vue'
-// import AirQualityMap from '_com/common//AirQualityMap.vue'
+import AirQualityMap from '_com/common//AirQualityMap.vue'
+import BeautifulTableList from '_com/common/BeautifulTableList'
+import DialogCenter from './components/DialogCenter.vue'
 
 export default {
   name: 'ProjectIndex',
   components: {
     BeautifulWrapper,
-    // BeautifulCard,
-    // ProjectTotalPie,
-    // BusinessSortPie,
-    // addMonthChart,
-    projectDialog
-    // AirQualityMap
+    BeautifulCard,
+    ProjectTotalPie,
+    BusinessSortPie,
+    addMonthChart,
+    projectDialog,
+    AirQualityMap,
+    BeautifulTableList,
+    DialogCenter
   },
   data () {
     return {
       borderIcon: ['top', 'right', 'bottom', 'left'],
       wraStyle: { inPadding: '0px' },
       // 项目总数模块
-      projectTotal: 131244,
-      paramslist: [
-        {
-          name: '房建',
-          value: 45,
-          color: '#FCFF20'
-        },
-        {
-          name: '市政',
-          value: 34,
-          color: '#FF4F01'
-        },
-        {
-          name: '轨道',
-          value: 21,
-          color: '#FF3D54'
-        },
-        {
-          name: '其他',
-          value: 50,
-          color: ' #00FFFF'
-        }
-      ],
+      projectTotal: 0,
+      projectColor: ['#FCFF20', '#FF4F01', '#FF3D54', '#00FFFF', '#FFAE00'],
+      paramslist: [],
       // 业务分类模块
-      businessTotal: 1432143,
-      businessSortList: [
-        {
-          name: 'AI识别',
-          value: 45,
-          color: '#FCFF20'
-        },
-        {
-          name: ' 水质',
-          value: 34,
-          color: '#FF4F01'
-        },
-        {
-          name: ' 噪声',
-          value: 21,
-          color: '#FF3D54'
-        },
-        {
-          name: ' 扬尘',
-          value: 50,
-          color: ' #00FFFF'
-        },
-        {
-          name: '智慧工地',
-          value: 50,
-          color: ' #FFAE00'
-        }
-      ],
+      businessTotal: 0,
+      businessSortList: [],
       // 每月新增模块
       xAxisData: ['1月', '2月', '3月', '4月', '5月', '6月'],
       seriesData: [20, 50, 10, 35, 35, 47],
       // 表格表头——右边两个表格
       columns: [
-        { name: '项目名称', prop: 'jcd', key: 1 },
-        { name: '开发单位', prop: 'jcwd', key: 2 },
-        { name: '施工单位', prop: 'sgdw', key: 3 },
-        { name: '超期/天', prop: 'cqt', key: 4 }
+        { name: '项目名称', prop: 'projectName', key: 1 },
+        { name: '开发单位', prop: 'constructor', key: 2 },
+        { name: '施工单位', prop: 'builder', key: 3 },
+        { name: '超期/天', prop: 'chaoQiDays', key: 4 }
       ],
       // 表格数据
-      dataList: [
-        {
-          id: '2', jcwd: '开发单位开发单位开发单位开发单位', jcd: '项目名称', cqt: '1223',
-          sgdw: '施工单位施工单位施工单位施工单位'
-        },
-        {
-          id: '3', jcwd: '开发单位开发单位开发单位开发单位开发单位', jcd: '项目名称', cqt: '1223',
-          sgdw: '施工单位施工单位施工单位施工单位'
-        },
-        {
-          id: '4', jcwd: '开发单位开发单位开发单位开发单位开发单位', jcd: '项目名称', cqt: '1223',
-          sgdw: '施工单位施工单位施工单位施工单位'
-        },
-        {
-          id: '1', jcwd: '开发单位开发单位开发单位开发单位开发单位', jcd: '项目名称', cqt: '1223',
-          sgdw: '施工单位施工单位施工单位施工单位'
-        }],
+      more90day: 0,
+      dataList: [],
       // 大弹窗数据
       DialogDataList: [
         { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
@@ -302,6 +269,7 @@ export default {
       dialogVisible: false,
       title: '',
       // 地图
+      searchValue: '', // 输入框搜索
       coordinateList: [{ lng: 116.2787, lat: 40.0492, value: 80 },
       { lng: 116.2787, lat: 40.040, value: 130 },
       { lng: 116.2887, lat: 40.040, value: 230 },
@@ -315,17 +283,141 @@ export default {
       { name: '中度', color: '#FF0200', section: '116-150' },
       { name: '重度', color: '#990099', section: '151-250' },
       { name: '严重', color: '#990000', section: '251-500' }],
-      center: { lng: 116.404, lat: 39.915 }
+      center: { lng: 116.404, lat: 39.915 },
+      // 详情弹窗数据
+      dataColumns: [{ name: '项目编号', prop: 'projectNum', value: '' },
+      { name: '备案号', prop: 'projectRecordNum', value: '' },
+      { name: '项目名称', prop: 'projectName', value: '' },
+      { name: '行政区域名称', prop: 'areaName', value: '' },
+      { name: '项目地址', prop: 'projectAddress', value: '' },
+      { name: '建设单位', prop: 'constructor', value: '' },
+      { name: '建设单位组织机构代码', prop: 'constructorOrgCode', value: '' },
+      { name: '建设单位联系人', prop: 'constructorContacts', value: '' },
+      { name: '建设单位联系电话', prop: 'constructorTel', value: '' },
+      { name: '施工单位', prop: 'builder', value: '' },
+      { name: '施工单位组织机构代码', prop: 'builderOrgCode', value: '' },
+      { name: '施工单位联系人', prop: 'builderContacts', value: '' },
+      { name: '施工单位联系电话', prop: 'builderTel', value: '' },
+      { name: '项目备案时间', prop: 'beianTime', value: '' },
+      { name: '项目竣工状态', prop: 'completeStatu', value: '' }
+      ],
+      dialogVisibleCenter: false,
+      api: {
+        projectTotalApi: 'integration/project/getProjectZs', // 项目总数
+        businessSorApi: 'integration/project/getProjectBussiness', // 业务分类
+        mapApi: 'integration/project/listDiTu', // 地图
+        moreApi: 'integration/project/getOver90Projects', // 超期90天
+        monthAddApi: 'integration/project/getMonthCreateProjects' // 每月新增
+      }
     }
   },
+  created () {
+    this.getProjectTotalData(this.api.projectTotalApi, 'project')
+    this.getProjectTotalData(this.api.businessSorApi, 'sort')
+    this.getProjectTotalData(this.api.monthAddApi, 'add')
+    this.getMapData()
+    this.getMoreData()
+  },
   methods: {
+    getProjectTotalData (url, str) {
+      this.$http({
+        url: url
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          console.log(data)
+          if (str === 'project') {
+            const { projectTotal, paramslist } = data
+            paramslist && paramslist.map((i, index) => {
+              i.color = this.projectColor[index]
+            })
+            this.projectTotal = projectTotal
+            this.paramslist = paramslist
+          } else if (str === 'sort') {
+            const { businessTotal, businessSortList } = data
+            businessSortList && businessSortList.map((i, index) => {
+              i.color = this.projectColor[index]
+            })
+            this.businessTotal = businessTotal
+            this.businessSortList = businessSortList
+          } else {
+            const { xAxisData, seriesData } = data
+            this.xAxisData = xAxisData
+            this.seriesData = seriesData
+          }
+
+
+        } else {
+          this.$message.error(msg || '获取数据错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
+    },
+    getMapData () {
+      this.$http({
+        url: this.api.mapApi,
+        data: {
+          project: this.searchValue
+        }
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          console.log(data)
+          this.center = data.center
+          this.coordinateList = data.list
+        } else {
+          this.$message.error(msg || '获取地图错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
+    },
+    getMoreData () {
+      this.$http({
+        url: this.api.moreApi
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          console.log(data)
+          this.dataList = data.list
+          this.more90day = data.over90
+        } else {
+          this.$message.error(msg || '获取超期项目错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
+    },
+    // 地图点位点击显示详情
+    markHandle (item) {
+      Object.keys(item).map(j => {
+        this.dataColumns.map(o => {
+          if (o.prop === j) {
+            console.log(item[j])
+            o.value = item[j] || ''
+          }
+        })
+      })
+      this.dialogVisibleCenter = true
+
+    },
     morePage (val) {
       console.log(val)
-      this.dialogVisible = true
-      this.title = val
+      if (val === '超期90天未竣工') {
+        this.dialogVisible = true
+        this.title = val
+      } else {
+        this.$message.error('暂未开放该模块')
+
+      }
+
     },
     closeDialog () {
       this.dialogVisible = false
+    },
+    closeDialogCenter () {
+      this.dialogVisibleCenter = false
     }
   }
 }
@@ -351,6 +443,19 @@ export default {
       text-align: center;
       line-height: 51px;
     }
+    .map-input {
+      position: absolute;
+      right: 50px;
+      top: 10px;
+      width: 12rem;
+    }
+    .el-icon-search {
+      position: absolute;
+      top: 50%;
+      right: 10%;
+      transform: translateY(-50%);
+      font-size: 20px;
+    }
   }
   .container_left {
     display: flex;
@@ -365,13 +470,12 @@ export default {
     height: 100%;
     .params {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       flex-wrap: wrap;
       overflow: hidden;
-      padding: 0 0.2rem;
       .item {
-        width: 11.8rem;
-        // height: 2.7rem;
+        width: 7.8rem;
+        padding: 0.2rem 0.2rem 0.4rem 0.2rem;
         text-align: center;
         cursor: pointer;
         margin: 0.25rem;
@@ -381,7 +485,6 @@ export default {
         justify-content: space-around;
         align-items: center;
         font-size: 1rem;
-        padding: 0.2rem 1rem 0.2rem 1.5rem;
         .color {
           width: 1.2rem;
           height: 0.6rem;
@@ -395,24 +498,13 @@ export default {
           // display: flex;
           // // justify-content: flex-start;
           // align-items: center;
-          margin-left: 1rem;
+          margin-left: 0.1rem;
           .margin {
             // width: 2.5rem;
             transform: scale(0.9);
             // text-align: left;
             margin-left: 0.4rem;
           }
-        }
-      }
-    }
-    .business {
-      padding: 0;
-      justify-content: flex-start;
-      .item.business {
-        width: 7.8rem;
-        padding: 0.2rem 0.2rem 0.4rem 0.2rem;
-        .span {
-          margin-left: 0.1rem;
         }
       }
     }
@@ -504,5 +596,8 @@ export default {
       }
     }
   }
+}
+/deep/ .be-ishead-content {
+  height: calc(100% - 5.5rem);
 }
 </style>

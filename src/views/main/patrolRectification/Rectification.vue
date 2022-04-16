@@ -1,6 +1,6 @@
 <template>
   <!-- 整改 -->
-  <!-- <TableForm
+  <TableForm
     :loading="false"
     :data-list="dataList"
     :columns="columns"
@@ -25,16 +25,16 @@
       <el-button type="primary">查询</el-button>
       <el-button>重置</el-button>
     </el-form>
-  </TableForm> -->
-  <div></div>
+  </TableForm>
+  <!-- <div></div> -->
 </template>
 
 <script>
-// import TableForm from '_vie/common/TableForm'
+import TableForm from '_vie/common/TableForm'
 export default {
   name: 'Rectification',
   components: {
-    // TableForm
+    TableForm
   },
   data () {
     return {

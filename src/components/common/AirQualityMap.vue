@@ -56,6 +56,12 @@ export default {
       default () {
         return []
       }
+    },
+    title: {
+      type: String,
+      default () {
+        return ''
+      }
     }
   },
   watch: {
@@ -67,6 +73,12 @@ export default {
     },
     coordinateList: {
       handler () {
+      },
+      deep: true
+    },
+    title: {
+      handler () {
+        this.flagHandle(BMaps, maps)
       },
       deep: true
     }
@@ -94,35 +106,46 @@ export default {
           position: new BMap.Point(item.lng, item.lat), // 指定文本标注所在的地理位置
           offset: new BMap.Size(30, -30) // 设置文本偏移量
         }
-        const { value, status } = item
-        let color = this.getColor(value, status)
-        console.log(color)
-        var labelvValue
-        if (status !== '1') {
-          labelvValue = '-'
-        } else {
-          labelvValue = value
-        }
-        var label = new BMap.Label(labelvValue, opts)
-        // console.log(label)
-        label.setStyle({
-          color: '#fff',
-          borderRadius: '5px',
-          borderColor: color,
-          backgroundColor: color,
-          padding: '8px 0',
-          fontSize: '16px',
-          width: '35px',
-          textAlign: 'center',
-          fontFamily: '微软雅黑'
-        })
-        label.addEventListener('click', function () {
-          if (that.isMarkHandle) {
-            that.$emit('markHandle', item.id)
-          }
+        if (this.title === 'project') {
+          var icon = new BMap.Icon(require('../../assets/img/maker.png'), new BMap.Size(60, 60))
+          var marker = new BMap.Marker(new BMap.Point(item.lng, item.lat), { icon: icon })
+          marker.addEventListener('click', function () {
+            if (that.isMarkHandle) {
+              that.$emit('markHandle', item)
+            }
 
-        })
-        map.addOverlay(label)
+          })
+          map.addOverlay(marker)
+        } else {
+          const { value, status } = item
+          let color = this.getColor(value, status)
+          var labelvValue
+          if (status !== '1') {
+            labelvValue = '-'
+          } else {
+            labelvValue = value
+          }
+          var label = new BMap.Label(labelvValue, opts)
+          label.setStyle({
+            color: '#fff',
+            borderRadius: '5px',
+            borderColor: color,
+            backgroundColor: color,
+            padding: '8px 0',
+            fontSize: '16px',
+            width: '35px',
+            textAlign: 'center',
+            fontFamily: '微软雅黑'
+          })
+          label.addEventListener('click', function () {
+            if (that.isMarkHandle) {
+              that.$emit('markHandle', item)
+            }
+
+          })
+          map.addOverlay(label)
+        }
+
       }
     },
     getColor (value, status) {

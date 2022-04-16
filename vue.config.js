@@ -34,7 +34,6 @@ const winConfig = {
     'https://cdn.staticfile.org/element-ui/2.13.2/index.js'
   ]
 }
-console.log(winConfig.isProd)
 module.exports = {
   outputDir: 'dist',
   // productionSourceMap：{ type:Bollean,default:true } 生产源映射，如果您不需要生产时的源映射，那么将此设置为false可以加速生产构建

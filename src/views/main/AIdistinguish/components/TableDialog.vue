@@ -30,12 +30,12 @@
               key="xmmc"
               label-width="5.4rem"
             >
-              <el-input
+              <el-预警管控
                 placeholder="输入点位名称搜索"
                 v-model="dataForm.projectName"
                 clearable
               >
-              </el-input>
+              </el-预警管控>
             </el-form-item>
             <el-form-item
               label="报警类型："
@@ -118,12 +118,12 @@
               label="点位名称："
               key="dwmc"
             >
-              <el-input
+              <el-预警管控
                 placeholder="输入点位名称搜索"
                 v-model="dataForm.projectName"
                 clearable
               >
-              </el-input>
+              </el-预警管控>
             </el-form-item>
             <el-form-item
               label="开始时间："
@@ -399,7 +399,7 @@ export default {
   margin-bottom: 0;
 }
 .el-select,
-.el-input {
+.el-预警管控 {
   width: 180px;
 }
 </style>

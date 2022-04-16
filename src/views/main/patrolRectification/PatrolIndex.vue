@@ -1,5 +1,5 @@
 <template>
-  <!--扬尘检测首-地图 -->
+  <!--巡察整改 -->
   <BeautifulWrapper
     :wraStyle="currentTabs === '1' ? { inPadding: '0px' } : {}"
     :tabsList="tabsList"

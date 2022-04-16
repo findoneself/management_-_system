@@ -213,8 +213,7 @@ export default {
       this.activePage = 1
     },
     markHandle (e) {
-      console.log(e)
-      let item = this.dataList.find(i => i.id === e)
+      let item = this.dataList.find(i => i.id === e.id)
       this.monitoringSspotData = item.monitoringSspotData
       console.log(item)
       this.activePage = 1
@@ -245,10 +244,14 @@ export default {
     },
     getDataList () {
       this.loading = true
+      const { monitoringSourceName, areaId } = this.dataForm
       this.$http({
         url: this.api.monitoringSourceApi,
         method: 'post',
-        data: this.dataForm
+        data: {
+          areaIds: [areaId],
+          monitoringSourceName
+        }
       }).then(res => {
         this.loading = false
         //  console.log(res)

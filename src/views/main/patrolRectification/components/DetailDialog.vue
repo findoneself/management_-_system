@@ -24,9 +24,57 @@
         <el-button
           slot="headform"
           type="primary"
+          @click="addHandle"
         >新增</el-button>
       </TableForm>
     </BeautifulWrapper>
+    <div
+      class="addBox"
+      v-if="isAddVisible"
+    >
+      <div class="title">
+        <h2>{{dialogTitle}}</h2>
+        <i
+          class="el-icon-close"
+          @click="closeClickAdd"
+        ></i>
+      </div>
+      <el-form
+        :inline="true"
+        size="medium"
+        class="demo-form-inline"
+      >
+        <el-form-item label="名称">
+          <el-input
+            v-model="name"
+            placeholder="请输入"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div class="button">
+        <el-button @click="addSubmit">提交</el-button>
+      </div>
+    </div>
+    <el-dialog
+      title="提示"
+      :visible.sync="deleteDialogVisible"
+      width="30%"
+      class="deleteDia"
+      @close="handleClose"
+      :modal='false'
+    >
+      <span>这是一段信息</span>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="deleteDialogVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="deleteDialogVisible = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
   </el-dialog>
 </template>
 
@@ -74,14 +122,18 @@ export default {
           },
           {
             text: '修改',
-            click: this.lookDetail
+            click: this.editHandle
           },
           {
             text: '删除',
-            click: this.lookDetail
+            click: this.deleteItem
           }
         ]
-      }
+      },
+      dialogTitle: '',
+      isAddVisible: false,
+      name: '',
+      deleteDialogVisible: false
     }
   },
   methods: {
@@ -90,6 +142,42 @@ export default {
     },
     lookDetail (item, e) { // 查看图片
       console.log(item, e)
+    },
+    editHandle (item) {
+      this.dialogTitle = '修改巡查记录'
+      this.isAddVisible = true
+      this.name = item.name
+    },
+    deleteItem (item) {
+      // 请求接口删除 item
+      console.log(item)
+      this.deleteDialogVisible = true
+    },
+    addHandle () {
+      this.dialogTitle = '新增巡查记录'
+      this.isAddVisible = true
+    },
+    closeClickAdd () {
+      this.isAddVisible = false
+      this.name = ''
+    },
+    addSubmit () {
+      this.$http({
+        url: '/xczg/getEchartData',
+        data: this.name
+      }).then(res => {
+        // 如果获取到数据
+        if (res.code === 200) {
+          console.log(res)
+          this.$message.info('提交成功！')
+          this.closeClickAdd()
+        } else {
+          this.$message.error('提交失败！')
+        }
+      })
+    },
+    handleClose () {
+      this.deleteDialogVisible = false
     }
   },
   computed: {
@@ -153,5 +241,41 @@ export default {
 /deep/.be-table-list,
 .be-table-ul {
   padding: 1rem;
+}
+.addBox {
+  width: 30%;
+  height: 300px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #0b1771;
+  color: #fff;
+  border: 1px solid #0a44ff;
+  .title {
+    padding: 20px;
+    border-bottom: 1px solid #fff;
+    display: flex;
+    justify-content: space-between;
+    .el-icon-close {
+      font-size: 20px;
+    }
+  }
+  .demo-form-inline {
+    margin: 40px;
+  }
+  .button {
+    text-align: center;
+    margin: 20px 0;
+  }
+}
+.deleteDia {
+  width: 30%;
+  height: 50px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
 }
 </style>

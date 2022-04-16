@@ -6,7 +6,7 @@ NProgress.configure({ showSpinner: false })
 import router from '../router'
 const http = axios.create({
   timeout: 1000 * 5,
-  baseURL: process.env.NODE_ENV === 'production' ? 'api' : '/',
+  baseURL: process.env.NODE_ENV === 'production' ? 'prod-api' : 'api',
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json; charset=utf-8'

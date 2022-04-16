@@ -5,18 +5,18 @@
       @click="closeIcon"
     ></i>
     <div class="title">
-      <span>{{dialogCenterData.dataForm1.title}}</span>
+      <span>项目信息</span>
     </div>
     <div class="content">
       <div class="data">
         <div
-          v-for="item in   dialogCenterData.dataForm1.data1"
+          v-for="item in   dialogCenterData"
           :key="item.value"
         >
           {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}
         </div>
       </div>
-      <div class="data">
+      <!-- <div class="data">
         <div
           v-for="item in     dialogCenterData.dataForm1.data2"
           :key="item.value"
@@ -42,7 +42,7 @@
         >
           {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -57,7 +57,7 @@ export default {
       default: false
     },
     dialogCenterData: {
-      type: Object,
+      type: Array,
       default () {
         return {}
       }

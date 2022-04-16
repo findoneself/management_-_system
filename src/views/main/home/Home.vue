@@ -65,15 +65,18 @@
         title="国控站点"
       >
         <div class="picker">
-          <el-date-picker
-            prefix-icon="el-icon-time"
-            class="gkzd-date"
-            size="mini"
-            v-model="gkzdDate"
-            type="date"
-            placeholder="选择日期"
+          <el-select
+            v-model="stationCode"
+            placeholder="请选择"
+            @change="stationChange"
           >
-          </el-date-picker>
+            <el-option
+              v-for="item in stationList"
+              :key="item.stationCode"
+              :label="item.station"
+              :value="item.stationCode"
+            ></el-option>
+          </el-select>
         </div>
         <ul class="gkzd-list">
           <li
@@ -82,7 +85,7 @@
             :key="index + '.'"
           >
             <span>{{ item.name }}:</span>
-            <span>{{ item.value }}</span>
+            <span>{{ (item.value&&item.value.length>5)?item.value.slice(0,3)+'...':item.value }}</span>
           </li>
         </ul>
       </BeautifulCard>
@@ -193,6 +196,8 @@ export default {
     return {
       // 国控站点日期
       gkzdDate: new Date(),
+      stationList: [],
+      stationCode: '',
       // 统计时间区间
       echartDate: [],
       // 巡查整改数据
@@ -213,8 +218,6 @@ export default {
 
       // 中间当前时间
       projectInfo: {
-        year: '',
-        month: '',
         count: '56562',
         list: [
           { id: 'xm1', name: '项目1', num: 3145 },
@@ -267,29 +270,36 @@ export default {
       fileData: [{ name: '文件', num: 132, type: '未读', history: 132455, src: '' },
       { name: '通报', num: 132, type: '未读', history: 132455, src: '../../../assets/img/tb.png' }],
       api: {
-        patrolDataApi: 'integration/check/getCount'
+        patrolDataApi: 'integration/check/getCount', // 巡查整改
+        projectTotalApi: 'integration/project/getMiddleNumber', // 中间大数字
+        gkzdApi: 'integration/epmapStation/epmapStationList', // 国控站点下拉框数据
+        getStationDataApi: 'integration/epmapStation/epmapStationData/' // 国控站点根据下拉框的参数列表
       }
 
     }
   },
   created () {
     this.getPatrolData()
-    this.getdate()
-    const cdate = new Date()
-    this.projectInfo.year = cdate.getFullYear()
-    this.projectInfo.month = cdate.getMonth()
-    this.projectInfo.count = this.projectInfo.count.split('')
+    this.getProjectData()
+    this.getgkzdData()
   },
   methods: {
-    getdate () {
-      let res = this.$utils.getDate()
-      this.date = res
-      let end = res.split('-')
-      Number(end[2]) < 31 && (end[2] = (Number(end[2]) + 1).toString())
-      this.startDate = res
-      this.endDate = end.join('-')
+    getgkzdData () {
+      this.$http({
+        url: this.api.gkzdApi
+      }).then(res => {
+        console.log(res)
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.stationList = data
+          this.stationCode = data[0].stationCode
+          this.stationChange()
+        } else {
+          this.$message.error(msg || '获取国控站点数据错误')
+        }
+      })
     },
-    getPatrolData () {
+    getPatrolData () { // projectTotalApi
       this.$http({
         url: this.api.patrolDataApi
       }).then(res => {
@@ -297,6 +307,39 @@ export default {
         const { data, code, msg } = res.data
         if (code === 200) {
           this.patrolData = data
+        } else {
+          this.$message.error(msg || '获取巡察整改数据错误')
+        }
+      })
+    },
+    getProjectData () { // projectTotalApi
+      this.$http({
+        url: this.api.projectTotalApi
+      }).then(res => {
+        console.log(res)
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          data.count = data.count.toString()
+          this.projectInfo = data
+        } else {
+          this.$message.error(msg || '获取项目总数错误')
+        }
+      })
+    },
+    stationChange () {
+      this.$http({
+        url: this.api.getStationDataApi + this.stationCode
+      }).then(res => {
+
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          let arr = []
+          for (let key in data) {
+            arr.push({ name: key, value: data[key] })
+            // console.log(data[key].length)
+          }
+          console.log(arr)
+          this.paramslist = arr
         } else {
           this.$message.error(msg || '获取巡察整改数据错误')
         }
@@ -389,12 +432,15 @@ export default {
     flex-shrink: 0;
   }
   .home_top_right {
+    .picker {
+      margin: 0.8rem 0 1.25rem 0;
+    }
     .gkzd-list {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
       overflow: hidden;
-      height: calc(100% - 35px);
+      height: calc(100% - 70px);
       overflow-y: scroll;
     }
     .gkzd-list-item {
@@ -526,11 +572,19 @@ export default {
         font-weight: bold;
       }
       .images_item1,
-      .images_item5 {
+      .images_item7 {
         margin-top: -32px;
       }
-      .images_item3 {
-        margin-top: 32px;
+      .images_item2,
+      .images_item6 {
+        margin-top: -10px;
+      }
+      .images_item3,
+      .images_item5 {
+        margin-top: 20px;
+      }
+      .images_item4 {
+        margin-top: 55px;
       }
       .images_value {
         font-size: 22px;
@@ -544,6 +598,7 @@ export default {
         }
       }
       .images_item1 .images_value,
+      .images_item7 .images_value,
       .images_item3 .images_value,
       .images_item5 .images_value {
         background: url("~_ats/img/img1.png") no-repeat center center;
@@ -551,16 +606,22 @@ export default {
         width: 140px;
         height: 140px;
       }
+      .images_item3 .images_value,
+      .images_item5 .images_value {
+        width: 200px;
+        height: 200px;
+      }
       .images_item2 .images_value,
-      .images_item4 .images_value {
+      .images_item4 .images_value,
+      .images_item6 .images_value {
         background: url("~_ats/img/img2.png") no-repeat center center;
         background-size: 100% 100%;
         width: 170px;
         height: 170px;
       }
-      .images_item3 .images_value {
-        width: 200px;
-        height: 200px;
+      .images_item4 .images_value {
+        width: 230px;
+        height: 230px;
       }
     }
   }

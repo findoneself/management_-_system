@@ -1,7 +1,7 @@
 <template>
   <!-- 巡查 -->
   <div style="height:100%">
-    <!-- <TableForm
+    <TableForm
       :loading="dataLoading"
       :data-list="dataList"
       :columns="columns"
@@ -32,18 +32,18 @@
       :title="title"
       :dataList="DialogDataList"
       @closeDialog='closeDialog'
-    ></DetailDialog> -->
+    ></DetailDialog>
   </div>
 </template>
 
 <script>
-// import TableForm from '_vie/common/TableForm'
-// import DetailDialog from './components/DetailDialog.vue'
+import TableForm from '_vie/common/TableForm'
+import DetailDialog from './components/DetailDialog.vue'
 export default {
   name: 'Partrol',
   components: {
-    // TableForm,
-    // DetailDialog
+    TableForm,
+    DetailDialog
   },
   data () {
     return {
@@ -57,10 +57,10 @@ export default {
         { name: '结束时间', prop: 'endTime', key: 5 }
       ],
       dataList: [
-        { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'gwg', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geewhwwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geegsdwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
+        { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09', imgSrc: '' },
+        { id: 'gwg', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09', imgSrc: '' },
+        { id: 'geewhwwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09', imgSrc: '' },
+        { id: 'geegsdwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09', imgSrc: '' },
         { id: 'geegeewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
         { id: 'geejwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
         { id: 'geeerwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },

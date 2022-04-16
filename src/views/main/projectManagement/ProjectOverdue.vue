@@ -20,6 +20,7 @@
         :is-table="true"
         :tform-head="tformHead"
         :operObj='operObj'
+        :index-obj="{isIndex: true, width: '5rem'}"
       >
         <el-form
           :inline="true"
@@ -35,14 +36,17 @@
             <i class="el-icon-search"></i>
           </el-form-item>
 
-          <el-button type="primary">查询</el-button>
-          <el-button>重置</el-button>
+          <el-button
+            type="primary"
+            @click="getMoreData"
+          >查询</el-button>
+          <el-button @click="reset">重置</el-button>
         </el-form>
       </TableForm>
     </BeautifulWrapper>
     <DialogCenter
       v-if="dialogVisibleCenter"
-      :dialogCenterData='dialogCenterData'
+      :dialogCenterData='dataColumns'
       @closeDialogCenter='closeDialogCenter'
     />
   </el-dialog>
@@ -67,25 +71,20 @@ export default {
     dialogVisible: {
       type: Boolean,
       default: false
-    },
-    dataList: {
-      type: Array,
-      default () {
-        return []
-      }
     }
   },
   data () {
     return {
+      dataList: [],
       projectName: '',
       dataLoading: false,
       dialogVisibleCenter: false,
       columns: [
-        { name: '分组名称', prop: 'groupName', key: 1 },
-        { name: '点位名称', prop: 'projectName', tooltip: true, key: 2 },
-        { name: '异常类型', prop: 'alertType', key: 3 },
-        { name: '时间', prop: 'startTime', key: 4 },
-        { name: '结束时间', prop: 'endTime', key: 5 }
+        { name: '备案号', prop: 'projectRecordNum', key: 1 },
+        { name: '项目名称', prop: 'projectName', key: 2 },
+        { name: '施工单位', prop: 'builder', key: 3 },
+        { name: '项目地址', prop: 'projectAddress', key: 4 },
+        { name: '备案日期', prop: 'beianTime', key: 5 }
       ],
       operObj: {
         isOperation: true,
@@ -97,48 +96,72 @@ export default {
           }
         ]
       },
-      dialogCenterData: {
-        dataForm1: {
-          title: '项目信息',
-          data1: [{ name: '监督备案号', value: 'AJ32978658658737435(监督一科)' },
-          { name: '项目编码', value: '124235436546546' },
-          { name: '项目名称', value: '天虹精英汇项目一标段1-3,5,9-14#楼，配' },
-          { name: '项目地址', value: '衢宁县城天虹大道东7823647' }],
-          data2: [{ name: '监督备案号', value: 'AJ329786586587335(监督一科)' },
-          { name: '项目编码', value: '12423543654006' },
-          { name: '项目名称', value: '天虹精英汇项目一标段1-3,5,9-14#楼，配2434253' }]
-        },
-        dataForm2: {
-          title: '五方单位信息',
-          data1: [{ name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
-          { name: '项目负责人', value: '124235436546546' },
-          { name: '联系方式', value: '14932746732' },
-          { name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
-          { name: '项目负责人', value: '124235436546546' },
-          { name: '联系方式', value: '14932746732' }, { name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
-          { name: '项目负责人', value: '124235436546546' },
-          { name: '联系方式', value: '14932746732' }, { name: '建设单位', value: 'AJ32978658658737435(监督一科)' },
-          { name: '项目负责人', value: '124235436546546' },
-          { name: '联系方式', value: '14932746732' }],
-          data2: [{ name: '监督备案号', value: 'AJ329786586587335' },
-          { name: '项目编码', value: '1242354' },
-          { name: '项目名称', value: '天虹精英汇5' },
-          { name: '项目编码', value: '12423543' }]
-        }
+      dataColumns: [{ name: '项目编号', prop: 'projectNum', value: '' },
+      { name: '备案号', prop: 'projectRecordNum', value: '' },
+      { name: '项目名称', prop: 'projectName', value: '' },
+      { name: '行政区域名称', prop: 'areaName', value: '' },
+      { name: '项目地址', prop: 'projectAddress', value: '' },
+      { name: '建设单位', prop: 'constructor', value: '' },
+      { name: '建设单位组织机构代码', prop: 'constructorOrgCode', value: '' },
+      { name: '建设单位联系人', prop: 'constructorContacts', value: '' },
+      { name: '建设单位联系电话', prop: 'constructorTel', value: '' },
+      { name: '施工单位', prop: 'builder', value: '' },
+      { name: '施工单位组织机构代码', prop: 'builderOrgCode', value: '' },
+      { name: '施工单位联系人', prop: 'builderContacts', value: '' },
+      { name: '施工单位联系电话', prop: 'builderTel', value: '' },
+      { name: '项目备案时间', prop: 'beianTime', value: '' },
+      { name: '项目竣工状态', prop: 'completeStatu', value: '' }
+      ],
+      api: {
+        moreApi: 'integration/project/getOver90Projects' // 超期90天
       }
     }
   },
+  created () {
+    this.getMoreData()
+  },
   methods: {
+    getMoreData () {
+      this.$http({
+        url: this.api.moreApi,
+        data: {
+          project: this.projectName
+        }
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          const { list } = data
+          this.dataList = list
+
+        } else {
+          this.$message.error(msg || '获取超期项目错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
+    },
     closeClick () {
       this.$emit('closeDialog')
       this.dialogVisibleCenter = false
     },
     lookDetail (item, e) {
       console.log(item, e)
+      Object.keys(item).map(j => {
+        this.dataColumns.map(o => {
+          if (o.prop === j) {
+            console.log(item[j])
+            o.value = item[j] || ''
+          }
+        })
+      })
+
       this.dialogVisibleCenter = true
     },
     closeDialogCenter () {
       this.dialogVisibleCenter = false
+    },
+    reset () {
+      this.projectName = ''
     }
   },
   computed: {
@@ -192,8 +215,5 @@ export default {
 }
 .el-input {
   width: 20rem;
-}
-/deep/.be-ishead-content {
-  // height: 0;
 }
 </style>
