@@ -18,6 +18,23 @@ apiObj.downloadBlob = function (url, params, filename = '文件', callback) {
   })
 }
 /** *
+ * 系统根据请求的Response对象转成成url地址
+ * @param response
+ * @param callback
+ */
+apiObj.blobToUrl = function (response, callback) {
+  try {
+    if (!response || response.status !== 200) {
+      callback.call(this, { msg: response.msg || '访问服务器网络错误，请检查！' })
+      return
+    }
+    let url = window.URL.createObjectURL(response.data)
+    callback.call(this, url)
+  } catch (e) {
+    callback.call(this, false)
+  }
+}
+/** *
  * 系统根据请求的Response对象下载文件
  * @param response
  * @param fileName

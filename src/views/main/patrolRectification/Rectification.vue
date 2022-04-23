@@ -187,7 +187,7 @@ export default {
       isForm: '整改',
       // 图片
       dialogVisibleImg: false,
-
+      imgSrc: '',
       api: {
         dataListApi: '/integration/rectification/listFromWg', // 列表
         deleteApi: '/integration/rectification/fromWG/', // 删除整改记录 /rectification/fromWG
