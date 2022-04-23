@@ -21,6 +21,14 @@ export default {
       }
     }
   },
+  watch: {
+    xAxisData: {
+      handler () {
+        this.getmap()
+      },
+      deep: true
+    }
+  },
   data () {
     return {
       colorList: ['#FF460D', '#FFAE00', '#1176FF', '#23DBFC'],
@@ -34,7 +42,7 @@ export default {
             top: -5,
             textStyle: {
               color: '#fff',
-              fontSize: '10'
+              fontSize: '12'
             },
             itemWidth: 10,
             itemHeight: 5,
@@ -47,7 +55,7 @@ export default {
             y: '30',
             textStyle: {
               color: '#fff',
-              fontSize: '10'
+              fontSize: '12'
             },
             itemWidth: 10,
             itemHeight: 5,

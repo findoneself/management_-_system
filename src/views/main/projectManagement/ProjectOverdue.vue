@@ -122,11 +122,12 @@ export default {
   },
   methods: {
     getMoreData () {
+      let data = {
+        projectName: this.projectName
+      }
+      let params = this.$api.toQueryString(data)
       this.$http({
-        url: this.api.moreApi,
-        data: {
-          project: this.projectName
-        }
+        url: this.api.moreApi + params
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
@@ -162,6 +163,7 @@ export default {
     },
     reset () {
       this.projectName = ''
+      this.getMoreData()
     }
   },
   computed: {

@@ -13,7 +13,9 @@
           v-for="item in   dialogCenterData"
           :key="item.value"
         >
-          {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}
+          <span v-if="item.prop==='completeStatu'">{{item.name}}:{{item.value==1?'已竣工':'未竣工'}}
+          </span>
+          <span v-else> {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}</span>
         </div>
       </div>
       <!-- <div class="data">

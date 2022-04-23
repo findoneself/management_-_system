@@ -32,7 +32,20 @@
       :isTriangle='false'
     >
       <div class="form-select">
-        <el-select
+        <el-date-picker
+          v-model="item.formValue"
+          type="daterange"
+          align="right"
+          unlink-panels
+          clearable
+          value-format="yyyy-MM-dd HH:mm:ss"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          @change="geEchartData(key)"
+        >
+        </el-date-picker>
+        <!-- <el-select
           v-model="item.formValue"
           clearable
           size="mini"
@@ -45,7 +58,7 @@
             :label="item.name"
             :value="item.id"
           ></el-option>
-        </el-select>
+        </el-select> -->
       </div>
       <div
         class="echart-content"
@@ -77,7 +90,7 @@
       </div>
     </BeautifulCard>
     <!-- 视频区域 -->
-    <!-- <BeautifulCard
+    <BeautifulCard
       title="隐患随手拍"
       class="echart-bottom echart-video"
       :cardStyle="{padding: '1.2rem 2.5rem'}"
@@ -99,20 +112,20 @@
           </div>
         </li>
       </ul>
-    </BeautifulCard> -->
+    </BeautifulCard>
   </div>
 </template>
 
 <script>
 import BeautifulCard from '_com/common/BeautifulCard'
 import PatrolMap from '_vie/common/patrolMap'
-// import BeVideo from '_com/common/BeVideo'
+import BeVideo from '_com/common/BeVideo'
 export default {
   name: 'PatrolEchart',
   components: {
     BeautifulCard,
-    PatrolMap
-    // BeVideo
+    PatrolMap,
+    BeVideo
   },
   data () {
     return {
@@ -189,11 +202,32 @@ export default {
         { id: 'gwshseg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
         { id: 'gwejrjeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
         { id: 'gweeaeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' }
-      ]
+      ],
+      echartArr: ['xctj', 'zgtj', 'zgyqtj', 'yhtj'],
+      api: {
+        patrolDataApi: 'integration/check/getCount', // 网格员统计
+        xctj: '/integration/patrol/tongJiXunCha', // 巡查整改
+        zgtj: '/integration/patrol/tongJiZhengGai', // 整改统计
+        zgyqtj: '/integration/patrol/tongJiZhengGaiYuQi', // 整改逾期
+        yhtj: '/integration/patrol/tongJiIsZhengGai', // 已整改未整改
+        imgDataApi: '/integration/rectification/suiShouPai'// 随手拍
+      }
     }
   },
+  // watch: {
+  //   echartsList: {
+  //     handler () {
+  //       console.log(this.echartsList)
+  //       // this.getmap()
+  //     },
+  //     deep: true
+  //   }
+  // },
   created () {
-    this.initDict()
+    this.getdate()
+    // this.initDict()
+    this.getFirstEchart()
+    this.getImgList()
   },
   mounted () {
     this.$nextTick(() => {
@@ -206,6 +240,60 @@ export default {
     window.removeEventListener('resize', this.watchEchart)
   },
   methods: {
+    // 网格员统计
+    getFirstEchart () {
+      this.$http({
+        url: this.api.patrolDataApi
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.patrolData = data
+        } else {
+          this.$message.error(msg || '获取网格员统计数据错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
+    },
+    geEchartData (api) {
+      let date = this.echartsList[api]['formValue']
+      this.$http({
+        url: this.api[api],
+        method: 'post',
+        data: {
+          phoneNumber: sessionStorage.getItem('userId'),
+          from: date[0],
+          end: date[1]
+        }
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          console.log(data.xcTjList)
+          this.echartsList[api].list = data.xcTjList
+        } else {
+          this.$message.error(msg || '获取数据错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
+    },
+    getImgList () {
+      this.$http({
+        url: this.api.imgDataApi,
+        method: 'post',
+        data: { phoneNumber: sessionStorage.getItem('userId') }
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          console.log(data)
+          // this.videoList = data
+        } else {
+          this.$message.error(msg || '获取网格员统计数据错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
+    },
     // 初始化字典数据
     initDict () {
       const dict = this.$store.state.global.dictData
@@ -228,6 +316,11 @@ export default {
     pickerHandel (item, key) {
       item.getData(item, key)
     },
+    getdate () {
+      this.echartArr.map(i => {
+        this.echartsList[i].formValue = this.$format.getTwodaysTime()
+      })
+    },
     // 初始化echarts图
     initEchart () {
       Object.entries(this.echartsList).forEach(([key, item]) => {
@@ -235,27 +328,63 @@ export default {
           item.myChart = this.$echarts.init(document.getElementById(key + '-echart'))
         }
         // 调用接口获取数据
-        item.getData = (info, type) => {
-          info.loading = true
-          const params = {
-            date: info.formValue,
-            type: type
-          }
+        item.getData = (item, key) => {
+          item.loading = true
+          let date = item.formValue
           this.$http({
-            url: '/xczg/getEchartData',
-            data: params
+            url: this.api[key],
+            method: 'post',
+            data: {
+              phoneNumber: sessionStorage.getItem('userId'),
+              from: date[0],
+              end: date[1]
+            }
           }).then(res => {
             // 如果获取到数据
-            info.loading = false
-            if (res.code === 200) {
-              info.list = res.data.list
-              console.log(res)
+            item.loading = false
+            const { data, code, msg } = res.data
+            if (code === 200) {
+              item.list = data.xcTjList
+              const series = item.list.map((info) => {
+                return {
+                  value: info.count,
+                  name: info.name
+                }
+              })
+              let option = {
+                title: {
+                  text: item.list.reduce((val, pre) => {
+                    return val + pre.count
+                  }, 0),
+                  left: 'center',
+                  top: 'center',
+                  textStyle: {
+                    fontWeight: 'bold',
+                    fontFamily: 'DS-Digital',
+                    fontSize: this.$utils.fontSize(24),
+                    color: '#fff'
+                  }
+                },
+                color: item.colors,
+                series: {
+                  type: 'pie',
+                  radius: ['55%', '80%'],
+                  label: { show: false },
+                  labelLine: { show: false },
+                  emphasis: {
+                    label: { show: true, formatter: '{b}: {c}' },
+                    labelLine: { show: true }
+                  },
+                  data: series
+                }
+              }
+              item.myChart.setOption(option)
             } else {
-              // this.$message.error('获取实时数据失败！')
-              info.list = []
+              this.$message.error(msg || '获取实时数据失败！')
+              item.list = []
             }
           }, () => {
-            info.loading = false
+            item.loading = false
             const list1 = [
               { name: '噪声检查', count: 16 },
               { name: '污染检查', count: 26 },
@@ -265,9 +394,9 @@ export default {
               { name: '施工隐患', count: 16 },
               { name: '污染环境', count: 26 }
             ]
-            info.list = key === 'yhtj' ? list2 : list1
+            item.list = key === 'yhtj' ? list2 : list1
             // 处理echarts的数据
-            const series = info.list.map((info) => {
+            const series = item.list.map((info) => {
               return {
                 value: info.count,
                 name: info.name
@@ -275,7 +404,7 @@ export default {
             })
             let option = {
               title: {
-                text: info.list.reduce((val, pre) => {
+                text: item.list.reduce((val, pre) => {
                   return val + pre.count
                 }, 0),
                 left: 'center',
@@ -287,7 +416,7 @@ export default {
                   color: '#fff'
                 }
               },
-              color: info.colors,
+              color: item.colors,
               series: {
                 type: 'pie',
                 radius: ['55%', '80%'],
@@ -300,10 +429,11 @@ export default {
                 data: series
               }
             }
-            info.myChart.setOption(option)
+            item.myChart.setOption(option)
           }).catch(err => {
             console.log(err)
           })
+
         }
         item.getData(item, key)
         // 鼠标移入隐藏点击的高亮-- - 单个元素的移入移出不太友好，最好是对echarts整个图表做移入移出
@@ -397,6 +527,9 @@ export default {
   .el-select {
     width: 120px;
   }
+}
+.el-range-editor.el-input__inner {
+  width: 15rem;
 }
 // 第一个模块，网络员统计
 .echart-top-first {

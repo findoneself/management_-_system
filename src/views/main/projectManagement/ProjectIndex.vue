@@ -21,12 +21,13 @@
                 class="item"
                 v-for="(item, index) in paramslist"
                 :key="index + '.'"
+                :title="item.name"
               >
                 <div
                   class="color"
                   :style="{ backgroundColor: item.color }"
                 ></div>
-                <div class="span">{{ item.name }}:
+                <div class="span">{{ item.name?item.name.slice(0,4):'' }}:
                   <span class="margin">{{ item.value }}</span>
                 </div>
               </div>
@@ -53,7 +54,7 @@
                   class="color"
                   :style="{ backgroundColor: item.color }"
                 ></div>
-                <div class="span">{{ item.name }}:
+                <div class="span">{{ item.name?item.name.slice(0,4):'' }}:
                   <span class="margin">{{ item.value }}</span>
                 </div>
               </div>
@@ -87,7 +88,6 @@
             type="text"
             v-model="searchValue"
             placeholder="地点名称"
-            clearable
           > </el-input>
           <i
             class="el-icon-search"
@@ -118,9 +118,9 @@
             </div>
             <BeautifulTableList
               cell-height="2.2rem"
-              highlight-currow
               :data-list="dataList"
               :columns="columns"
+              :operObj='{}'
             />
             <!-- <div class="columns">
               <div
@@ -229,7 +229,7 @@ export default {
       wraStyle: { inPadding: '0px' },
       // 项目总数模块
       projectTotal: 0,
-      projectColor: ['#FCFF20', '#FF4F01', '#FF3D54', '#00FFFF', '#FFAE00'],
+      projectColor: ['#FCFF20', '#FF4F01', '#FF3D54', '#00FFFF', '#FFAE00', '#B78FFF'],
       paramslist: [],
       // 业务分类模块
       businessTotal: 0,
@@ -240,7 +240,7 @@ export default {
       // 表格表头——右边两个表格
       columns: [
         { name: '项目名称', prop: 'projectName', key: 1 },
-        { name: '开发单位', prop: 'constructor', key: 2 },
+        { name: '开发单位', prop: 'constructo', key: 2 },
         { name: '施工单位', prop: 'builder', key: 3 },
         { name: '超期/天', prop: 'chaoQiDays', key: 4 }
       ],
@@ -325,7 +325,6 @@ export default {
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
-          console.log(data)
           if (str === 'project') {
             const { projectTotal, paramslist } = data
             paramslist && paramslist.map((i, index) => {
@@ -355,17 +354,18 @@ export default {
       })
     },
     getMapData () {
+      let data = {
+        projectAddress: this.searchValue
+      }
+      let params = this.$api.toQueryString(data)
       this.$http({
-        url: this.api.mapApi,
-        data: {
-          project: this.searchValue
-        }
+        url: this.api.mapApi + params
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
-          console.log(data)
-          this.center = data.center
-          this.coordinateList = data.list
+          const { center, list } = data
+          this.center = center
+          this.coordinateList = list
         } else {
           this.$message.error(msg || '获取地图错误')
         }
@@ -379,9 +379,13 @@ export default {
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
-          console.log(data)
-          this.dataList = data.list
-          this.more90day = data.over90
+          const { over90, list } = data
+          let arr = []
+          list && list.map(i => {
+            arr.push({ ...i, 'devUint': i.constructor })
+          })
+          this.dataList = arr || []
+          this.more90day = over90
         } else {
           this.$message.error(msg || '获取超期项目错误')
         }
@@ -473,6 +477,7 @@ export default {
       justify-content: flex-start;
       flex-wrap: wrap;
       overflow: hidden;
+      height: 30%;
       .item {
         width: 7.8rem;
         padding: 0.2rem 0.2rem 0.4rem 0.2rem;

@@ -63,6 +63,7 @@
             v-for="(item, iindex) in tableList"
             :class="[{'be-list--active': highlightCurrow && curRowIndex === iindex}, 'be-item--' + columnsNum, {'be-list--bgcolor': stripe && ((columnsNum === 1 && iindex % 2 === 0) || (columnsNum === 2 && (iindex % 4 === 0 || iindex % 4 === 1)) || (columnsNum === 3 && (iindex % 6 === 0 || iindex % 6 === 1 || iindex % 6 === 2)))}]"
             @click="rowClick(item, iindex)"
+            @dblclick='doubleClick(item, iindex)'
             :key="item.id"
           >
             <!-- 序号列 -->
@@ -270,6 +271,10 @@ export default {
     // 行点击
     rowClick (row, rowIndex) {
       this.$emit('rowClick', { row, rowIndex })
+    },
+    // 双击列表
+    doubleClick (row) {
+      this.$emit('doubleClick', { row })
     },
     // 单元格点击，四个参数，单元格信息，单元格索引，行信息，行索引
     cellClick (cell, cellIndex, row, rowIndex) {

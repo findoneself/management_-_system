@@ -1,5 +1,5 @@
 <template>
-  <!--车洗裸土 -->
+  <!--车辆冲洗 -->
   <BeautifulWrapper
     :isMenuTab='false'
     :borderIcon='borderIcon'

@@ -30,6 +30,21 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item class="el_form_county">
+            <el-select
+              v-model="dataForm.paramTypes"
+              clearable
+              placeholder="请选择"
+              @change="paramChange"
+            >
+              <el-option
+                v-for="item in dictOptions.paramTypesList"
+                :key="item.prop"
+                :label="item.name"
+                :value="item.prop"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item
             label-width="5rem"
             class="el_form_search"
@@ -37,11 +52,13 @@
             <el-input
               v-model="dataForm.monitoringSourceName"
               placeholder="请输入关键字搜索"
+              clearable
+              @change="monitoringSourceNameChange"
             >
             </el-input>
             <i
               class="el-icon-search"
-              @click="iconSearchHandle"
+              @click="getDataList"
             ></i>
           </el-form-item>
         </el-form>
@@ -55,9 +72,16 @@
         :operObj='{isOperation: false}'
         cell-height='2rem'
         class="tableList"
+        @doubleClick='doubleClick'
       >
       </BeautifulTableList>
-
+      <el-pagination
+        @current-change="handlePageChange"
+        :current-page="dataForm.pageIndex"
+        :page-size="dataForm.pageSize"
+        layout="prev, pager, next"
+        :total="projectTotal"
+      />
     </BeautifulCard>
     <!-- 监测点数据 -->
     <MonitoringSpot
@@ -140,19 +164,21 @@ export default {
           { id: 'xz-2', name: '区域2' },
           { id: 'xz-3', name: '区域3' },
           { id: 'xz-4', name: '区域4' }
-        ]
+        ],
+        paramTypesList: []
       },
       dataForm: {
         areaId: '',
-        monitoringSourceName: ''
+        monitoringSourceName: '',
+        paramTypes: '',
+        pageIndex: 1,
+        pageSize: 10
       },
+      projectTotal: 0,
       cardStyle: { padding: '0px' },
-      // 表格表头
-      columns: [
-        { name: '监测点', prop: 'name', key: 1, tooltip: 9 },
-        { name: 'PM2.5', prop: 'value', key: 2, isSort: true }
-      ],
+
       // 检测源 表格数据
+      // columns: [],
       dataList: [],
       // 监测点数据
       monitoringSspotData: {
@@ -181,7 +207,7 @@ export default {
       { name: '中度', color: '#FF0200', section: '116-150' },
       { name: '重度', color: '#990099', section: '151-250' },
       { name: '严重', color: '#990000', section: '251-500' }],
-      center: { lng: 116.413315, lat: 39.927636 },
+      center: {},
       // 地图右下角的switch 和相关data
       switch_value1: '',
       switch_value2: '',
@@ -196,6 +222,21 @@ export default {
   },
   created () {
     this.getArea()
+  },
+  computed: {
+    columns () {
+      let router = this.$route.path.slice(16)
+      if (router === 'DusIndex') {
+        return ([
+          { name: '监测点', prop: 'name', key: 1, tooltip: 9 },
+          { name: 'PM2.5', prop: 'value', key: 2, isSort: true }
+        ])
+      } else {
+        return ([
+          { name: '监测点', prop: 'name', key: 1, tooltip: 9 }
+        ])
+      }
+    }
   },
   mounted () {
     this.$nextTick(() => {
@@ -235,7 +276,7 @@ export default {
         if (status === 200) {
           this.dictOptions.areaList = data.data || []
           sessionStorage.setItem('areaList', JSON.stringify(data.data))
-          this.dataForm.areaId = data.data[0].id
+          // this.dataForm.areaId = data.data[0].id
           this.getDataList()
         } else {
           this.$message.error('获取行政数据错误')
@@ -244,13 +285,14 @@ export default {
     },
     getDataList () {
       this.loading = true
-      const { monitoringSourceName, areaId } = this.dataForm
+      const { monitoringSourceName, areaId, paramTypes } = this.dataForm
       this.$http({
         url: this.api.monitoringSourceApi,
         method: 'post',
         data: {
-          areaIds: [areaId],
-          monitoringSourceName
+          areaIds: areaId ? [areaId] : [],
+          monitoringSourceName,
+          paramTypes
         }
       }).then(res => {
         this.loading = false
@@ -282,6 +324,7 @@ export default {
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
+          this.dictOptions.paramTypesList = data
           sessionStorage.setItem('paramTypesList', JSON.stringify(data))
         } else {
           this.$message.error(msg || '获取参数类型数据错误')
@@ -306,7 +349,31 @@ export default {
         this.$message.error(err.data.msg || err.data.error)
         this.$store.commit('global/setDusDictData', { type: 'station', list: [] })
       })
+    },
+    doubleClick ({ row, rowIndex }) {
+      console.log(rowIndex)
+      this.center = row.mapLngLat
+      let coordinateList = []
+      coordinateList.push({ ...row.mapLngLat, value: row.value, status: row.status, id: row.id })
+      this.coordinateList = coordinateList
+    },
+    monitoringSourceNameChange (e) {
+      console.log(e)
+      if (e === '') {
+        this.getDataList()
+      }
+    },
+    paramChange () {
+      let val = this.dataForm.paramTypes
+      this.columns[1].name = this.dictOptions.paramTypesList.find(i => i.prop === val).name
+      this.getDataList()
+    },
+    // 分页组件
+    handlePageChange (val) {
+      this.dataForm.pageIndex = val
+      // this.getProjectData()
     }
+
   }
 }
 </script>
@@ -318,7 +385,7 @@ export default {
 }
 .tableList {
   position: relative;
-  height: calc(100% - 100px);
+  height: calc(100% - 135px);
   .order_sj {
     position: absolute;
     top: 10px;
@@ -342,16 +409,26 @@ export default {
     overflow: hidden;
     .demo-form-inline {
       display: flex;
-      padding: 2rem 0 0 1rem;
+      justify-content: space-between;
+      padding: 2rem 1rem 0.5rem;
+      flex-wrap: wrap;
       .el_form_county {
-        width: 35%;
+        width: 46%;
       }
       .el_form_search {
+        /deep/.el-form-item__content {
+          width: 100%;
+        }
+        width: 100%;
         position: relative;
+        /deep/.el-input .el-input__inner {
+          padding-left: 2rem;
+        }
         i {
           position: absolute;
           top: 50%;
-          right: 1rem;
+          left: 1rem;
+          margin-right: 0.5rem;
           transform: translateY(-50%);
           cursor: pointer;
         }

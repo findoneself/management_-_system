@@ -170,12 +170,16 @@
             src="../../../assets/img/tb.png"
           />
           <span>{{item.name}}</span>
-          <span>{{item.num}}{{item.type}}</span>
+          <span @click="lookFile(item.name)">{{item.num}}({{item.type}})</span>
           <span>{{item.history}}</span>
         </div>
 
       </BeautifulCard>
     </div>
+    <fileDialog
+      ref="fileDialog"
+      @getFileData='getFileData'
+    />
   </div>
 </template>
 
@@ -184,13 +188,16 @@ import BeautifulCard from '_com/common/BeautifulCard'
 import PatrolMap from '_vie/common/patrolMap'
 import WarningNum from './components/warningNum'
 import InstallNum from './components/installNmu'
+import fileDialog from './components/fileDialog.vue'
+
 export default {
   name: 'Home',
   components: {
     BeautifulCard,
     PatrolMap,
     WarningNum,
-    InstallNum
+    InstallNum,
+    fileDialog
   },
   data () {
     return {
@@ -267,13 +274,15 @@ export default {
         name: 'Video Ad',
         data: [10, 22, 21, 54, 10, 30, 40]
       }],
-      fileData: [{ name: '文件', num: 132, type: '未读', history: 132455, src: '' },
-      { name: '通报', num: 132, type: '未读', history: 132455, src: '../../../assets/img/tb.png' }],
+      fileData: [{ name: '文件', num: 132, type: '未读', history: 132455 },
+      { name: '通报', num: 132, type: '未读', history: 132455 }],
       api: {
         patrolDataApi: 'integration/check/getCount', // 巡查整改
         projectTotalApi: 'integration/project/getMiddleNumber', // 中间大数字
         gkzdApi: 'integration/epmapStation/epmapStationList', // 国控站点下拉框数据
-        getStationDataApi: 'integration/epmapStation/epmapStationData/' // 国控站点根据下拉框的参数列表
+        getStationDataApi: 'integration/epmapStation/epmapStationData/', // 国控站点根据下拉框的参数列表
+        getFileApi: '/integration/document/getNoReadNumberFromWg', // 文件通报
+        getInstallApi: '/integration/project/getGqxAzTjr' // 各县区安装数量
       }
 
     }
@@ -282,13 +291,14 @@ export default {
     this.getPatrolData()
     this.getProjectData()
     this.getgkzdData()
+    this.getFileData()
+    this.getInstallData()
   },
   methods: {
     getgkzdData () {
       this.$http({
         url: this.api.gkzdApi
       }).then(res => {
-        console.log(res)
         const { data, code, msg } = res.data
         if (code === 200) {
           this.stationList = data
@@ -303,7 +313,6 @@ export default {
       this.$http({
         url: this.api.patrolDataApi
       }).then(res => {
-        console.log(res)
         const { data, code, msg } = res.data
         if (code === 200) {
           this.patrolData = data
@@ -316,7 +325,6 @@ export default {
       this.$http({
         url: this.api.projectTotalApi
       }).then(res => {
-        console.log(res)
         const { data, code, msg } = res.data
         if (code === 200) {
           data.count = data.count.toString()
@@ -330,7 +338,6 @@ export default {
       this.$http({
         url: this.api.getStationDataApi + this.stationCode
       }).then(res => {
-
         const { data, code, msg } = res.data
         if (code === 200) {
           let arr = []
@@ -338,12 +345,43 @@ export default {
             arr.push({ name: key, value: data[key] })
             // console.log(data[key].length)
           }
-          console.log(arr)
           this.paramslist = arr
         } else {
           this.$message.error(msg || '获取巡察整改数据错误')
         }
       })
+    },
+    getFileData () {
+      this.$http({
+        url: this.api.getFileApi,
+        method: 'post',
+        data: {
+          phoneNumber: sessionStorage.getItem('userId')
+        }
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.fileData = data
+        } else {
+          this.$message.error(msg || '获取国控站点数据错误')
+        }
+      })
+    },
+    getInstallData () {
+      this.$http({
+        url: this.api.getInstallApi
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.xAxisDataInstall = data.xAxisDataInstall
+          this.seriesDataInstall = data.seriesDataInstall
+        } else {
+          this.$message.error(msg || '获取国控站点数据错误')
+        }
+      })
+    },
+    lookFile (name) {
+      this.$refs.fileDialog.open(name)
     }
   }
 }
@@ -577,14 +615,14 @@ export default {
       }
       .images_item2,
       .images_item6 {
-        margin-top: -10px;
+        margin-top: -5px;
       }
       .images_item3,
       .images_item5 {
-        margin-top: 20px;
+        margin-top: 30px;
       }
       .images_item4 {
-        margin-top: 55px;
+        margin-top: 60px;
       }
       .images_value {
         font-size: 22px;
@@ -603,25 +641,25 @@ export default {
       .images_item5 .images_value {
         background: url("~_ats/img/img1.png") no-repeat center center;
         background-size: 100% 100%;
-        width: 140px;
-        height: 140px;
+        width: 8rem;
+        height: 8rem;
       }
       .images_item3 .images_value,
       .images_item5 .images_value {
-        width: 200px;
-        height: 200px;
+        width: 10rem;
+        height: 10rem;
       }
       .images_item2 .images_value,
       .images_item4 .images_value,
       .images_item6 .images_value {
         background: url("~_ats/img/img2.png") no-repeat center center;
         background-size: 100% 100%;
-        width: 170px;
-        height: 170px;
+        width: 9rem;
+        height: 9rem;
       }
       .images_item4 .images_value {
-        width: 230px;
-        height: 230px;
+        width: 12rem;
+        height: 12rem;
       }
     }
   }
@@ -674,9 +712,9 @@ export default {
       display: flex;
       justify-content: flex-end;
       text-align: center;
-      margin: 2rem 0 0.5rem 0;
+      margin: 2rem 0 1rem 0;
       span {
-        width: 26%;
+        width: 22%;
         color: #39f8ff;
       }
     }
@@ -686,7 +724,7 @@ export default {
       justify-content: space-around;
       align-items: center;
       background-color: #12298d;
-      // height: 6.5rem;
+      padding: 10px 0;
       border-radius: 1rem;
       margin-bottom: 1rem;
       img {

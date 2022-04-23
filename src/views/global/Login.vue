@@ -127,13 +127,8 @@ export default {
           let token = data.access_token
           this.$cookie.set('token', token)
           this.$router.push({ name: 'main' })
-          // ----以下逻辑仅为测试
-          // 登录成功获取用户信息
-          // this.getUserInfo('1').then((user) => {
-          //   // 获取用户信息失败
-          //   this.$router.push({ name: 'main', params: { userId: '1' } })
-          //   if (!user.isUser) this.$message.error(user.message)
-          // })
+          sessionStorage.setItem('userId', this.loginForm.username)
+
         } else {
           this.$message.error(msg || '登录失败')
         }

@@ -1,92 +1,79 @@
 <template>
   <!--超过90天未竣工 -->
-  <el-dialog
-    :visible.sync="dialogVisible"
+  <div
+    v-if="dialogVisible"
     id="detail_dialog"
     :modal='false'
   >
-    <BeautifulWrapper
-      :wraStyle="{ inPadding: '0px' }"
-      :isTitle='true'
-      style="width:100%;geight:100%"
-      :title="title"
-      @closeClick="closeClick"
-      :borderIcon="['right', 'bottom', 'left', 'close']"
-    >
-      <TableForm
-        :loading="dataLoading"
-        :oper-obj="operObj"
-        :columns-num="2"
-        :data-list="dataList"
-        :columns="columns"
-        :tform-head="tformHead"
-      >
-        <el-button
-          slot="headform"
-          type="primary"
-          @click="addHandle"
-        >新增</el-button>
-      </TableForm>
-    </BeautifulWrapper>
-    <div
-      class="addBox"
-      v-if="isAddVisible"
-    >
-      <div class="title">
-        <h2>{{dialogTitle}}</h2>
-        <i
-          class="el-icon-close"
-          @click="closeClickAdd"
-        ></i>
-      </div>
-      <el-form
-        :inline="true"
-        size="medium"
-        class="demo-form-inline"
-      >
-        <el-form-item label="名称">
-          <el-input
-            v-model="name"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <div class="button">
-        <el-button @click="addSubmit">提交</el-button>
-      </div>
+    <div class="title">
+      <h2>{{title}}</h2>
+      <i
+        class="el-icon-close"
+        @click="closeClickAdd"
+      ></i>
     </div>
-    <el-dialog
-      title="提示"
-      :visible.sync="deleteDialogVisible"
-      width="30%"
-      class="deleteDia"
-      @close="handleClose"
-      :modal='false'
+    <el-form
+      :inline="true"
+      size="medium"
+      class="demo-form-inline"
     >
-      <span>这是一段信息</span>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="deleteDialogVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="deleteDialogVisible = false"
-        >确 定</el-button>
-      </span>
-    </el-dialog>
-  </el-dialog>
+      <el-form-item label="整改项目">
+        <el-select
+          v-model="dataForm.projectName"
+          clearable
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in dictOptions.projectList"
+            :key="item.prop"
+            :label="item.name"
+            :value="item.prop"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="整改日期">
+        <el-input
+          v-model="name"
+          placeholder="请输入"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="整改内容">
+        <el-input
+          v-model="name"
+          placeholder="请输入"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="图片">
+        <el-upload
+          class="upload-demo"
+          action
+          :on-preview="handlePreview"
+          :on-change="handleChange"
+          :file-list="fileList"
+          :limit='3'
+        >
+          <el-button
+            size="small"
+            type="primary"
+          >点击上传</el-button>
+          <!-- <div
+            slot="tip"
+            class="el-upload__tip"
+          >只能上传jpg/png文件，且不超过500kb</div> -->
+        </el-upload>
+      </el-form-item>
+
+    </el-form>
+    <div class="button">
+      <el-button @click="addSubmit">提交</el-button>
+    </div>
+
+  </div>
 </template>
 
 <script>
-import BeautifulWrapper from '_com/common/BeautifulWrapper'
-import TableForm from '_vie/common/TableForm'
 export default {
   name: 'ProjectOverdue',
-  components: {
-    BeautifulWrapper,
-    TableForm
-  },
   props: {
     title: {
       type: String,
@@ -95,71 +82,60 @@ export default {
     dialogVisible: {
       type: Boolean,
       default: true
-    },
-    dataList: {
-      type: Array,
-      default () {
-        return []
-      }
     }
   },
   data () {
     return {
-      projectName: '',
       dataLoading: false,
-      columns: [
-        { name: '名称', prop: 'projectName', tooltip: true, key: 2 },
-        { name: '日期', prop: 'startTime', key: 4 }
-      ],
-      operObj: {
-        isOperation: true,
-        headName: '操作',
-        width: '10rem',
-        operButton: [
-          {
-            text: '查看',
-            click: this.lookDetail
-          },
-          {
-            text: '修改',
-            click: this.editHandle
-          },
-          {
-            text: '删除',
-            click: this.deleteItem
-          }
-        ]
+      dataForm: { projectName: '' },
+      dictOptions: {
+        projectList: []
+
       },
       dialogTitle: '',
       isAddVisible: false,
       name: '',
-      deleteDialogVisible: false
+      fileList: [],
+
+      api: {
+        uploadApi: '/communal/file/upload',
+        projectPickerApi: '/integration/project/getProjectsByWgPhone/'
+      }
     }
   },
+  created () {
+    this.getProjectData()
+  },
   methods: {
-    closeClick () {
-      this.$emit('closeDialog')
-    },
-    lookDetail (item, e) { // 查看图片
-      console.log(item, e)
-    },
-    editHandle (item) {
-      this.dialogTitle = '修改巡查记录'
-      this.isAddVisible = true
-      this.name = item.name
-    },
-    deleteItem (item) {
-      // 请求接口删除 item
-      console.log(item)
-      this.deleteDialogVisible = true
-    },
-    addHandle () {
-      this.dialogTitle = '新增巡查记录'
-      this.isAddVisible = true
+    getProjectData () {
+      this.$http({
+        url: this.api.dataListApi + sessionStorage.getItem('userId')
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.dictOptions.projectList = data || []
+
+        } else {
+          this.$message.error(msg || '获取项目错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
     },
     closeClickAdd () {
-      this.isAddVisible = false
+      this.$emit('closeDialog')
       this.name = ''
+    },
+    handleChange (file) {
+      const typeArr = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg']
+      const isJPG = typeArr.indexOf(file.raw.type) !== -1
+      if (!isJPG) {
+        this.$message.error('只能是图片!')
+        // this.$refs.upload.clearFiles()
+        this.files = null
+        return
+      }
+      console.log(file)
     },
     addSubmit () {
       this.$http({
@@ -175,16 +151,6 @@ export default {
           this.$message.error('提交失败！')
         }
       })
-    },
-    handleClose () {
-      this.deleteDialogVisible = false
-    }
-  },
-  computed: {
-    tformHead () {
-      // 需要取参数类型和选择日期的信息
-      const info = { isTableHead: false }
-      return info
     }
   }
 }
@@ -242,11 +208,11 @@ export default {
 .be-table-ul {
   padding: 1rem;
 }
-.addBox {
-  width: 30%;
-  height: 300px;
+#detail_dialog {
+  width: 40%;
+  height: 70%;
   position: absolute;
-  top: 40%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: #0b1771;
@@ -263,19 +229,28 @@ export default {
   }
   .demo-form-inline {
     margin: 40px;
+    /deep/.el-form-item {
+      width: 100%;
+    }
   }
   .button {
     text-align: center;
     margin: 20px 0;
   }
 }
+.upload-demo {
+  margin-left: 2rem;
+}
 .deleteDia {
   width: 30%;
-  height: 50px;
+  height: 250px;
   position: absolute;
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  h3 {
+    text-align: center;
+    margin: 45px;
+  }
 }
 </style>

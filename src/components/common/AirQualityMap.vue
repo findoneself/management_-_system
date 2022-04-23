@@ -73,6 +73,7 @@ export default {
     },
     coordinateList: {
       handler () {
+        this.flagHandle(BMaps, maps)
       },
       deep: true
     },
@@ -99,6 +100,9 @@ export default {
       this.flagHandle(BMap, map)
     },
     flagHandle (BMap, map) {
+      console.log(this.coordinateList)
+      this.coordinateList || marker.remove()
+      map.clearOverlays()
       let that = this
       for (var i = 0; i < this.coordinateList.length; i++) {
         let item = this.coordinateList[i]

@@ -41,4 +41,12 @@ apiObj.download = function (response, fileName = '文件', callback) {
     callback.call(this, false)
   }
 }
+apiObj.toQueryString = (params = {}, mark = true) => {
+  return (
+    (mark ? '?' : '') +
+    Object.keys(params)
+      .map(key => `${key}=${params[key]}`)
+      .join('&')
+  )
+}
 export default apiObj
