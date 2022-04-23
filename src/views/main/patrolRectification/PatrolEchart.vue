@@ -42,7 +42,7 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          @change="geEchartData(key)"
+          @change="pickerHandel(item, key)"
         >
         </el-date-picker>
         <!-- <el-select
@@ -214,18 +214,8 @@ export default {
       }
     }
   },
-  // watch: {
-  //   echartsList: {
-  //     handler () {
-  //       console.log(this.echartsList)
-  //       // this.getmap()
-  //     },
-  //     deep: true
-  //   }
-  // },
   created () {
     this.getdate()
-    // this.initDict()
     this.getFirstEchart()
     this.getImgList()
   },
@@ -247,6 +237,7 @@ export default {
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
+          console.log(data)
           this.patrolData = data
         } else {
           this.$message.error(msg || '获取网格员统计数据错误')
@@ -255,29 +246,28 @@ export default {
         this.$message.error(err.data.msg || err.data.error)
       })
     },
-    geEchartData (api) {
-      let date = this.echartsList[api]['formValue']
-      console.log(date)
-      this.$http({
-        url: this.api[api],
-        method: 'post',
-        data: {
-          phoneNumber: sessionStorage.getItem('userId'),
-          from: date[0],
-          end: date[1]
-        }
-      }).then(res => {
-        const { data, code, msg } = res.data
-        if (code === 200) {
-          console.log(data.xcTjList)
-          this.echartsList[api].list = data.xcTjList
-        } else {
-          this.$message.error(msg || '获取数据错误')
-        }
-      }, (err) => {
-        this.$message.error(err.data.msg || err.data.error)
-      })
-    },
+    // geEchartData (api) {
+    //   let date = this.echartsList[api]['formValue']
+    //   this.$http({
+    //     url: this.api[api],
+    //     method: 'post',
+    //     data: {
+    //       phoneNumber: sessionStorage.getItem('userId'),
+    //       from: date[0],
+    //       end: date[1]
+    //     }
+    //   }).then(res => {
+    //     const { data, code, msg } = res.data
+    //     if (code === 200) {
+    //       console.log(data.xcTjList)
+    //       this.echartsList[api].list = data.xcTjList
+    //     } else {
+    //       this.$message.error(msg || '获取数据错误')
+    //     }
+    //   }, (err) => {
+    //     this.$message.error(err.data.msg || err.data.error)
+    //   })
+    // },
     getImgList () {
       this.$http({
         url: this.api.imgDataApi,
@@ -294,16 +284,6 @@ export default {
       }, (err) => {
         this.$message.error(err.data.msg || err.data.error)
       })
-    },
-    // 初始化字典数据
-    initDict () {
-      const dict = this.$store.state.global.dictData
-      if (dict.dayDate && dict.dayDate.length > 0) {
-        this.dictOptions.dayList = dict.dayDate
-        Object.values(this.echartsList).forEach((item) => {
-          item.formValue = dict.dayDate[0].id
-        })
-      }
     },
     // 监听窗口改变，两个echarts刷新
     watchEchart () {
@@ -386,55 +366,9 @@ export default {
             }
           }, () => {
             item.loading = false
-            const list1 = [
-              { name: '噪声检查', count: 16 },
-              { name: '污染检查', count: 26 },
-              { name: '项目检查', count: 36 }
-            ]
-            const list2 = [
-              { name: '施工隐患', count: 16 },
-              { name: '污染环境', count: 26 }
-            ]
-            item.list = key === 'yhtj' ? list2 : list1
-            // 处理echarts的数据
-            const series = item.list.map((info) => {
-              return {
-                value: info.count,
-                name: info.name
-              }
-            })
-            let option = {
-              title: {
-                text: item.list.reduce((val, pre) => {
-                  return val + pre.count
-                }, 0),
-                left: 'center',
-                top: 'center',
-                textStyle: {
-                  fontWeight: 'bold',
-                  fontFamily: 'DS-Digital',
-                  fontSize: this.$utils.fontSize(24),
-                  color: '#fff'
-                }
-              },
-              color: item.colors,
-              series: {
-                type: 'pie',
-                radius: ['55%', '80%'],
-                label: { show: false },
-                labelLine: { show: false },
-                emphasis: {
-                  label: { show: true, formatter: '{b}: {c}' },
-                  labelLine: { show: true }
-                },
-                data: series
-              }
-            }
-            item.myChart.setOption(option)
           }).catch(err => {
             console.log(err)
           })
-
         }
         item.getData(item, key)
         // 鼠标移入隐藏点击的高亮-- - 单个元素的移入移出不太友好，最好是对echarts整个图表做移入移出
