@@ -5,7 +5,7 @@
       @click="closeIcon"
     ></i>
     <div class="title">
-      <span>项目信息</span>
+      <span>{{title?title:'项目信息'}}</span>
     </div>
     <div class="content">
       <div class="data">
@@ -15,36 +15,10 @@
         >
           <span v-if="item.prop==='completeStatu'">{{item.name}}:{{item.value==1?'已竣工':'未竣工'}}
           </span>
+          <span v-else-if="item.prop==='patrolTheEnd'">{{item.name}}:{{item.value==1?'已完结':'未完结'}}</span>
           <span v-else> {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}</span>
         </div>
       </div>
-      <!-- <div class="data">
-        <div
-          v-for="item in     dialogCenterData.dataForm1.data2"
-          :key="item.value"
-        >
-          {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}
-        </div>
-      </div>
-      <div class="dataForm2_title">
-        <div>{{dialogCenterData.dataForm2.title}}</div>
-      </div>
-      <div class="data">
-        <div
-          v-for="item in dialogCenterData.dataForm2.data1"
-          :key="item.value"
-        >
-          {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}
-        </div>
-      </div>
-      <div class="data1">
-        <div
-          v-for="item in dialogCenterData.dataForm2.data2"
-          :key="item.value"
-        >
-          {{item.name}}:{{item.value.length>25?item.value.slice(0,20)+'...':item.value}}
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -62,6 +36,12 @@ export default {
       type: Array,
       default () {
         return {}
+      }
+    },
+    title: {
+      type: String,
+      default () {
+        return ''
       }
     }
   },

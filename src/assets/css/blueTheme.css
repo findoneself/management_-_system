@@ -75,6 +75,14 @@ div.el-picker-panel__sidebar {
     box-shadow: inset -1px -1px 10px var(--shadow-color),
         inset 1px 1px 10px var(--shadow-color);
 }
+.el-form--inline .el-form-item .el-textarea .el-textarea__inner{
+    background-color: #040560;
+    border-color: var(--input-bdcolor);
+    color: #fff;
+    box-shadow: inset -1px -1px 10px var(--shadow-color),
+        inset 1px 1px 10px var(--shadow-color);
+}
+
 
 .el-input .el-input__inner:hover,
 .el-date-editor.el-input__inner:hover,

@@ -36,8 +36,9 @@
     <DetailDialog
       :dialogVisible="dialogVisible"
       :title="title"
+      :dataForm='paramsObj'
       :dataList="DialogDataList"
-      @closeDialog='dialogVisible = false'
+      @closeDialog='closeDialog'
     ></DetailDialog>
     <div
       class="deleteDia"
@@ -59,18 +60,34 @@
         >取消</el-button>
       </div>
     </div>
+    <DialogCenter
+      v-if="dialogVisibleCenter"
+      :title='dialogCenterTitle'
+      :isForm='true'
+      :dialogCenterData='dataColumns'
+      @closeDialogCenter='dialogVisibleCenter=false'
+    />
+    <el-dialog :visible.sync="dialogVisibleImg">
+      <img
+        width="100%"
+        :src="imgSrc"
+        class="avatar"
+      >
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import TableForm from '_vie/common/TableForm'
 import DetailDialog from './components/DetailDialog.vue'
+import DialogCenter from '../projectManagement/components/DialogCenter.vue'
 
 export default {
   name: 'Rectification',
   components: {
     TableForm,
-    DetailDialog
+    DetailDialog,
+    DialogCenter
   },
   data () {
     return {
@@ -78,11 +95,9 @@ export default {
       columns: [
         { name: '整改项目', prop: 'projectName', key: 1 },
         { name: '整改类型', prop: 'rectificationName', key: 2 },
-        { name: '整改内容', prop: 'rectificationContent', key: 3 },
+        { name: '整改内容', prop: 'rectificationContent', tooltip: 15, key: 3 },
         { name: '整改开始日期', prop: 'rectificationBeginTime', key: 4 },
         { name: '整改结束日期', prop: 'rectificationEndTime', key: 5 },
-        // { name: '整改前图片URL', prop: 'alertType', key: 6 },
-        // { name: '整改后图片', prop: 'startTime', key: 7 },
         { name: '网格员', prop: 'fullName', key: 8 },
         { name: '管理员', prop: 'managerName', key: 9 }
       ],
@@ -154,8 +169,29 @@ export default {
         { id: '24244641', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' }
       ],
       deleteDialogVisible: false,
+      // 详情弹窗
+      dialogVisibleCenter: false,
+      // 详情弹窗数据
+      dialogCenterTitle: '',
+      dataColumns: [{ name: '整改项目', prop: 'projectName', value: '' },
+      { name: '整改类型', prop: 'rectificationName', value: '' },
+      { name: '整改内容', prop: 'rectificationContent', value: '' },
+      { name: '整改开始日期', prop: 'rectificationBeginTime', value: '' },
+      { name: '整改结束日期', prop: 'rectificationEndTime', value: '' },
+      { name: '网格员', prop: 'fullName', value: '' },
+      { name: '管理员', prop: 'managerName', value: '' },
+      { name: '完结时间', prop: 'wjTime', value: '' }
+      ],
+      // 删除
+      deleteObj: {},
+      isForm: '整改',
+      // 图片
+      dialogVisibleImg: false,
+
       api: {
-        dataListApi: '/integration/rectification/listFromWg'
+        dataListApi: '/integration/rectification/listFromWg', // 列表
+        deleteApi: '/integration/rectification/fromWG/', // 删除整改记录 /rectification/fromWG
+        editApi: '/integration/rectification/edit'
       }
     }
   },
@@ -164,8 +200,12 @@ export default {
   },
   methods: {
     getDataList () {
+      let data = {
+        projectName: this.projectName
+      }
+      let params = this.$api.toQueryString(data)
       this.$http({
-        url: this.api.dataListApi + sessionStorage.getItem('userId')
+        url: this.api.dataListApi + params
       }).then(res => {
         const { rows, code, msg } = res.data
         if (code === 200) {
@@ -187,12 +227,24 @@ export default {
     },
     lookDetail (item, e) { // 查看详情
       console.log(item, e, '详情')
-      // this.dialogVisible = true
+      this.dialogVisibleCenter = true
+      this.dialogCenterTitle = '整改详情'
+      Object.keys(item).map(j => {
+        this.dataColumns.map(o => {
+          if (o.prop === j) {
+            console.log(item[j])
+            o.value = item[j] || ''
+          }
+        })
+      })
     },
-    lookImage1 (item, e) { // 查看图片
+    lookImage1 (item, e) { // 整改前查看图片 beforeFileList
       console.log(item, e, '图片')
+      this.dialogVisibleImg = true
+      console.log(process.env.VUE_APP_BASE_API, window.location.origin)
+      this.imgSrc = process.env.VUE_APP_BASE_API + '/communal/file/download/' + item.beforeFileList[0].fileUrl
     },
-    lookImage2 (item, e) { // 查看图片
+    lookImage2 (item, e) { // 查看图片 afterFileList
       console.log(item, e, '图片')
     },
     addHandle () {
@@ -202,14 +254,49 @@ export default {
     editHandle (item, e) {
       this.title = '修改整改记录'
       this.dialogVisible = true
+      console.log(item)
+      let { beforeFileList, afterFileList } = item
+      let beforeFileLists = []
+      beforeFileList && beforeFileList.map(i => {
+        beforeFileLists.push({ name: i.fileUrl, ...i })
+      })
+      let afterFileLists = []
+      afterFileList && beforeFileList.map(i => {
+        afterFileLists.push({ name: i.fileUrl, ...i })
+      })
+      item.beforeFileList = beforeFileLists
+      item.afterFileList = afterFileLists
+      console.log(item)
       this.paramsObj = item
     },
     deleteItem (item, e) {
       console.log(item, e, '图片')
       this.deleteDialogVisible = true
+      this.deleteObj = item
     },
     deleteSubmit () {
-
+      this.$http({
+        url: this.api.deleteApi,
+        method: 'post',
+        data: {
+          rectificationId: this.deleteObj.rectificationId
+        }
+      }).then(res => {
+        const { code, msg } = res.data
+        if (code === 200) {
+          this.$message.success('操作成功')
+          this.deleteDialogVisible = false
+          this.getDataList()
+        } else {
+          this.$message.error(msg || '删除失败')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
+    },
+    closeDialog () {
+      this.dialogVisible = false
+      this.getDataList()
     }
   },
   computed: {

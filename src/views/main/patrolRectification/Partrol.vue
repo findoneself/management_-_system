@@ -66,18 +66,26 @@
         class="avatar"
       >
     </el-dialog>
-
+    <DialogCenter
+      v-if="dialogVisibleCenter"
+      :title='dialogCenterTitle'
+      :dialogCenterData='dataColumns'
+      @closeDialogCenter='dialogVisibleCenter=false'
+    />
   </div>
 </template>
 
 <script>
 import TableForm from '_vie/common/TableForm'
 import DetailDialog from './components/DetailDialog.vue'
+import DialogCenter from '../projectManagement/components/DialogCenter.vue'
+
 export default {
   name: 'Partrol',
   components: {
     TableForm,
-    DetailDialog
+    DetailDialog,
+    DialogCenter
   },
   data () {
     return {
@@ -88,7 +96,7 @@ export default {
         { name: '巡查分类', prop: 'patrolType', tooltip: true, key: 2 },
         { name: '巡查时间', prop: 'patrolTime', key: 4 },
         { name: '巡查内容', prop: 'alertType', key: 5 },
-        { name: '网格员', prop: 'gridmemberId', key: 6 }
+        { name: '网格员', prop: 'fullName', key: 6 }
       ],
       dataList: [
         { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09', imgSrc: ['https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1115%2F0ZR1095111%2F210ZP95111-7-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653226696&t=f19f1fa29e8977b5ae3a8beff4a0764c', 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653226795&t=9294e44c40d6eea6cf72854a469ec49e'] },
@@ -158,8 +166,22 @@ export default {
       deleteDialogVisible: false,
       dialogVisibleImg: false,
       imgSrc: '',
+      // 详情弹窗
+      dialogVisibleCenter: false,
+      dialogCenterTitle: '',
+      dataColumns: [
+        { name: '项目名称', prop: 'projectName', value: '' },
+        { name: '巡查分类', prop: 'patrolType', value: '' },
+        { name: '巡查时间', prop: 'patrolTime', value: '' },
+        { name: '巡查内容', prop: 'alertType', value: '' },
+        { name: '网格员', prop: 'fullName', value: '' },
+        { name: '是否完结', prop: 'patrolTheEnd', value: '' }
+      ],
+      // 删除
+      deleteObj: {},
       api: {
-        dataListApi: '/integration/patrol/listFromWg'
+        dataListApi: '/integration/patrol/listFromWg', // 列表
+        deleteApi: '/integration/patrol/' // 删除巡查记录
       }
     }
   },
@@ -177,15 +199,8 @@ export default {
         if (code === 200) {
           console.log(rows)
           this.dataList = rows || []
-          // const { over90, list } = data
-          // let arr = []
-          // list && list.map(i => {
-          //   arr.push({ ...i, 'devUint': i.constructor })
-          // })
-          // this.dataList = arr || []
-          // this.more90day = over90
         } else {
-          this.$message.error(msg || '获取超期项目错误')
+          this.$message.error(msg || '获取数据错误')
         }
       }, (err) => {
         this.$message.error(err.data.msg || err.data.error)
@@ -193,7 +208,16 @@ export default {
     },
 
     lookDetail (item, e) { // 查看详情
-      this.dialogVisible = true
+      this.dialogVisibleCenter = true
+      this.dialogCenterTitle = '巡查详情'
+      Object.keys(item).map(j => {
+        this.dataColumns.map(o => {
+          if (o.prop === j) {
+            console.log(item[j])
+            o.value = item[j] || ''
+          }
+        })
+      })
       console.log(item, e, '详情打开弹窗', this.dialogVisible)
     },
     lookImage (item, e) { // 查看图片
@@ -217,9 +241,23 @@ export default {
     deleteItem (item, e) {
       console.log(item, e, '图片')
       this.deleteDialogVisible = true
+      this.deleteObj = item
     },
     deleteSubmit () {
       // 调取删除接口
+      this.$http({
+        url: this.api.deleteApi + this.deleteObj.patrolIds,
+        method: 'delete'
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          console.log(data)
+        } else {
+          this.$message.error(msg || '删除失败')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
     }
   },
   computed: {

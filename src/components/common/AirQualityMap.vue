@@ -111,7 +111,31 @@ export default {
           offset: new BMap.Size(30, -30) // 设置文本偏移量
         }
         if (this.title === 'project') {
-          var icon = new BMap.Icon(require('../../assets/img/maker.png'), new BMap.Size(60, 60))
+          let labelvValue = item.projectName
+          var labelopts = {
+            position: new BMap.Point(item.lng, item.lat), // 指定文本标注所在的地理位置
+            offset: new BMap.Size(-1, -25) // 设置文本偏移量
+          }
+          var labels = new BMap.Label(labelvValue, labelopts)
+          labels.setStyle({
+            color: '#fff',
+            borderRadius: '10px',
+            borderColor: '#0068E8',
+            backgroundColor: '#0068E8',
+            padding: '3px 0',
+            fontSize: '16px',
+            width: '120px',
+            textAlign: 'center',
+            fontFamily: '微软雅黑'
+          })
+          labels.addEventListener('click', function () {
+            if (that.isMarkHandle) {
+              that.$emit('markHandle', item)
+            }
+
+          })
+          map.addOverlay(labels)
+          var icon = new BMap.Icon(require('../../assets/img/maker.png'), new BMap.Size(70, 70))
           var marker = new BMap.Marker(new BMap.Point(item.lng, item.lat), { icon: icon })
           marker.addEventListener('click', function () {
             if (that.isMarkHandle) {
@@ -120,6 +144,7 @@ export default {
 
           })
           map.addOverlay(marker)
+
         } else {
           const { value, status } = item
           let color = this.getColor(value, status)

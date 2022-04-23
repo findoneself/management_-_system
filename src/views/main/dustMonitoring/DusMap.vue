@@ -178,7 +178,7 @@ export default {
       cardStyle: { padding: '0px' },
 
       // 检测源 表格数据
-      // columns: [],
+      columns: [{ name: '监测点', prop: 'name', key: 1, tooltip: 9 }],
       dataList: [],
       // 监测点数据
       monitoringSspotData: {
@@ -224,18 +224,9 @@ export default {
     this.getArea()
   },
   computed: {
-    columns () {
+    router () {
       let router = this.$route.path.slice(16)
-      if (router === 'DusIndex') {
-        return ([
-          { name: '监测点', prop: 'name', key: 1, tooltip: 9 },
-          { name: 'PM2.5', prop: 'value', key: 2, isSort: true }
-        ])
-      } else {
-        return ([
-          { name: '监测点', prop: 'name', key: 1, tooltip: 9 }
-        ])
-      }
+      return router
     }
   },
   mounted () {
@@ -324,7 +315,11 @@ export default {
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
-          this.dictOptions.paramTypesList = data
+          if (this.router === 'DusIndex') {
+            this.dictOptions.paramTypesList = data
+          } else {
+            this.dictOptions.paramTypesList = [data.find(i => i.name === '噪声')] || []
+          }
           sessionStorage.setItem('paramTypesList', JSON.stringify(data))
         } else {
           this.$message.error(msg || '获取参数类型数据错误')
@@ -365,7 +360,11 @@ export default {
     },
     paramChange () {
       let val = this.dataForm.paramTypes
-      this.columns[1].name = this.dictOptions.paramTypesList.find(i => i.prop === val).name
+      let name = this.dictOptions.paramTypesList.find(i => i.prop === val).name
+      let prop = this.dictOptions.paramTypesList.find(i => i.prop === val).prop
+      let obj = { name: name, prop: prop, key: 2, isSort: true }
+      this.columns = [{ name: '监测点', prop: 'name', key: 1, tooltip: 9 }, obj]
+      console.log(this.columns)
       this.getDataList()
     },
     // 分页组件

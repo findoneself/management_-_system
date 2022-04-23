@@ -257,6 +257,7 @@ export default {
     },
     geEchartData (api) {
       let date = this.echartsList[api]['formValue']
+      console.log(date)
       this.$http({
         url: this.api[api],
         method: 'post',
