@@ -96,7 +96,7 @@
       :cardStyle="{padding: '1.2rem 2.5rem'}"
       :isTriangle='false'
     >
-      <!-- <ul class="video-ul">
+      <ul class="video-ul">
         <li
           class="video-item"
           v-for="item in videoList"
@@ -111,7 +111,7 @@
             <span>{{ item.title }}</span>
           </div>
         </li>
-      </ul> -->
+      </ul>
     </BeautifulCard>
   </div>
 </template>
@@ -119,13 +119,13 @@
 <script>
 import BeautifulCard from '_com/common/BeautifulCard'
 import PatrolMap from '_vie/common/patrolMap'
-// import BeVideo from '_com/common/BeVideo'
+import BeVideo from '_com/common/BeVideo'
 export default {
   name: 'PatrolEchart',
   components: {
     BeautifulCard,
-    PatrolMap
-    // BeVideo
+    PatrolMap,
+    BeVideo
   },
   data () {
     return {
@@ -201,6 +201,9 @@ export default {
         { id: 'gwhejeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
         { id: 'gwshseg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
         { id: 'gwejrjeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gweeaeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gwshseg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gwejrjeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
         { id: 'gweeaeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' }
       ],
       echartArr: ['xctj', 'zgtj', 'zgyqtj', 'yhtj'],
@@ -246,6 +249,23 @@ export default {
         this.$message.error(err.data.msg || err.data.error)
       })
     },
+    getImgUrl (fileUrl) {
+      this.$http({
+        url: 'communal/file/download/' + fileUrl,
+        responseType: 'blob'
+      }).then(res => {
+        console.log(res)
+        const { data, status } = res
+        if (status === 200) {
+          let url = window.URL.createObjectURL(data)
+          return url
+        } else {
+          this.$message.error('获取图片错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
+    },
     // geEchartData (api) {
     //   let date = this.echartsList[api]['formValue']
     //   this.$http({
@@ -277,7 +297,14 @@ export default {
         const { data, code, msg } = res.data
         if (code === 200) {
           console.log(data)
-          // this.videoList = data
+          let { beforeFileList } = data[0]
+          let imgList = []
+          beforeFileList && beforeFileList.map(async i => {
+            let res = await this.getImgUrl(i.fileUrl)
+            imgList.push(res)
+          })
+          this.imgLists = imgList
+          console.log(imgList)
         } else {
           this.$message.error(msg || '获取数据错误')
         }
