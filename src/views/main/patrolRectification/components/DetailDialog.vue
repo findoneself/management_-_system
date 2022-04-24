@@ -1,5 +1,5 @@
 <template>
-  <!--超过90天未竣工 -->
+  <!--新增修改弹窗 -->
   <div
     v-if="dialogVisible"
     id="detail_dialog"
@@ -9,7 +9,7 @@
       <h2>{{title}}</h2>
       <i
         class="el-icon-close"
-        @click="closeClickAdd"
+        @click="closeClickAdd('false')"
       ></i>
     </div>
     <el-form
@@ -117,91 +117,60 @@
       class="demo-form-inline"
       v-else
     >
-      <el-form-item label="整改项目">
+      <el-form-item label="巡查项目">
         <el-select
-          v-model="dataForm.projectName"
+          v-model="dataForm1.projectList"
           clearable
+          multiple
           placeholder="请选择"
         >
           <el-option
             v-for="item in dictOptions.projectList"
-            :key="item.prop"
-            :label="item.name"
-            :value="item.prop"
+            :key="item.projectId"
+            :label="item.projectName"
+            :value="item.projectName"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="整改类型">
+      <el-form-item label="巡查分类">
         <el-select
-          v-model="dataForm.rectificationName"
+          v-model="dataForm1.patrolName"
           clearable
           placeholder="请选择"
         >
           <el-option
-            v-for="item in dictOptions.typeList"
-            :key="item.rectificationTypeId"
-            :label="item.rectificationName"
-            :value="item.rectificationName"
+            v-for="item in dictOptions.patrolTypeList"
+            :key="item.patrolTypeId"
+            :label="item.patrolName"
+            :value="item.patrolName"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="整改开始日期">
+      <el-form-item label="巡查日期">
         <el-date-picker
-          v-model="dataForm.date"
+          v-model="dataForm1.patrolTime"
           type="date"
           value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="选择日期"
         >
         </el-date-picker>
-        <el-date-picker
-          v-model="dataForm.date"
-          type="daterange"
-          align="right"
-          unlink-panels
-          clearable
-          value-format="yyyy-MM-dd HH:mm:ss"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        >
-        </el-date-picker>
       </el-form-item>
-      <el-form-item label="整改内容">
+      <el-form-item label="巡查内容">
         <el-input
           type="textarea"
           :rows="2"
-          v-model="dataForm.rectificationContent"
+          v-model="dataForm1.patrolContent"
           placeholder="请输入"
         ></el-input>
       </el-form-item>
-      <el-form-item label="整改前图片">
+      <el-form-item label="图片">
         <el-upload
           class="upload-demo"
-          v-model="dataForm.beforeFileList"
+          v-model="dataForm1.fileList"
           action='#'
           :auto-upload='false'
-          :on-change="handleChange1"
+          :on-change="handleChange3"
           :file-list="dataForm.beforeFileList"
-          :limit='3'
-        >
-          <el-button
-            size="small"
-            type="primary"
-          >点击上传</el-button>
-          <!-- <div
-            slot="tip"
-            class="el-upload__tip"
-          >只能上传jpg/png文件，且不超过500kb</div> -->
-        </el-upload>
-      </el-form-item>
-      <el-form-item label="整改后图片">
-        <el-upload
-          class="upload-demo"
-          v-model="dataForm.afterFileList"
-          action='#'
-          :auto-upload='false'
-          :on-change="handleChange2"
-          :file-list="dataForm.afterFileList"
           :limit='3'
         >
           <el-button
@@ -244,7 +213,6 @@ export default {
         return {
           projectName: '', // 整改项目
           rectificationName: '', // 整改类型
-          date: '',
           rectificationContent: '', // 整改内容
           rectificationBeginTime: '', // 开始时间
           rectificationEndTime: '', // 整改结束
@@ -252,45 +220,56 @@ export default {
           afterFileList: [] // 整改后图片
         }
       }
+    },
+    dataForm1: {
+      type: Object,
+      default () {
+        return {
+          projectList: [], // 巡查项目
+          patrolName: '', // 巡查分类
+          patrolContent: '', // 巡查内容
+          patrolTime: '', // 时间
+          fileList: [], // 图片
+          patrolTypeId: '' // 巡查分类id
+        }
+      }
     }
   },
   data () {
     return {
       dataLoading: false,
-      // dataForm: {
-      //   projectName: '', // 整改项目
-      //   rectificationName: '', // 整改类型
-      //   date: this.$format.getTwodaysTime(),
-      //   rectificationContent: '', // 整改内容
-      //   rectificationBeginTime: '', // 开始时间
-      //   beforeFileList: [], // 整改前的图片
-      //   afterFileList: [] // 整改后图片
-      // },
       dictOptions: {
         projectList: [],
-        typeList: []
+        typeList: [],
+        patrolTypeList: []
       },
-      dialogTitle: '',
-      isAddVisible: false,
-      name: '',
-      fileList1: [],
-      fileList2: [],
       api: {
         uploadApi: '/communal/file/upload',
         projectPickerApi: '/integration/project/getProjectsByWgPhone/',
         addApi: '/integration/rectification/add', // 新增整改记录
         typeApi: '/integration/rectificationType/list', // 增改分类
-        editZG: '/integration/rectification/edit'// 整改编辑
+        editZG: '/integration/rectification/editFromWg', // 整改编辑
+        patrolAdd: '/integration/patrol/addFromWg', // 巡查新增
+        patrolEdit: '/integration/patrol/editFromWg', // 巡查修改
+        patrolTypeList: '/integration/patrolType/list' // 巡查分类下拉
 
       }
+    }
+  },
+  watch: {
+    isForm: {
+      handler () {
+        console.log(this.isForm)
+      },
+      deep: true
     }
   },
   created () {
     this.getProjectData()
     this.getTypeData()
+    this.getpatrolTypeList()
   },
   mounted () {
-    console.log(this.dataForm)
   },
   methods: {
     getProjectData () {
@@ -300,7 +279,6 @@ export default {
         const { data, code, msg } = res.data
         if (code === 200) {
           this.dictOptions.projectList = data || []
-          console.log(data, this.dictOptions.projectList)
         } else {
           this.$message.error(msg || '获取项目错误')
         }
@@ -323,18 +301,42 @@ export default {
         this.$message.error(err.data.msg || err.data.error)
       })
     },
-    closeClickAdd () {
-      this.$emit('closeDialog')
-      this.name = ''
+    getpatrolTypeList () {
+      this.$http({
+        url: this.api.patrolTypeList
+      }).then(res => {
+        const { rows, code, msg } = res.data
+        if (code === 200) {
+          this.dictOptions.patrolTypeList = rows || []
+
+        } else {
+          this.$message.error(msg || '获取分类错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
+      })
+    },
+    closeClickAdd (val) {
+      this.$emit('closeDialog', val)
+      // this.name = ''
       this.dataForm = {
         projectName: '', // 整改项目
         rectificationName: '', // 整改类型
-        date: this.$format.getTwodaysTime(),
         rectificationContent: '', // 整改内容
         rectificationBeginTime: '', // 开始时间
         beforeFileList: [], // 整改前的图片
         afterFileList: [] // 整改后图片
       }
+      this.dataForm1 = {
+        projectList: [], // 巡查项目
+        patrolType: '', // 巡查分类
+        patrolTypeId: '', // 巡查分类id
+        patrolContent: '', // 巡查内容
+        patrolTime: '', // 时间
+        fileList: [] // 图片
+
+      }
+      console.log(this.dataForm1)
     },
     handleChange1 (file) {
       let formData = this.beforeUpload(file)
@@ -344,6 +346,10 @@ export default {
     handleChange2 (file) {
       let formData = this.beforeUpload(file)
       this.uploadImg(formData, 2)
+    },
+    handleChange3 (file) {
+      let formData = this.beforeUpload(file)
+      this.uploadImg(formData, 3)
 
     },
     uploadImg (formData, num) {
@@ -357,11 +363,13 @@ export default {
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
-          console.log(this.fileList, data)
           if (num === 1) {
             this.dataForm.beforeFileList.push({ name: data })
-          } else {
+          } else if (num === 2) {
             this.dataForm.afterFileList.push({ name: data })
+          } else {
+            console.log(this.dataForm1.fileList)
+            this.dataForm1.fileList.push({ name: data })
           }
         } else {
           this.$message.error(msg || '获取项目错误')
@@ -386,50 +394,88 @@ export default {
       formData.append('file', this.imgFiles)
       return formData
     },
-    addSubmit () {
-      console.log(this.dataForm)
-      // 处理参数
-      let { projectName, beforeFileList, afterFileList, rectificationName } = this.dataForm
-      let beforeFileLists = []
-      beforeFileList && beforeFileList.map(i => {
-        beforeFileLists.push({ fileUrl: i.name })
-      })
-      this.dataForm.beforeFileList = beforeFileLists || []
-      let afterFileLists = []
-      afterFileList && afterFileList.map(i => {
-        afterFileLists.push({ fileUrl: i.name })
-      })
-      this.dataForm.afterFileList = afterFileLists || []
-      console.log(projectName, this.dictOptions.projectList.find(i => i.projectName === projectName))
-      // 完结
-      console.log(beforeFileList, afterFileList, this.dataForm)
+    async addSubmit () {
       let str = this.title.slice(0, 2)
-      if (str === '新增') {
-        this.submitData(this.api.addApi, 'post')
-      } else {
-        this.submitData(this.api.editZG, 'put')
+      if (str === '新增' && this.isForm) {
+        this.changeDataForm('整改')
+        this.submitData(this.api.addApi, 'post', 'zg')
+      } else if (str === '修改' && this.isForm) {
+        this.changeDataForm('整改')
+        this.submitData(this.api.editZG, 'put', 'zg')
+      } else if (str === '新增' && !this.isForm) {
+        let res = await this.changeDataForm('巡查')
+        console.log(res)
+        res && this.submitData(this.api.patrolAdd, 'post', 'xc')
+      } else if (str === '修改' && !this.isForm) {
+        this.changeDataForm('巡查')
+        this.submitData(this.api.patrolEdit, 'put', 'xc')
       }
-
     },
-    submitData (url, method) {
-      this.$http({
-        url,
-        method,
-        data: {
+    submitData (url, method, val) {
+      let data = {}
+      if (val === 'zg') {
+        data = {
           projectId: this.dictOptions.projectList.find(i => i.projectName === this.dataForm.projectName).projectId,
           rectificationTypeId: this.dictOptions.typeList.find(i => i.rectificationName === this.dataForm.rectificationName).rectificationTypeId,
           ...this.dataForm
         }
+      } else {
+        let { projectList, patrolName } = this.dataForm1
+        let projectLists = []
+        this.dictOptions.projectList.map(i => {
+          projectList.map(j => {
+            if (i.projectName === j) {
+              projectLists.push({ 'projectId': i.projectId, 'projectName': j })
+            }
+          })
+        })
+        this.dictOptions.patrolTypeList.map(i => {
+          if (i.patrolName === patrolName) {
+            this.dataForm1.patrolTypeId = i.patrolTypeId
+          }
+        })
+        this.dataForm1.phoneNumber = sessionStorage.getItem('userId')
+        this.dataForm1.projectList = projectLists
+        data = this.dataForm1
+      }
+      this.$http({
+        url,
+        method,
+        data
       }).then(res => {
         console.log(res)
         // 如果获取到数据
         if (res.data.code === 200) {
           this.$message.success('提交成功！')
-          this.closeClickAdd()
+          this.closeClickAdd('true')
         } else {
           this.$message.error('提交失败！')
         }
       })
+    },
+    changeDataForm (val) {
+      if (val === '整改') {
+        let { beforeFileList, afterFileList } = this.dataForm
+        let beforeFileLists = []
+        beforeFileList && beforeFileList.map(i => {
+          beforeFileLists.push({ fileUrl: i.name })
+        })
+        this.dataForm.beforeFileList = beforeFileLists || []
+        let afterFileLists = []
+        afterFileList && afterFileList.map(i => {
+          afterFileLists.push({ fileUrl: i.name })
+        })
+        this.dataForm.afterFileList = afterFileLists || []
+        return this.dataForm
+      } else {
+        let { fileList } = this.dataForm1
+        let fileLists = []
+        fileList && fileList.map(i => {
+          fileLists.push({ fileUrl: i.name })
+        })
+        this.dataForm1.fileList = fileLists || []
+        return this.dataForm1
+      }
     }
   }
 }

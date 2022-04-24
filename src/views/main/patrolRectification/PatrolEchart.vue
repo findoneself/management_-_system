@@ -74,10 +74,10 @@
           class="echart-legend"
           v-if="item.list && item.list.length > 0"
         >
+          <!-- @click="echartClick(item, bindex)" -->
           <li
             v-for="(val, bindex) in item.list"
             class="echart-legend-item"
-            @click="echartClick(item, bindex)"
             :class="bindex === item.curIndex ? 'active-legend' : ''"
             :style="{color: iindex === 3 && bindex === item.curIndex ? item.colors[bindex] : 'inherit'}"
             :key="val.id"
@@ -96,7 +96,7 @@
       :cardStyle="{padding: '1.2rem 2.5rem'}"
       :isTriangle='false'
     >
-      <ul class="video-ul">
+      <!-- <ul class="video-ul">
         <li
           class="video-item"
           v-for="item in videoList"
@@ -111,7 +111,7 @@
             <span>{{ item.title }}</span>
           </div>
         </li>
-      </ul>
+      </ul> -->
     </BeautifulCard>
   </div>
 </template>
@@ -119,13 +119,13 @@
 <script>
 import BeautifulCard from '_com/common/BeautifulCard'
 import PatrolMap from '_vie/common/patrolMap'
-import BeVideo from '_com/common/BeVideo'
+// import BeVideo from '_com/common/BeVideo'
 export default {
   name: 'PatrolEchart',
   components: {
     BeautifulCard,
-    PatrolMap,
-    BeVideo
+    PatrolMap
+    // BeVideo
   },
   data () {
     return {
@@ -279,7 +279,7 @@ export default {
           console.log(data)
           // this.videoList = data
         } else {
-          this.$message.error(msg || '获取网格员统计数据错误')
+          this.$message.error(msg || '获取数据错误')
         }
       }, (err) => {
         this.$message.error(err.data.msg || err.data.error)

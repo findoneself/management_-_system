@@ -36,8 +36,9 @@
     <DetailDialog
       :dialogVisible="dialogVisible"
       :title="title"
-      :dataList="DialogDataList"
-      @closeDialog='dialogVisible = false'
+      :isForm='false'
+      :dataForm1='paramsObj'
+      @closeDialog='closeDialog'
     ></DetailDialog>
     <div
       class="addBox deleteDia"
@@ -93,9 +94,9 @@ export default {
       projectName: '',
       columns: [
         { name: '项目名称', prop: 'projectName', key: 1 },
-        { name: '巡查分类', prop: 'patrolType', tooltip: true, key: 2 },
+        { name: '巡查分类', prop: 'patrolName', key: 2 },
         { name: '巡查时间', prop: 'patrolTime', key: 4 },
-        { name: '巡查内容', prop: 'alertType', key: 5 },
+        { name: '巡查内容', prop: 'patrolContent', key: 5 },
         { name: '网格员', prop: 'fullName', key: 6 }
       ],
       dataList: [
@@ -140,32 +141,16 @@ export default {
           }
         ]
       },
-      // 详情弹窗
+      // 新增修改弹窗
       dialogVisible: false,
-      title: '巡查记录',
-      DialogDataList: [
-        { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'gwg', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geewhwwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geegsdwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geegeewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geejwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geeerwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geesjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geejjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '2434', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '2421', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242149661', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '244642141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242145641', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '2446122141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '24244641', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' }
-      ],
+      paramsObj: {},
+      title: '', // 新增修改的弹窗title
       // 删除弹窗
       deleteDialogVisible: false,
-      dialogVisibleImg: false,
-      imgSrc: '',
+      // 删除
+      deleteObj: {},
+      dialogVisibleImg: false, // 图片弹窗
+      imgSrc: '', // 图片url
       // 详情弹窗
       dialogVisibleCenter: false,
       dialogCenterTitle: '',
@@ -173,15 +158,13 @@ export default {
         { name: '项目名称', prop: 'projectName', value: '' },
         { name: '巡查分类', prop: 'patrolType', value: '' },
         { name: '巡查时间', prop: 'patrolTime', value: '' },
-        { name: '巡查内容', prop: 'alertType', value: '' },
+        { name: '巡查内容', prop: 'patrolContent', value: '' },
         { name: '网格员', prop: 'fullName', value: '' },
         { name: '是否完结', prop: 'patrolTheEnd', value: '' }
       ],
-      // 删除
-      deleteObj: {},
       api: {
         dataListApi: '/integration/patrol/listFromWg', // 列表
-        deleteApi: '/integration/patrol/' // 删除巡查记录
+        deleteApi: '/integration/patrol/fromWG/' // 删除巡查记录
       }
     }
   },
@@ -197,7 +180,6 @@ export default {
       }).then(res => {
         const { rows, code, msg } = res.data
         if (code === 200) {
-          console.log(rows)
           this.dataList = rows || []
         } else {
           this.$message.error(msg || '获取数据错误')
@@ -206,8 +188,7 @@ export default {
         this.$message.error(err.data.msg || err.data.error)
       })
     },
-
-    lookDetail (item, e) { // 查看详情
+    lookDetail (item) { // 查看详情
       this.dialogVisibleCenter = true
       this.dialogCenterTitle = '巡查详情'
       Object.keys(item).map(j => {
@@ -218,46 +199,85 @@ export default {
           }
         })
       })
-      console.log(item, e, '详情打开弹窗', this.dialogVisible)
     },
-    lookImage (item, e) { // 查看图片
-      console.log(item, e, '图片')
-      if (item.imgSrc) {
-        this.dialogVisibleImg = true
+    lookImage (item) { // 查看图片
+      if (item.fileList.length > 0) {
+        this.imgLoading = true
+        this.$http({
+          url: 'communal/file/download/' + item.fileList[0].fileUrl,
+          responseType: 'blob'
+        }).then(res => {
+          console.log(res)
+          const { data, status } = res
+          if (status === 200) {
+            let url = window.URL.createObjectURL(data)
+            this.imgSrc = url
+            this.dialogVisibleImg = true
+          } else {
+            this.$message.error('获取图片错误')
+          }
+        }, (err) => {
+          this.$message.error(err.data.msg || err.data.error)
+        })
       } else {
         this.$message.error('暂无巡查图片')
       }
-      this.imgSrc = item.imgSrc
+
     },
-    addHandle () {
+    addHandle () { // 新增弹窗
       this.dialogVisible = true
       this.title = '新增巡查记录'
+      this.paramsObj = {
+        projectList: [], // 巡查项目
+        patrolName: '', // 巡查分类
+        patrolTypeId: '', // 巡查分类id
+        patrolContent: '', // 巡查内容
+        patrolTime: '', // 时间
+        fileList: []// 图片
+      }
     },
-    editHandle (item, e) {
+    editHandle (item) { // 修改弹窗
       this.title = '修改整改记录'
       this.dialogVisible = true
+      let { fileList } = item
+      let fileLists = []
+      fileList && fileList.map(i => {
+        fileLists.push({ name: i.fileUrl, ...i })
+      })
+      item.fileList = fileLists
       this.paramsObj = item
+      console.log(item)
     },
-    deleteItem (item, e) {
-      console.log(item, e, '图片')
+    deleteItem (item) { // 删除弹窗
       this.deleteDialogVisible = true
       this.deleteObj = item
+      console.log(item)
     },
-    deleteSubmit () {
-      // 调取删除接口
+    deleteSubmit () { // 调取删除接口
       this.$http({
-        url: this.api.deleteApi + this.deleteObj.patrolIds,
-        method: 'delete'
+        url: this.api.deleteApi,
+        method: 'post',
+        data: {
+          rectificationId: this.deleteObj.patrolId
+        }
       }).then(res => {
-        const { data, code, msg } = res.data
+        const { code, msg } = res.data
         if (code === 200) {
-          console.log(data)
+          this.$message.success('操作成功')
+          this.deleteDialogVisible = false
+          this.getDataList()
         } else {
           this.$message.error(msg || '删除失败')
         }
       }, (err) => {
         this.$message.error(err.data.msg || err.data.error)
       })
+    },
+    closeDialog (val) {
+      if (val) {
+        this.getDataList()
+      }
+      this.dialogVisible = false
     }
   },
   computed: {

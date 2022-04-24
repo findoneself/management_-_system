@@ -36,8 +36,8 @@
     <DetailDialog
       :dialogVisible="dialogVisible"
       :title="title"
+      :isForm='true'
       :dataForm='paramsObj'
-      :dataList="DialogDataList"
       @closeDialog='closeDialog'
     ></DetailDialog>
     <div
@@ -63,11 +63,13 @@
     <DialogCenter
       v-if="dialogVisibleCenter"
       :title='dialogCenterTitle'
-      :isForm='true'
       :dialogCenterData='dataColumns'
       @closeDialogCenter='dialogVisibleCenter=false'
     />
-    <el-dialog :visible.sync="dialogVisibleImg">
+    <el-dialog
+      :loading='imgLoading'
+      :visible.sync="dialogVisibleImg"
+    >
       <img
         width="100%"
         :src="imgSrc"
@@ -149,26 +151,6 @@ export default {
       dialogVisible: false,
       title: '',
       paramsObj: {},
-      DialogDataList: [
-        { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'gwg', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geewhwwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geegsdwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geegeewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geejwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geeerwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geesjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geejjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '2434', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '2421', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242149661', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '244642141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242145641', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '2446122141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '24244641', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' }
-      ],
-      deleteDialogVisible: false,
       // 详情弹窗
       dialogVisibleCenter: false,
       // 详情弹窗数据
@@ -184,10 +166,11 @@ export default {
       ],
       // 删除
       deleteObj: {},
-      isForm: '整改',
-      // 图片
+      deleteDialogVisible: false,
+      // 图片弹窗和url
+      imgLoading: false,
       dialogVisibleImg: false,
-
+      imgSrc: '',
       api: {
         dataListApi: '/integration/rectification/listFromWg', // 列表
         deleteApi: '/integration/rectification/fromWG/', // 删除整改记录 /rectification/fromWG
@@ -238,23 +221,67 @@ export default {
         })
       })
     },
-    lookImage1 (item, e) { // 整改前查看图片 beforeFileList
-      console.log(item, e, '图片')
-      this.dialogVisibleImg = true
-      console.log(process.env.VUE_APP_BASE_API, window.location.origin)
-      this.imgSrc = process.env.VUE_APP_BASE_API + '/communal/file/download/' + item.beforeFileList[0].fileUrl
+    lookImage1 (item) { // 整改前查看图片 beforeFileList
+      if (item.beforeFileList.length > 0) {
+        this.imgLoading = true
+        this.$http({
+          url: 'communal/file/download/' + item.beforeFileList[0].fileUrl,
+          responseType: 'blob'
+        }).then(res => {
+          console.log(res)
+          const { data, status } = res
+          if (status === 200) {
+            let url = window.URL.createObjectURL(data)
+            this.imgSrc = url
+            this.dialogVisibleImg = true
+          } else {
+            this.$message.error('获取图片错误')
+          }
+        }, (err) => {
+          this.$message.error(err.data.msg || err.data.error)
+        })
+      } else {
+        this.$message.error('暂无整改前图片')
+      }
     },
-    lookImage2 (item, e) { // 查看图片 afterFileList
-      console.log(item, e, '图片')
+    lookImage2 (item) { // 查看图片 afterFileList
+      if (item.afterFileList.length > 0) {
+        this.$http({
+          url: 'communal/file/download/' + item.afterFileList[0].fileUrl,
+          responseType: 'blob'
+        }).then(res => {
+          console.log(res)
+          const { data, status } = res
+          if (status === 200) {
+            let url = window.URL.createObjectURL(data)
+            this.imgSrc = url
+            this.dialogVisibleImg = true
+          } else {
+            this.$message.error('获取图片错误')
+          }
+        }, (err) => {
+          this.$message.error(err.data.msg || err.data.error)
+        })
+      } else {
+        this.$message.error('暂无整改后图片')
+      }
     },
     addHandle () {
       this.dialogVisible = true
       this.title = '新增整改记录'
+      this.paramsObj = {
+        projectName: '', // 整改项目
+        rectificationName: '', // 整改类型
+        rectificationContent: '', // 整改内容
+        rectificationBeginTime: '', // 开始时间
+        rectificationEndTime: '', // 整改结束
+        beforeFileList: [], // 整改前的图片
+        afterFileList: [] // 整改后图片
+      }
     },
-    editHandle (item, e) {
+    editHandle (item) {
       this.title = '修改整改记录'
       this.dialogVisible = true
-      console.log(item)
       let { beforeFileList, afterFileList } = item
       let beforeFileLists = []
       beforeFileList && beforeFileList.map(i => {
@@ -269,12 +296,11 @@ export default {
       console.log(item)
       this.paramsObj = item
     },
-    deleteItem (item, e) {
-      console.log(item, e, '图片')
+    deleteItem (item) {
       this.deleteDialogVisible = true
       this.deleteObj = item
     },
-    deleteSubmit () {
+    deleteSubmit () { // 删除调接口
       this.$http({
         url: this.api.deleteApi,
         method: 'post',
@@ -294,9 +320,11 @@ export default {
         this.$message.error(err.data.msg || err.data.error)
       })
     },
-    closeDialog () {
+    closeDialog (val) {
+      if (val) {
+        this.getDataList()
+      }
       this.dialogVisible = false
-      this.getDataList()
     }
   },
   computed: {
