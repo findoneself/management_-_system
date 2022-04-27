@@ -423,7 +423,7 @@ export default {
           this.dataList.sssjList = res.data.list
           console.log(res)
         } else {
-          this.$message.error('获取实时数据失败！')
+          // this.$message.error('获取实时数据失败！')
           this.dataList.sssjList = [
             { id: '1212', address: '和平路南阳花园西侧1号门和平路南阳花园西侧1号门和平路南阳花园西侧1号门', date: '2022-11-12' },
             { id: '165', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
@@ -442,7 +442,7 @@ export default {
         }
       }, () => {
         this.loadings.sssjLoading = false
-        this.$message.error('获取实时数据失败！')
+        // this.$message.error('获取实时数据失败！')
       })
       // ---获取项目分类统计数据
       this.loadings.xmflLoading = true
@@ -452,7 +452,7 @@ export default {
           this.xmflOption.list = res.data.list
           console.log(res)
         } else {
-          this.$message.error('获取项目分类统计失败！')
+          // this.$message.error('获取项目分类统计失败！')
           const list = [
             { name: '监测站', count: 16 },
             { name: '燃气站', count: 26 },
@@ -481,7 +481,7 @@ export default {
           this.bjflOption.list = res.data.list
           console.log(res)
         } else {
-          this.$message.error('获取报警分类统计失败！')
+          // this.$message.error('获取报警分类统计失败！')
           this.bjflOption.list = []
         }
       }, () => {
@@ -525,7 +525,7 @@ export default {
           this.dataForm.total = res.data.total
           console.log(res)
         } else {
-          this.$message.error('获取项目报警统计排行失败！')
+          // this.$message.error('获取项目报警统计排行失败！')
           this.dataList.xmbjList = []
           this.dataForm.total = 0
         }
@@ -553,7 +553,8 @@ export default {
     },
     // 获取项目报警详情数据
     getXmbjInfoData () {
-      if (!this.currentXmbj) return this.$message.warninf('请选择项目报警！')
+      // this.$message.warninf('请选择项目报警！')
+      if (!this.currentXmbj) return false
       // ---获取项目报警统计排行
       this.loadings.xmbjInfoLoading = true
       this.$http({
@@ -571,13 +572,13 @@ export default {
           this.dataForm.infoTotal = res.data.total
           console.log(res)
         } else {
-          this.$message.error('获取项目报警统计排行失败！')
+          // this.$message.error('获取项目报警统计排行失败！')
           this.dataList.xmbjInfoList = []
           this.dataForm.infoTotal = 0
         }
       }, () => {
         this.loadings.xmbjInfoLoading = false
-        this.$message.error('获取项目报警详情排行失败！')
+        // this.$message.error('获取项目报警详情排行失败！')
         const list = [
           { id: '1212', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
           { id: '165', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ0.jpg' },
@@ -604,11 +605,11 @@ export default {
           this.dictOptions.jkdwList = res.data.list
           console.log(res)
         } else {
-          this.$message.error('视频已失效！')
+          // this.$message.error('视频已失效！')
           this.dictOptions.jkdwList = []
         }
       }, () => {
-        this.$message.error('视频已失效！')
+        // this.$message.error('视频已失效！')
         const list = [
           { id: 'aaa', name: '监控一层', parentId: '00' },
           { id: 'ddd', name: '监控点位', parentId: 'aaa' },
@@ -640,7 +641,7 @@ export default {
           this.dictOptions.videoSrc = res.data.url
           console.log(res)
         } else {
-          this.$message.error('视频已失效！')
+          // this.$message.error('视频已失效！')
           this.dataList.videoSrc = ''
         }
       }, () => {
@@ -667,7 +668,7 @@ export default {
           this.bjlsOption.list = res.data.list
           console.log(res)
         } else {
-          this.$message.error('获取报警分类统计失败！')
+          // this.$message.error('获取报警分类统计失败！')
           this.bjlsOption.list = []
         }
       }, () => {

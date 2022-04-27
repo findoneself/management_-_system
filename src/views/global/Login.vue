@@ -117,25 +117,31 @@ export default {
     // ...mapActions({ getUserInfo: 'global/getUserInfo' }),
     // 登录按钮
     loginClick () {
-      this.$http({
-        url: '/auth/gridmember/login',
-        method: 'post',
-        data: this.loginForm
-      }).then(res => {
-        const { data, code, msg } = res.data
-        if (code === 200) {
-          let token = data.access_token
-          this.$cookie.set('token', token)
-          this.$router.push({ name: 'main' })
-          sessionStorage.setItem('userId', this.loginForm.username)
+      this.$refs.loginForm.validate(async valid => {
+        console.log(valid)
+        if (!valid) return
+        this.$http({
+          url: '/auth/gridmember/login',
+          method: 'post',
+          data: this.loginForm
+        }).then(res => {
 
-        } else {
-          this.$message.error(msg || '登录失败')
-        }
-      }, () => {
-        // 登录失败
-        this.$message.error('toke验证失效或不存在此账户!')
+          const { data, code, msg } = res.data
+          if (code === 200) {
+            let token = data.access_token
+            this.$cookie.set('token', token)
+            this.$router.push({ name: 'main' })
+            sessionStorage.setItem('userId', this.loginForm.username)
+
+          } else {
+            this.$message.error(msg || '登录失败')
+          }
+        }, () => {
+          // 登录失败
+          this.$message.error('toke验证失效或不存在此账户!')
+        })
       })
+
     },
     getCode () {
       this.$http({

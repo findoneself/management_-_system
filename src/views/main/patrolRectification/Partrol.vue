@@ -35,6 +35,18 @@
         style="margin-top:1rem"
         @click="addHandle"
       >新增</el-button>
+      <div
+        slot="oper"
+        slot-scope="{row}"
+      >
+        <el-link
+          @click="item.click(row)"
+          v-for="(item,index) in operButton"
+          :key="index"
+          type='primary'
+          :disabled='item.fileUrl&&row.fileList.length === 0'
+        >{{item.text}} </el-link>
+      </div>
     </TableForm>
     <DetailDialog
       :dialogVisible="dialogVisible"
@@ -63,7 +75,11 @@
         >取消</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="dialogVisibleImg">
+    <el-dialog
+      :visible.sync="dialogVisibleImg"
+      @closed="imgSrc=''"
+      class="bigImgCenter"
+    >
       <img
         width="100%"
         :src="imgSrc"
@@ -118,25 +134,27 @@ export default {
         isOperation: true,
         headName: '操作',
         width: '16rem',
-        operButton: [
-          {
-            text: '详情',
-            click: this.lookDetail
-          },
-          {
-            text: '查看图片',
-            click: this.lookImage
-          },
-          {
-            text: '修改',
-            click: this.editHandle
-          },
-          {
-            text: '删除',
-            click: this.deleteItem
-          }
-        ]
+        isUnifiedOper: false
       },
+      operButton: [
+        {
+          text: '详情',
+          click: this.lookDetail
+        },
+        {
+          text: '查看图片',
+          fileUrl: true,
+          click: this.lookImage
+        },
+        {
+          text: '修改',
+          click: this.editHandle
+        },
+        {
+          text: '删除',
+          click: this.deleteItem
+        }
+      ],
       // 新增修改弹窗
       dialogVisible: false,
       paramsObj: {},
@@ -222,6 +240,7 @@ export default {
     lookImage (item) { // 查看图片
       if (item.fileList.length > 0) {
         this.imgLoading = true
+        this.dialogVisibleImg = true
         this.$http({
           url: 'communal/file/download/' + item.fileList[0].fileUrl,
           responseType: 'blob'
@@ -231,7 +250,6 @@ export default {
           if (status === 200) {
             let url = window.URL.createObjectURL(data)
             this.imgSrc = url
-            this.dialogVisibleImg = true
           } else {
             this.$message.error('获取图片错误')
           }
@@ -364,5 +382,10 @@ export default {
   // width: 100px;
   height: 120px;
   margin: 5px;
+}
+.bigImgCenter {
+  /deep/.el-dialog__body {
+    min-height: 500px;
+  }
 }
 </style>

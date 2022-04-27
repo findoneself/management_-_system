@@ -104,7 +104,7 @@ function getMenuData (to, next) {
     { id: '5', key: 5, type: 'menu', title: 'AI识别', alias: 'AI识别', parentId: '00', url: '@/AIdistinguish/AIdistinguish' },
     { id: '6', key: 6, type: 'menu', title: '巡查整改', alias: '巡查整改', parentId: '00', url: '@/patrolRectification/PatrolIndex' },
     { id: '7', key: 7, type: 'menu', title: '项目管理', alias: '项目管理', parentId: '00', url: '@/projectManagement/ProjectIndex' },
-    { id: '8', key: 8, type: 'menu', title: '视频管控', alias: '视频管控', parentId: '00', url: '@/videoMonitor/VideoIndex' }
+    { id: '8', key: 8, type: 'menu', title: '视频管控', alias: '视频管控', parentId: '00', url: '@/videoMonitor/VideoIndex', right: true }
   ]
   let temp = []
   list.map(item => {

@@ -245,7 +245,8 @@ export default {
     }
   },
   mounted () {
-    this.getAreaData()
+
+    // this.getAreaData()
   },
   methods: {
     // tabs右侧模式点击
