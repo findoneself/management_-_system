@@ -170,8 +170,8 @@
             src="../../../assets/img/tb.png"
           />
           <span>{{item.name}}</span>
-          <span @click="lookFile(item.name)">{{item.num}}({{item.type}})</span>
-          <span>{{item.history}}</span>
+          <span @click="lookFile(item.name+'未读')">{{item.num}}({{item.type}})</span>
+          <span @click="lookFile(item.name+'历史')">{{item.history}}</span>
         </div>
 
       </BeautifulCard>

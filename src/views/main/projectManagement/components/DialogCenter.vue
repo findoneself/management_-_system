@@ -20,6 +20,9 @@
         </div>
       </div>
     </div>
+    <div class="imgBox">
+      <slot></slot>
+    </div>
   </div>
 </template>
 <script>

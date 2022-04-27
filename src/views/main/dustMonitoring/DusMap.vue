@@ -72,16 +72,16 @@
         :operObj='{isOperation: false}'
         cell-height='2rem'
         class="tableList"
-        @doubleClick='doubleClick'
+        @rowClick='rowClick'
       >
       </BeautifulTableList>
-      <el-pagination
+      <!-- <el-pagination
         @current-change="handlePageChange"
         :current-page="dataForm.pageIndex"
         :page-size="dataForm.pageSize"
         layout="prev, pager, next"
         :total="projectTotal"
-      />
+      /> -->
     </BeautifulCard>
     <!-- 监测点数据 -->
     <MonitoringSpot
@@ -299,6 +299,7 @@ export default {
             coordinateList.push({ ...i.mapLngLat, value: i.value, status: i.status, id: i.id })
           })
           this.coordinateList = coordinateList
+          this.projectTotal = list.length
         } else {
           this.mapLoading = false
           this.$message.error('获取数据错误')
@@ -345,12 +346,26 @@ export default {
         this.$store.commit('global/setDusDictData', { type: 'station', list: [] })
       })
     },
-    doubleClick ({ row, rowIndex }) {
-      console.log(rowIndex)
+    rowClick ({ row, rowIndex }) {
+      let params = this.dataForm.paramTypes
       this.center = row.mapLngLat
       let coordinateList = []
-      coordinateList.push({ ...row.mapLngLat, value: row.value, status: row.status, id: row.id })
+      coordinateList.push({ ...row.mapLngLat, value: params ? row[params] : row.value, status: row.status, id: row.id })
       this.coordinateList = coordinateList
+      let item = this.dataList.find(i => i.id === row.id)
+      if (params) {
+        const { title, detailList } = row.monitoringSspotData
+        let item = detailList.find(i => i.prop === params)
+        this.monitoringSspotData = {
+          pieData: item,
+          title,
+          detailList
+        }
+      } else {
+        this.monitoringSspotData = item.monitoringSspotData
+
+      }
+      this.activePage = 1
     },
     monitoringSourceNameChange (e) {
       console.log(e)
@@ -360,11 +375,15 @@ export default {
     },
     paramChange () {
       let val = this.dataForm.paramTypes
-      let name = this.dictOptions.paramTypesList.find(i => i.prop === val).name
-      let prop = this.dictOptions.paramTypesList.find(i => i.prop === val).prop
-      let obj = { name: name, prop: prop, key: 2, isSort: true }
-      this.columns = [{ name: '监测点', prop: 'name', key: 1, tooltip: 9 }, obj]
-      console.log(this.columns)
+      console.log(val)
+      if (val) {
+        let name = this.dictOptions.paramTypesList.find(i => i.prop === val).name
+        let prop = this.dictOptions.paramTypesList.find(i => i.prop === val).prop
+        let obj = { name: name, prop: prop, key: 2, isSort: true }
+        this.columns = [{ name: '监测点', prop: 'name', key: 1, tooltip: 9 }, obj]
+      } else {
+        this.columns = [{ name: '监测点', prop: 'name', key: 1, tooltip: 9 }]
+      }
       this.getDataList()
     },
     // 分页组件
@@ -397,7 +416,10 @@ export default {
     }
   }
 }
-
+.el-table,
+.el-pagination {
+  margin: 0;
+}
 .container {
   display: flex;
   height: 100%;

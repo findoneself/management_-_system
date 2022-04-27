@@ -193,6 +193,7 @@ export default {
           getData: null
         }
       },
+      imgLists: [],
       // 视频列表
       videoList: [
         { id: 'gweg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
@@ -201,10 +202,10 @@ export default {
         { id: 'gwhejeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
         { id: 'gwshseg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
         { id: 'gwejrjeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
-        { id: 'gweeaeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
-        { id: 'gwshseg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
-        { id: 'gwejrjeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
-        { id: 'gweeaeg', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' }
+        { id: 'gweeaeg32', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gwshseg23', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gwejrjeg234', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' },
+        { id: 'gweeaeg4', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' }
       ],
       echartArr: ['xctj', 'zgtj', 'zgyqtj', 'yhtj'],
       api: {
@@ -240,7 +241,6 @@ export default {
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
-          console.log(data)
           this.patrolData = data
         } else {
           this.$message.error(msg || '获取网格员统计数据错误')
@@ -254,11 +254,12 @@ export default {
         url: 'communal/file/download/' + fileUrl,
         responseType: 'blob'
       }).then(res => {
-        console.log(res)
         const { data, status } = res
         if (status === 200) {
           let url = window.URL.createObjectURL(data)
-          return url
+          let imgList = []
+          imgList.push(url)
+          this.imgLists = imgList
         } else {
           this.$message.error('获取图片错误')
         }
@@ -296,15 +297,14 @@ export default {
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
-          console.log(data)
-          let { beforeFileList } = data[0]
-          let imgList = []
-          beforeFileList && beforeFileList.map(async i => {
-            let res = await this.getImgUrl(i.fileUrl)
-            imgList.push(res)
-          })
-          this.imgLists = imgList
-          console.log(imgList)
+          if (data.length > 0) {
+            let { beforeFileList } = data[0]
+            beforeFileList && beforeFileList.map(async i => {
+              let res = await this.getImgUrl(i.fileUrl)
+              console.log(i.fileUrl, res)
+            })
+          }
+
         } else {
           this.$message.error(msg || '获取数据错误')
         }

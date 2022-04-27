@@ -69,8 +69,8 @@ export default {
     return {
       // 登录表单数据绑定对象
       loginForm: {
-        username: '18994585055',
-        password: 'admin123',
+        username: '',
+        password: '',
         code: '',
         uuid: ''
       },
@@ -85,8 +85,8 @@ export default {
           },
           {
             min: 3,
-            max: 10,
-            message: '用户名长度在 3 到 10 个字符',
+            max: 11,
+            message: '用户名长度在 3 到 11 个字符',
             trigger: 'blur'
           }
         ],

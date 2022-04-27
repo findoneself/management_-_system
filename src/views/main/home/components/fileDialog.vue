@@ -53,20 +53,25 @@ export default {
       },
       api: {
         tbListApi: '/integration/notification/getNoReadlist', // 通报未读列表
+        historyTbApi: '/integration/notification/getHistorylistFromWg', // 通报历史列表
+        historyFileApi: '/integration/document/getHistorylistFromWg', // 文件历史列表
         fileListApi: '/integration/document/getNoReadlist', // 文件未读列表
-        lookDetailApi: '/integration/documentMiddleNotification/intoMiddle'
+        lookDetailApi: '/integration/documentMiddleNotification/intoMiddle'// 阅读
       }
     }
   },
   methods: {
     open (name) {
+      this.title = name
       this.$refs.tableDialog.showDialog(true)
-      if (name === '文件') {
-        this.title = '文件未读'
+      if (name === '文件未读') {
         this.getData(this.api.fileListApi)
-      } else {
-        this.title = '通报未读'
+      } else if (name === '文件历史') {
+        this.getData(this.api.historyFileApi)
+      } else if (name === '通报未读') {
         this.getData(this.api.tbListApi)
+      } else { // 通报历史
+        this.getData(this.api.historyTbApi)
       }
     },
     getData (url) {

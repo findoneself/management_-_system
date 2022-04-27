@@ -23,8 +23,11 @@
           <i class="el-icon-search"></i>
         </el-form-item>
 
-        <el-button type="primary">查询</el-button>
-        <el-button>重置</el-button>
+        <el-button
+          @click="getDataList"
+          type="primary"
+        >查询</el-button>
+        <el-button @click="reset">重置</el-button>
       </el-form>
       <el-button
         slot="headform"
@@ -65,7 +68,19 @@
       :title='dialogCenterTitle'
       :dialogCenterData='dataColumns'
       @closeDialogCenter='dialogVisibleCenter=false'
-    />
+    >
+      <div>
+        <!-- <span>图片：</span> -->
+        <img
+          v-for="(item,index) in detailImgs"
+          :key='index'
+          :src="item"
+          alt=""
+          class="imgs"
+          @click="bigImg(item)"
+        >
+      </div>
+    </DialogCenter>
     <el-dialog
       :loading='imgLoading'
       :visible.sync="dialogVisibleImg"
@@ -137,6 +152,7 @@ export default {
       paramsObj: {},
       // 详情弹窗
       dialogVisibleCenter: false,
+      detailImgs: [],
       // 详情弹窗数据
       dialogCenterTitle: '',
       dataColumns: [{ name: '整改项目', prop: 'projectName', value: '' },
@@ -178,30 +194,45 @@ export default {
         if (code === 200) {
           console.log(rows)
           this.dataList = rows || []
-          // const { over90, list } = data
-          // let arr = []
-          // list && list.map(i => {
-          //   arr.push({ ...i, 'devUint': i.constructor })
-          // })
-          // this.dataList = arr || []
-          // this.more90day = over90
         } else {
-          this.$message.error(msg || '获取超期项目错误')
+          this.$message.error(msg || '获取整改列表错误')
         }
       }, (err) => {
         this.$message.error(err.data.msg || err.data.error)
       })
     },
-    lookDetail (item, e) { // 查看详情
-      console.log(item, e, '详情')
-      this.dialogVisibleCenter = true
-      this.dialogCenterTitle = '整改详情'
+    lookDetail (item) { // 查看详情
+      this.getImgUrl(item)
       Object.keys(item).map(j => {
         this.dataColumns.map(o => {
           if (o.prop === j) {
             console.log(item[j])
             o.value = item[j] || ''
           }
+        })
+      })
+      this.dialogVisibleCenter = true
+      this.dialogCenterTitle = '整改详情'
+    },
+    getImgUrl (item) {
+      const { beforeFileList, afterFileList } = item
+      let imgs = []
+      beforeFileList.map(async (i) => {
+        let url = ''
+        this.$http({
+          url: 'communal/file/download/' + i.fileUrl,
+          responseType: 'blob'
+        }).then(res => {
+          const { data, status } = res
+          if (status === 200) {
+            url = window.URL.createObjectURL(data)
+            imgs.push(url)
+            this.detailImgs = imgs
+          } else {
+            this.$message.error('获取图片错误')
+          }
+        }, (err) => {
+          this.$message.error(err.data.msg || err.data.error)
         })
       })
     },
@@ -309,6 +340,14 @@ export default {
         this.getDataList()
       }
       this.dialogVisible = false
+    },
+    reset () {
+      this.projectName = ''
+      this.getDataList()
+    },
+    bigImg (url) {
+      this.imgSrc = url
+      this.dialogVisibleImg = true
     }
   },
   computed: {
@@ -363,5 +402,10 @@ export default {
     text-align: center;
     margin: 45px;
   }
+}
+.imgs {
+  // width: 100px;
+  height: 120px;
+  margin: 5px;
 }
 </style>

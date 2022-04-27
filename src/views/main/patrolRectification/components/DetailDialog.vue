@@ -14,11 +14,17 @@
     </div>
     <el-form
       :inline="true"
+      :rules="zgRules"
+      ref="zgForm"
+      :model='dataForm'
       size="medium"
       class="demo-form-inline"
       v-if="isForm"
     >
-      <el-form-item label="整改项目">
+      <el-form-item
+        label="整改项目"
+        prop="projectName"
+      >
         <el-select
           v-model="dataForm.projectName"
           clearable
@@ -32,7 +38,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="整改类型">
+      <el-form-item
+        label="整改类型"
+        prop="rectificationName"
+      >
         <el-select
           v-model="dataForm.rectificationName"
           clearable
@@ -46,7 +55,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="整改开始日期">
+      <el-form-item
+        label="整改开始日期"
+        prop="rectificationBeginTime"
+      >
         <el-date-picker
           v-model="dataForm.rectificationBeginTime"
           type="date"
@@ -54,7 +66,10 @@
           placeholder="选择日期"
         />
       </el-form-item>
-      <el-form-item label="整改结束日期">
+      <el-form-item
+        label="整改结束日期"
+        prop="rectificationEndTime"
+      >
         <el-date-picker
           v-model="dataForm.rectificationEndTime"
           type="date"
@@ -62,7 +77,10 @@
           placeholder="选择日期"
         />
       </el-form-item>
-      <el-form-item label="整改内容">
+      <el-form-item
+        label="整改内容"
+        prop="rectificationContent"
+      >
         <el-input
           type="textarea"
           :rows="2"
@@ -70,15 +88,19 @@
           placeholder="请输入"
         ></el-input>
       </el-form-item>
-      <el-form-item label="整改前图片">
+      <el-form-item
+        label="整改前图片"
+        prop="beforeFileList"
+      >
         <el-upload
           class="upload-demo"
           v-model="dataForm.beforeFileList"
           action='#'
           :auto-upload='false'
+          :on-remove="(file, fileList)=>{handleRemove(file, fileList,'zgq')}"
           :on-change="handleChange1"
           :file-list="dataForm.beforeFileList"
-          :limit='3'
+          :limit='4'
         >
           <el-button
             size="small"
@@ -90,7 +112,10 @@
           >只能上传jpg/png文件，且不超过500kb</div> -->
         </el-upload>
       </el-form-item>
-      <el-form-item label="整改后图片">
+      <el-form-item
+        label="整改后图片"
+        prop="afterFileList"
+      >
         <el-upload
           class="upload-demo"
           v-model="dataForm.afterFileList"
@@ -98,7 +123,8 @@
           :auto-upload='false'
           :on-change="handleChange2"
           :file-list="dataForm.afterFileList"
-          :limit='3'
+          :on-remove="(file, fileList)=>{handleRemove(file, fileList,'zgh')}"
+          :limit='4'
         >
           <el-button
             size="small"
@@ -113,11 +139,17 @@
     </el-form>
     <el-form
       :inline="true"
+      :model='dataForm1'
+      :rules="xcRules"
+      ref="xcForm"
       size="medium"
       class="demo-form-inline"
       v-else
     >
-      <el-form-item label="巡查项目">
+      <el-form-item
+        label="巡查项目"
+        prop="projectList"
+      >
         <el-select
           v-model="dataForm1.projectList"
           clearable
@@ -132,7 +164,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="巡查分类">
+      <el-form-item
+        label="巡查分类"
+        prop="patrolName"
+      >
         <el-select
           v-model="dataForm1.patrolName"
           clearable
@@ -146,7 +181,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="巡查日期">
+      <el-form-item
+        label="巡查日期"
+        prop="patrolTime"
+      >
         <el-date-picker
           v-model="dataForm1.patrolTime"
           type="date"
@@ -155,7 +193,10 @@
         >
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="巡查内容">
+      <el-form-item
+        label="巡查内容"
+        prop="patrolContent"
+      >
         <el-input
           type="textarea"
           :rows="2"
@@ -163,15 +204,19 @@
           placeholder="请输入"
         ></el-input>
       </el-form-item>
-      <el-form-item label="图片">
+      <el-form-item
+        label="图片"
+        prop="fileList"
+      >
         <el-upload
           class="upload-demo"
           v-model="dataForm1.fileList"
           action='#'
           :auto-upload='false'
           :on-change="handleChange3"
-          :file-list="dataForm.beforeFileList"
+          :file-list="dataForm1.fileList"
           :limit='3'
+          :on-remove="(file, fileList)=>{handleRemove(file, fileList,'xc')}"
         >
           <el-button
             size="small"
@@ -243,6 +288,86 @@ export default {
         typeList: [],
         patrolTypeList: []
       },
+      zgRules: {
+        projectName: [
+          {
+            required: true,
+            message: '整改项目不能为空',
+            trigger: 'blur'
+          }
+        ],
+        rectificationName: [
+          {
+            required: true,
+            message: '整改类型不能为空',
+            trigger: 'blur'
+          }
+        ],
+        rectificationContent: [
+          {
+            required: true,
+            message: '整改内容不能为空',
+            trigger: 'blur'
+          }
+        ],
+        rectificationBeginTime: [
+          {
+            required: true,
+            message: '整改开始时间不能为空',
+            trigger: 'blur'
+          }
+        ],
+        rectificationEndTime: [
+          {
+            required: false
+          }
+        ],
+        beforeFileList: [
+          {
+            required: false
+          }
+        ],
+        afterFileList: [
+          {
+            required: false
+          }
+        ]
+      },
+      xcRules: {
+        projectList: [
+          {
+            required: true,
+            message: '巡查项目不能为空',
+            trigger: 'blur'
+          }
+        ],
+        patrolName: [
+          {
+            required: true,
+            message: '巡查分类不能为空',
+            trigger: 'blur'
+          }
+        ],
+        patrolContent: [
+          {
+            required: true,
+            message: '巡查内容不能为空',
+            trigger: 'blur'
+          }
+        ],
+        patrolTime: [
+          {
+            required: true,
+            message: '巡查时间不能为空',
+            trigger: 'blur'
+          }
+        ],
+        fileList: [
+          {
+            required: false
+          }
+        ]
+      },
       api: {
         uploadApi: '/communal/file/upload',
         projectPickerApi: '/integration/project/getProjectsByWgPhone/',
@@ -265,6 +390,7 @@ export default {
     }
   },
   created () {
+
     this.getProjectData()
     this.getTypeData()
     this.getpatrolTypeList()
@@ -398,46 +524,98 @@ export default {
       let str = this.title.slice(0, 2)
       if (str === '新增' && this.isForm) {
         this.changeDataForm('整改')
-        this.submitData(this.api.addApi, 'post', 'zg')
+        this.submitData(this.api.addApi, 'post', 'zgxz')
       } else if (str === '修改' && this.isForm) {
         this.changeDataForm('整改')
-        this.submitData(this.api.editZG, 'put', 'zg')
+        this.submitData(this.api.editZG, 'put', 'zgxg')
       } else if (str === '新增' && !this.isForm) {
         let res = await this.changeDataForm('巡查')
         console.log(res)
-        res && this.submitData(this.api.patrolAdd, 'post', 'xc')
+        res && this.submitData(this.api.patrolAdd, 'post', 'xcxz')
       } else if (str === '修改' && !this.isForm) {
         this.changeDataForm('巡查')
-        this.submitData(this.api.patrolEdit, 'put', 'xc')
+        this.submitData(this.api.patrolEdit, 'put', 'xcxg')
       }
     },
     submitData (url, method, val) {
       let data = {}
-      if (val === 'zg') {
-        data = {
-          projectId: this.dictOptions.projectList.find(i => i.projectName === this.dataForm.projectName).projectId,
-          rectificationTypeId: this.dictOptions.typeList.find(i => i.rectificationName === this.dataForm.rectificationName).rectificationTypeId,
-          ...this.dataForm
-        }
-      } else {
-        let { projectList, patrolName } = this.dataForm1
-        let projectLists = []
-        this.dictOptions.projectList.map(i => {
-          projectList.map(j => {
-            if (i.projectName === j) {
-              projectLists.push({ 'projectId': i.projectId, 'projectName': j })
+      if (this.isForm) {
+        console.log(123)
+        this.$refs.zgForm.validate(async valid => {
+          console.log(valid)
+          if (!valid) return
+          if (val === 'zgxz') {
+            data = {
+              projectId: this.dictOptions.projectList.find(i => i.projectName === this.dataForm.projectName).projectId,
+              rectificationTypeId: this.dictOptions.typeList.find(i => i.rectificationName === this.dataForm.rectificationName).rectificationTypeId,
+              ...this.dataForm
             }
-          })
-        })
-        this.dictOptions.patrolTypeList.map(i => {
-          if (i.patrolName === patrolName) {
-            this.dataForm1.patrolTypeId = i.patrolTypeId
+          } else if (val === 'zgxg') {
+            data = this.dataForm
           }
+          this.submitHandel(url, method, data)
         })
-        this.dataForm1.phoneNumber = sessionStorage.getItem('userId')
-        this.dataForm1.projectList = projectLists
-        data = this.dataForm1
+      } else {
+        this.$refs.xcForm.validate(async valid => {
+          if (!valid) return
+          if (val === 'xcxz') {
+            let { projectList, patrolName } = this.dataForm1
+            let projectLists = []
+            this.dictOptions.projectList.map(i => {
+              projectList.map(j => {
+                if (i.projectName === j) {
+                  projectLists.push({ 'projectId': i.projectId, 'projectName': j })
+                }
+              })
+            })
+            this.dictOptions.patrolTypeList.map(i => {
+              if (i.patrolName === patrolName) {
+                this.dataForm1.patrolTypeId = i.patrolTypeId
+              }
+            })
+            this.dataForm1.phoneNumber = sessionStorage.getItem('userId')
+            this.dataForm1.projectList = projectLists
+            data = this.dataForm1
+          } else {
+            data = this.dataForm1
+          }
+          this.submitHandel(url, method, data)
+        })
       }
+
+      // if (val === 'zgxz') {
+
+      //   data = {
+      //     projectId: this.dictOptions.projectList.find(i => i.projectName === this.dataForm.projectName).projectId,
+      //     rectificationTypeId: this.dictOptions.typeList.find(i => i.rectificationName === this.dataForm.rectificationName).rectificationTypeId,
+      //     ...this.dataForm
+      //   }
+      // } else if (val === 'zgxg') {
+      //   data = this.dataForm
+      // } else if (val === 'xcxz') {
+      //   let { projectList, patrolName } = this.dataForm1
+      //   let projectLists = []
+      //   this.dictOptions.projectList.map(i => {
+      //     projectList.map(j => {
+      //       if (i.projectName === j) {
+      //         projectLists.push({ 'projectId': i.projectId, 'projectName': j })
+      //       }
+      //     })
+      //   })
+      //   this.dictOptions.patrolTypeList.map(i => {
+      //     if (i.patrolName === patrolName) {
+      //       this.dataForm1.patrolTypeId = i.patrolTypeId
+      //     }
+      //   })
+      //   this.dataForm1.phoneNumber = sessionStorage.getItem('userId')
+      //   this.dataForm1.projectList = projectLists
+      //   data = this.dataForm1
+      // } else {
+      //   data = this.dataForm1
+      // }
+
+    },
+    submitHandel (url, method, data) {
       this.$http({
         url,
         method,
@@ -458,12 +636,12 @@ export default {
         let { beforeFileList, afterFileList } = this.dataForm
         let beforeFileLists = []
         beforeFileList && beforeFileList.map(i => {
-          beforeFileLists.push({ fileUrl: i.name })
+          i.fileUrl ? beforeFileLists.push(i) : beforeFileLists.push({ fileUrl: i.name })
         })
         this.dataForm.beforeFileList = beforeFileLists || []
         let afterFileLists = []
         afterFileList && afterFileList.map(i => {
-          afterFileLists.push({ fileUrl: i.name })
+          i.fileUrl ? afterFileLists.push(i) : afterFileLists.push({ fileUrl: i.name })
         })
         this.dataForm.afterFileList = afterFileLists || []
         return this.dataForm
@@ -471,10 +649,23 @@ export default {
         let { fileList } = this.dataForm1
         let fileLists = []
         fileList && fileList.map(i => {
-          fileLists.push({ fileUrl: i.name })
+          i.fileUrl ? fileLists.push(i) : fileLists.push({ fileUrl: i.name })
         })
         this.dataForm1.fileList = fileLists || []
         return this.dataForm1
+      }
+    },
+    handleRemove (file, fileList, val) {
+      console.log(file, fileList, val)
+      if (val === 'zgq') {
+        let res = this.dataForm.beforeFileList.findIndex(i => i.fileUrl === file.fileUrl)
+        this.dataForm.beforeFileList.splice(res, 1)
+      } else if (val === 'zgh') {
+        let res = this.dataForm.afterFileList.findIndex(i => i.fileUrl === file.fileUrl)
+        this.dataForm.afterFileList.splice(res, 1)
+      } else {
+        let res = this.dataForm1.fileList.findIndex(i => i.fileUrl === file.fileUrl)
+        this.dataForm1.fileList.splice(res, 1)
       }
     }
   }
@@ -511,7 +702,7 @@ export default {
   }
 }
 /deep/.el-form--inline .el-form-item__label {
-  width: 100px;
+  width: 120px;
 }
 /deep/ .menu-tablist > li {
   width: 226px;
