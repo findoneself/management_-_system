@@ -3,10 +3,11 @@
   <BeautifulWrapper
     :wraStyle="{ inPadding: '0px' }"
     :tabsList="tabsList"
+    @tabsClick='tabsClick'
     v-model="currentTabs"
   >
     <!-- 右侧按钮 -->
-    <!-- <div
+    <div
       slot="menuRight"
       class="menu-btn"
     >
@@ -161,23 +162,23 @@
           ></div>
         </li>
       </ul>
-    </div> -->
+    </div>
   </BeautifulWrapper>
 </template>
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
-// import BeVideo from '_com/common/BeVideo'
-// import BeautifulCard from '_com/common/BeautifulCard'
-// import BeautifulTableList from '_com/common/BeautifulTableList'
+import BeVideo from '_com/common/BeVideo'
+import BeautifulCard from '_com/common/BeautifulCard'
+import BeautifulTableList from '_com/common/BeautifulTableList'
 
 export default {
   name: 'VideoIndex',
   components: {
-    BeautifulWrapper
-    // BeautifulCard,
-    // BeVideo,
-    // BeautifulTableList
+    BeautifulWrapper,
+    BeautifulCard,
+    BeVideo,
+    BeautifulTableList
   },
   data () {
     return {
@@ -245,10 +246,12 @@ export default {
     }
   },
   mounted () {
-
-    // this.getAreaData()
+    this.getAreaData()
   },
   methods: {
+    tabsClick (item) {
+      console.log(item)
+    },
     // tabs右侧模式点击
     menuBtnClick (val) {
       this.currentBtn = val
@@ -324,90 +327,90 @@ export default {
     },
     // 获取项目数据
     getProjectData () {
-      this.projectLoading = true
-      const params = this._cloneDeep(this.dataForm)
-      this.$http({
-        url: this.api.projectApi,
-        method: 'post',
-        data: params
-      }).then(res => {
-        this.projectLoading = false
-        const { data, code, msg, total } = res.data
-        if (code === 200) {
-          this.projectList = data || []
-          if (data && data.length > 0) {
-            this.currentProject = data[0]
-            this.getVideoList()
-          }
-          this.projectTotal = total
-        } else {
-          this.projectList = [
-            { id: '1', projectName: '项目1516' },
-            { id: '2', projectName: '项目1516' },
-            { id: '3', projectName: '项目1516' },
-            { id: '4', projectName: '项目1516' },
-            { id: '5', projectName: '项目1516' },
-            { id: '6', projectName: '项目1516' },
-            { id: '7', projectName: '项目1516' },
-            { id: '8', projectName: '项目1516' },
-            { id: '9', projectName: '项目1516' },
-            { id: '10', projectName: '项目1516' },
-            { id: '11', projectName: '项目1516' },
-            { id: '12', projectName: '项目1516' },
-            { id: '13', projectName: '项目1516' },
-            { id: '14', projectName: '项目1516' },
-            { id: '1565', projectName: '项目1516' }
-          ]
-          this.currentProject = this.projectList[0]
-          this.getVideoList()
-          this.projectTotal = this.projectList.length
-          this.$message.error(msg || '获取数据错误')
-        }
-      }, (err) => {
-        this.projectLoading = false
-        this.$message.error(err.data.msg || err.data.error)
-        this.projectList = []
-      })
+      // this.projectLoading = true
+      // const params = this._cloneDeep(this.dataForm)
+      // this.$http({
+      //   url: this.api.projectApi,
+      //   method: 'post',
+      //   data: params
+      // }).then(res => {
+      //   this.projectLoading = false
+      //   const { data, code, msg, total } = res.data
+      //   if (code === 200) {
+      //     this.projectList = data || []
+      //     if (data && data.length > 0) {
+      //       this.currentProject = data[0]
+      //       this.getVideoList()
+      //     }
+      //     this.projectTotal = total
+      //   } else {
+      this.projectList = [
+        { id: '1', projectName: '项目1516' },
+        { id: '2', projectName: '项目1516' },
+        { id: '3', projectName: '项目1516' },
+        { id: '4', projectName: '项目1516' },
+        { id: '5', projectName: '项目1516' },
+        { id: '6', projectName: '项目1516' },
+        { id: '7', projectName: '项目1516' },
+        { id: '8', projectName: '项目1516' },
+        { id: '9', projectName: '项目1516' },
+        { id: '10', projectName: '项目1516' },
+        { id: '11', projectName: '项目1516' },
+        { id: '12', projectName: '项目1516' },
+        { id: '13', projectName: '项目1516' },
+        { id: '14', projectName: '项目1516' },
+        { id: '1565', projectName: '项目1516' }
+      ]
+      this.currentProject = this.projectList[0]
+      this.getVideoList()
+      this.projectTotal = this.projectList.length
+      // this.$message.error(msg || '获取数据错误')
+      // }
+      // }, (err) => {
+      //   this.projectLoading = false
+      //   this.$message.error(err.data.msg || err.data.error)
+      //   this.projectList = []
+      // })
     },
     // 获取视频列表
     getVideoList () {
-      this.videoLoading = true
-      this.$http({
-        url: this.api.videoApi + '/' + (this.currentProject.id || '')
-      }).then(res => {
-        this.videoLoading = false
-        const { data, code, msg } = res.data
-        if (code === 200) {
-          this.videoList = data || []
-          if (data && data.length > 0) {
-            this.currentSrc = data[0].videoSrc
-          }
-        } else {
-          this.videoList = [
-            { id: '1', videoName: '项目1516', videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4', poster: '' },
-            { id: '2', videoName: '项目1516', videoSrc: 'http://www.w3school.com.cn/example/html5/mov_bbb.mp4', poster: '' },
-            { id: '3', videoName: '项目1516', videoSrc: 'https://www.w3schools.com/html/movie.mp4', poster: '' },
-            { id: '4', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '5', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '6', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '7', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '8', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '9', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '10', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '11', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '12', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '13', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '14', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-            { id: '1565', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' }
-          ]
-          this.currentSrc = this.videoList[0].videoSrc
-          this.$message.error(msg || '获取视频数据失败')
-        }
-      }, (err) => {
-        this.videoLoading = false
-        this.$message.error(err.data.msg || err.data.error)
-        this.videoList = []
-      })
+      // this.videoLoading = true
+      // this.$http({
+      //   url: this.api.videoApi + '/' + (this.currentProject.id || '')
+      // }).then(res => {
+      //   this.videoLoading = false
+      //   const { data, code, msg } = res.data
+      //   if (code === 200) {
+      //     this.videoList = data || []
+      //     if (data && data.length > 0) {
+      //       this.currentSrc = data[0].videoSrc
+      //     }
+      //   } else {
+      this.videoList = [
+        { id: '1', videoName: '项目1516', videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4', poster: '' },
+        { id: '2', videoName: '项目1516', videoSrc: 'http://www.w3school.com.cn/example/html5/mov_bbb.mp4', poster: '' },
+        { id: '3', videoName: '项目1516', videoSrc: 'https://www.w3schools.com/html/movie.mp4', poster: '' },
+        { id: '4', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '5', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '6', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '7', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '8', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '9', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '10', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '11', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '12', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '13', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '14', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+        { id: '1565', videoName: '项目1516', videoSrc: 'rtsp://myeye.xuzhouzhihui.com:9030/camera?device=3301061001680&channel=0&streamtype=0&token=gH11E9aKdeZf2z2cc4&type=std.sdp', poster: '' }
+      ]
+      this.currentSrc = this.videoList[0].videoSrc
+      // this.$message.error(msg || '获取视频数据失败')
+      // }
+      // }, (err) => {
+      //   this.videoLoading = false
+      //   this.$message.error(err.data.msg || err.data.error)
+      //   this.videoList = []
+      // })
     }
   }
 }

@@ -134,6 +134,7 @@ export default {
             }
 
           })
+
           map.addOverlay(labels)
           var icon = new BMap.Icon(require('../../assets/img/maker.png'), new BMap.Size(70, 70))
           var marker = new BMap.Marker(new BMap.Point(item.lng, item.lat), { icon: icon })
@@ -141,10 +142,8 @@ export default {
             if (that.isMarkHandle) {
               that.$emit('markHandle', item)
             }
-
           })
           map.addOverlay(marker)
-
         } else {
           const { value, status } = item
           let color = this.getColor(value, status)
@@ -171,6 +170,40 @@ export default {
               that.$emit('markHandle', item)
             }
 
+          })
+          label.addEventListener('mouseover', function () {
+            if (that.isMarkHandle) {
+              console.log('鼠标经过点位', item, opts)
+              const { name, type, value } = item
+              let labelvValues = ' '
+              if (type && value) {
+                labelvValues = name + '<br/>' + type + ':' + '&nbsp' + value
+              } else {
+                labelvValues = name
+              }
+              let opts = {
+                position: new BMap.Point(item.lng, item.lat), // 指定文本标注所在的地理位置
+                offset: new BMap.Size(66, -40) // 设置文本偏移量
+              }
+
+              var labelt = new BMap.Label(labelvValues, opts)
+              labelt.setStyle({
+                color: '#fff',
+                borderRadius: '5px',
+                borderColor: 'transparent',
+                backgroundColor: 'transparent',
+                padding: '8px 0',
+                fontSize: '16px',
+                width: '100px',
+                textAlign: 'center',
+                fontFamily: '微软雅黑'
+              })
+              map.addOverlay(labelt)
+            }
+
+          })
+          label.addEventListener('mouseleave', function () {
+            console.log('离开', item)
           })
           map.addOverlay(label)
         }

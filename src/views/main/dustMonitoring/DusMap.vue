@@ -52,10 +52,14 @@
             <el-input
               v-model="dataForm.monitoringSourceName"
               placeholder="请输入关键字搜索"
-              clearable
               @change="monitoringSourceNameChange"
             >
             </el-input>
+            <i
+              v-if="dataForm.monitoringSourceName"
+              class="el-icon-circle-close"
+              @click="deleteJcd"
+            ></i>
             <i
               class="el-icon-search"
               @click="getDataList"
@@ -240,6 +244,7 @@ export default {
     },
     monitoringSpotBack () {
       this.activePage = 0
+      this.getDataList()
     },
     changeActivePage () {
       this.activePage = 1
@@ -293,10 +298,15 @@ export default {
           const { center, list } = data.data
           this.mapLoading = false
           this.center = center
+          let val = this.dataForm.paramTypes
+          let typeParams = ''
+          if (val) {
+            typeParams = this.dictOptions.paramTypesList.find(i => i.prop === val).name
+          }
           this.dataList = list
           let coordinateList = []
           list.map(i => {
-            coordinateList.push({ ...i.mapLngLat, value: i.value, status: i.status, id: i.id })
+            coordinateList.push({ ...i.mapLngLat, type: typeParams, name: i.name, value: i.value, status: i.status, id: i.id })
           })
           this.coordinateList = coordinateList
           this.projectTotal = list.length
@@ -348,9 +358,14 @@ export default {
     },
     rowClick ({ row, rowIndex }) {
       let params = this.dataForm.paramTypes
+      let typeParams = ''
+      if (params) {
+        typeParams = this.dictOptions.paramTypesList.find(i => i.prop === params).name
+      }
+      console.log(row)
       this.center = row.mapLngLat
       let coordinateList = []
-      coordinateList.push({ ...row.mapLngLat, value: params ? row[params] : row.value, status: row.status, id: row.id })
+      coordinateList.push({ ...row.mapLngLat, type: typeParams, name: row.name, value: params ? row[params] : row.value, status: row.status, id: row.id })
       this.coordinateList = coordinateList
       let item = this.dataList.find(i => i.id === row.id)
       if (params) {
@@ -375,7 +390,6 @@ export default {
     },
     paramChange () {
       let val = this.dataForm.paramTypes
-      console.log(val)
       if (val) {
         let name = this.dictOptions.paramTypesList.find(i => i.prop === val).name
         let prop = this.dictOptions.paramTypesList.find(i => i.prop === val).prop
@@ -390,6 +404,9 @@ export default {
     handlePageChange (val) {
       this.dataForm.pageIndex = val
       // this.getProjectData()
+    },
+    deleteJcd () {
+      this.dataForm.monitoringSourceName = ''
     }
 
   }
@@ -445,13 +462,17 @@ export default {
         /deep/.el-input .el-input__inner {
           padding-left: 2rem;
         }
+
         i {
           position: absolute;
           top: 50%;
-          left: 1rem;
+          right: 3rem;
           margin-right: 0.5rem;
           transform: translateY(-50%);
           cursor: pointer;
+        }
+        .el-icon-search {
+          right: 1rem;
         }
       }
     }

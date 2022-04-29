@@ -23,10 +23,11 @@
           >序号</div>
           <!-- 所有表头列 -->
           <div
-            class="cell"
+            class="cell cursor"
             v-for="item in tabColumns"
             :style="cellHeight ? {height: cellHeight, width: item.width, flex: item.width ? 'none' : 1} : {width: item.width, flex: item.width ? 'none' : 1}"
             :key="item.prop"
+            @click="sortTextClick(item.prop)"
           >
             {{ item.name|| '' }}
             <span
@@ -36,11 +37,11 @@
               <i
                 class="el-icon-caret-top"
                 :class="curSort.prop === item.prop && curSort.order === 'asc' ? 'sort-icon-acitve' : ''"
-                @click="sortClick(item.prop, 'asc')"
+                @click="e=>{sortClick(item.prop, 'asc',e)}"
               ></i><i
                 class="el-icon-caret-bottom"
                 :class="curSort.prop === item.prop && curSort.order === 'desc' ? 'sort-icon-acitve' : ''"
-                @click="sortClick(item.prop, 'desc')"
+                @click="e=>{sortClick(item.prop, 'desc',e)}"
               ></i></span>
           </div>
           <!-- 操作列 -->
@@ -282,7 +283,10 @@ export default {
       this.$emit('cellClick', { cell, cellIndex, row, rowIndex })
     },
     // 排序的点击
-    sortClick (prop, order) {
+    sortClick (prop, order, e) {
+      if (e) {
+        e.stopPropagation()
+      }
       if (this.curSort.prop === prop && this.curSort.order === order) {
         // 如果点击的是同一个字段和同样顺序，则取消排序
         this.tableList = this._cloneDeep(this.dataList)
@@ -294,10 +298,25 @@ export default {
         this.curSort.order = order
         this.tableList = this.$utils.compareSort(this.tableList, prop, order)
       }
+    },
+    sortTextClick (prop) {
+      const { order } = this.curSort
+      if (!order) {
+        this.sortClick(prop, 'asc')
+      } else if (order === 'asc') {
+        this.sortClick(prop, 'desc')
+      } else if (order === 'desc') {
+        this.curSort.prop = ''
+        this.curSort.order = ''
+        this.tableList = this.dataList
+      }
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+.cursor {
+  cursor: pointer;
+}
 </style>

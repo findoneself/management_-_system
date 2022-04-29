@@ -91,6 +91,7 @@
         cell-height="2.2rem"
         :data-list="dataList.sssjList"
         :columns="columns.sssjColumns"
+        @rowClick='rowClick'
       />
     </BeautifulCard>
     <BeautifulCard
@@ -176,7 +177,6 @@
           :index-obj="{isIndex: true, width: '5rem'}"
           :data-list="dataList.xmbjList"
           :columns="columns.xmbjColumns"
-          @rowClick="rowClick"
         />
         <el-pagination
           @current-change="handleCurrentChange"
