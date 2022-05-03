@@ -2,9 +2,8 @@
   <!--视频管控 -->
   <BeautifulWrapper
     :wraStyle="{ inPadding: '0px' }"
-    :tabsList="tabsList"
-    @tabsClick='tabsClick'
-    v-model="currentTabs"
+    :is-title="false"
+    :border-icon="['top', 'right', 'bottom', 'left']"
   >
     <!-- 右侧按钮 -->
     <div
@@ -12,16 +11,16 @@
       class="menu-btn"
     >
       <i
-        v-for="val in menuButtons"
+        v-for="(val,index) in menuButtons"
         :key="val"
         class="menubtn-item"
         :class="[val, currentBtn === val && 'menubtn-active']"
-        @click="menuBtnClick(val)"
+        @click="menuBtnClick(val,index)"
       ></i>
     </div>
     <div
       class="video-content video-one"
-      v-if="currentBtn === 'el-icon-one'"
+      v-if="currentPage === 1"
     >
       <BeVideo
         :src="currentSrc"
@@ -85,11 +84,70 @@
         class="project-card"
         :card-style="{borderWidth: '0.125rem 0.125rem 0 0 '}"
       >
-        <el-form
+        <div>
+          <el-form
+            :inline="true"
+            slot="headform"
+            size="medium"
+            class="demo-form-inline"
+          >
+            <el-form-item class="el_form_county">
+              <el-select
+                v-model="dataForm.areaIds"
+                clearable
+                placeholder="请选择"
+                @change="getProjectData"
+              >
+                <el-option
+                  v-for="item in dictOptions.areaList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item class="el_form_county">
+              <el-select
+                v-model="dataForm.name"
+                clearable
+                placeholder="请选择"
+                @change="getProjectData"
+              >
+                <el-option
+                  v-for="item in tabsList"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.title"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              label-width="5rem"
+              class="el_form_search"
+            >
+              <el-input
+                v-model="dataForm.projectName"
+                placeholder="搜索项目名称"
+              >
+              </el-input>
+              <i
+                v-if="dataForm.projectName"
+                class="el-icon-circle-close"
+                @click="deleteJcd"
+              ></i>
+              <i
+                class="el-icon-search"
+                @click="getProjectData"
+              ></i>
+            </el-form-item>
+          </el-form>
+        </div>
+        <!-- <el-form
           :inline="true"
-          size="small"
+          size="medium"
+          class="form"
         >
-          <el-form-item>
+          <el-form-item class="form-item">
             <el-select
               v-model="dataForm.areaIds"
               clearable
@@ -101,6 +159,21 @@
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item class="form-item">
+            <el-select
+              v-model="dataForm.name"
+              clearable
+              placeholder="请选择"
+              @change="getProjectData"
+            >
+              <el-option
+                v-for="item in dictOptions.nameList"
+                :key="item"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -117,7 +190,7 @@
               ></i>
             </el-input>
           </el-form-item>
-        </el-form>
+        </el-form> -->
         <BeautifulTableList
           :loading="projectLoading"
           cell-height="2.2rem"
@@ -142,18 +215,21 @@
         v-loading="videoLoading"
         element-loading-text="数据加载中..."
         element-loading-spinner="el-icon-loading"
-        :class="currentBtn === 'el-icon-menu' ? 'video-list--four' : 'video-list--nine'"
+        :class="currentBtn === 'el-icon-one' ?'video-list--one':currentBtn === 'el-icon-menu'? 'video-list--four' : 'video-list--nine'"
       >
         <li
           class="video-item"
           v-for="vi in videoList"
           :key="vi.id"
         >
-          <BeVideo
+          <!-- <BeVideo
             :src="vi.videoSrc"
             :ref="'videoItem' + vi.id"
             :options="{preload: 'none'}"
-          />
+          /> -->
+          <div>
+            {{vi.id}}
+          </div>
           <div
             class="video-model"
             @click="modelClick(vi)"
@@ -184,7 +260,8 @@ export default {
     return {
       // 下拉字典
       dictOptions: {
-        areaList: []
+        areaList: [],
+        nameList: ['扬尘视频', 'AI视频', '车辆冲洗视频']
       },
       // tabs列表
       tabsList: [
@@ -192,6 +269,7 @@ export default {
         { id: '2', title: 'AI视频' },
         { id: '3', title: '车辆冲洗视频' }
       ],
+      currentPage: 0,
       // 当前选择的tabs
       currentTabs: '1',
       // 当前点击的右侧按钮
@@ -229,12 +307,23 @@ export default {
       // 宫格视频表单
       dataForm: {
         areaIds: '',
+        name: '扬尘视频',
         projectName: '',
         pageIndex: 1,
         pageSize: 10
       },
       // 宫格视频列表
-      videoList: [],
+      videoList: [
+        { id: '1', videoName: '项目1516', videoSrc: '', poster: '' },
+        { id: '2', videoName: '项目1516', videoSrc: '', poster: '' },
+        { id: '3', videoName: '项目1516', videoSrc: '', poster: '' },
+        { id: '4', videoName: '项目1516', videoSrc: '', poster: '' },
+        { id: '5', videoName: '项目1516', videoSrc: '', poster: '' },
+        { id: '6', videoName: '项目1516', videoSrc: '', poster: '' },
+        { id: '7', videoName: '项目1516', videoSrc: '', poster: '' },
+        { id: '8', videoName: '项目1516', videoSrc: '', poster: '' },
+        { id: '9', videoName: '项目1516', videoSrc: '', poster: '' }
+      ],
       // 接口地址
       api: {
         videoApi: '',
@@ -253,8 +342,25 @@ export default {
       console.log(item)
     },
     // tabs右侧模式点击
-    menuBtnClick (val) {
+    menuBtnClick (val, index) {
       this.currentBtn = val
+      let videoLists = [{ id: '1', videoName: '项目1516', videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4', poster: '' },
+      { id: '2', videoName: '项目1516', videoSrc: 'http://www.w3school.com.cn/example/html5/mov_bbb.mp4', poster: '' },
+      { id: '3', videoName: '项目1516', videoSrc: 'https://www.w3schools.com/html/movie.mp4', poster: '' },
+      { id: '4', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+      { id: '5', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+      { id: '6', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+      { id: '7', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+      { id: '8', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+      { id: '9', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' }]
+      if (index === 0) {
+        this.videoList = videoLists.splice(0, 1)
+      } else if (index === 1) {
+        this.videoList = videoLists.splice(0, 4)
+      } else {
+        this.videoList = videoLists.splice(0, 9)
+      }
+
     },
     // 控制台圆盘按钮点击
     consoleClick (index) {
@@ -265,8 +371,18 @@ export default {
 
     },
     // 项目点击
-    rowClick (item) {
-      this.currentProject = item
+    rowClick ({ row }) {
+      this.currentProject = row
+      console.log(row.projectName)
+      let num = this.menuButtons.findIndex(i => i === this.currentBtn)
+      if (num === 0) {
+        console.log(this.videoList)
+        this.videoList = [{ id: row.projectName, videoName: '项目1516', videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4' }]
+      } else if (num === 1) {
+        this.videoList.push(row.url)
+      } else {
+        this.videoList.push(row.url)
+      }
       this.getVideoList()
     },
     // 项目页码改变
@@ -386,7 +502,7 @@ export default {
       //       this.currentSrc = data[0].videoSrc
       //     }
       //   } else {
-      this.videoList = [
+      let videoLists = [
         { id: '1', videoName: '项目1516', videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4', poster: '' },
         { id: '2', videoName: '项目1516', videoSrc: 'http://www.w3school.com.cn/example/html5/mov_bbb.mp4', poster: '' },
         { id: '3', videoName: '项目1516', videoSrc: 'https://www.w3schools.com/html/movie.mp4', poster: '' },
@@ -400,9 +516,10 @@ export default {
         { id: '11', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
         { id: '12', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
         { id: '13', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '14', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '1565', videoName: '项目1516', videoSrc: 'rtsp://myeye.xuzhouzhihui.com:9030/camera?device=3301061001680&channel=0&streamtype=0&token=gH11E9aKdeZf2z2cc4&type=std.sdp', poster: '' }
+        { id: '14', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' }
+        // { id: '1565', videoName: '项目1516', videoSrc: 'rtsp://myeye.xuzhouzhihui.com:9030/camera?device=3301061001680&channel=0&streamtype=0&token=gH11E9aKdeZf2z2cc4&type=std.sdp', poster: '' }
       ]
+      this.videoList = videoLists.splice(0, 1)
       this.currentSrc = this.videoList[0].videoSrc
       // this.$message.error(msg || '获取视频数据失败')
       // }
@@ -417,23 +534,76 @@ export default {
 </script>
 
 <style scoped lang="less">
+/deep/.beau-content {
+  height: calc(100% - 80px);
+}
+.demo-form-inline {
+  display: flex;
+  justify-content: space-between;
+  // padding: 2rem 1rem 0.5rem;
+  flex-wrap: wrap;
+  .el_form_county {
+    width: 46%;
+  }
+  .el_form_search {
+    width: 90%;
+    // margin-top: 10px;
+    position: relative;
+    /deep/.el-form-item__content {
+      width: 100%;
+    }
+
+    /deep/.el-input .el-input__inner {
+      padding-left: 2rem;
+    }
+
+    i {
+      position: absolute;
+      top: 50%;
+      right: 3rem;
+      margin-right: 0.5rem;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    .el-icon-search {
+      right: 1rem;
+    }
+  }
+}
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  .form-item {
+    // width: 46%;
+    /deep/.el-form-item__content {
+      width: 100%;
+    }
+  }
+  :last-child {
+    // width: 100%;
+    /deep/.el-form-item__content {
+      width: 100%;
+    }
+  }
+}
 .menu-btn {
   position: relative;
   z-index: 99;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  padding-right: 20px;
+  padding: 20px;
   .menubtn-item {
     margin-left: 10px;
-    font-size: 26px;
+    font-size: 40px;
     color: #0e5dfb;
     transition: all 0.2s;
     cursor: pointer;
   }
   .el-icon-one {
-    width: 20px;
-    height: 20px;
+    width: 34px;
+    height: 34px;
     display: block;
     background-color: #0e5dfb;
     border-radius: 2px;
@@ -639,7 +809,7 @@ export default {
     height: 100%;
     flex-shrink: 0;
     .be-table-list {
-      height: calc(100% - 108px);
+      height: calc(100% - 160px);
     }
     .el-form {
       display: flex;
@@ -647,7 +817,7 @@ export default {
       justify-content: space-between;
     }
     .el-form-item {
-      margin: 0;
+      // margin: 0;
     }
     .el-select {
       width: 130px;
@@ -670,13 +840,17 @@ export default {
     position: relative;
     border: 1px solid var(--wrapper-bdcolor);
   }
+  .video-list--one .video-item {
+    width: 100%;
+    height: 100%;
+  }
   .video-list--four .video-item {
-    width: 25%;
-    height: 185px;
+    width: 50%;
+    height: 50%;
   }
   .video-list--nine .video-item {
-    width: 11.11%;
-    height: 100px;
+    width: 33.33%;
+    height: 33.33%;
   }
   .video-player {
     width: 100%;

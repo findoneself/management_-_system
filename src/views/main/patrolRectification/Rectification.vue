@@ -240,7 +240,7 @@ export default {
       this.dialogCenterTitle = '整改详情'
     },
     getImgUrl (item) {
-      const { beforeFileList, afterFileList } = item
+      const { beforeFileList } = item
       let imgs = []
       beforeFileList.map(async (i) => {
         let url = ''

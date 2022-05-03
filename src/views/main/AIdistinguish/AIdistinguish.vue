@@ -16,12 +16,26 @@
         element-loading-text="数据加载中..."
         element-loading-spinner="el-icon-loading"
       >
+        <div class="form-select bjflOption">
+          <el-date-picker
+            v-model="xmflOption.dateList"
+            type="daterange"
+            @change="getXmflData"
+            size="small"
+            value-format="yyyy-MM-dd"
+            :clearable="false"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
+        </div>
         <div id="xmflEchart"></div>
         <ul class="echart-legend">
+          <!--   @click="echartClick(bindex, 'xmflOption')" -->
           <li
             v-for="(item, bindex) in xmflOption.list"
             class="echart-legend-item"
-            @click="echartClick(bindex, 'xmflOption')"
             :class="bindex === xmflOption.curIndex ? 'active-legend' : ''"
             :key="item.id"
           >
@@ -42,7 +56,7 @@
           :show-all-levels="false"
           :options="dictOptions.jkdwList"
           size="small"
-          :props="{emitPath: false, value: 'id', label: 'name'}"
+          :props="{emitPath: false, value: 'groupId', label: 'label'}"
           @change="getJkdwVideos"
         ></el-cascader>
       </div>
@@ -65,12 +79,26 @@
         element-loading-text="数据加载中..."
         element-loading-spinner="el-icon-loading"
       >
+        <div class="form-select bjflOption">
+          <el-date-picker
+            v-model="bjflOption.dateList"
+            type="daterange"
+            @change="getBjflData"
+            size="small"
+            value-format="yyyy-MM-dd"
+            :clearable="false"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
+        </div>
         <div id="bjflEchart"></div>
         <ul class="echart-legend">
+          <!--  @click="echartClick(bindex, 'bjflOption')" -->
           <li
             v-for="(item, bindex) in bjflOption.list"
             class="echart-legend-item"
-            @click="echartClick(bindex, 'bjflOption')"
             :style="{color: bindex === bjflOption.curIndex ? bjflOption.colors[bindex] : 'inherit'}"
             :key="item.id"
           >
@@ -89,10 +117,20 @@
         :loading="loadings.sssjLoading"
         :is-header="false"
         cell-height="2.2rem"
+        highlight-currow
         :data-list="dataList.sssjList"
         :columns="columns.sssjColumns"
         @rowClick='rowClick'
       />
+      <el-pagination
+        @current-change="handleInfoChange"
+        :current-page="dataForm.infopageIndex"
+        :page-size="dataForm.infopageSize"
+        layout="prev, pager, next"
+        :total="dataForm.infoTotal"
+      >
+      </el-pagination>
+
     </BeautifulCard>
     <BeautifulCard
       class="bjls-card"
@@ -114,6 +152,7 @@
             type="daterange"
             @change="getBjlsData"
             size="small"
+            value-format="yyyy-MM-dd"
             :clearable="false"
             range-separator="至"
             start-placeholder="开始日期"
@@ -130,15 +169,15 @@
       >
         <div id="bjlsEchart"></div>
         <ul class="echart-legend">
+          <!--  @click="echartClick(bindex, 'bjlsOption')" -->
           <li
             v-for="(item, bindex) in bjlsOption.list"
-            class="echart-legend-item"
-            @click="echartClick(bindex, 'bjlsOption')"
+            class="echart-legend-item bjlstj"
             :class="bindex === bjlsOption.curIndex ? 'active-legend' : ''"
             :key="item.id"
           >
             <i :style="{backgroundColor: bjlsOption.colors[bindex]}"></i>
-            <span class="legend-name">{{ item.name }}：{{ item.count }}</span>
+            <span class="legend-name">{{ item.name }}</span>
           </li>
         </ul>
       </div>
@@ -155,25 +194,22 @@
             @click="dialogClick(dialogTitle.xmbj)"
             type="primary"
           >{{ dialogTitle.xmbj }}</el-button>
-          <el-select
+          <el-date-picker
             v-model="dataForm.dayDate"
-            clearable
+            type="daterange"
             @change="getXmbjData"
+            value-format="yyyy-MM-dd"
             size="small"
-            placeholder="请选择"
+            :clearable="false"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
           >
-            <el-option
-              v-for="item in dictOptions.dayList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          </el-date-picker>
         </div>
         <BeautifulTableList
           :loading="loadings.xmbjLoading"
           cell-height="2.2rem"
-          highlight-currow
           :index-obj="{isIndex: true, width: '5rem'}"
           :data-list="dataList.xmbjList"
           :columns="columns.xmbjColumns"
@@ -181,7 +217,7 @@
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page="dataForm.pageIndex"
-          :page-size="dataForm.pageSize"
+          :page-size="dataForm.size"
           layout="prev, pager, next"
           :total="dataForm.total"
         >
@@ -226,18 +262,29 @@
           :data-list="dataList.xmbjInfoList"
           :columns="columns.xmbjInfoColumns"
         />
-        <el-pagination
+        <!-- <el-pagination
           @current-change="handleInfoChange"
           :current-page="dataForm.infopageIndex"
           :page-size="dataForm.infopageSize"
           layout="prev, pager, next"
           :total="dataForm.infoTotal"
         >
-        </el-pagination>
+        </el-pagination> -->
       </BeautifulCard>
     </div>
     <TableDialog ref="TableDialog" />
     <BeImageFixed ref="imageRef" />
+    <el-dialog
+      :visible.sync="dialogVisibleImg"
+      @closed="imgSrc=''"
+      class="bigImgCenter"
+    >
+      <img
+        width="100%"
+        :src="imgSrc"
+        class="avatar"
+      >
+    </el-dialog>
   </BeautifulWrapper>
 </template>
 
@@ -277,8 +324,8 @@ export default {
       // 所有表头
       columns: {
         sssjColumns: [
-          { name: '位置', prop: 'address', key: 1, tooltip: 12 },
-          { name: '日期', prop: 'date', key: 2 }
+          { name: '位置', prop: 'cameraName', key: 1, tooltip: 12 },
+          { name: '日期', prop: 'createdAt', key: 2 }
         ],
         xmbjColumns: [
           { name: '项目名称', prop: 'name', key: 1 },
@@ -301,15 +348,16 @@ export default {
         dayDate: '',
         dateList: [],
         pageIndex: 1,
-        pageSize: 3,
+        size: 5,
         total: 0,
         xmbjInfoDate: '',
         infoPageIndex: 1,
-        infopageSize: 3,
+        infopageSize: 20,
         infoTotal: 0
       },
       // 项目分类图信息
       xmflOption: {
+        dateList: '',
         myChart: null,
         list: [],
         // 当前图例点击的index
@@ -318,6 +366,7 @@ export default {
       },
       // 报警分类图信息
       bjflOption: {
+        dateList: '',
         myChart: null,
         list: [],
         // 当前图例点击的index
@@ -329,7 +378,7 @@ export default {
         myChart: null,
         xlist: [],
         list: [],
-        colors: ['#1CC483', '#9834FF', '#00FFFF', '#FF4F01'],
+        colors: ['#1CC483', '#9834FF', '#00FFFF', '#FF4F01', '#FCFF20', '#FF9920', '#317FFF', '#B790FF'],
         // 当前图例点击的index
         curIndex: null
       },
@@ -341,6 +390,9 @@ export default {
       },
       // 是否显示项目报警详情
       isXmbjInfo: false,
+      // 图片
+      dialogVisibleImg: false,
+      imgSrc: '',
       // 报警详情操作列
       operObj: {
         isOperation: true,
@@ -355,15 +407,20 @@ export default {
     }
   },
   created () {
-    this.initDict()
+    // this.initDict()
     // 设置历史统计默认日期
-    const now = this.$format.getSysDateString()
-    this.dataForm.dateList = [now, now]
+    const now = this.$format.getTwodaysDate()
+    this.dataForm.dateList = [now[0], now[1]]
+    this.xmflOption.dateList = [now[0], now[1]]
+    this.bjflOption.dateList = [now[0], now[1]]
+    this.dataForm.dayDate = [now[0], now[1]]
   },
   mounted () {
     // getData获取不需传参的数据
     this.getData()
     // 以下获取的是三个需要传参的数据
+    this.getXmflData()
+    this.getBjflData()
     this.getBjlsData()
     this.getJkdwTree()
     this.getXmbjData()
@@ -389,10 +446,11 @@ export default {
       this.dataForm.pageIndex = val
       this.getXmbjData()
     },
-    // 项目报警详情页码改变
+    // 实时数据页码改变
     handleInfoChange (val) {
       this.dataForm.infoPageIndex = val
-      this.getXmbjInfoData()
+      console.log(val, this.dataForm.infoPageIndex)
+      this.getData()
     },
     // 项目报警详情图片点击
     imgClick (item, e) {
@@ -405,54 +463,78 @@ export default {
     },
     // 项目报警统计行点击
     rowClick ({ row }) {
-      this.currentXmbj = row
-      this.isXmbjInfo = true
-      this.getXmbjInfoData()
+      if (row.url) {
+        this.dialogVisibleImg = true
+        this.imgSrc = row.url
+      } else {
+        this.$message.error('该数据暂无图片！')
+
+      }
+      // this.currentXmbj = row
+      // this.isXmbjInfo = true
+      // this.getXmbjInfoData()
     },
     // 弹窗按钮点击
     dialogClick (name) {
       this.$refs.TableDialog.open(name)
     },
-    // 获取所有数据
+    // 获取实时数据
     getData () {
       // ---获取实时数据
       this.loadings.sssjLoading = true
-      this.$http({ url: '/aixb/getSssjData' }).then(res => {
+      let date = this.$format.getSysDateString()
+      let params = {
+        startDate: date + ' 00:00:00',
+        endDate: date + ' 23:59:59',
+        size: this.dataForm.infopageSize,
+        page: this.dataForm.infoPageIndex
+
+      }
+      let val = this.$api.toQueryString(params)
+      this.$http({ url: 'integration/aicr/alert/list' + val }).then(res => {
         this.loadings.sssjLoading = false
-        if (res.code === 200) {
-          this.dataList.sssjList = res.data.list
-          console.log(res)
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          this.dataList.sssjList = data.alertList
+          if (data.pageVO) {
+            this.dataForm.infoTotal = data.pageVO.total
+          }
         } else {
-          // this.$message.error('获取实时数据失败！')
-          this.dataList.sssjList = [
-            { id: '1212', address: '和平路南阳花园西侧1号门和平路南阳花园西侧1号门和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '165', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '1215542', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '124', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '145452', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '1256', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '1565232', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '15652445', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '156222', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '15652565', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '1565323232', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '152', address: '和平路南阳花园西侧1号门', date: '2022-11-12' },
-            { id: '1552', address: '和平路南阳花园西侧1号门', date: '2022-11-12' }
-          ]
+          this.$message.error(msg || '获取实时数据失败！')
+          this.dataList.sssjList = []
         }
       }, () => {
         this.loadings.sssjLoading = false
         // this.$message.error('获取实时数据失败！')
       })
+
+
+    },
+    // 项目分类统计1
+    getXmflData () {
       // ---获取项目分类统计数据
       this.loadings.xmflLoading = true
-      this.$http({ url: '/aixb/getXmflData' }).then(res => {
+      let params = {}
+      if (this.xmflOption.dateList && this.xmflOption.dateList.length) {
+        params.startDate = this.xmflOption.dateList[0]
+        params.endDate = this.xmflOption.dateList[1]
+      }
+
+      let data = this.$api.toQueryString(params)
+      this.$http({ url: 'integration/aicr/camera/chart/pie' + data }).then(res => {
         this.loadings.xmflLoading = false
-        if (res.code === 200) {
-          this.xmflOption.list = res.data.list
-          console.log(res)
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          this.xmflOption.list = data
+          const series = data.map((item) => {
+            return {
+              value: item.count,
+              name: item.name
+            }
+          })
+          this.setXmflEchart(series)
         } else {
-          // this.$message.error('获取项目分类统计失败！')
+          this.$message.error(msg || '获取项目分类统计失败！')
           const list = [
             { name: '监测站', count: 16 },
             { name: '燃气站', count: 26 },
@@ -461,71 +543,67 @@ export default {
             { name: '其他', count: 49 }
           ]
           this.xmflOption.list = list
-          const series = list.map((item) => {
+
+        }
+      }, () => {
+        this.loadings.xmflLoading = false
+        this.$message.error('获取项目分类统计失败！')
+      })
+    },
+    // 报警分类统计2
+    getBjflData () {
+      // ---获取报警分类统计数据
+      this.loadings.bjflLoading = true
+      let params = {}
+      if (this.bjflOption.dateList && this.bjflOption.dateList.length) {
+        params.startDate = this.dataForm.dayDate[0]
+        params.endDate = this.dataForm.dayDate[1]
+      }
+      let data = this.$api.toQueryString(params)
+      this.$http({ url: 'integration/aicr/alert/chart/pie' + data }).then(res => {
+        this.loadings.bjflLoading = false
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          this.bjflOption.list = data
+          const series = data.map((item) => {
             return {
               value: item.count,
               name: item.name
             }
           })
-          this.setXmflEchart(series)
-        }
-      }, () => {
-        this.loadings.xmflLoading = false
-        // this.$message.error('获取项目分类统计失败！')
-      })
-      // ---获取报警分类统计数据
-      this.loadings.bjflLoading = true
-      this.$http({ url: '/aixb/getBjflData' }).then(res => {
-        this.loadings.bjflLoading = false
-        if (res.code === 200) {
-          this.bjflOption.list = res.data.list
-          console.log(res)
+          this.setBjflEchart(series)
         } else {
-          // this.$message.error('获取报警分类统计失败！')
+          this.$message.error(msg || '获取报警分类统计失败！')
           this.bjflOption.list = []
         }
       }, () => {
         this.loadings.bjflLoading = false
-        // this.$message.error('获取报警分类统计失败！')
-        const list = [
-          { name: '反光衣', count: 16 },
-          { name: '抽烟', count: 26 },
-          { name: '火焰', count: 36 },
-          { name: '安全帽', count: 47 },
-          { name: '行人闯入', count: 49 },
-          { name: '打电话', count: 60 },
-          { name: '人员离岗', count: 75 },
-          { name: '工作服', count: 80 }
-        ]
-        this.bjflOption.list = list
-        const series = list.map((item) => {
-          return {
-            value: item.count,
-            name: item.name
-          }
-        })
-        this.setBjflEchart(series)
+        this.$message.error('获取报警分类统计失败！')
       })
     },
-    // 获取项目报警统计数据
+    // 获取项目报警统计排行
     getXmbjData () {
       // ---获取项目报警统计排行
       this.loadings.xmbjLoading = true
+      let params = {}
+      if (this.dataForm.dayDate && this.dataForm.dayDate.length) {
+        params.startDate = this.dataForm.dayDate[0]
+        params.endDate = this.dataForm.dayDate[1]
+        params.size = this.dataForm.size
+        params.page = this.dataForm.pageIndex
+      }
+
+      let data = this.$api.toQueryString(params)
       this.$http({
-        url: '/aixb/getXmbjData',
-        data: {
-          page: this.dataForm.pageIndex,
-          pageSize: this.dataForm.pageSize,
-          date: this.dataForm.dayDate || ''
-        }
+        url: 'integration/aicr/camera/alert/list' + data
       }).then(res => {
         this.loadings.xmbjLoading = false
-        if (res.code === 200) {
-          this.dataList.xmbjList = res.data.list
-          this.dataForm.total = res.data.total
-          console.log(res)
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          this.dataList.xmbjList = data.rows
+          this.dataForm.total = data.total
         } else {
-          // this.$message.error('获取项目报警统计排行失败！')
+          this.$message.error(msg || '获取项目报警统计排行失败！')
           this.dataList.xmbjList = []
           this.dataForm.total = 0
         }
@@ -572,40 +650,27 @@ export default {
           this.dataForm.infoTotal = res.data.total
           console.log(res)
         } else {
-          // this.$message.error('获取项目报警统计排行失败！')
+          this.$message.error('获取项目报警统计排行失败！')
           this.dataList.xmbjInfoList = []
           this.dataForm.infoTotal = 0
         }
       }, () => {
         this.loadings.xmbjInfoLoading = false
         // this.$message.error('获取项目报警详情排行失败！')
-        const list = [
-          { id: '1212', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
-          { id: '165', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ0.jpg' },
-          { id: '1215542', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7.png' },
-          { id: '124', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
-          { id: '145452', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
-          { id: '1256', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
-          { id: '1565232', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
-          { id: '15652445', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
-          { id: '156222', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
-          { id: '15652565', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
-          { id: '1565323232', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
-          { id: '152', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
-          { id: '1552', warnType: '项目名称项目名称', date: '2022-02-02', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' }
-        ]
-        this.dataForm.infoTotal = list.length
-        this.dataList.xmbjInfoList = list
+        this.dataForm.infoTotal = 0
+        this.dataList.xmbjInfoList = []
       })
     },
     // 获取监控点位树结构数据
     getJkdwTree () {
-      this.$http({ url: '/aixb/getJkdwTree' }).then(res => {
-        if (res.code === 200) {
-          this.dictOptions.jkdwList = res.data.list
-          console.log(res)
+      this.$http({
+        url: 'integration/aicr/camera/tree'
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.dictOptions.jkdwList = data.treeData
         } else {
-          // this.$message.error('视频已失效！')
+          this.$message.error(msg || '获取失败！')
           this.dictOptions.jkdwList = []
         }
       }, () => {
@@ -636,12 +701,13 @@ export default {
     // 获取监控点位视频地址
     getJkdwVideos () {
       if (!this.dataForm.jkdw) return
-      this.$http({ url: `/aixb/getVideoData/${this.dataForm.jkdw}` }).then(res => {
-        if (res.code === 200) {
-          this.dictOptions.videoSrc = res.data.url
-          console.log(res)
+      this.$http({ url: `integration/aicr/camera/video/${this.dataForm.jkdw}` }).then(res => {
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          this.dictOptions.videoSrc = data
+          console.log(data)
         } else {
-          // this.$message.error('视频已失效！')
+          this.$message.error(msg || '获取视频失败！')
           this.dataList.videoSrc = ''
         }
       }, () => {
@@ -656,58 +722,23 @@ export default {
       // 参数处理
       let params = {}
       if (this.dataForm.dateList && this.dataForm.dateList.length) {
-        params.startTime = this.dataForm.dateList[0]
-        params.endTime = this.dataForm.dateList[1]
+        params.startDate = this.dataForm.dateList[0]
+        params.endDate = this.dataForm.dateList[1]
       }
+      let data = this.$api.toQueryString(params)
       this.$http({
-        url: '/aixb/getBjlsData',
+        url: 'integration/aicr/alert/chart/line' + data,
         data: params
       }).then(res => {
         this.loadings.bjlsLoading = false
-        if (res.code === 200) {
-          this.bjlsOption.list = res.data.list
-          console.log(res)
-        } else {
-          // this.$message.error('获取报警分类统计失败！')
-          this.bjlsOption.list = []
-        }
-      }, () => {
-        this.loadings.bjlsLoading = false
-        // this.$message.error('获取报警分类统计失败！')
-        const list = [
-          { count: 56, name: '反光衣', typeId: 'bj1', date: '2022-3-9' },
-          { count: 43, name: '行人闯入', typeId: 'bj2', date: '2022-3-9' },
-          { count: 26, name: '打电话', typeId: 'bj3', date: '2022-3-9' },
-          { count: 54, name: '抽烟', typeId: 'bj4', date: '2022-3-9' },
-          { count: 46, name: '反光衣', typeId: 'bj1', date: '2022-3-10' },
-          { count: 32, name: '行人闯入', typeId: 'bj2', date: '2022-3-10' },
-          { count: 16, name: '打电话', typeId: 'bj3', date: '2022-3-10' },
-          { count: 24, name: '抽烟', typeId: 'bj4', date: '2022-3-10' },
-          { count: 16, name: '反光衣', typeId: 'bj1', date: '2022-3-11' },
-          { count: 22, name: '行人闯入', typeId: 'bj2', date: '2022-3-11' },
-          { count: 26, name: '打电话', typeId: 'bj3', date: '2022-3-11' },
-          { count: 27, name: '抽烟', typeId: 'bj4', date: '2022-3-11' },
-          { count: 16, name: '反光衣', typeId: 'bj1', date: '2022-3-12' },
-          { count: 22, name: '行人闯入', typeId: 'bj2', date: '2022-3-12' },
-          { count: 26, name: '打电话', typeId: 'bj3', date: '2022-3-12' },
-          { count: 27, name: '抽烟', typeId: 'bj4', date: '2022-3-12' },
-          { count: 16, name: '反光衣', typeId: 'bj1', date: '2022-3-13' },
-          { count: 22, name: '行人闯入', typeId: 'bj2', date: '2022-3-13' },
-          { count: 26, name: '打电话', typeId: 'bj3', date: '2022-3-13' },
-          { count: 27, name: '抽烟', typeId: 'bj4', date: '2022-3-13' }
-        ]
-        let allList = []
-        let xlist = []
-        // 处理成需要的数据结构
-        list.map((item) => {
-          if (!xlist.includes(item.date)) xlist.push(item.date)
-          const isName = allList.find(t => t.name === item.name)
-          if (isName) {
-            // 新数组里面如果找到了当前名称的，则直接push到series的data
-            isName.all += item.count
-            isName.data.push(item.count)
-          } else {
-            // 新数组里面如果没找到当前名称的，则添加一个新的series数据
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          const { series, xAxisData } = data
+          // this.bjlsOption.list = data
+          let allList = []
+          let xlist = []
+          // 处理成需要的数据结构
+          series && series.map((item) => {
             allList.push({
               all: item.count,
               name: item.name,
@@ -721,15 +752,23 @@ export default {
                   borderColor: '#fff'
                 }
               },
-              data: [item.count]
+              data: item.data
             })
-          }
-        })
-        // 保存当前处理完成的数据
-        this.bjlsOption.list = allList
-        // 保存当前xAixs数据，为了点击图例重新渲染而用
-        this.bjlsOption.xlist = xlist
-        this.setBjlsEchart(allList, xlist)
+            // }
+          })
+          // 保存当前处理完成的数据
+          this.bjlsOption.list = allList
+          // 保存当前xAixs数据，为了点击图例重新渲染而用
+          this.bjlsOption.xlist = xlist
+          this.setBjlsEchart(allList, xAxisData)
+        } else {
+          this.$message.error(msg || '获取报警历史统计失败！')
+          this.bjlsOption.list = []
+          this.setBjlsEchart([], [])
+        }
+      }, () => {
+        this.loadings.bjlsLoading = false
+        this.$message.error('获取报警历史统计失败！')
       })
     },
     // 初始化项目分类echarts图
@@ -752,7 +791,6 @@ export default {
           data: data || []
         }
       }
-      console.log(option)
       this.xmflOption.myChart.setOption(option)
       // 鼠标移入隐藏点击的高亮---单个元素的移入移出不太友好，最好是对echarts整个图表做移入移出
       this.xmflOption.myChart.on('mouseover', (v) => {
@@ -962,7 +1000,7 @@ export default {
   justify-content: space-between;
   text-align: center;
   font-size: 0.875rem;
-  height: 45px;
+  height: 35px;
   background: #2f71ff33;
   color: #fff;
   width: calc(33.33% - 10px);
@@ -987,6 +1025,9 @@ export default {
     width: 50%;
   }
 }
+.bjlstj {
+  height: 29px;
+}
 .active-legend {
   background: #2f71ffce;
 }
@@ -1003,6 +1044,10 @@ export default {
     width: 270px;
   }
 }
+.bjflOption {
+  justify-content: flex-end;
+  padding-bottom: 0;
+}
 .jkdw-card,
 .xmfl-card,
 .bjfl-card {
@@ -1015,6 +1060,14 @@ export default {
   width: 28%;
   flex-shrink: 0;
   text-align: right;
+  .be-table-list,
+  .be-table-ul {
+    height: calc(100% - 2.5rem);
+  }
+  .el-table,
+  .el-pagination {
+    margin-top: 1rem;
+  }
 }
 .bjls-card {
   flex: 1;
@@ -1043,9 +1096,13 @@ export default {
   .xmbj-list {
     height: 100%;
     width: 100%;
+    .el-table,
+    .el-pagination {
+      margin-top: 0;
+    }
   }
   .be-table-list {
-    height: calc(100% - 101px);
+    height: calc(100% - 70px);
   }
 }
 .xmbj-info {

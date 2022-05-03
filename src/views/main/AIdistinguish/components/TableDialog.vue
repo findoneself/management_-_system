@@ -30,27 +30,27 @@
               key="xmmc"
               label-width="5.4rem"
             >
-              <el-预警管控
-                placeholder="输入点位名称搜索"
-                v-model="dataForm.projectName"
+              <el-input
+                placeholder="输入项目名称搜索"
+                v-model="dataForm.name"
                 clearable
               >
-              </el-预警管控>
+              </el-input>
             </el-form-item>
             <el-form-item
               label="报警类型："
               key="bjlx"
             >
               <el-select
-                v-model="dataForm.warnType"
+                v-model="dataForm.alertType"
                 clearable
                 placeholder="请选择"
               >
                 <el-option
-                  v-for="item in dictOptions.warnTypes"
-                  :key="item.id"
+                  v-for="item in dictOptions.alertTypes"
+                  :key="item.task_key"
                   :label="item.name"
-                  :value="item.id"
+                  :value="item.task_key"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -59,7 +59,7 @@
               key="jcsj"
             >
               <el-date-picker
-                v-model="dataForm.startTime"
+                v-model="dataForm.startDate"
                 type="date"
                 clearable
                 placeholder="选择日期"
@@ -71,8 +71,9 @@
               key="ccsj"
             >
               <el-date-picker
-                v-model="dataForm.endTime"
+                v-model="dataForm.endDate"
                 type="date"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
                 placeholder="选择日期"
               >
@@ -85,18 +86,15 @@
               key="fzmc"
               label-width="5.4rem"
             >
-              <el-select
+              <el-cascader
                 v-model="dataForm.groupName"
-                clearable
-                placeholder="分组名称"
-              >
-                <el-option
-                  v-for="item in dictOptions.groupTypes"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
+                :show-all-levels="false"
+                :options="dictOptions.groupTypes"
+                size="small"
+                :props="{emitPath: false, value: 'groupId', label: 'label'}"
+                @change="groupTypeChange"
+              ></el-cascader>
+
             </el-form-item>
             <el-form-item
               label="异常类型："
@@ -108,9 +106,9 @@
               >
                 <el-option
                   v-for="item in dictOptions.alertTypes"
-                  :key="item.id"
+                  :key="item.task_key"
                   :label="item.name"
-                  :value="item.id"
+                  :value="item.task_key"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -118,20 +116,27 @@
               label="点位名称："
               key="dwmc"
             >
-              <el-预警管控
-                placeholder="输入点位名称搜索"
-                v-model="dataForm.projectName"
+              <el-select
+                v-model="dataForm.keyword"
                 clearable
               >
-              </el-预警管控>
+                <el-option
+                  v-for="item in dictOptions.keywordList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item
               label="开始时间："
               key="kssj"
             >
               <el-date-picker
-                v-model="dataForm.startTime"
+                v-model="dataForm.startDate"
                 clearable
+                @change="comeDate"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 type="date"
                 placeholder="选择日期"
               >
@@ -142,8 +147,9 @@
               key="jssj"
             >
               <el-date-picker
-                v-model="dataForm.endTime"
+                v-model="dataForm.endDate"
                 clearable
+                value-format="yyyy-MM-dd HH:mm:ss"
                 type="date"
                 placeholder="选择日期"
               >
@@ -158,17 +164,42 @@
             <el-button @click="refreshClick">重置</el-button>
           </el-form-item>
         </el-form>
+        <!-- <div
+          slot="oper"
+          slot-scope="{row}"
+        >
+          <el-link
+            @click="imgClick(row)"
+            type='primary'
+            :disabled='!row.url'
+          >查看</el-link>
+        </div> -->
         <el-pagination
           slot="pagination"
           @current-change="handleCurrentChange"
           :current-page="queryInfo.pageIndex"
-          :page-size="queryInfo.pageSize"
+          :page-size="queryInfo.size"
           layout="prev, pager, next, total, jumper"
           :total="total"
         >
         </el-pagination>
       </TableForm>
     </BeautifulWrapper>
+    <div
+      :loading='imgLoading'
+      v-if="dialogVisibleImg"
+      class="bigImgCenter"
+    >
+      <i
+        class="el-icon-close"
+        @click="closeImgClick"
+      ></i>
+      <img
+        width="100%"
+        :src="imgSrc"
+        class="avatar"
+      >
+    </div>
     <BeImageFixed ref="imageRef" />
   </BeDialog>
 </template>
@@ -198,14 +229,15 @@ export default {
         // 报警类型
         warnTypes: [],
         // 异常类型
-        alertTypes: []
+        alertTypes: [],
+        // 点位
+        keywordList: []
       },
       // 查询参数
       queryInfo: {
-        pageIndex: 1,
-        pageSize: 3,
-        order: 'desc',
-        sidx: 'startTime'
+        page: 1,
+        size: 20,
+        order: 'desc'
       },
       // 数据总数
       total: 0,
@@ -220,21 +252,25 @@ export default {
       // 表单数据
       dataForm: {
         // 点位/项目名称
-        projectName: '',
-        // 报警类型
-        warnType: '',
+        name: '',
         // 分组名称
         groupName: '',
         // 异常类型
         alertType: '',
         // 开始时间/进场时间
-        startTime: '',
+        startDate: '',
         // 结束时间/出场时间
-        endTime: ''
+        endDate: '',
+        keyword: ''
       },
-      // 分类排名操作栏
+      // 查看图片
+      dialogVisibleImg: false,
+      imgSrc: '',
+      imgLoading: false,
+      // 报警记录操作栏
       operObj: {
         isOperation: true,
+        isIndex: false,
         headName: '报警截图',
         operButton: [
           {
@@ -242,14 +278,20 @@ export default {
             click: this.imgClick
           }
         ]
+      },
+
+      api: {
+        alertDataApi: 'integration/aicr/algorithm', // 异常/报警类型 下拉框
+        projectApi: 'integration/aicr/camera/tree', // 分组名称也是点位级联下拉
+        dianweiApi: 'integration/aicr/camera/list/'
       }
     }
   },
   created () {
+    this.getAlertData()
+    this.getprojectData()
     // 设置默认日期
-    // const now = this.$format.getSysDateString()
-    // this.dataForm.startTime = now
-    // this.dataForm.endTime = now
+
   },
   methods: {
     // 初始数据
@@ -258,30 +300,84 @@ export default {
       // 初始化列表信息
       if (title === '报警记录') {
         this.operObj.isOperation = true
+        this.operObj.isIndex = false
         this.columns = [
-          { name: '分组名称', prop: 'groupName', key: 1 },
-          { name: '点位名称', prop: 'projectName', tooltip: true, key: 2 },
+          // { name: '分组名称', prop: 'id', key: 1 },
+          { name: '点位名称', prop: 'cameraName', key: 2 },
           { name: '异常类型', prop: 'alertType', key: 3 },
-          { name: '时间', prop: 'startTime', key: 4 }
+          { name: '时间', prop: 'createdAt', key: 4 }
         ]
       } else {
         this.operObj.isOperation = false
+        this.operObj.isIndex = true
         this.columns = [
-          { name: '序号', prop: 'id', key: 1 },
-          { name: '项目名称', prop: 'projectName', tooltip: true, key: 2 },
-          { name: '报警次数', prop: 'num', key: 3 }
+          { name: '项目名称', prop: 'name', key: 2 },
+          { name: '报警次数', prop: 'count', key: 3 }
         ]
       }
+      const now = this.$format.getTwodaysDate()
+      this.dataForm.startDate = now[0] + ' 00:00:00'
+      this.dataForm.endDate = now[1] + ' 23:59:59'
       // 初始化字典
-      if (this.dicts.warnType && this.dicts.warnType.length > 0) {
-        this.dictOptions.warnTypes = this.dicts.warnType
-      }
-      if (this.dicts.alertType && this.dicts.alertType.length > 0) {
-        this.dictOptions.alertTypes = this.dicts.alertType
-      }
-      if (this.dicts.groupType && this.dicts.groupType.length > 0) {
-        this.dictOptions.groupTypes = this.dicts.groupType
-      }
+      // if (this.dicts.warnType && this.dicts.warnType.length > 0) {
+      //   this.dictOptions.warnTypes = this.dicts.warnType
+      // }
+      // if (this.dicts.alertType && this.dicts.alertType.length > 0) {
+      //   this.dictOptions.alertTypes = this.dicts.alertType
+      // }
+      // if (this.dicts.groupType && this.dicts.groupType.length > 0) {
+      //   this.dictOptions.groupTypes = this.dicts.groupType
+      // }
+    },
+    getprojectData () {
+      this.$http({
+        url: this.api.projectApi
+      }).then(res => {
+        this.dataLoading = false
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          this.dictOptions.groupTypes = data.treeData
+        } else {
+          this.$message.error(msg || '获取报警类型错误')
+        }
+      }, () => {
+        this.$message.error('获取报警类型错误')
+
+      })
+    },
+    getAlertData () {
+      this.$http({
+        url: this.api.alertDataApi
+      }).then(res => {
+        this.dataLoading = false
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          this.dictOptions.alertTypes = data.algoConfig
+        } else {
+          this.$message.error(msg || '获取报警类型错误')
+        }
+      }, () => {
+        this.$message.error('获取报警类型错误')
+
+      })
+    },
+    groupTypeChange () {
+      this.$http({
+        url: this.api.dianweiApi + this.dataForm.groupName
+      }).then(res => {
+        console.log(res)
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          // this.dictOptions.groupTypes = data.treeData
+          this.dictOptions.keywordList = data.cameraList
+          console.log(res)
+        } else {
+          this.$message.error(msg || '获取报警类型错误')
+        }
+      }, () => {
+        this.$message.error('获取报警类型错误')
+
+      })
     },
     // 打开弹窗
     open (title = '') {
@@ -296,14 +392,16 @@ export default {
     },
     // 重置表单
     refreshClick () {
+      const now = this.$format.getTwodaysDate()
       this.dataForm = {
         projectName: '',
-        warnType: '',
+        keyword: '',
         groupName: '',
         alertType: '',
-        startTime: '',
-        endTime: ''
+        startDate: now[0] + ' 00:00:00',
+        endDate: now[1] + ' 23:59:59'
       }
+      this.getTableData()
     },
     // 关闭回调事件
     onCancel () {
@@ -312,12 +410,17 @@ export default {
       // this.$emit('onCancel')
     },
     // 图片点击
-    imgClick (item, e) {
-      this.$refs.imageRef.showImg(e, item)
+    imgClick (item) {
+      this.imgSrc = item.url
+      this.dialogVisibleImg = true
+      // this.$refs.imageRef.showImg(e, item)
+    },
+    closeImgClick () {
+      this.dialogVisibleImg = false
     },
     // 页码改变
     handleCurrentChange (val) {
-      this.queryInfo.pageIndex = val
+      this.queryInfo.page = val
       this.getTableData()
     },
     // 获取表格数据
@@ -329,77 +432,86 @@ export default {
       let url = ''
       let errmsg = ''
       if (this.dialogTitle === '报警记录') {
-        url = '/aixb/getBjjlData'
+        url = 'integration/aicr/alert/list'
         errmsg = '获取报警记录数据失败！'
-        params.projectName = this.dataForm.projectName
-        params.groupName = this.dataForm.groupName
-        params.alertType = this.dataForm.alertType
-        params.startTime = this.dataForm.startTime
-        params.endTime = this.dataForm.endTime
+        params.keyword = this.dataForm.keyword || ''
+        params.alertType = this.dataForm.alertType || ''
+        params.startDate = this.dataForm.startDate
+        params.endDate = this.dataForm.endDate
+        params.page = this.queryInfo.page
+        params.size = this.queryInfo.size
       } else if (this.dialogTitle === '分类排名') {
-        url = '/aixb/getFlpmData'
+        url = 'integration/aicr/camera/alert/list'
         errmsg = '获取分类排名数据失败！'
-        params.projectName = this.dataForm.projectName
-        params.warnType = this.dataForm.warnType
-        params.startTime = this.dataForm.startTime
-        params.endTime = this.dataForm.endTime
-        params.sidx = 'num'
+        params.name = this.dataForm.name || ''
+        params.alertType = this.dataForm.alertType || ''
+        params.startDate = this.dataForm.startDate
+        params.orderByCt = 'asc'
+        params.endDate = this.dataForm.endDate
+        params.page = this.queryInfo.page
+        params.size = this.queryInfo.size
       }
       console.log(params)
+      let data = this.$api.toQueryString(params)
       this.$http({
-        url: url,
-        data: params
+        url: url + data
       }).then(res => {
         this.dataLoading = false
-        if (res.code === 200) {
-          this.dataList = res.data.list
-          this.total = res.data.total
-          console.log(res)
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          if (this.dialogTitle === '分类排名') {
+            this.dataList = data.rows
+            this.total = data.total
+          } else {
+            this.dataList = data.alertList || []
+            if (data.pageVO) {
+              const { total } = data.pageVO
+              this.total = total
+            } else {
+              this.total = 0
+            }
+          }
         } else {
-          this.$message.error(errmsg)
+          this.$message.error(msg || '获取数据错误')
           this.total = 0
           this.dataList = []
         }
       }, () => {
         this.dataLoading = false
         this.$message.error(errmsg)
-        const list = [
-          { id: 'geewew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '反光衣', startTime: '2022-03-04', endTime: '2022-03-09', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
-          { id: 'gwg', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '行人闯入', startTime: '2022-03-04', endTime: '2022-03-09', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ0.jpg' },
-          { id: 'geewhwwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '打电话', startTime: '2022-03-04', endTime: '2022-03-09', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7.png' },
-          { id: 'geegsdwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '抽烟', startTime: '2022-03-04', endTime: '2022-03-09', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41KJ7-50.png' },
-          { id: 'geegeewew', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '反光衣', startTime: '2022-03-04', endTime: '2022-03-010', imgUrl: 'http://xpei.ren/uploads/allimg/180704/1-1PF41K055.jpg' },
-          { id: 'geejwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '行人闯入', startTime: '2022-03-04', endTime: '2022-03-010', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
-          { id: 'geeerwew', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '打电话', startTime: '2022-03-04', endTime: '2022-03-010', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
-          { id: 'geesjjwew', groupName: '分组1', projectName: '防空雷达技术反馈', alertType: '抽烟', startTime: '2022-03-04', endTime: '2022-03-010', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
-          { id: 'geejjjwew', groupName: '分组2', projectName: '防空雷达技术反馈', alertType: '反光衣', startTime: '2022-03-04', endTime: '2022-03-011', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' }
-        ]
-        const list2 = [
-          { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-          { id: 'gwg', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-          { id: 'geewhwwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-          { id: 'geegsdwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-          { id: 'geegeewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-          { id: 'geejwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-          { id: 'geeerwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-          { id: 'geesjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-          { id: 'geejjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' }
-        ]
         // 保存当前处理完成的数据
-        this.total = this.dialogTitle === '报警记录' ? list.length : list2.length
-        this.dataList = this.dialogTitle === '报警记录' ? list : list2
+        this.total = 0
+        this.dataList = []
       })
+    },
+    comeDate (val) {
+      console.log(val)
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .el-form-item {
   margin-bottom: 0;
 }
 .el-select,
-.el-预警管控 {
+.el-input {
   width: 180px;
+}
+.bigImgCenter {
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55%;
+  min-height: 500px;
+  background: #fff;
+  text-align: right;
+  .el-icon-close {
+    font-size: 20px;
+    margin: 15px;
+    color: #000;
+  }
 }
 </style>

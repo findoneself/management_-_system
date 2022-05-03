@@ -16,6 +16,13 @@ import './plugins/element'
 import './libs/pxtoRem'
 // 引入nprogress样式
 import 'nprogress/nprogress.css'
+// 引入rtsp
+// const RTSP2web = require('rtsp2web')
+// const port = 8081
+// console.log(RTSP2web)
+// new RTSP2web({
+//   port
+// })
 Vue.prototype._cloneDeep = cloneDeep
 Vue.config.productionTip = false
 Vue.prototype.$utils = Utils

@@ -31,7 +31,8 @@ const winConfig = {
     // 'https://cdn.jsdelivr.net/npm/echarts@4.9.0/dist/echarts.min.js',
     'https://cdn.jsdelivr.net/npm/vue-video-player@5.0.2/dist/vue-video-player.min.js',
     'https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js',
-    'https://cdn.staticfile.org/element-ui/2.13.2/index.js'
+    'https://cdn.staticfile.org/element-ui/2.13.2/index.js',
+    'https://jsmpeg.com/jsmpeg.min.js'
   ]
 }
 module.exports = {
