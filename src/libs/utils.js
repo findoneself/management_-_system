@@ -63,29 +63,33 @@ Utils.queryTreeFirst = function (data) {
   return obj
 }
 // 递归获取当前节点的所有父节点
-Utils.familyTree = function (data, id) {
+Utils.familyTree = function (data, id, idname = 'id', pid = 'parentId', children = 'children') {
   let obj = {}
   let lists = []
-  let index = 1
+  let indexs = []
+  let num = 1
 
   function forFn (arr, id) {
-    arr.map(list => {
-      if (list.id === id) {
-        lists.push(list)
-        obj['item' + index] = list
-        index++
-        if (list.parentId && list.parentId !== '00') {
-          forFn(data, list.parentId)
+    arr.map((item, index) => {
+      if (item[idname] === id) {
+        lists.push(item)
+        indexs.push(index)
+        obj['item' + num] = item
+        num++
+        if (item[pid] && item[pid] !== '00') {
+          forFn(data, item[pid])
         }
       } else {
-        if (list.children && list.children.length > 0) {
-          forFn(list.children, id)
+        if (item[children] && item[children].length > 0) {
+          forFn(item[children], id)
         }
       }
     })
   }
   forFn(data, id)
-  return { obj, list: lists }
+  // lists也应该给倒叙，只是已经在用了，暂时不
+  indexs = indexs.reverse()
+  return { obj, list: lists, indexs: indexs }
 }
 /**
  * 对象数组排序
