@@ -343,7 +343,7 @@ export default {
     // 为表格奇偶行设置不同class
     addEvenClass ({ row, rowIndex }) {
       let i = rowIndex % 2
-      return i ? this.oddClass : this.evenClass
+      return this.isShowHeader ? (i ? this.evenClass : this.oddClass) : (i ? this.oddClass : this.evenClass)
     },
     // 表格行点击事件
     rowClick (row) {

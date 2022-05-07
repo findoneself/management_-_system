@@ -437,15 +437,15 @@ div.el-table {
 }
 
 div.el-table,
-div.el-table__expanded-cell.el-table,
-div.el-table__expanded-cell,
+div.el-table .el-table__expanded-cell.el-table,
+div.el-table .el-table__expanded-cell,
 div.el-table th,
-div.el-table tr {
+div.el-table tr{
     background-color: transparent;
 }
 
-div.el-table td,
-div.el-table th.is-leaf {
+div.el-table td.el-table__cell,
+div.el-table th.el-table__cell.is-leaf {
     border: 0;
 }
 
@@ -454,18 +454,21 @@ div.el-table--group::after,
 div.el-table::before {
     background-color: transparent;
 }
-
-div.el-table--striped .el-table__body tr.even-table-style td {
+div.el-table__expand-icon {
+  color: var(--color-text);
+}
+div.el-table th.el-table__cell,
+div.el-table--striped .el-table__body tr.even-table-style td.el-table__cell {
     background-color: #0b1771;
 }
 
-div.el-table--striped .el-table__body tr.odd-table-style td {
+div.el-table--striped .el-table__body tr.odd-table-style td.el-table__cell {
     background-color: transparent;
 }
 
 div.el-table .el-table__body tr.el-table__row.current-row td,
-div.el-table--enable-row-hover .el-table__body tr:hover>td {
-    /* background-color: #163ea6; */
+div.el-table--enable-row-hover .el-table__body tr:hover>td,
+div.el-table--striped .el-table__body tr.el-table__row--striped.current-row td.el-table__cell {
     background-color: #132184;
 }
 

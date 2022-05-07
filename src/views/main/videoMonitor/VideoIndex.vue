@@ -143,61 +143,45 @@
           </el-form>
         </div>
         <!-- :tree-props="{children: 'deviceList', hasChildren: 'hasChildren'}"  row-key="projectId"-->
-        <el-table
-          :data="projectList"
-          stripe
-          style="width: 100%"
-          height="calc(100% - 120px)"
-          :row-class-name="tableRowClassName"
-        >
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <div
-                v-for="(item,index) in props.row.deviceList"
-                :key="index"
-                @click="e=>{getVideo(e,item)}"
-              >
-                <el-form
-                  label-position="left"
-                  inline
-                  class="demo-table-expand"
-                >
-                  <el-form-item label="设备名称">
-                    <span>{{ item.title }}</span>
-                  </el-form-item>
-                </el-form>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            type="index"
-            width="50px"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="projectName"
-            label="项目名称"
-          >
-          </el-table-column>
-        </el-table>
-        <!-- <BeautifulTableList
-          :loading="projectLoading"
-          cell-height="2.2rem"
-          highlight-currow
-          :defaultRowIndex="0"
-          :index-obj="{isIndex: true, width: '5rem'}"
-          :data-list="projectList"
+        <BeautifulTableEl
           :columns="projectColumns"
-          @rowClick="rowClick"
-        /> -->
-        <!-- <el-pagination
+          :dataList="projectList"
+          :operObj="{isOperation: false}"
+          highlightCurrent
+          stripe
+          isExpand
+          :loading="projectLoading"
+        >
+          <div
+            class="project-expand"
+            slot-scope="{row}"
+            slot="expand"
+          >
+            <div
+              v-for="(item,index) in row.deviceList"
+              :key="index"
+              @click="e=>{getVideo(e,item)}"
+            >
+              <el-form
+                label-position="left"
+                inline
+                class="demo-table-expand"
+              >
+                <el-form-item label="设备名称">
+                  <span>{{ item.title }}</span>
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+        </BeautifulTableEl>
+        <el-pagination
           @current-change="handlePageChange"
           :current-page="dataForm.pageIndex"
           :page-size="dataForm.pageSize"
           layout="prev, pager, next"
           :total="projectTotal"
         >
-        </el-pagination> -->
+        </el-pagination>
       </BeautifulCard>
       <ul
         class="video-list"
@@ -233,6 +217,7 @@
 
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
+import BeautifulTableEl from '_com/common/BeautifulTableEl'
 import BeVideo from '_com/common/BeVideo'
 import BeautifulCard from '_com/common/BeautifulCard'
 // import BeautifulTableList from '_com/common/BeautifulTableList'
@@ -241,6 +226,7 @@ export default {
   name: 'VideoIndex',
   components: {
     BeautifulWrapper,
+    BeautifulTableEl,
     BeautifulCard,
     BeVideo
     // BeautifulTableList
@@ -297,9 +283,9 @@ export default {
       dataForm: {
         areaId: '',
         groupId: '扬尘视频',
-        projectName: ''
-        // pageIndex: 1,
-        // pageSize: 10
+        projectName: '',
+        pageIndex: 1,
+        pageSize: 10
       },
       // 宫格视频列表
       videoList: [
@@ -460,7 +446,6 @@ export default {
     getProjectData () {
       this.projectLoading = true
       // let val = this.$api.toQueryString(params)
-      console.log(this.dataForm)
       this.$http({
         url: this.api.projectApi,
         method: 'post',
@@ -469,20 +454,22 @@ export default {
         this.projectLoading = false
         const { data, code, msg } = res.data
         if (code === 200) {
-          this.projectList = data || []
-          if (data && data.length > 0) {
-            this.currentProject = ''
-          }
-          // this.projectTotal = total
+          let list = data || []
+          list.map(item => {
+            item.id = item.projectId
+          })
+          this.projectList = list
+          // 暂时用数据长度，后面需要接口返回总数
+          this.projectTotal = list.length
         } else {
-          this.currentProject = ''
           this.projectTotal = 0
+          this.projectList = []
           this.$message.error(msg || '获取数据错误')
         }
       }, (err) => {
-        //   this.projectLoading = false
+        this.projectLoading = false
+        this.projectList = []
         this.$message.error(err.data.msg || err.data.error)
-        //   this.projectList = []
       })
     },
     // 点击左侧列表的设备
@@ -561,14 +548,6 @@ export default {
       }
       this.vloading = false
       // })
-    },
-    tableRowClassName ({ row, rowIndex }) {
-      if (rowIndex % 2 === 0) {
-        return 'odd-row'
-      } else {
-        return 'even-row'
-      }
-
     }
   }
 }
@@ -849,7 +828,7 @@ export default {
     width: 21%;
     height: 100%;
     flex-shrink: 0;
-    .be-table-list {
+    .beautiful-table-el {
       height: calc(100% - 160px);
     }
     .el-form {
@@ -956,25 +935,5 @@ export default {
 }
 /deep/.video-more .project-card .el-form {
   margin: 0;
-}
-/deep/.el-table td.el-table__cell,
-/deep/.el-table th.el-table__cell.is-leaf,
-div.el-table td,
-div.el-table th.is-leaf,
-/deep/.el-table th.el-table__cell {
-  background: #0a0b7b !important;
-}
-/deep/.project-card .el-table .el-table__row.odd-row {
-  background: #0b1771 !important;
-  border: none;
-}
-/deep/.el-table .el-table__cell {
-  text-align: center;
-}
-/deep/.project-card .el-table .el-table__row.even-row {
-  background: #02004d !important;
-}
-/deep/.el-table__expand-icon > .el-icon {
-  color: #fff;
 }
 </style>
