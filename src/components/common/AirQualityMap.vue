@@ -165,15 +165,16 @@ export default {
             textAlign: 'center',
             fontFamily: '微软雅黑'
           })
-          label.addEventListener('click', function () {
+          label.addEventListener('click', function (e) {
             if (that.isMarkHandle) {
               that.$emit('markHandle', item)
             }
-
+            if (!e.overlay) {
+              console.log(e)
+            }
           })
           label.addEventListener('mouseover', function () {
             if (that.isMarkHandle) {
-              console.log('鼠标经过点位', item, opts)
               const { name, type, value } = item
               let labelvValues = ' '
               if (type && value) {
@@ -186,7 +187,7 @@ export default {
                 offset: new BMap.Size(66, -40) // 设置文本偏移量
               }
 
-              var labelt = new BMap.Label(labelvValues, opts)
+              let labelt = new BMap.Label(labelvValues, opts)
               labelt.setStyle({
                 color: '#fff',
                 borderRadius: '5px',
@@ -200,10 +201,12 @@ export default {
               })
               map.addOverlay(labelt)
             }
-
           })
-          label.addEventListener('mouseleave', function () {
+          label.addEventListener('mouseout', function () {
             console.log('离开', item)
+            // const { name, type, value } = item
+            map.clearOverlays()
+            that.flagHandle(BMap, map)
           })
           map.addOverlay(label)
         }

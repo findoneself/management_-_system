@@ -93,31 +93,31 @@
           >
             <el-form-item class="el_form_county">
               <el-select
-                v-model="dataForm.areaIds"
+                v-model="dataForm.areaId"
                 clearable
                 placeholder="请选择"
                 @change="getProjectData"
               >
                 <el-option
                   v-for="item in dictOptions.areaList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
+                  :key="item.areaId"
+                  :label="item.areaName"
+                  :value="item.areaId"
                 ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="el_form_county">
               <el-select
-                v-model="dataForm.name"
+                v-model="dataForm.groupId"
                 clearable
                 placeholder="请选择"
                 @change="getProjectData"
               >
                 <el-option
-                  v-for="item in tabsList"
-                  :key="item.id"
-                  :label="item.title"
-                  :value="item.title"
+                  v-for="item in dictOptions.nameList"
+                  :key="item.groupId"
+                  :label="item.groupName"
+                  :value="item.groupId"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -142,56 +142,45 @@
             </el-form-item>
           </el-form>
         </div>
-        <!-- <el-form
-          :inline="true"
-          size="medium"
-          class="form"
+        <!-- :tree-props="{children: 'deviceList', hasChildren: 'hasChildren'}"  row-key="projectId"-->
+        <el-table
+          :data="projectList"
+          stripe
+          style="width: 100%"
+          height="calc(100% - 120px)"
+          :row-class-name="tableRowClassName"
         >
-          <el-form-item class="form-item">
-            <el-select
-              v-model="dataForm.areaIds"
-              clearable
-              placeholder="请选择"
-              @change="getProjectData"
-            >
-              <el-option
-                v-for="item in dictOptions.areaList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item class="form-item">
-            <el-select
-              v-model="dataForm.name"
-              clearable
-              placeholder="请选择"
-              @change="getProjectData"
-            >
-              <el-option
-                v-for="item in dictOptions.nameList"
-                :key="item"
-                :label="item"
-                :value="item"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-input
-              placeholder="搜索项目名称"
-              v-model="dataForm.projectName"
-            >
-              <i
-                slot="suffix"
-                @click="getProjectData"
-                style="cursor:pointer"
-                class="el-input__icon el-icon-search"
-              ></i>
-            </el-input>
-          </el-form-item>
-        </el-form> -->
-        <BeautifulTableList
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <div
+                v-for="(item,index) in props.row.deviceList"
+                :key="index"
+                @click="e=>{getVideo(e,item)}"
+              >
+                <el-form
+                  label-position="left"
+                  inline
+                  class="demo-table-expand"
+                >
+                  <el-form-item label="设备名称">
+                    <span>{{ item.title }}</span>
+                  </el-form-item>
+                </el-form>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            type="index"
+            width="50px"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="projectName"
+            label="项目名称"
+          >
+          </el-table-column>
+        </el-table>
+        <!-- <BeautifulTableList
           :loading="projectLoading"
           cell-height="2.2rem"
           highlight-currow
@@ -200,15 +189,15 @@
           :data-list="projectList"
           :columns="projectColumns"
           @rowClick="rowClick"
-        />
-        <el-pagination
+        /> -->
+        <!-- <el-pagination
           @current-change="handlePageChange"
           :current-page="dataForm.pageIndex"
           :page-size="dataForm.pageSize"
           layout="prev, pager, next"
           :total="projectTotal"
         >
-        </el-pagination>
+        </el-pagination> -->
       </BeautifulCard>
       <ul
         class="video-list"
@@ -219,22 +208,22 @@
       >
         <li
           class="video-item"
-          v-for="vi in videoList"
+          v-for="(vi, idx) in videoList"
           :key="vi.id"
         >
-          <!-- <BeVideo
-            :src="vi.videoSrc"
+          <video
+            style="width:100%;height:100%;object-fit: fill;"
             :ref="'videoItem' + vi.id"
+            :id="'videoItem' + idx"
             :options="{preload: 'none'}"
-          /> -->
-          <div>
+          />
+          <!-- <div>
             {{vi.id}}
-          </div>
+          </div>      @mouseenter="modelMouseenter(vi, $event)"
+            @mouseleave="modelMouseleave(vi, $event)"-->
           <div
             class="video-model"
             @click="modelClick(vi)"
-            @mouseenter="modelMouseenter(vi, $event)"
-            @mouseleave="modelMouseleave(vi, $event)"
           ></div>
         </li>
       </ul>
@@ -246,15 +235,15 @@
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import BeVideo from '_com/common/BeVideo'
 import BeautifulCard from '_com/common/BeautifulCard'
-import BeautifulTableList from '_com/common/BeautifulTableList'
+// import BeautifulTableList from '_com/common/BeautifulTableList'
 
 export default {
   name: 'VideoIndex',
   components: {
     BeautifulWrapper,
     BeautifulCard,
-    BeVideo,
-    BeautifulTableList
+    BeVideo
+    // BeautifulTableList
   },
   data () {
     return {
@@ -306,36 +295,46 @@ export default {
       ],
       // 宫格视频表单
       dataForm: {
-        areaIds: '',
-        name: '扬尘视频',
-        projectName: '',
-        pageIndex: 1,
-        pageSize: 10
+        areaId: '',
+        groupId: '扬尘视频',
+        projectName: ''
+        // pageIndex: 1,
+        // pageSize: 10
       },
       // 宫格视频列表
       videoList: [
-        { id: '1', videoName: '项目1516', videoSrc: '', poster: '' },
-        { id: '2', videoName: '项目1516', videoSrc: '', poster: '' },
-        { id: '3', videoName: '项目1516', videoSrc: '', poster: '' },
-        { id: '4', videoName: '项目1516', videoSrc: '', poster: '' },
-        { id: '5', videoName: '项目1516', videoSrc: '', poster: '' },
-        { id: '6', videoName: '项目1516', videoSrc: '', poster: '' },
-        { id: '7', videoName: '项目1516', videoSrc: '', poster: '' },
-        { id: '8', videoName: '项目1516', videoSrc: '', poster: '' },
-        { id: '9', videoName: '项目1516', videoSrc: '', poster: '' }
+        // { id: '1', videoName: '项目1516', videoSrc: '', poster: '' },
+        // { id: '2', videoName: '项目1516', videoSrc: '', poster: '' },
+        // { id: '3', videoName: '项目1516', videoSrc: '', poster: '' },
+        // { id: '4', videoName: '项目1516', videoSrc: '', poster: '' },
+        // { id: '5', videoName: '项目1516', videoSrc: '', poster: '' },
+        // { id: '6', videoName: '项目1516', videoSrc: '', poster: '' },
+        // { id: '7', videoName: '项目1516', videoSrc: '', poster: '' },
+        // { id: '8', videoName: '项目1516', videoSrc: '', poster: '' },
+        // { id: '9', videoName: '项目1516', videoSrc: '', poster: '' }
       ],
       // 接口地址
       api: {
-        videoApi: '',
-        projectApi: '',
-        areaApi: 'integration/area/tree'
+        videoApi: '/integration/videoDevice/getRtsp',
+        projectApi: 'integration/videoDevice/getProjectsAndDevices',
+        areaApi: 'integration/videoDevice/getArealist',
+        groupApi: 'integration/videoGroup/getGroupList' // 分组
       },
       // 防抖timer
-      timer: null
+      timer: null,
+      activeCell: 0,
+      clickNum: 0, // 点击次数
+      lastBtn: '',
+      currentBtnName: ''
+
     }
+  },
+  created () {
+    this.menuBtnClick('el-icon-one', 0)
   },
   mounted () {
     this.getAreaData()
+    this.getGroupList()
   },
   methods: {
     tabsClick (item) {
@@ -343,6 +342,10 @@ export default {
     },
     // tabs右侧模式点击
     menuBtnClick (val, index) {
+
+      if (index === 1) {
+        this.clickNum--
+      }
       this.currentBtn = val
       let videoLists = [{ id: '1', videoName: '项目1516', videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4', poster: '' },
       { id: '2', videoName: '项目1516', videoSrc: 'http://www.w3school.com.cn/example/html5/mov_bbb.mp4', poster: '' },
@@ -360,7 +363,6 @@ export default {
       } else {
         this.videoList = videoLists.splice(0, 9)
       }
-
     },
     // 控制台圆盘按钮点击
     consoleClick (index) {
@@ -374,16 +376,7 @@ export default {
     rowClick ({ row }) {
       this.currentProject = row
       console.log(row.projectName)
-      let num = this.menuButtons.findIndex(i => i === this.currentBtn)
-      if (num === 0) {
-        console.log(this.videoList)
-        this.videoList = [{ id: row.projectName, videoName: '项目1516', videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4' }]
-      } else if (num === 1) {
-        this.videoList.push(row.url)
-      } else {
-        this.videoList.push(row.url)
-      }
-      this.getVideoList()
+
     },
     // 项目页码改变
     handlePageChange (val) {
@@ -425,109 +418,157 @@ export default {
       this.$http({
         url: this.api.areaApi
       }).then(res => {
-        const { data, code } = res.data
+        const { rows, code, msg } = res.data
         if (code === 200) {
-          this.dictOptions.areaList = data || []
-          if (data && data.length > 0) {
-            this.dataForm.areaIds = data[0].id
+          this.dictOptions.areaList = rows || []
+          if (rows && rows.length > 0) {
+            // this.dataForm.areaId = rows[0].areaId
             this.getProjectData()
           }
         } else {
+          this.$message.error(msg || '获取行政区域错误')
           this.dictOptions.areaList = []
-          this.dataForm.areaIds = ''
+          this.dataForm.areaId = ''
         }
       }, () => {
         this.dictOptions.areaList = []
-        this.dataForm.areaIds = ''
+        this.dataForm.areaId = ''
+      })
+    },
+    // 分组下拉选择
+    getGroupList () {
+      this.$http({
+        url: this.api.groupApi
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.dictOptions.nameList = data || []
+          if (data && data.length > 0) {
+            this.dataForm.groupId = data[0].groupId
+          }
+        } else {
+          this.$message.error(msg || '获取行政区域错误')
+          this.dictOptions.nameList = []
+          this.dataForm.groupId = ''
+        }
+      }, () => {
+        this.dictOptions.nameList = []
+        this.dataForm.groupId = ''
       })
     },
     // 获取项目数据
     getProjectData () {
-      // this.projectLoading = true
-      // const params = this._cloneDeep(this.dataForm)
-      // this.$http({
-      //   url: this.api.projectApi,
-      //   method: 'post',
-      //   data: params
-      // }).then(res => {
-      //   this.projectLoading = false
-      //   const { data, code, msg, total } = res.data
-      //   if (code === 200) {
-      //     this.projectList = data || []
-      //     if (data && data.length > 0) {
-      //       this.currentProject = data[0]
-      //       this.getVideoList()
-      //     }
-      //     this.projectTotal = total
-      //   } else {
-      this.projectList = [
-        { id: '1', projectName: '项目1516' },
-        { id: '2', projectName: '项目1516' },
-        { id: '3', projectName: '项目1516' },
-        { id: '4', projectName: '项目1516' },
-        { id: '5', projectName: '项目1516' },
-        { id: '6', projectName: '项目1516' },
-        { id: '7', projectName: '项目1516' },
-        { id: '8', projectName: '项目1516' },
-        { id: '9', projectName: '项目1516' },
-        { id: '10', projectName: '项目1516' },
-        { id: '11', projectName: '项目1516' },
-        { id: '12', projectName: '项目1516' },
-        { id: '13', projectName: '项目1516' },
-        { id: '14', projectName: '项目1516' },
-        { id: '1565', projectName: '项目1516' }
-      ]
-      this.currentProject = this.projectList[0]
-      this.getVideoList()
-      this.projectTotal = this.projectList.length
-      // this.$message.error(msg || '获取数据错误')
-      // }
-      // }, (err) => {
-      //   this.projectLoading = false
-      //   this.$message.error(err.data.msg || err.data.error)
-      //   this.projectList = []
-      // })
+      this.projectLoading = true
+      // let val = this.$api.toQueryString(params)
+      console.log(this.dataForm)
+      this.$http({
+        url: this.api.projectApi,
+        method: 'post',
+        data: this.dataForm
+      }).then(res => {
+        this.projectLoading = false
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.projectList = data || []
+          if (data && data.length > 0) {
+            this.currentProject = ''
+          }
+          // this.projectTotal = total
+        } else {
+          this.currentProject = ''
+          this.projectTotal = 0
+          this.$message.error(msg || '获取数据错误')
+        }
+      }, (err) => {
+        //   this.projectLoading = false
+        this.$message.error(err.data.msg || err.data.error)
+        //   this.projectList = []
+      })
+    },
+    // 点击左侧列表的设备
+    getVideo (e, item) {
+      console.log(item)
+      this.clickNum++
+      const { channel, deviceId } = item
+      this.$http({
+        url: this.api.videoApi,
+        method: 'post',
+        data: {
+          deviceId,
+          channel
+        }
+      }).then(res => {
+        const { code, msg } = res.data
+        if (code === 200) {
+          this.getVideoFlv()
+
+        } else {
+          this.$message.error(msg || '获取视频错误')
+        }
+      }, () => {
+        this.$message.error('获取视频错误')
+
+      })
     },
     // 获取视频列表
-    getVideoList () {
-      // this.videoLoading = true
-      // this.$http({
-      //   url: this.api.videoApi + '/' + (this.currentProject.id || '')
-      // }).then(res => {
-      //   this.videoLoading = false
-      //   const { data, code, msg } = res.data
-      //   if (code === 200) {
-      //     this.videoList = data || []
-      //     if (data && data.length > 0) {
-      //       this.currentSrc = data[0].videoSrc
-      //     }
-      //   } else {
-      let videoLists = [
-        { id: '1', videoName: '项目1516', videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4', poster: '' },
-        { id: '2', videoName: '项目1516', videoSrc: 'http://www.w3school.com.cn/example/html5/mov_bbb.mp4', poster: '' },
-        { id: '3', videoName: '项目1516', videoSrc: 'https://www.w3schools.com/html/movie.mp4', poster: '' },
-        { id: '4', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '5', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '6', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '7', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '8', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '9', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '10', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '11', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '12', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '13', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-        { id: '14', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' }
-        // { id: '1565', videoName: '项目1516', videoSrc: 'rtsp://myeye.xuzhouzhihui.com:9030/camera?device=3301061001680&channel=0&streamtype=0&token=gH11E9aKdeZf2z2cc4&type=std.sdp', poster: '' }
-      ]
-      this.videoList = videoLists.splice(0, 1)
-      this.currentSrc = this.videoList[0].videoSrc
-      // this.$message.error(msg || '获取视频数据失败')
-      // }
-      // }, (err) => {
-      //   this.videoLoading = false
-      //   this.$message.error(err.data.msg || err.data.error)
-      //   this.videoList = []
+    getVideoFlv () {
+      let clickNum = this.clickNum
+      let last = this.menuButtons.findIndex(i => i === this.lastBtn)
+      let num = this.menuButtons.findIndex(i => i === this.currentBtn)
+      let msg = 'http://myeye.xuzhouzhihui.com:9050/camera?device=3301061002309&channel=0&streamtype=0&token=5t612ztdezsc51aPK2&type=std.flv'
+      console.log(clickNum)
+      if (num === 0) { // 当前只有一个视频框
+        this.palyVideo(msg, 0)
+      } else if (num === 1) { // 当前为4个视频框
+        // if (last === num) {
+        let index = clickNum % 4
+        this.palyVideo(msg, index)
+        console.log(last, num)
+        // } else {
+        //   this.clickNum = 0
+        //   let index = this.clickNum % 4
+        //   // this.palyVideo(msg, index)
+        //   this.lastBtn = this.currentBtn
+        //   console.log(last, num)
+        // }
+
+
+      } else { // 当前为9个视频框
+        let num = clickNum % 9
+        this.palyVideo(msg, num)
+      }
+    },
+    deleteJcd () {
+      this.dataForm.projectName = ''
+    },
+    palyVideo (msg, index) {
+      // this.videoList.forEach((item, index) => {
+      if (this.$flvjs.isSupported()) {
+        let player = null
+        console.log(`videoItem${index}`)
+        let videoElement = document.getElementById(`videoItem${index}`)
+        player = this.$flvjs.createPlayer({
+          type: 'flv', // => 媒体类型 flv 或 mp4
+          isLive: true, // => 是否为直播流
+          hasAudio: true, // => 是否开启声音
+          url: msg // => 视频流地址
+        })
+        player.attachMediaElement(videoElement) // => 绑DOM
+        player.load()
+        // player.play()
+      } else {
+        this.$message.error('不支持flv格式视频')
+      }
+      this.vloading = false
       // })
+    },
+    tableRowClassName ({ row, rowIndex }) {
+      if (rowIndex % 2 === 0) {
+        return 'odd-row'
+      } else {
+        return 'even-row'
+      }
+
     }
   }
 }
@@ -546,7 +587,7 @@ export default {
     width: 46%;
   }
   .el_form_search {
-    width: 90%;
+    width: 100%;
     // margin-top: 10px;
     position: relative;
     /deep/.el-form-item__content {
@@ -554,7 +595,7 @@ export default {
     }
 
     /deep/.el-input .el-input__inner {
-      padding-left: 2rem;
+      padding-left: 1rem;
     }
 
     i {
@@ -909,5 +950,31 @@ export default {
       opacity: 1;
     }
   }
+}
+/deep/.video-more .project-card .el-select {
+  width: 100%;
+}
+/deep/.video-more .project-card .el-form {
+  margin: 0;
+}
+/deep/.el-table td.el-table__cell,
+/deep/.el-table th.el-table__cell.is-leaf,
+div.el-table td,
+div.el-table th.is-leaf,
+/deep/.el-table th.el-table__cell {
+  background: #0a0b7b !important;
+}
+/deep/.project-card .el-table .el-table__row.odd-row {
+  background: #0b1771 !important;
+  border: none;
+}
+/deep/.el-table .el-table__cell {
+  text-align: center;
+}
+/deep/.project-card .el-table .el-table__row.even-row {
+  background: #02004d !important;
+}
+/deep/.el-table__expand-icon > .el-icon {
+  color: #fff;
 }
 </style>

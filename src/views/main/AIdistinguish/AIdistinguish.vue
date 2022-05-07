@@ -63,6 +63,7 @@
       <div class="video">
         <video
           :src="videoSrc"
+          id='video'
           controls="controls"
         >
         </video>
@@ -311,7 +312,7 @@ export default {
         dayList: []
       },
       // 监控点位视频地址
-      videoSrc: '',
+      videoSrc: 'http://1011.hlsplay.aodianyun.com/demo/game.flv',
       // 所有加载效果
       loadings: {
         sssjLoading: false,
@@ -426,6 +427,7 @@ export default {
     this.getXmbjData()
     // echart的监听
     window.addEventListener('resize', this.watchEchart)
+    this.palyVideo()
   },
   destroyed () {
     // 销毁监听
@@ -700,19 +702,21 @@ export default {
     },
     // 获取监控点位视频地址
     getJkdwVideos () {
+      console.log(this.videoSrc)
+      // if (flvjs.isSupported) { }
       if (!this.dataForm.jkdw) return
       this.$http({ url: `integration/aicr/camera/video/${this.dataForm.jkdw}` }).then(res => {
         const { data, msg, code } = res.data
         if (code === 200) {
           this.dictOptions.videoSrc = data
-          console.log(data)
+
         } else {
           this.$message.error(msg || '获取视频失败！')
           this.dataList.videoSrc = ''
         }
       }, () => {
         this.$message.error('视频已失效！')
-        this.videoSrc = 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4'
+        // this.videoSrc = 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4'
       })
     },
     // 获取报警历史统计数据
@@ -969,6 +973,26 @@ export default {
           this[obj].curIndex = index
         }
       }
+    },
+    palyVideo () {
+      // this.videoList.forEach((item, index) => {
+      if (this.$flvjs.isSupported()) {
+        let player = null
+        let videoElement = document.getElementById('video')
+        player = this.$flvjs.createPlayer({
+          type: 'flv', // => 媒体类型 flv 或 mp4
+          isLive: true, // => 是否为直播流
+          hasAudio: true, // => 是否开启声音
+          url: 'http://myeye.xuzhouzhihui.com:9050/camera?device=3301061001680&channel=0&streamtype=0&token=odd525Mzeb1Nx2F5v8&type=std.flv' // => 视频流地址
+        })
+        player.attachMediaElement(videoElement) // => 绑DOM
+        player.load()
+        player.play()
+      } else {
+        this.$message.error('不支持flv格式视频')
+      }
+      this.vloading = false
+      // })
     }
   }
 }

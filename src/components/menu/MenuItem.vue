@@ -88,10 +88,10 @@ export default {
     },
     // 路由操作
     routeHandle (item, val = 'id') {
-      if (item.right) {
-        this.$message.info('暂无权限')
-        return
-      }
+      // if (item.right) {
+      //   this.$message.info('暂无权限')
+      //   return
+      // }
       const isRoute = this.menuRoutes.find(menu => menu && menu.meta[val] === item.id)
       if (isRoute && isRoute.name) {
         this.$router.push({ name: isRoute.name })

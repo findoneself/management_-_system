@@ -5,7 +5,7 @@ import store from './store'
 import Utils from './libs/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import format from './libs/format'
-import http from './network'
+import https from './network'
 import apiObj from './network/api'
 import echarts from 'echarts'
 import VueCookie from 'vue-cookie'
@@ -16,6 +16,8 @@ import './plugins/element'
 import './libs/pxtoRem'
 // 引入nprogress样式
 import 'nprogress/nprogress.css'
+// 引入flv.js
+import flvjs from 'flv.js'
 // 引入rtsp
 // const RTSP2web = require('rtsp2web')
 // const port = 8081
@@ -23,12 +25,13 @@ import 'nprogress/nprogress.css'
 // new RTSP2web({
 //   port
 // })
+Vue.prototype.$flvjs = flvjs
 Vue.prototype._cloneDeep = cloneDeep
 Vue.config.productionTip = false
 Vue.prototype.$utils = Utils
 Vue.prototype.$api = apiObj
 Vue.prototype.$echarts = echarts
-Vue.prototype.$http = http
+Vue.prototype.$http = https
 Vue.prototype.$format = format
 Vue.use(VueCookie)
 new Vue({
