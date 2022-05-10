@@ -347,7 +347,7 @@ export default {
     },
     getAlertData () {
       this.$http({
-        url: this.api.alertDataApi
+        url: this.api.alertDataApi //  alertDataApi: 'integration/aicr/algorithm',
       }).then(res => {
         this.dataLoading = false
         const { data, msg, code } = res.data

@@ -43,7 +43,7 @@
             >
               <el-input
                 placeholder="输入设备名称搜索"
-                v-model="dataForm.deviceName"
+                v-model="dataForm.name"
                 clearable
               >
               </el-input>
@@ -54,15 +54,15 @@
               key="bjlx"
             >
               <el-select
-                v-model="dataForm.warnType"
+                v-model="dataForm.alertType"
                 clearable
                 placeholder="请选择"
               >
                 <el-option
-                  v-for="item in dictOptions.warnList"
-                  :key="item.id"
+                  v-for="item in dictOptions.alertTypes"
+                  :key="item.task_key"
                   :label="item.name"
-                  :value="item.id"
+                  :value="item.task_key"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -99,7 +99,7 @@
             <el-form-item>
               <el-button
                 type="primary"
-                @click="getWarnData"
+                @click="getList"
               >查询</el-button>
               <el-button @click="refreshClick">重置</el-button>
             </el-form-item>
@@ -168,7 +168,7 @@ export default {
       // 字典数据
       dictOptions: {
         // 报警类型
-        warnList: [],
+        alertTypes: [],
         // 整改分类
         modifyList: []
       },
@@ -177,11 +177,11 @@ export default {
       // 表单数据
       dataForm: {
         // 点位/项目名称
-        projectName: '',
+        name: '',
         // 时间区间
         dateList: [],
         // 报警类型
-        warnType: '',
+        alertType: '',
         // 整改分类
         modifyType: ''
       },
@@ -190,7 +190,7 @@ export default {
       // 查询参数
       queryAll: {
         pageIndex: 1,
-        pageSize: 3
+        pageSize: 20
       },
       // 数据总数
       dataTotal: 0,
@@ -219,7 +219,7 @@ export default {
       // 右侧详情查询参数
       queryInfo: {
         pageIndex: 1,
-        pageSize: 3,
+        pageSize: 20,
         order: 'desc',
         sidx: 'datetime'
       },
@@ -237,19 +237,88 @@ export default {
       // 当前点击的统计数据
       currentInfo: {},
       // 详情总数
-      infoTotal: 0
+      infoTotal: 0,
+      api: {
+        alertDataApi: 'integration/aicr/algorithm', // 预警下拉
+        AiListApi: 'integration/aicr/camera/alert/list' // ai列表
+      }
     }
   },
   methods: {
     // 初始数据
     init () {
       // 初始化字典
-      if (this.dicts.warnType && this.dicts.warnType.length > 0) {
-        this.dictOptions.warnList = this.dicts.warnType
+      const now = this.$format.getTwodaysDate()
+      this.dataForm.dateList = [now[0], now[1]]
+      // if (this.dicts.warnType && this.dicts.warnType.length > 0) {
+      //   this.dictOptions.warnList = this.dicts.warnType
+      // }
+      // if (this.dicts.modifyType && this.dicts.modifyType.length > 0) {
+      //   this.dictOptions.modifyList = this.dicts.modifyType
+      // }
+    },
+    getAlertData () {
+      this.$http({
+        url: this.api.alertDataApi
+      }).then(res => {
+        this.dataLoading = false
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          this.dictOptions.alertTypes = data.algoConfig
+          this.getList()
+        } else {
+          this.$message.error(msg || '获取报警类型错误')
+        }
+      }, () => {
+        this.$message.error('获取报警类型错误')
+
+      })
+    },
+    getList () {
+      //   url = 'integration/aicr/camera/alert/list'
+      //   errmsg = '获取分类排名数据失败！'
+      //   params.name = this.dataForm.name || ''
+      //   params.alertType = this.dataForm.alertType || ''
+      //   params.startDate = this.dataForm.startDate
+      //   params.orderByCt = 'asc'
+      //   params.endDate = this.dataForm.endDate
+      //   params.page = this.queryInfo.page
+      //   params.size = this.queryInfo.size
+      // }
+      const { dateList, alertType, name } = this.dataForm
+      let params = {
+        startDate: dateList[0],
+        endDate: dateList[1],
+        orderByCt: 'asc',
+        alertType: alertType || '',
+        name: name || '',
+        page: this.queryAll.pageIndex,
+        size: this.queryAll.pageSize
       }
-      if (this.dicts.modifyType && this.dicts.modifyType.length > 0) {
-        this.dictOptions.modifyList = this.dicts.modifyType
-      }
+      console.log(params)
+      let data = this.$api.toQueryString(params)
+      this.$http({
+        url: this.api.AiListApi + data
+      }).then(res => {
+        this.dataLoading = false
+        const { data, msg, code } = res.data
+        if (code === 200) {
+          this.dataList = data.rows
+          this.dataTotal = data.total
+
+
+        } else {
+          this.$message.error(msg || '获取数据错误')
+          this.total = 0
+          this.dataList = []
+        }
+      }, () => {
+        this.dataLoading = false
+        this.$message.error('获取数据错误')
+        // 保存当前处理完成的数据
+        this.total = 0
+        this.dataList = []
+      })
     },
     open (item) {
       this.currentItme = item
@@ -262,13 +331,14 @@ export default {
         ]
       } else {
         this.columns = [
-          { name: '序号', prop: 'id', key: 1 },
-          { name: '设备名称', prop: 'deviceName', key: 2 },
-          { name: '预警数量', prop: 'num', key: 3 }
+          // { name: '序号', prop: 'id', key: 1 },
+          { name: '设备名称', prop: 'name', key: 2 },
+          { name: '预警数量', prop: 'count', key: 3 }
         ]
       }
       this.init()
-      this.getWarnData()
+      // this.getWarnData()
+      this.getAlertData()
     },
     // 页码改变
     handleCurrentChange (val) {
@@ -386,11 +456,13 @@ export default {
     // 重置表单
     refreshClick () {
       this.dataForm = {
-        projectName: '',
+        name: '',
         dateList: [],
-        warnType: '',
+        alertType: '',
         modifyType: ''
       }
+      this.init()
+      this.getList()
     }
   }
 }

@@ -22,11 +22,48 @@
       class="video-content video-one"
       v-if="currentPage === 1"
     >
+      <!--        id='videoItem10'
+        style="width:79%"  -->
       <BeVideo
         :src="currentSrc"
         :options="{autoplay: true}"
         ref="oneVideo"
       />
+      <!-- <object
+        id="videoItem10"
+        class="vlc"
+        type="application/x-vlc-plugin"
+        events='True'
+        width='100%'
+      >
+        <param
+          name='url'
+          value='rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov'
+        />
+
+        <param
+          name='volume'
+          value='50'
+        />
+
+        <param
+          name='autoplay'
+          value='true'
+        />
+
+        <param
+          name='loop'
+          value='false'
+        />
+        <param
+          name='fullscreen'
+          value='true'
+        />
+        <param
+          name='stretchToFit'
+          value='1'
+        />
+      </object> -->
       <BeautifulCard
         title="点位操作"
         :isTriangle='false'
@@ -147,7 +184,6 @@
           :columns="projectColumns"
           :dataList="projectList"
           :operObj="{isOperation: false}"
-          highlightCurrent
           stripe
           isExpand
           :loading="projectLoading"
@@ -160,6 +196,7 @@
             <div
               v-for="(item,index) in row.deviceList"
               :key="index"
+              :class="activeCell === item.deviceId ? 'activeCell-light':''"
               @click="e=>{getVideo(e,item)}"
             >
               <el-form
@@ -174,18 +211,17 @@
             </div>
           </div>
         </BeautifulTableEl>
-        <el-pagination
+        <!-- <el-pagination
           @current-change="handlePageChange"
           :current-page="dataForm.pageIndex"
           :page-size="dataForm.pageSize"
           layout="prev, pager, next"
           :total="projectTotal"
         >
-        </el-pagination>
+        </el-pagination> -->
       </BeautifulCard>
       <ul
         class="video-list"
-        v-loading="videoLoading"
         element-loading-text="数据加载中..."
         element-loading-spinner="el-icon-loading"
         :class="currentBtn === 'el-icon-one' ?'video-list--one':currentBtn === 'el-icon-menu'? 'video-list--four' : 'video-list--nine'"
@@ -194,21 +230,32 @@
           class="video-item"
           v-for="(vi, idx) in videoList"
           :key="vi.id"
+          v-loading="vi.videoLoading"
+          @click="modelMouseenter(idx, $event)"
         >
           <video
+            muted
             style="width:100%;height:100%;object-fit: fill;"
             :ref="'videoItem' + vi.id"
             :id="'videoItem' + idx"
             :options="{preload: 'none'}"
+            :loading='vi.videoLoading'
           />
-          <!-- <div>
-            {{vi.id}}
-          </div>      @mouseenter="modelMouseenter(vi, $event)"
-            @mouseleave="modelMouseleave(vi, $event)"-->
-          <div
+          <!-- <BeVideo
+            :src="vi.videoSrc"
+            :ref="'videoItem' + vi.id"
+            :options="{preload: 'none'}"
+          /> -->
+          <!-- <div
             class="video-model"
             @click="modelClick(vi)"
-          ></div>
+            @mouseenter="modelMouseenter(vi, $event)"
+            @mouseleave="modelMouseleave(vi, $event)"
+          ></div> -->
+          <!-- <div
+            class="video-model"
+            @click="modelClick(vi)"
+          ></div> -->
         </li>
       </ul>
     </div>
@@ -252,12 +299,12 @@ export default {
       // 右侧按钮列表
       menuButtons: ['el-icon-one', 'el-icon-menu', 'el-icon-s-grid'],
       // 当前视频的src地址
-      currentSrc: '',
+      currentSrc: 'https://logos-channel.scaleengine.net/logos-channel/live/biblescreen-ad-free/playlist.m3u8',
       // 控制台按钮列表
       consoleBtnlist: [
-        ['enlarge', 'narrow'],
-        ['1', '2'],
-        ['zfocus', 'focus']
+        ['ZoomWide', 'ZoomTile'],
+        ['FocusNear', 'FocusFar'],
+        ['IrisSmall', 'IrisLarge']
       ],
       // 视频控制表单
       consoleForm: {
@@ -268,7 +315,7 @@ export default {
       // 项目加载
       projectLoading: false,
       // 视频加载
-      videoLoading: false,
+      videoLoading: true,
       // 当前点击的项目
       currentProject: {},
       // 视频数据总数
@@ -288,30 +335,22 @@ export default {
         pageSize: 10
       },
       // 宫格视频列表
-      videoList: [
-        // { id: '1', videoName: '项目1516', videoSrc: '', poster: '' },
-        // { id: '2', videoName: '项目1516', videoSrc: '', poster: '' },
-        // { id: '3', videoName: '项目1516', videoSrc: '', poster: '' },
-        // { id: '4', videoName: '项目1516', videoSrc: '', poster: '' },
-        // { id: '5', videoName: '项目1516', videoSrc: '', poster: '' },
-        // { id: '6', videoName: '项目1516', videoSrc: '', poster: '' },
-        // { id: '7', videoName: '项目1516', videoSrc: '', poster: '' },
-        // { id: '8', videoName: '项目1516', videoSrc: '', poster: '' },
-        // { id: '9', videoName: '项目1516', videoSrc: '', poster: '' }
-      ],
+      videoList: [],
       // 接口地址
       api: {
         videoApi: '/integration/videoDevice/getRtsp',
         projectApi: 'integration/videoDevice/getProjectsAndDevices',
         areaApi: 'integration/videoDevice/getArealist',
-        groupApi: 'integration/videoGroup/getGroupList' // 分组
+        groupApi: 'integration/videoGroup/getGroupList', // 分组
+        controlApi: '/integration/videoDevice/ptzControl'
       },
       // 防抖timer
       timer: null,
       activeCell: 0,
       clickNum: 0, // 点击次数
-      lastBtn: '',
-      currentBtnName: ''
+      lastBtn: 'el-icon-one',
+      deviceId: '',
+      channel: ''
 
     }
   },
@@ -321,6 +360,7 @@ export default {
   mounted () {
     this.getAreaData()
     this.getGroupList()
+    // this.loadingVideo()
   },
   methods: {
     tabsClick (item) {
@@ -328,20 +368,30 @@ export default {
     },
     // tabs右侧模式点击
     menuBtnClick (val, index) {
-
-      if (index === 1) {
-        this.clickNum--
+      this.currentPage = 0
+      let last = this.lastBtn && this.menuButtons.findIndex(i => i === this.lastBtn)
+      // console.log('lastindex', last, 'clickNum', this.clickNum)
+      if (this.clickNum !== 0) {
+        if (last === 0) {
+          this.clickNum = 1
+        } else if (last === 1) {
+          this.clickNum = this.clickNum % 4
+        } else {
+          this.clickNum = this.clickNum % 9
+        }
       }
+      // console.log('clickNum', this.clickNum)
       this.currentBtn = val
-      let videoLists = [{ id: '1', videoName: '项目1516', videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4', poster: '' },
-      { id: '2', videoName: '项目1516', videoSrc: 'http://www.w3school.com.cn/example/html5/mov_bbb.mp4', poster: '' },
-      { id: '3', videoName: '项目1516', videoSrc: 'https://www.w3schools.com/html/movie.mp4', poster: '' },
-      { id: '4', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-      { id: '5', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-      { id: '6', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-      { id: '7', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-      { id: '8', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-      { id: '9', videoName: '项目1516', videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' }]
+      this.lastBtn = this.currentBtn
+      let videoLists = [{ id: '1', videoName: '项目1516', videoLoading: false, videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4', poster: '' },
+      { id: '2', videoName: '项目1516', videoLoading: false, videoSrc: 'http://www.w3school.com.cn/example/html5/mov_bbb.mp4', poster: '' },
+      { id: '3', videoName: '项目1516', videoLoading: false, videoSrc: 'https://www.w3schools.com/html/movie.mp4', poster: '' },
+      { id: '4', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+      { id: '5', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+      { id: '6', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+      { id: '7', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+      { id: '8', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
+      { id: '9', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' }]
       if (index === 0) {
         this.videoList = videoLists.splice(0, 1)
       } else if (index === 1) {
@@ -352,10 +402,49 @@ export default {
     },
     // 控制台圆盘按钮点击
     consoleClick (index) {
-
+      // /控制方向:上:DirectionUp 下:DirectionDown 左:DirectionLeft 右:DirectionRight 左上:DirectionLeftUp 左下:DirectionLeftDown
+      // 右上:DirectionRightUp 右下:DirectionRightDown
+      let btnList = ['DirectionUp', 'DirectionRightUp', 'DirectionRight', 'DirectionRightDown', 'DirectionDown', 'DirectionLeftDown', 'DirectionLeft', 'DirectionLeftUp']
+      console.log(index)
+      let ptzCmd = btnList[index - 1]
+      this.$http({
+        url: this.api.controlApi,
+        method: 'post',
+        data: {
+          deviceId: '3301061001680',
+          channel: '0',
+          ptzCmd
+        }
+      }).then(res => {
+        const { code, msg } = res.data
+        if (code === 200) {
+          this.$message.success('操作成功')
+        } else {
+          this.$message.error(msg || '操作失败')
+        }
+      }, () => {
+      })
     },
     // 控制台按钮点击
     consoleBtnClick (val) {
+      this.$http({
+        url: this.api.controlApi,
+        method: 'post',
+        data: {
+          deviceId: '3301061001680',
+          channel: '0',
+          ptzCmd: val
+        }
+      }).then(res => {
+        const { code, msg } = res.data
+        if (code === 200) {
+          this.$message.success('操作成功')
+        } else {
+          this.$message.error(msg || '操作失败')
+        }
+      }, () => {
+
+      })
 
     },
     // 项目点击
@@ -374,19 +463,27 @@ export default {
       this.currentBtn = 'el-icon-one'
       this.currentSrc = vid.videoSrc
     },
-    // 鼠标移入
-    modelMouseenter (vid, e) {
+    // 鼠标按下
+    modelMouseenter (idx, e) {
+      const { deviceId, channel } = this.videoList[idx]
+      console.log(deviceId, channel)
+      this.deviceId = deviceId
+      this.channel = channel
+      this.currentSrc = 'http://1011.hlsplay.aodianyun.com/demo/game.flv'
+      if (deviceId && channel) {
+        this.currentPage = 1
+      }
       // 显示播放图标
-      e.target.classList.add('video-model-icon')
+      // e.target.classList.add('video-model-icon')
       // 设置防抖，鼠标移入播放视频
       if (this.timer) {
         clearTimeout(this.timer)
       }
-      if (this.currentBtn !== 'el-icon-one') {
-        this.timer = setTimeout(() => {
-          this.$refs['videoItem' + vid.id][0].videoPlayer().play()
-        }, 1200)
-      }
+      // if (this.currentBtn !== 'el-icon-one') {
+      //   this.timer = setTimeout(() => {
+      //     this.$refs['videoItem' + vid.id][0].videoPlayer().play()
+      //   }, 1200)
+      // }
     },
     // 鼠标移出
     modelMouseleave (vid, e) {
@@ -472,23 +569,22 @@ export default {
         this.$message.error(err.data.msg || err.data.error)
       })
     },
-    // 点击左侧列表的设备
+    // 点击左侧列表设备
     getVideo (e, item) {
-      console.log(item)
+      this.activeCell = item.deviceId
       this.clickNum++
       const { channel, deviceId } = item
       this.$http({
         url: this.api.videoApi,
         method: 'post',
-        data: {
+        data: { // device=3301061001680&channel=0
           deviceId,
           channel
         }
       }).then(res => {
         const { code, msg } = res.data
         if (code === 200) {
-          this.getVideoFlv()
-
+          this.getVideoFlv(deviceId, channel, msg)
         } else {
           this.$message.error(msg || '获取视频错误')
         }
@@ -498,56 +594,80 @@ export default {
       })
     },
     // 获取视频列表
-    getVideoFlv () {
-      let clickNum = this.clickNum
-      let last = this.menuButtons.findIndex(i => i === this.lastBtn)
+    getVideoFlv (deviceId, channel, msg) {
+      // console.log(this.lastBtn, this.currentBtn)
+      let clickNum = this.clickNum - 1
+      // let last = this.menuButtons.findIndex(i => i === this.lastBtn)
       let num = this.menuButtons.findIndex(i => i === this.currentBtn)
-      let msg = 'http://myeye.xuzhouzhihui.com:9050/camera?device=3301061002309&channel=0&streamtype=0&token=5t612ztdezsc51aPK2&type=std.flv'
-      console.log(clickNum)
+      // let msg = 'http://1011.hlsplay.aodianyun.com/demo/game.flv'
+      let index = ''
       if (num === 0) { // 当前只有一个视频框
-        this.palyVideo(msg, 0)
+        index = 0
+        // let url = 'http://153.36.201.214:8088//Service/testPlayerVideo?URI=http://myeye.xuzhouzhihui.com:9050/camera?device=3301061000760&channel=0&streamtype=0&token=83b7271ANz3J330247&type=std.flv' // `http://153.36.201.214:8088/Service/testPlayerVideo?URI=${msg}`
+        // window.open(url)
       } else if (num === 1) { // 当前为4个视频框
-        // if (last === num) {
-        let index = clickNum % 4
-        this.palyVideo(msg, index)
-        console.log(last, num)
-        // } else {
-        //   this.clickNum = 0
-        //   let index = this.clickNum % 4
-        //   // this.palyVideo(msg, index)
-        //   this.lastBtn = this.currentBtn
-        //   console.log(last, num)
-        // }
-
-
+        index = clickNum % 4
       } else { // 当前为9个视频框
-        let num = clickNum % 9
-        this.palyVideo(msg, num)
+        index = clickNum % 9
       }
+      this.$set(this.videoList, index, {
+        videoSrc: msg,
+        deviceId,
+        channel,
+        videoLoading: true
+      })
+      this.palyVideo(msg, index)
     },
-    deleteJcd () {
-      this.dataForm.projectName = ''
-    },
-    palyVideo (msg, index) {
+
+    palyVideo (msg, index, flag) {
+      setTimeout(() => {
+        this.$set(this.videoList[index], 'videoLoading', false)
+        this.$message.error('此视频因格式问题或者太大暂无法播放，请稍后再试')
+      }, 5000)
       // this.videoList.forEach((item, index) => {
       if (this.$flvjs.isSupported()) {
         let player = null
-        console.log(`videoItem${index}`)
         let videoElement = document.getElementById(`videoItem${index}`)
         player = this.$flvjs.createPlayer({
           type: 'flv', // => 媒体类型 flv 或 mp4
           isLive: true, // => 是否为直播流
           hasAudio: true, // => 是否开启声音
           url: msg // => 视频流地址
+        }, {
+          enableStashBuffer: false,
+          fixAudioTimestampGap: false,
+          isLive: true
         })
         player.attachMediaElement(videoElement) // => 绑DOM
         player.load()
-        // player.play()
+        if (flag) {
+          player.play()
+        }
+        player.on(this.$flvjs.Events.ERROR, (errType, errDetail) => {
+          console.log('errorType:', errType)
+          console.log('errDetail', errDetail)
+          this.destoyrVideo(player)
+        })
+
       } else {
         this.$message.error('不支持flv格式视频')
       }
       this.vloading = false
       // })
+    },
+    deleteJcd () {
+      this.dataForm.projectName = ''
+    },
+    destoyrVideo (play) {
+      play.pause()
+      play.unload()
+      play.destroy()
+      play = null
+    },
+    loadingVideo () {
+      var vlc = document.getElementById('videoItem10')
+      vlc.video.aspectRatio = '16:9'
+      vlc.playlist.playItem('rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov')
     }
   }
 }
@@ -794,22 +914,25 @@ export default {
       margin-right: 15px;
     }
   }
-  .console-enlarge {
+  //   ['ZoomWide', 'ZoomTile'],
+  // ['FocusNear', 'FocusFar'],
+  // ['IrisSmall', 'IrisLarge']
+  .console-ZoomWide {
     background-image: url("~_ats/img/video-icon-enlarge.png");
   }
-  .console-narrow {
+  .console-ZoomTile {
     background-image: url("~_ats/img/video-icon-narrow.png");
   }
-  .console-1 {
+  .console-FocusNear {
     background-image: url("~_ats/img/video-icon-1.png");
   }
-  .console-2 {
+  .console-FocusFar {
     background-image: url("~_ats/img/video-icon-2.png");
   }
-  .console-zfocus {
+  .console-IrisSmall {
     background-image: url("~_ats/img/video-icon-zfocus.png");
   }
-  .console-focus {
+  .console-IrisLarge {
     background-image: url("~_ats/img/video-icon-focus.png");
   }
   .el-form {
@@ -935,5 +1058,11 @@ export default {
 }
 /deep/.video-more .project-card .el-form {
   margin: 0;
+}
+.project-expand .activeCell-light {
+  background: #132184;
+}
+.video-more .project-card .beautiful-table-el {
+  overflow: auto;
 }
 </style>

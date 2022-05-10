@@ -4,12 +4,14 @@
     ref="videoPlayer"
     :playsinline="true"
     :options="playerOptions"
+    :id='id'
   >
   </video-player>
 </template>
 
 <script>
 import VideoPlayer from 'vue-video-player/src/player'
+
 export default {
   name: 'BeVideo',
   components: {
@@ -30,6 +32,10 @@ export default {
     },
     // 视频封面地址
     poster: {
+      type: String,
+      default: ''
+    },
+    id: {
       type: String,
       default: ''
     }
@@ -61,8 +67,9 @@ export default {
       }
       if (this.src) {
         option.sources = [{
-          type: 'video/mp4',
-          src: this.src
+          type: 'application/x-mpegURL',
+          src: this.src,
+          withCredentials: false
         }]
         return Object.assign(option, this.options)
       } else {

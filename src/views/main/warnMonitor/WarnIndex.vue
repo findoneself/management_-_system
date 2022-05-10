@@ -242,15 +242,29 @@ export default {
         xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
         seriesData: [20, 50, 10, 35, 35, 47, 20],
         color: '#9662FF'
-      }]
+      }],
+      api: {
+        AiApi: 'integration/aicr/camera/alert/list'
+      }
     }
   },
   created () {
-    this.getMapData()
+    // this.getMapData()
   },
   methods: {
     // 获取统计图数据
     getMapData () {
+      this.$http({
+        url: this.api.AiApi
+      }).then(res => {
+        const { code, msg } = res.data
+        if (code === 200) {
+          this.$message.success('操作成功')
+        } else {
+          this.$message.error(msg || '操作失败')
+        }
+      }, () => {
+      })
     },
     moreClick (item = {}) {
       this.$refs.moreDialog.open(item)

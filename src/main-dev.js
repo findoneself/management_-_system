@@ -16,15 +16,11 @@ import './plugins/element'
 import './libs/pxtoRem'
 // 引入nprogress样式
 import 'nprogress/nprogress.css'
+import 'videojs-contrib-hls.js/src/videojs.hlsjs'
+// require('videojs-contrib-hls/dist/videojs-contrib-hls')
 // 引入flv.js
 import flvjs from 'flv.js'
-// 引入rtsp
-// const RTSP2web = require('rtsp2web')
-// const port = 8081
-// console.log(RTSP2web)
-// new RTSP2web({
-//   port
-// })
+
 Vue.prototype.$flvjs = flvjs
 Vue.prototype._cloneDeep = cloneDeep
 Vue.config.productionTip = false

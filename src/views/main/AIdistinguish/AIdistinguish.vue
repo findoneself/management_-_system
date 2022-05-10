@@ -983,7 +983,7 @@ export default {
           type: 'flv', // => 媒体类型 flv 或 mp4
           isLive: true, // => 是否为直播流
           hasAudio: true, // => 是否开启声音
-          url: 'http://myeye.xuzhouzhihui.com:9050/camera?device=3301061001680&channel=0&streamtype=0&token=odd525Mzeb1Nx2F5v8&type=std.flv' // => 视频流地址
+          url: 'http://myeye.xuzhouzhihui.com:9050/camera?device=3301061002355&channel=2&streamtype=0&token=Tz950k6362rb8jbdd1&type=std.flv' // => 视频流地址
         })
         player.attachMediaElement(videoElement) // => 绑DOM
         player.load()

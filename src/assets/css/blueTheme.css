@@ -461,7 +461,16 @@ div.el-table th.el-table__cell,
 div.el-table--striped .el-table__body tr.even-table-style td.el-table__cell {
     background-color: #0b1771;
 }
-
+div.el-table--striped .el-table__body tr.el-table__row--striped td{
+    background-color: #0b1771;
+    border:none
+}
+.el-table--enable-row-transition .el-table__body td{
+    border:none
+}
+.el-table__expanded-cell[class*=cell]{
+    padding: 0;
+}
 div.el-table--striped .el-table__body tr.odd-table-style td.el-table__cell {
     background-color: transparent;
 }
