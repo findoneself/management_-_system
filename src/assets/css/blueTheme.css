@@ -444,8 +444,9 @@ div.el-table tr{
     background-color: transparent;
 }
 
-div.el-table td.el-table__cell,
-div.el-table th.el-table__cell.is-leaf {
+div.el-table .el-table__row td,
+div.el-table .has-gutter th.is-leaf,
+div.el-table td.el-table__expanded-cell {
     border: 0;
 }
 
@@ -458,25 +459,23 @@ div.el-table__expand-icon {
   color: var(--color-text);
 }
 div.el-table th.el-table__cell,
-div.el-table--striped .el-table__body tr.even-table-style td.el-table__cell {
+div.el-table--striped .el-table__body tr.even-table-style.el-table__row td,
+div.el-table--enable-row-hover .el-table__body tr.even-table-style:hover > td {
     background-color: #0b1771;
 }
-div.el-table--striped .el-table__body tr.el-table__row--striped td{
+/* div.el-table--striped .el-table__body tr.el-table__row--striped td{
     background-color: #0b1771;
     border:none
-}
-.el-table--enable-row-transition .el-table__body td{
-    border:none
-}
-.el-table__expanded-cell[class*=cell]{
+} */
+div.el-table td.el-table__expanded-cell{
     padding: 0;
 }
-div.el-table--striped .el-table__body tr.odd-table-style td.el-table__cell {
+div.el-table--striped .el-table__body tr.odd-table-style td.el-table__cell,
+div.el-table--enable-row-hover .el-table__body tr.odd-table-style:hover > td {
     background-color: transparent;
 }
 
 div.el-table .el-table__body tr.el-table__row.current-row td,
-div.el-table--enable-row-hover .el-table__body tr:hover>td,
 div.el-table--striped .el-table__body tr.el-table__row--striped.current-row td.el-table__cell {
     background-color: #132184;
 }
