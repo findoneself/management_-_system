@@ -16,7 +16,7 @@ import './plugins/element'
 import './libs/pxtoRem'
 // 引入nprogress样式
 import 'nprogress/nprogress.css'
-import 'videojs-contrib-hls.js/src/videojs.hlsjs'
+// import 'videojs-contrib-hls.js/src/videojs.hlsjs'
 // require('videojs-contrib-hls/dist/videojs-contrib-hls')
 // 引入flv.js
 import flvjs from 'flv.js'

@@ -61,6 +61,11 @@
         ></el-cascader>
       </div>
       <div class="video">
+        <!-- <BeVideo
+          :src="videoSrc"
+          :options="{autoplay: false}"
+          ref="aiVideo"
+        /> -->
         <video
           :src="videoSrc"
           id='video'
@@ -295,6 +300,8 @@ import BeautifulCard from '_com/common/BeautifulCard'
 import BeautifulTableList from '_com/common/BeautifulTableList'
 import BeImageFixed from '_com/common/BeImageFixed'
 import TableDialog from './components/TableDialog'
+// import BeVideo from '_com/common/BeVideo'
+
 export default {
   name: 'AIdistinguish',
   components: {
@@ -303,6 +310,7 @@ export default {
     BeautifulTableList,
     TableDialog,
     BeImageFixed
+    // BeVideo
   },
   data () {
     return {
@@ -312,7 +320,7 @@ export default {
         dayList: []
       },
       // 监控点位视频地址
-      videoSrc: 'http://1011.hlsplay.aodianyun.com/demo/game.flv',
+      videoSrc: 'http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8',
       // 所有加载效果
       loadings: {
         sssjLoading: false,
@@ -427,7 +435,7 @@ export default {
     this.getXmbjData()
     // echart的监听
     window.addEventListener('resize', this.watchEchart)
-    this.palyVideo()
+    // this.palyVideo()
   },
   destroyed () {
     // 销毁监听
@@ -1108,8 +1116,12 @@ export default {
   background: transparent;
   height: 20px;
 }
+.video-player.video-player.vjs-custom-skin {
+  width: 100%;
+  height: calc(100% - 45px);
+}
 .jkdw-card .video {
-  height: calc(100% - 47px);
+  height: 100%;
 }
 .jkdw-card .form-select::before {
   // 为了适应flex布局右边

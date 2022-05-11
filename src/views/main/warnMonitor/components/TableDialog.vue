@@ -16,6 +16,7 @@
           :data-list="dataList"
           :columns="columns"
           :operObj="operObj"
+          :index-obj="{isIndex: true}"
         >
           <el-form
             :inline="true"
@@ -27,7 +28,7 @@
             <el-form-item
               label="项目名称："
               key="xmmc"
-              v-if="currentItme.title === '整改项目超期' || currentItme.title === '车辆冲洗预警'"
+              v-if=" currentItme.title === '车辆冲洗预警'"
             >
               <el-input
                 placeholder="输入项目名称搜索"
@@ -67,20 +68,20 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              label="整改分类："
+              label="整改项目："
               v-show="currentItme.title === '整改项目超期'"
               key="zgfl"
             >
               <el-select
-                v-model="dataForm.modifyType"
+                v-model="dataForm.projectId"
                 clearable
                 placeholder="请选择"
               >
                 <el-option
-                  v-for="item in dictOptions.modifyList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
+                  v-for="item in dictOptions.projectList"
+                  :key="item.value"
+                  :label="item.lable"
+                  :value="item.value"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -109,7 +110,7 @@
             @current-change="handleCurrentChange"
             :current-page="queryAll.pageIndex"
             :page-size="queryAll.pageSize"
-            layout="prev, pager, next, total, jumper"
+            layout="prev, pager, next, total"
             :total="dataTotal"
           >
           </el-pagination>
@@ -125,7 +126,6 @@
         <BeautifulTableList
           :loading="infoLoading"
           :data-list="infoDataList"
-          :index-obj="{isIndex: true}"
           :columns="currentItme.columns"
           :oper-obj="currentItme.title === 'AI设备预警' ? infoOperObj : {}"
         ></BeautifulTableList>
@@ -133,13 +133,28 @@
           @current-change="handleInfoChange"
           :current-page="queryInfo.pageIndex"
           :page-size="queryInfo.pageSize"
-          layout="prev, pager, next, total, jumper"
+          layout="prev, pager, next, total"
           :total="infoTotal"
         >
         </el-pagination>
       </BeautifulWrapper>
     </div>
     <BeImageFixed ref="imageRef" />
+    <div
+      :loading='imgLoading'
+      v-if="dialogVisibleImg"
+      class="bigImgCenter"
+    >
+      <i
+        class="el-icon-close"
+        @click="dialogVisibleImg=false"
+      ></i>
+      <img
+        width="100%"
+        :src="imgSrc"
+        class="avatar"
+      >
+    </div>
   </BeDialog>
 </template>
 
@@ -170,7 +185,8 @@ export default {
         // 报警类型
         alertTypes: [],
         // 整改分类
-        modifyList: []
+        modifyList: [],
+        projectList: []
       },
       // 当前点击的类目
       currentItme: {},
@@ -183,7 +199,9 @@ export default {
         // 报警类型
         alertType: '',
         // 整改分类
-        modifyType: ''
+        modifyType: '',
+        projectName: '', // 项目名称
+        projectId: ''
       },
       // loading加载
       dataLoading: false,
@@ -238,9 +256,15 @@ export default {
       currentInfo: {},
       // 详情总数
       infoTotal: 0,
+      // 图片弹窗
+      dialogVisibleImg: false,
+      imgLoading: false,
+      imgSrc: '',
       api: {
         alertDataApi: 'integration/aicr/algorithm', // 预警下拉
-        AiListApi: 'integration/aicr/camera/alert/list' // ai列表
+        AiListApi: 'integration/aicr/camera/alert/list', // ai列表
+        peojectListApi: '/integration/rectification/getTjList',
+        zgtypeApi: 'integration/rectification/getProjectXl' // 整改分类下拉
       }
     }
   },
@@ -275,36 +299,49 @@ export default {
       })
     },
     getList () {
-      //   url = 'integration/aicr/camera/alert/list'
-      //   errmsg = '获取分类排名数据失败！'
-      //   params.name = this.dataForm.name || ''
-      //   params.alertType = this.dataForm.alertType || ''
-      //   params.startDate = this.dataForm.startDate
-      //   params.orderByCt = 'asc'
-      //   params.endDate = this.dataForm.endDate
-      //   params.page = this.queryInfo.page
-      //   params.size = this.queryInfo.size
-      // }
-      const { dateList, alertType, name } = this.dataForm
-      let params = {
-        startDate: dateList[0],
-        endDate: dateList[1],
-        orderByCt: 'asc',
-        alertType: alertType || '',
-        name: name || '',
-        page: this.queryAll.pageIndex,
-        size: this.queryAll.pageSize
+      const { title } = this.currentItme
+      let params = {}
+      let url = ''
+
+      if (title === 'AI设备预警') {
+
+        const { dateList, alertType, name } = this.dataForm
+        params = {
+          startDate: dateList[0],
+          endDate: dateList[1],
+          orderByCt: 'asc',
+          alertType: alertType || '',
+          name: name || '',
+          page: this.queryAll.pageIndex,
+          size: this.queryAll.pageSize
+        }
+        url = this.api.AiListApi
+      } else if (title === '整改项目超期') {
+        const { projectId } = this.dataForm
+        console.log(projectId)
+
+        params = {
+          projectName: this.dictOptions.projectList.find(i => i.value === projectId).lable, //
+          rectificationName: ''
+        }
+        url = this.api.peojectListApi
       }
-      console.log(params)
       let data = this.$api.toQueryString(params)
       this.$http({
-        url: this.api.AiListApi + data
+        url: url + data
       }).then(res => {
+        console.log(res.data)
         this.dataLoading = false
         const { data, msg, code } = res.data
         if (code === 200) {
-          this.dataList = data.rows
-          this.dataTotal = data.total
+          if (title === 'AI设备预警') {
+            this.dataTotal = data.total
+            this.dataList = data.rows
+          } else if (title === '整改项目超期') {
+            this.dataTotal = res.data.total
+            this.dataList = res.data.rows
+            console.log(data.rows)
+          }
 
 
         } else {
@@ -321,17 +358,17 @@ export default {
       })
     },
     open (item) {
+      console.log(item)
       this.currentItme = item
       this.$refs.tableDialog.showDialog(true)
-      if (item.title === '整改项目超期' || item.title === '车辆冲洗预警') {
+      if (item.title === '整改项目超期') {
+        // if(item.title === '整改项目超期预警')
         this.columns = [
-          { name: '序号', prop: 'id', key: 1 },
-          { name: '项目名称', prop: 'projectName', key: 2 },
-          { name: '预警数量', prop: 'num', key: 3 }
-        ]
+          { name: '整改项目', prop: 'projectName', key: 2 },
+          { name: '整改类型', prop: 'rectificationName', key: 3 }]
+        this.getzgType()
       } else {
         this.columns = [
-          // { name: '序号', prop: 'id', key: 1 },
           { name: '设备名称', prop: 'name', key: 2 },
           { name: '预警数量', prop: 'count', key: 3 }
         ]
@@ -359,8 +396,13 @@ export default {
       this.$refs.tableDialog.showDialog(false)
     },
     // 图片点击
-    imgClick (item, e) {
-      this.$refs.imageRef.showImg(e, item)
+    imgClick (item) {
+      // const { title } = this.currentItme // 当前弹窗
+
+      this.imgSrc = item.url
+
+      this.dialogVisibleImg = true
+      // this.$refs.imageRef.showImg(e, item)
     },
     // 获取预警统计数据
     getWarnData () {
@@ -406,8 +448,37 @@ export default {
     // 预警记录点击
     warnLogClick (item) {
       this.currentInfo = item
+      console.log(item)
+      const { cameraId } = item
       this.isShowInfo = true
-      this.getWarnInfo()
+      const { title } = this.currentItme // 当前弹窗
+      if (title === 'AI设备预警') {
+        let params = {
+          keyword: cameraId,
+          page: this.queryInfo.pageSize,
+          size: this.queryInfo.pageIndex
+        }
+        let data = this.$api.toQueryString(params)
+        this.$http({ url: 'integration/aicr/alert/list' + data }).then(res => {
+          const { data, msg, code } = res.data
+          if (code === 200) {
+            this.infoDataList = data.alertList
+            if (data.pageVO) {
+              this.infoTotal = data.pageVO.total
+            }
+          } else {
+            this.$message.error(msg || '获取详情数据失败！')
+            this.infoDataList = []
+          }
+        }, () => {
+          this.loadings.sssjLoading = false
+        })
+      } else if (title === '整改项目超期') {
+        this.infoDataList = [item]
+        this.infoTotal = 1
+
+      }
+
     },
     // 获取预警记录详情
     getWarnInfo () {
@@ -463,6 +534,26 @@ export default {
       }
       this.init()
       this.getList()
+    },
+    // 整改下拉
+    getzgType () {
+      this.$http({
+        url: this.api.zgtypeApi
+      }).then(res => {
+        this.dataLoading = false
+        const { data, msg, code } = res.data
+        console.log(data)
+        if (code === 200) {
+          this.dictOptions.projectList = data
+          this.dataForm.projectId = data[0].value
+          // this.AiForm.alertType = data.algoConfig[0].task_key
+          this.getList()
+        } else {
+          this.$message.error(msg || '获取报警类型错误')
+        }
+      }, () => {
+        this.$message.error('获取报警类型错误')
+      })
     }
   }
 }
@@ -497,5 +588,20 @@ export default {
 }
 /deep/ .menu-tablist .tab-shadow {
   margin-left: -206px;
+}
+.bigImgCenter {
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55%;
+  min-height: 500px;
+  background: #fff;
+  text-align: right;
+  .el-icon-close {
+    font-size: 20px;
+    margin: 15px;
+    color: #000;
+  }
 }
 </style>

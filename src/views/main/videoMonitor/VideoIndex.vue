@@ -10,12 +10,12 @@
       slot="menuRight"
       class="menu-btn"
     >
+      <!--   @click="menuBtnClick(val,index)" -->
       <i
-        v-for="(val,index) in menuButtons"
+        v-for="val in menuButtons"
         :key="val"
-        class="menubtn-item"
+        class="menubtn-item "
         :class="[val, currentBtn === val && 'menubtn-active']"
-        @click="menuBtnClick(val,index)"
       ></i>
     </div>
     <div
@@ -228,28 +228,37 @@
       >
         <li
           class="video-item"
-          v-for="(vi, idx) in videoList"
+          v-for="(vi,idx) in videoList"
           :key="vi.id"
           v-loading="vi.videoLoading"
-          @click="modelMouseenter(idx, $event)"
         >
-          <video
+          <!-- <video
             muted
             style="width:100%;height:100%;object-fit: fill;"
             :ref="'videoItem' + vi.id"
             :id="'videoItem' + idx"
             :options="{preload: 'none'}"
             :loading='vi.videoLoading'
-          />
+          /> -->
+          <video
+            :id="'videoItem' + idx"
+            class="video-js vjs-default-skin fillWidth"
+            controls
+            data-setup='{}'
+          >
+            <source
+              src="http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8"
+              type="application/x-mpegURL"
+            >
+          </video>
           <!-- <BeVideo
             :src="vi.videoSrc"
             :ref="'videoItem' + vi.id"
             :options="{preload: 'none'}"
-          /> -->
-          <!-- <div
+          />
+          <div
             class="video-model"
-            @click="modelClick(vi)"
-            @mouseenter="modelMouseenter(vi, $event)"
+            @click="modelMouseenter(vi, $event)"
             @mouseleave="modelMouseleave(vi, $event)"
           ></div> -->
           <!-- <div
@@ -299,7 +308,7 @@ export default {
       // 右侧按钮列表
       menuButtons: ['el-icon-one', 'el-icon-menu', 'el-icon-s-grid'],
       // 当前视频的src地址
-      currentSrc: 'https://logos-channel.scaleengine.net/logos-channel/live/biblescreen-ad-free/playlist.m3u8',
+      currentSrc: '',
       // 控制台按钮列表
       consoleBtnlist: [
         ['ZoomWide', 'ZoomTile'],
@@ -335,7 +344,15 @@ export default {
         pageSize: 10
       },
       // 宫格视频列表
-      videoList: [],
+      videoList: [{ id: '1', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '2', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '3', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '4', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '5', videoName: '项目1516', videoLoading: false, videoSrc: '4', poster: '' },
+      { id: '6', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '7', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '8', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '9', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' }],
       // 接口地址
       api: {
         videoApi: '/integration/videoDevice/getRtsp',
@@ -368,7 +385,7 @@ export default {
     },
     // tabs右侧模式点击
     menuBtnClick (val, index) {
-      this.currentPage = 0
+      // this.currentPage = 0
       let last = this.lastBtn && this.menuButtons.findIndex(i => i === this.lastBtn)
       // console.log('lastindex', last, 'clickNum', this.clickNum)
       if (this.clickNum !== 0) {
@@ -383,15 +400,15 @@ export default {
       // console.log('clickNum', this.clickNum)
       this.currentBtn = val
       this.lastBtn = this.currentBtn
-      let videoLists = [{ id: '1', videoName: '项目1516', videoLoading: false, videoSrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4', poster: '' },
-      { id: '2', videoName: '项目1516', videoLoading: false, videoSrc: 'http://www.w3school.com.cn/example/html5/mov_bbb.mp4', poster: '' },
-      { id: '3', videoName: '项目1516', videoLoading: false, videoSrc: 'https://www.w3schools.com/html/movie.mp4', poster: '' },
-      { id: '4', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-      { id: '5', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-      { id: '6', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-      { id: '7', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-      { id: '8', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' },
-      { id: '9', videoName: '项目1516', videoLoading: false, videoSrc: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', poster: '' }]
+      let videoLists = [{ id: '1', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '2', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '3', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '4', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '5', videoName: '项目1516', videoLoading: false, videoSrc: '4', poster: '' },
+      { id: '6', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '7', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '8', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
+      { id: '9', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' }]
       if (index === 0) {
         this.videoList = videoLists.splice(0, 1)
       } else if (index === 1) {
@@ -460,29 +477,36 @@ export default {
     },
     // 视频遮罩点击
     modelClick (vid) {
-      this.currentBtn = 'el-icon-one'
-      this.currentSrc = vid.videoSrc
+      console.log(vid)
+      // this.currentBtn = 'el-icon-one'
+      // this.currentSrc = vid.videoSrc
     },
-    // 鼠标按下
-    modelMouseenter (idx, e) {
-      const { deviceId, channel } = this.videoList[idx]
-      console.log(deviceId, channel)
-      this.deviceId = deviceId
-      this.channel = channel
-      this.currentSrc = 'http://1011.hlsplay.aodianyun.com/demo/game.flv'
-      if (deviceId && channel) {
-        this.currentPage = 1
+    // 鼠标经过
+    modelMouseenter (item, e) {
+      // let item = this.videoList[idx]
+      console.log(item, e)
+      if (item.videoSrc) {
+        this.deviceId = item.deviceId
+        this.channel = item.channel
+      } else {
+        this.$message.error('请选择设备')
       }
+
+      this.currentSrc = 'http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8'
+      // if (item.deviceId && item.channel) {
+      //   this.currentPage = 1
+      // }
       // 显示播放图标
       // e.target.classList.add('video-model-icon')
       // 设置防抖，鼠标移入播放视频
       if (this.timer) {
         clearTimeout(this.timer)
       }
+      this.timer = setTimeout(() => {
+        this.$refs['videoItem' + item.id][0].videoPlayer().play()
+      }, 1200)
       // if (this.currentBtn !== 'el-icon-one') {
-      //   this.timer = setTimeout(() => {
-      //     this.$refs['videoItem' + vid.id][0].videoPlayer().play()
-      //   }, 1200)
+
       // }
     },
     // 鼠标移出
@@ -582,24 +606,25 @@ export default {
           channel
         }
       }).then(res => {
+        this.getVideoFlv(deviceId, channel)
         const { code, msg } = res.data
         if (code === 200) {
           this.getVideoFlv(deviceId, channel, msg)
         } else {
-          this.$message.error(msg || '获取视频错误')
+          // this.$message.error(msg || '获取视频错误')
         }
       }, () => {
-        this.$message.error('获取视频错误')
+        // this.$message.error('获取视频错误')
 
       })
     },
     // 获取视频列表
-    getVideoFlv (deviceId, channel, msg) {
+    getVideoFlv (deviceId, channel) {
       // console.log(this.lastBtn, this.currentBtn)
       let clickNum = this.clickNum - 1
       // let last = this.menuButtons.findIndex(i => i === this.lastBtn)
       let num = this.menuButtons.findIndex(i => i === this.currentBtn)
-      // let msg = 'http://1011.hlsplay.aodianyun.com/demo/game.flv'
+      let msg = 'http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8'
       let index = ''
       if (num === 0) { // 当前只有一个视频框
         index = 0
@@ -614,44 +639,47 @@ export default {
         videoSrc: msg,
         deviceId,
         channel,
+        id: this.videoList[index].id,
         videoLoading: true
       })
-      this.palyVideo(msg, index)
+      // console.log(this.videoList)
+      setTimeout(() => {
+        this.$set(this.videoList[index], 'videoLoading', false)
+        // this.$message.error('此视频因格式问题或者太大暂无法播放，请稍后再试')
+      }, 3000)
+      // this.palyVideo(msg, index)
     },
 
     palyVideo (msg, index, flag) {
-      setTimeout(() => {
-        this.$set(this.videoList[index], 'videoLoading', false)
-        this.$message.error('此视频因格式问题或者太大暂无法播放，请稍后再试')
-      }, 5000)
+      console.log(msg, index, flag)
       // this.videoList.forEach((item, index) => {
-      if (this.$flvjs.isSupported()) {
-        let player = null
-        let videoElement = document.getElementById(`videoItem${index}`)
-        player = this.$flvjs.createPlayer({
-          type: 'flv', // => 媒体类型 flv 或 mp4
-          isLive: true, // => 是否为直播流
-          hasAudio: true, // => 是否开启声音
-          url: msg // => 视频流地址
-        }, {
-          enableStashBuffer: false,
-          fixAudioTimestampGap: false,
-          isLive: true
-        })
-        player.attachMediaElement(videoElement) // => 绑DOM
-        player.load()
-        if (flag) {
-          player.play()
-        }
-        player.on(this.$flvjs.Events.ERROR, (errType, errDetail) => {
-          console.log('errorType:', errType)
-          console.log('errDetail', errDetail)
-          this.destoyrVideo(player)
-        })
+      // if (this.$flvjs.isSupported()) {
+      //   let player = null
+      //   let videoElement = document.getElementById(`videoItem${index}`)
+      //   player = this.$flvjs.createPlayer({
+      //     type: 'flv', // => 媒体类型 flv 或 mp4
+      //     isLive: true, // => 是否为直播流
+      //     hasAudio: true, // => 是否开启声音
+      //     url: msg // => 视频流地址
+      //   }, {
+      //     enableStashBuffer: false,
+      //     fixAudioTimestampGap: false,
+      //     isLive: true
+      //   })
+      //   player.attachMediaElement(videoElement) // => 绑DOM
+      //   player.load()
+      //   if (flag) {
+      //     player.play()
+      //   }
+      //   player.on(this.$flvjs.Events.ERROR, (errType, errDetail) => {
+      //     console.log('errorType:', errType)
+      //     console.log('errDetail', errDetail)
+      //     this.destoyrVideo(player)
+      //   })
 
-      } else {
-        this.$message.error('不支持flv格式视频')
-      }
+      // } else {
+      //   this.$message.error('不支持flv格式视频')
+      // }
       this.vloading = false
       // })
     },
@@ -1064,5 +1092,9 @@ export default {
 }
 .video-more .project-card .beautiful-table-el {
   overflow: auto;
+}
+/deep/.video-js {
+  width: 100%;
+  height: 100%;
 }
 </style>

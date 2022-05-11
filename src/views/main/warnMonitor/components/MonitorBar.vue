@@ -2,7 +2,7 @@
   <!-- 各区县安装数量统计 -->
   <div
     :id="id"
-    style="width: 100%; height: 80%"
+    style="width: 100%; height: 85%"
   ></div>
 </template>
 <script>
@@ -33,6 +33,20 @@ export default {
       }
     }
   },
+  watch: {
+    xAxisData: {
+      handler () {
+        this.getmap()
+      },
+      deep: true
+    },
+    seriesData: {
+      handler () {
+        this.getmap()
+      },
+      deep: true
+    }
+  },
   data () {
     return {
       option: {
@@ -46,7 +60,7 @@ export default {
           }
         },
         grid: {
-          left: '10rem',
+          left: '2%',
           right: '10rem',
           top: '40rem',
           bottom: '1rem',
@@ -126,10 +140,6 @@ export default {
       const { xAxis, series } = this.option
       xAxis.data = this.xAxisData
       series[0].data = this.seriesData
-      //   let option = {
-      //     ...this.option,
-      //     series
-      //   }
       var myChart = this.$echarts.init(document.getElementById(this.id))
       myChart.setOption(this.option)
       window.addEventListener('resize', function () {
