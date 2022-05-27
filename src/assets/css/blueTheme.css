@@ -253,6 +253,7 @@ span.el-radio__inner::after {
     box-shadow: inset -1px -1px 10px var(--shadow-color),
         inset 1px 1px 10px var(--shadow-color); */
     border-color: #0b1771;
+    border-radius: 5px;
 }
 
 /* ===============el-ui翻页样式=============== */
@@ -314,7 +315,7 @@ div.el-pagination button:disabled {
 }
 
 .tform-form .el-form-item {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
 }
 
 .tform-form .el-radio {
@@ -483,7 +484,9 @@ div.el-table--striped .el-table__body tr.el-table__row--striped.current-row td.e
 div.el-table thead {
     color: #39F8FF;
 }
-
+.be-table-list .be-table-index.cell,.be-table-list .be-table-oper.cell .el-link.el-link--primary.is-disabled{
+    color: #eee;
+}
 /* ===============table-list手写列表=============== */
 .be-table-list,
 .be-table-ul {
@@ -656,7 +659,7 @@ div.el-tooltip__popper.is-light[x-placement^="right"] .popper__arrow::after {
 }
 
 .tform-contnent {
-    height: calc(100% - 178px);
+    height: calc(100% - 156px);
 }
 
 /* ===============视频插件=============== */

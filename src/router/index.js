@@ -86,25 +86,24 @@ function getMenuData (to, next) {
   router.options.isLoadMenu = true
   const list = [
     { id: '0', key: 0, type: 'home', title: '首页', alias: '', parentId: '00', url: '@/home/Home' },
-    { id: '1', key: 1, type: 'menu', title: '预警管控', alias: '预警监控', parentId: '00', url: '@/warnMonitor/WarnIndex' },
-    { id: '2', key: 2, type: 'menu', title: '扬尘监测', alias: '扬尘监测', parentId: '00', url: '@/dustMonitoring/DusIndex' },
-    { id: '2-1', key: 1, type: 'menu', title: '地图', alias: '地图', parentId: '2', url: '@/dustMonitoring/DusMap' },
-    { id: '2-2', key: 2, type: 'menu', title: '单设备统计', alias: '单设备统计', parentId: '2', url: '@/dustMonitoring/DusSingleEcharts' },
-    { id: '2-3', key: 3, type: 'menu', title: '多设备统计', alias: '多设备统计', parentId: '2', url: '@/dustMonitoring/DusMultipleEcharts' },
-    { id: '2-4', key: 4, type: 'menu', title: '排名统计', alias: '排名统计', parentId: '2', url: '@/dustMonitoring/DusRankingEcharts' },
-    { id: '3', key: 3, type: 'menu', title: '噪声监测', alias: '噪声监测', parentId: '00', url: '@/dustMonitoring/NoiseMonitoring' },
-    { id: '4', key: 4, type: 'menu', catType: 'tabs', title: '车辆冲洗', alias: '车辆冲洗', parentId: '00', url: '@/carWashing/index' },
-    { id: '4-1', key: 1, type: 'menu', title: 'AI识别安装率', alias: 'AI识别安装率', parentId: '4', url: '@/carWashing/CarAIinstall' },
-    { id: '4-2', key: 2, type: 'menu', title: '违规渣土车', alias: '违规渣土车', parentId: '4', url: '@/carWashing/CarViolation' },
-    { id: '4-3', key: 3, type: 'menu', title: '合规车次', alias: '合规车次', parentId: '4', url: '@/carWashing/CarCompliance' },
-    { id: '4-4', key: 4, type: 'menu', title: '备案渣土车', alias: '备案渣土车', parentId: '4', url: '@/carWashing/CarKeepRecord' },
-    { id: '4-5', key: 5, type: 'menu', title: '在监工程', alias: '在监工程', parentId: '4', url: '@/carWashing/CarMonitorProject' },
-    { id: '4-6', key: 6, type: 'menu', title: '准运渣土车', alias: '准运渣土车', parentId: '4', url: '@/carWashing/CarQuasiTransportation' },
-    { id: '4-7', key: 7, type: 'menu', title: '合规视频', alias: '合规车次+点击弹窗视频', parentId: '4', url: '@/carWashing/CarVideo' },
-    { id: '5', key: 5, type: 'menu', title: 'AI识别', alias: 'AI识别', parentId: '00', url: '@/AIdistinguish/AIdistinguish' },
-    { id: '6', key: 6, type: 'menu', title: '巡查整改', alias: '巡查整改', parentId: '00', url: '@/patrolRectification/PatrolIndex' },
-    { id: '7', key: 7, type: 'menu', title: '项目管理', alias: '项目管理', parentId: '00', url: '@/projectManagement/ProjectIndex' },
-    { id: '8', key: 8, type: 'menu', title: '视频管控', alias: '视频管控', parentId: '00', url: '@/videoMonitor/VideoIndex', right: true }
+    { id: '1', key: 1, type: 'menu', title: '项目管理', alias: '项目管理', parentId: '00', url: '@/projectManagement/ProjectIndex' },
+    { id: '2', key: 2, type: 'menu', title: '巡查整改', alias: '巡查整改', parentId: '00', url: '@/patrolRectification/PatrolIndex' },
+    { id: '3', key: 3, type: 'menu', title: '预警管控', alias: '预警监控', parentId: '00', url: '@/warnMonitor/WarnIndex' },
+    { id: '4', key: 4, type: 'menu', title: '视频管控', alias: '视频管控', parentId: '00', url: '@/videoMonitor/VideoIndex', right: true },
+    { id: '5', key: 5, type: 'menu', title: '扬尘监测', alias: '扬尘监测', parentId: '00', url: '@/dustMonitoring/DusIndex' },
+    { id: '2-1', key: 1, type: 'menu', title: '地图', alias: '地图', parentId: '5', url: '@/dustMonitoring/DusMap' },
+    { id: '2-2', key: 2, type: 'menu', title: '单设备统计', alias: '单设备统计', parentId: '5', url: '@/dustMonitoring/DusSingleEcharts' },
+    { id: '2-3', key: 3, type: 'menu', title: '多设备统计', alias: '多设备统计', parentId: '5', url: '@/dustMonitoring/DusMultipleEcharts' },
+    { id: '2-4', key: 4, type: 'menu', title: '排名统计', alias: '排名统计', parentId: '5', url: '@/dustMonitoring/DusRankingEcharts' },
+    { id: '6', key: 6, type: 'menu', title: '噪声监测', alias: '噪声监测', parentId: '00', url: '@/dustMonitoring/NoiseMonitoring' },
+    { id: '7', key: 7, type: 'menu', catType: 'tabs', title: '车辆冲洗', alias: '车辆冲洗', parentId: '00', url: '@/carWashing/index' },
+    { id: '4-1', key: 1, type: 'menu', title: 'AI识别安装率', alias: 'AI识别安装率', parentId: '7', url: '@/carWashing/CarAIinstall' },
+    { id: '4-2', key: 2, type: 'menu', title: '违规渣土车', alias: '违规渣土车', parentId: '7', url: '@/carWashing/CarViolation' },
+    { id: '4-3', key: 3, type: 'menu', title: '合规车次', alias: '合规车次', parentId: '7', url: '@/carWashing/CarCompliance' },
+    { id: '4-4', key: 4, type: 'menu', title: '备案渣土车', alias: '备案渣土车', parentId: '7', url: '@/carWashing/CarKeepRecord' },
+    { id: '4-5', key: 5, type: 'menu', title: '在监工程', alias: '在监工程', parentId: '7', url: '@/carWashing/CarMonitorProject' },
+    { id: '4-6', key: 6, type: 'menu', title: '准运渣土车', alias: '准运渣土车', parentId: '7', url: '@/carWashing/CarQuasiTransportation' },
+    { id: '8', key: 8, type: 'menu', title: 'AI识别', alias: 'AI识别', parentId: '00', url: '@/AIdistinguish/AIdistinguish' }
   ]
   let temp = []
   list.map(item => {

@@ -14,10 +14,15 @@
         v-for="(item,index) in monitoringSspotData.detailList"
         :key="index+'0'"
         class="monitoring_spot_detail_item"
-        :style="{ backgroundColor: index % 4 == 0 || index % 4 == 1? '#0B1771' : '' }"
+        :style="{ backgroundColor:  '#0B1771' }"
       >
-        <div>{{item.name}}</div>
-        <div>{{item.value}}</div>
+        <!-- index % 4 == 0 || index % 4 == 1? -->
+        <span class="name">{{item.name}}:</span>
+        <span style="margin-left:3px">{{item.value}}</span>
+        <span
+          style="font-size:14px;margin-left:3px"
+          v-if="item.value"
+        > {{item.unit}}</span>
       </div>
     </div>
     <div class="monitoring_spot_detail_back_button">
@@ -58,27 +63,37 @@ export default {
   position: relative;
   width: 25rem;
   .monitoring_spot_title {
-    // width: 100%;
+    padding: 0.5rem 0;
+    background: #10196e;
     text-align: center;
-    margin: 2rem 0 1.5rem 0;
+    border-radius: 5px;
+    margin: 2rem 2rem 1.5rem 2rem;
   }
   .monitoring_spot_detail {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     // height: 40%;
-    margin-top: 1.5rem;
+    margin-top: 0.5rem;
     padding: 0 1rem;
+    font-weight: 600;
     .monitoring_spot_detail_item {
       display: flex;
       align-items: center;
-      padding-left: 1.5rem;
-      // margin: 0 1rem 0 0;
-      font-size: 1rem;
+      padding-left: 0.5rem;
+      margin: 5px 0;
+      font-size: 16px;
       width: 11.25rem;
       height: 2rem;
+      border-radius: 5px;
       div {
         transform: scale(0.7);
+      }
+      span {
+        width: 18%;
+      }
+      .name {
+        width: 42%;
       }
     }
   }

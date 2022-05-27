@@ -81,6 +81,7 @@
             :class="bindex === item.curIndex ? 'active-legend' : ''"
             :style="{color: iindex === 3 && bindex === item.curIndex ? item.colors[bindex] : 'inherit'}"
             :key="val.id"
+            @click="echartClick(item, bindex)"
           >
             <i :style="{backgroundColor: item.colors[bindex]}"></i>
             <span class="legend-name">{{ val.name }}</span>
@@ -99,33 +100,45 @@
       <ul class="video-ul">
         <li
           class="video-item"
-          v-for="item in videoList"
-          :key="item.id"
+          v-for="(item,index) in imgLists"
+          :key="index"
         >
-          <BeVideo
+          <img
+            :src="item"
+            alt=""
+            class="imgs"
+          >
+          <!-- <BeVideo
             :src="item.src"
             :options="{preload: 'none'}"
           />
           <div class="video-title">
             <span>{{ item.datetime }}</span>
             <span>{{ item.title }}</span>
-          </div>
+          </div> -->
         </li>
       </ul>
     </BeautifulCard>
+    <fileDialog
+      ref="fileDialog"
+      :date='date'
+      :dataListItem="dataListItem"
+    />
   </div>
 </template>
 
 <script>
 import BeautifulCard from '_com/common/BeautifulCard'
 import PatrolMap from '_vie/common/patrolMap'
-import BeVideo from '_com/common/BeVideo'
+import fileDialog from './components/fileDialog.vue'
+// import BeVideo from '_com/common/BeVideo'
 export default {
   name: 'PatrolEchart',
   components: {
     BeautifulCard,
     PatrolMap,
-    BeVideo
+    fileDialog
+    // BeVideo
   },
   data () {
     return {
@@ -208,6 +221,9 @@ export default {
         { id: 'gweeaeg4', title: '测试视频', datetime: '2022-02-02 11:02', src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' }
       ],
       echartArr: ['xctj', 'zgtj', 'zgyqtj', 'yhtj'],
+      // 弹窗时间
+      date: [],
+      dataListItem: [], // 图例数据
       api: {
         patrolDataApi: 'integration/check/getCount', // 网格员统计
         xctj: '/integration/patrol/tongJiXunCha', // 巡查整改
@@ -267,28 +283,6 @@ export default {
         this.$message.error(err.data.msg || err.data.error)
       })
     },
-    // geEchartData (api) {
-    //   let date = this.echartsList[api]['formValue']
-    //   this.$http({
-    //     url: this.api[api],
-    //     method: 'post',
-    //     data: {
-    //       phoneNumber: sessionStorage.getItem('userId'),
-    //       from: date[0],
-    //       end: date[1]
-    //     }
-    //   }).then(res => {
-    //     const { data, code, msg } = res.data
-    //     if (code === 200) {
-    //       console.log(data.xcTjList)
-    //       this.echartsList[api].list = data.xcTjList
-    //     } else {
-    //       this.$message.error(msg || '获取数据错误')
-    //     }
-    //   }, (err) => {
-    //     this.$message.error(err.data.msg || err.data.error)
-    //   })
-    // },
     getImgList () {
       this.$http({
         url: this.api.imgDataApi,
@@ -299,12 +293,29 @@ export default {
         if (code === 200) {
           if (data.length > 0) {
             let { beforeFileList } = data[0]
+            let imgList = []
             beforeFileList && beforeFileList.map(async i => {
-              let res = await this.getImgUrl(i.fileUrl)
-              console.log(i.fileUrl, res)
-            })
-          }
+              this.$http({
+                url: 'communal/file/download/' + i.fileUrl,
+                responseType: 'blob'
+              }).then(res => {
+                const { data, status } = res
+                if (status === 200) {
+                  let url = window.URL.createObjectURL(data)
+                  imgList.push(url)
+                  this.imgLists = imgList
 
+                } else {
+                  this.$message.error('获取图片错误')
+                }
+              }, (err) => {
+                this.$message.error(err.data.msg || err.data.error)
+              })
+              // let res = await this.getImgUrl(i.fileUrl)
+
+            })
+            console.log(this.imgLists)
+          }
         } else {
           this.$message.error(msg || '获取数据错误')
         }
@@ -338,6 +349,7 @@ export default {
         // 调用接口获取数据
         item.getData = (item, key) => {
           item.loading = true
+          item.titleKey = key
           let date = item.formValue
           this.$http({
             url: this.api[key],
@@ -364,6 +376,7 @@ export default {
                   text: item.list.reduce((val, pre) => {
                     return val + pre.count
                   }, 0),
+                  triggerEvent: true,
                   left: 'center',
                   top: 'center',
                   textStyle: {
@@ -398,6 +411,24 @@ export default {
           })
         }
         item.getData(item, key)
+        // 环饼图中间的title点击事件
+        item.myChart.on('click', (a) => {
+          // this.$emit('chartClick', a)
+          console.log(item, a)
+          this.date = item.formValue
+          if (item.titleKey === 'yhtj' && a.componentType === 'title' && item.list.length > 0) { // 已整改未整改 中间总数点击
+            this.$refs.fileDialog.open('已整改未整改')
+          } else if (item.titleKey === 'xctj' && a.componentType === 'title' && item.list.length > 0) {
+            this.$refs.fileDialog.open('巡查统计')
+          } else if (item.titleKey === 'zgtj' && a.componentType === 'title' && item.list.length > 0) {
+            this.$refs.fileDialog.open('整改统计')
+          } else if (item.titleKey === 'zgyqtj' && a.componentType === 'title' && item.list.length > 0) {
+            this.$refs.fileDialog.open('整改逾期统计')
+          } else {
+            this.$message.error('暂无相关统计')
+          }
+
+        })
         // 鼠标移入隐藏点击的高亮-- - 单个元素的移入移出不太友好，最好是对echarts整个图表做移入移出
         item.myChart.on('mouseover', (v) => {
           if (item.curIndex !== null && v.dataIndex !== item.curIndex) {
@@ -422,26 +453,45 @@ export default {
     },
     // 图例点击事件---obj是data里面定义的图表对象
     echartClick (item, index) {
-      // 点击回调，如果点击同一个图例，则直接清除高亮
-      if (item.curIndex !== null && index === item.curIndex) {
-        item.curIndex = null
-        item.myChart.dispatchAction({
-          type: 'downplay', seriesIndex: 0, dataIndex: index
-        })
+      console.log(item.list[index])
+      this.date = item.formValue
+      let itemIndex = item.list[index]
+      if (item.titleKey === 'yhtj') {
+        this.dataListItem = itemIndex.projects
+        this.$refs.fileDialog.open(itemIndex.name, item.titleKey)
+      } else if (item.titleKey === 'zgtj' && itemIndex.zgList.length > 0) {
+        this.dataListItem = itemIndex.zgList
+        this.$refs.fileDialog.open(itemIndex.name, item.titleKey)
+      } else if (item.titleKey === 'zgyqtj' && itemIndex.zgYuqiList.length > 0) {
+        this.dataListItem = itemIndex.zgYuqiList
+        this.$refs.fileDialog.open(itemIndex.name, item.titleKey)
+      } else if (item.titleKey === 'xctj' && itemIndex.xcList.length > 0) {
+        this.dataListItem = itemIndex.xcList
+        this.$refs.fileDialog.open(itemIndex.name, item.titleKey)
       } else {
-        // 如果上一个点击的图例不为空，则清除上一个
-        if (item.curIndex !== null) {
-          item.myChart.dispatchAction({
-            type: 'downplay', seriesIndex: 0, dataIndex: item.curIndex
-          })
-        }
-        // 新点击的图例高亮
-        item.myChart.dispatchAction({
-          type: 'highlight', seriesIndex: 0, dataIndex: index
-        })
-        // 保存当前点击的图例的索引
-        item.curIndex = index
+        this.$message.error('暂无相关统计')
       }
+
+      // 点击回调，如果点击同一个图例，则直接清除高亮
+      // if (item.curIndex !== null && index === item.curIndex) {
+      //   item.curIndex = null
+      //   item.myChart.dispatchAction({
+      //     type: 'downplay', seriesIndex: 0, dataIndex: index
+      //   })
+      // } else {
+      //   // 如果上一个点击的图例不为空，则清除上一个
+      //   if (item.curIndex !== null) {
+      //     item.myChart.dispatchAction({
+      //       type: 'downplay', seriesIndex: 0, dataIndex: item.curIndex
+      //     })
+      //   }
+      //   // 新点击的图例高亮
+      //   item.myChart.dispatchAction({
+      //     type: 'highlight', seriesIndex: 0, dataIndex: index
+      //   })
+      //   // 保存当前点击的图例的索引
+      //   item.curIndex = index
+      // }
     }
   }
 }
@@ -478,6 +528,7 @@ export default {
 .echart-content {
   width: 100%;
   height: calc(100% - 43px);
+  overflow: hidden;
 }
 .echart-item {
   height: calc(100% - 112px);
@@ -491,7 +542,7 @@ export default {
   }
 }
 .el-range-editor.el-input__inner {
-  width: 15rem;
+  width: 18rem;
 }
 // 第一个模块，网络员统计
 .echart-top-first {
@@ -555,6 +606,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  overflow: auto;
 }
 .echart-legend-item {
   display: flex;
@@ -568,6 +620,7 @@ export default {
   cursor: pointer;
   padding: 0 22px;
   transition: background 0.5s;
+  // margin: 0 auto;
   > i {
     width: 20px;
     height: 8px;
@@ -621,16 +674,20 @@ export default {
   .video-item {
     flex-shrink: 0;
     margin-right: 20px;
-    border: 1px solid #0e5dfb;
-    background: #2045ae;
-    box-shadow: inset -0.0625rem -0.0625rem 30px #305cb3,
-      inset 0.0625rem 0.0625rem 30px #2563e3;
+    // border: 1px solid #0e5dfb;
+    // background: #2045ae;
+    // box-shadow: inset -0.0625rem -0.0625rem 30px #305cb3,
+    //   inset 0.0625rem 0.0625rem 30px #2563e3;
     &:last-of-type {
       margin-right: 0;
     }
     .video-player {
       height: calc(100% - 44px);
       width: 100%;
+    }
+    .imgs {
+      width: 100%;
+      height: 98%;
     }
   }
   .video-title {

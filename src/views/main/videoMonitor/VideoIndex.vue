@@ -10,60 +10,34 @@
       slot="menuRight"
       class="menu-btn"
     >
-      <!--   @click="menuBtnClick(val,index)" -->
+      <!--    -->
       <i
-        v-for="val in menuButtons"
+        v-for="(val,index ) in menuButtons"
         :key="val"
         class="menubtn-item "
+        @click="menuBtnClick(val,index)"
         :class="[val, currentBtn === val && 'menubtn-active']"
       ></i>
     </div>
     <div
       class="video-content video-one"
       v-if="currentPage === 1"
+      v-loading='currentPageLoading'
     >
       <!--        id='videoItem10'
         style="width:79%"  -->
-      <BeVideo
+      <!-- <BeVideo
         :src="currentSrc"
         :options="{autoplay: true}"
         ref="oneVideo"
-      />
-      <!-- <object
-        id="videoItem10"
-        class="vlc"
-        type="application/x-vlc-plugin"
-        events='True'
-        width='100%'
-      >
-        <param
-          name='url'
-          value='rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov'
-        />
-
-        <param
-          name='volume'
-          value='50'
-        />
-
-        <param
-          name='autoplay'
-          value='true'
-        />
-
-        <param
-          name='loop'
-          value='false'
-        />
-        <param
-          name='fullscreen'
-          value='true'
-        />
-        <param
-          name='stretchToFit'
-          value='1'
-        />
-      </object> -->
+      /> -->
+      <video
+        id='videoItem10'
+        controls
+        autoplay
+        ref="videoItem10"
+        style="width:100%;height:100%;object-fit: fill;"
+      ></video>
       <BeautifulCard
         title="点位操作"
         :isTriangle='false'
@@ -72,10 +46,11 @@
       >
         <div class="console-panel">
           <span
-            v-for="ix in 8"
-            :key="ix"
+            v-for="(ix,index) in topBtnList"
+            :key="index"
+            :title='ix.name'
             class="console-triangle"
-            @click="consoleClick(ix)"
+            @click="consoleClick(ix.label)"
           ></span>
         </div>
         <ul class="console-btnlist">
@@ -84,11 +59,12 @@
             :key="bindex"
           >
             <span
-              v-for="val in btns"
-              :key="val"
+              v-for="(val,index) in btns"
+              :key="index"
+              :title="val.name"
               class="console-btnitem"
-              :class="'console-' + val"
-              @click="consoleBtnClick(val)"
+              :class="'console-' + val.label"
+              @click="consoleBtnClick(val.label)"
             ></span>
           </li>
         </ul>
@@ -100,12 +76,16 @@
             <el-input
               v-model="consoleForm.step"
               clearable
+              type="number"
+              :min='1'
             ></el-input>
           </el-form-item>
           <el-form-item label="预置点：">
             <el-input
               v-model="consoleForm.preset"
               clearable
+              type="number"
+              :min='0'
             ></el-input>
           </el-form-item>
         </el-form>
@@ -128,7 +108,7 @@
             size="medium"
             class="demo-form-inline"
           >
-            <el-form-item class="el_form_county">
+            <!-- <el-form-item class="el_form_county">
               <el-select
                 v-model="dataForm.areaId"
                 clearable
@@ -142,7 +122,7 @@
                   :value="item.areaId"
                 ></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item class="el_form_county">
               <el-select
                 v-model="dataForm.groupId"
@@ -163,12 +143,12 @@
               class="el_form_search"
             >
               <el-input
-                v-model="dataForm.projectName"
-                placeholder="搜索项目名称"
+                v-model="dataForm.title"
+                placeholder="搜索设备名称"
               >
               </el-input>
               <i
-                v-if="dataForm.projectName"
+                v-if="dataForm.title"
                 class="el-icon-circle-close"
                 @click="deleteJcd"
               ></i>
@@ -204,8 +184,8 @@
                 inline
                 class="demo-table-expand"
               >
-                <el-form-item label="设备名称">
-                  <span>{{ item.title }}</span>
+                <el-form-item>
+                  <span :title='item.title'>{{ item.title.length>15?item.title.slice(0,20)+'...':item.title }}</span>
                 </el-form-item>
               </el-form>
             </div>
@@ -229,39 +209,27 @@
         <li
           class="video-item"
           v-for="(vi,idx) in videoList"
-          :key="vi.id"
+          :key="vi.id+idx"
           v-loading="vi.videoLoading"
         >
-          <!-- <video
-            muted
+          <video
+            controls
             style="width:100%;height:100%;object-fit: fill;"
             :ref="'videoItem' + vi.id"
-            :id="'videoItem' + idx"
-            :options="{preload: 'none'}"
-            :loading='vi.videoLoading'
-          /> -->
-          <video
-            :id="'videoItem' + idx"
-            class="video-js vjs-default-skin fillWidth"
-            controls
-            data-setup='{}'
-          >
-            <source
-              src="http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8"
-              type="application/x-mpegURL"
-            >
-          </video>
+            :id="'videoItem'+idx"
+            autoplay
+            @click="modelMouseenter(vi, $event)"
+          ></video>
           <!-- <BeVideo
             :src="vi.videoSrc"
             :ref="'videoItem' + vi.id"
-            :options="{preload: 'none'}"
+            :options="{preload: 'none',}"
           />
           <div
             class="video-model"
-            @click="modelMouseenter(vi, $event)"
-            @mouseleave="modelMouseleave(vi, $event)"
+
           ></div> -->
-          <!-- <div
+          <!-- <div  @mouseleave="modelMouseleave(vi, $event)"
             class="video-model"
             @click="modelClick(vi)"
           ></div> -->
@@ -274,17 +242,18 @@
 <script>
 import BeautifulWrapper from '_com/common/BeautifulWrapper'
 import BeautifulTableEl from '_com/common/BeautifulTableEl'
-import BeVideo from '_com/common/BeVideo'
+// import BeVideo from '_com/common/BeVideo'
 import BeautifulCard from '_com/common/BeautifulCard'
 // import BeautifulTableList from '_com/common/BeautifulTableList'
-
+import Hls from 'hls.js'
+var hls = null
 export default {
   name: 'VideoIndex',
   components: {
     BeautifulWrapper,
     BeautifulTableEl,
-    BeautifulCard,
-    BeVideo
+    BeautifulCard
+    // BeVideo
     // BeautifulTableList
   },
   data () {
@@ -301,6 +270,8 @@ export default {
         { id: '3', title: '车辆冲洗视频' }
       ],
       currentPage: 0,
+      // 操作loading
+      currentPageLoading: false,
       // 当前选择的tabs
       currentTabs: '1',
       // 当前点击的右侧按钮
@@ -308,17 +279,26 @@ export default {
       // 右侧按钮列表
       menuButtons: ['el-icon-one', 'el-icon-menu', 'el-icon-s-grid'],
       // 当前视频的src地址
+      bigNum: 10,
       currentSrc: '',
+      topBtnList: [{ label: 'DirectionUp', name: '上' },
+      { label: 'DirectionRightUp', name: '右上' },
+      { label: 'DirectionRight', name: '右' },
+      { label: 'DirectionRightDown', name: '右下' },
+      { label: 'DirectionDown', name: '下' },
+      { label: 'DirectionLeftDown', name: '左下' },
+      { label: 'DirectionLeft', name: '左' },
+      { label: 'DirectionLeftUp', name: '左上' }],
       // 控制台按钮列表
       consoleBtnlist: [
-        ['ZoomWide', 'ZoomTile'],
-        ['FocusNear', 'FocusFar'],
-        ['IrisSmall', 'IrisLarge']
+        [{ label: 'ZoomWide', name: '放大' }, { label: 'ZoomTile', name: '缩小' }],
+        [{ label: 'FocusNear', name: '聚焦+' }, { label: 'FocusFar', name: '聚焦-' }],
+        [{ label: 'IrisSmall', name: '光圈-' }, { label: 'IrisLarge', name: '光圈+' }]
       ],
       // 视频控制表单
       consoleForm: {
-        step: '',
-        preset: ''
+        step: 1,
+        preset: 0
       },
       // ---宫格视频
       // 项目加载
@@ -337,22 +317,14 @@ export default {
       ],
       // 宫格视频表单
       dataForm: {
-        areaId: '',
-        groupId: '扬尘视频',
-        projectName: '',
+        // areaId: '',
+        groupId: '',
+        title: '',
         pageIndex: 1,
         pageSize: 10
       },
       // 宫格视频列表
-      videoList: [{ id: '1', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '2', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '3', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '4', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '5', videoName: '项目1516', videoLoading: false, videoSrc: '4', poster: '' },
-      { id: '6', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '7', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '8', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '9', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' }],
+      videoList: [{ id: '1', videoLoading: false, videoSrc: '' }],
       // 接口地址
       api: {
         videoApi: '/integration/videoDevice/getRtsp',
@@ -371,92 +343,114 @@ export default {
 
     }
   },
+  computed: {
+    currentNum () {
+      return this.currentBtn === 'el-icon-one' ? 1 : this.currentBtn === 'el-icon-menu' ? 4 : 9
+    }
+  },
+  watch: {
+    currentNum (val, old) {
+      this.clickNum = this.clickNum > old ? old : this.clickNum
+      if (val > old) {
+        for (let i = 0; i < val - old; i++) {
+          this.videoList.push({ id: Math.random(), videoLoading: false, videoSrc: '' })
+        }
+      } else {
+        this.videoList = this.videoList.slice(0, val)
+      }
+    }
+  },
   created () {
     this.menuBtnClick('el-icon-one', 0)
-  },
-  mounted () {
     this.getAreaData()
     this.getGroupList()
-    // this.loadingVideo()
+  },
+  mounted () {
+    this.getProjectData()
+  },
+  beforeDestroy () {
+    console.log('销毁', hls)
+    hls.destroy()
+    hls = null
   },
   methods: {
     tabsClick (item) {
       console.log(item)
     },
-    // tabs右侧模式点击
+    // tabs右侧 1、4、9 模式点击
     menuBtnClick (val, index) {
-      // this.currentPage = 0
+      this.currentBtn = val
+      this.currentPage = 0
       let last = this.lastBtn && this.menuButtons.findIndex(i => i === this.lastBtn)
-      // console.log('lastindex', last, 'clickNum', this.clickNum)
+      let num = this.menuButtons.findIndex(i => i === this.currentBtn)
       if (this.clickNum !== 0) {
         if (last === 0) {
           this.clickNum = 1
         } else if (last === 1) {
-          this.clickNum = this.clickNum % 4
+          console.log('last:', last, num)
+          if (last < num && this.clickNum > 3) {
+            this.clickNum = 4
+          } else {
+            this.clickNum = this.clickNum % 4
+          }
         } else {
           this.clickNum = this.clickNum % 9
         }
       }
-      // console.log('clickNum', this.clickNum)
-      this.currentBtn = val
       this.lastBtn = this.currentBtn
-      let videoLists = [{ id: '1', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '2', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '3', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '4', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '5', videoName: '项目1516', videoLoading: false, videoSrc: '4', poster: '' },
-      { id: '6', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '7', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '8', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' },
-      { id: '9', videoName: '项目1516', videoLoading: false, videoSrc: '', poster: '' }]
-      if (index === 0) {
-        this.videoList = videoLists.splice(0, 1)
-      } else if (index === 1) {
-        this.videoList = videoLists.splice(0, 4)
-      } else {
-        this.videoList = videoLists.splice(0, 9)
-      }
     },
     // 控制台圆盘按钮点击
-    consoleClick (index) {
+    consoleClick (ptzCmd) {
+      this.currentPageLoading = true
       // /控制方向:上:DirectionUp 下:DirectionDown 左:DirectionLeft 右:DirectionRight 左上:DirectionLeftUp 左下:DirectionLeftDown
       // 右上:DirectionRightUp 右下:DirectionRightDown
-      let btnList = ['DirectionUp', 'DirectionRightUp', 'DirectionRight', 'DirectionRightDown', 'DirectionDown', 'DirectionLeftDown', 'DirectionLeft', 'DirectionLeftUp']
-      console.log(index)
-      let ptzCmd = btnList[index - 1]
+      // let btnList = ['DirectionUp', 'DirectionRightUp', 'DirectionRight', 'DirectionRightDown', 'DirectionDown', 'DirectionLeftDown', 'DirectionLeft', 'DirectionLeftUp']
+      console.log(ptzCmd)
+      // let ptzCmd = btnList[index - 1]
       this.$http({
         url: this.api.controlApi,
         method: 'post',
         data: {
-          deviceId: '3301061001680',
-          channel: '0',
-          ptzCmd
+          deviceId: this.deviceId,
+          channel: this.channel,
+          ptzCmd,
+          ...this.consoleForm
         }
       }).then(res => {
         const { code, msg } = res.data
         if (code === 200) {
-          this.$message.success('操作成功')
+          setTimeout(() => {
+            this.currentPageLoading = false
+            this.$message.success('操作成功')
+          }, 2000)
         } else {
           this.$message.error(msg || '操作失败')
+          this.currentPageLoading = false
+
         }
       }, () => {
       })
     },
     // 控制台按钮点击
     consoleBtnClick (val) {
+      this.currentPageLoading = true
       this.$http({
         url: this.api.controlApi,
         method: 'post',
         data: {
-          deviceId: '3301061001680',
-          channel: '0',
+          deviceId: this.deviceId,
+          channel: this.channel,
           ptzCmd: val
         }
       }).then(res => {
         const { code, msg } = res.data
         if (code === 200) {
-          this.$message.success('操作成功')
+          setTimeout(() => {
+            this.currentPageLoading = false
+            this.$message.success('操作成功')
+          }, 2000)
         } else {
+          this.currentPageLoading = false
           this.$message.error(msg || '操作失败')
         }
       }, () => {
@@ -481,30 +475,49 @@ export default {
       // this.currentBtn = 'el-icon-one'
       // this.currentSrc = vid.videoSrc
     },
-    // 鼠标经过
+    // 鼠标点击视频
     modelMouseenter (item, e) {
       // let item = this.videoList[idx]
-      console.log(item, e)
       if (item.videoSrc) {
         this.deviceId = item.deviceId
         this.channel = item.channel
       } else {
         this.$message.error('请选择设备')
       }
+      this.$http({
+        url: this.api.videoApi,
+        method: 'post',
+        data: { // device=3301061001680&channel=0
+          deviceId: item.deviceId,
+          channel: item.channel
+        }
+      }).then(res => {
+        const { code, msg } = res.data
+        if (code === 200) {
+          this.currentPage = 1
+          this.currentPageLoading = true
+          setTimeout(() => {
+            this.loadingVideo(msg, 10)
+            this.currentPageLoading = false
+          }, 3000)
+          this.activeCell = ''
+        } else {
+          this.$message.error(msg || '获取视频错误')
+        }
+      }, () => {
+        // this.$message.error('获取视频错误')
+      })
+      // 'http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8'
 
-      this.currentSrc = 'http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8'
-      // if (item.deviceId && item.channel) {
-      //   this.currentPage = 1
-      // }
       // 显示播放图标
       // e.target.classList.add('video-model-icon')
       // 设置防抖，鼠标移入播放视频
-      if (this.timer) {
-        clearTimeout(this.timer)
-      }
-      this.timer = setTimeout(() => {
-        this.$refs['videoItem' + item.id][0].videoPlayer().play()
-      }, 1200)
+      // if (this.timer) {
+      //   clearTimeout(this.timer)
+      // }
+      // this.timer = setTimeout(() => {
+      //   this.$refs['videoItem' + item.id][0].videoPlayer().play()
+      // }, 1200)
       // if (this.currentBtn !== 'el-icon-one') {
 
       // }
@@ -530,7 +543,6 @@ export default {
           this.dictOptions.areaList = rows || []
           if (rows && rows.length > 0) {
             // this.dataForm.areaId = rows[0].areaId
-            this.getProjectData()
           }
         } else {
           this.$message.error(msg || '获取行政区域错误')
@@ -551,8 +563,9 @@ export default {
         if (code === 200) {
           this.dictOptions.nameList = data || []
           if (data && data.length > 0) {
-            this.dataForm.groupId = data[0].groupId
+            // this.dataForm.groupId = data[0].groupId
           }
+          this.getProjectData()
         } else {
           this.$message.error(msg || '获取行政区域错误')
           this.dictOptions.nameList = []
@@ -596,7 +609,6 @@ export default {
     // 点击左侧列表设备
     getVideo (e, item) {
       this.activeCell = item.deviceId
-      this.clickNum++
       const { channel, deviceId } = item
       this.$http({
         url: this.api.videoApi,
@@ -606,35 +618,32 @@ export default {
           channel
         }
       }).then(res => {
-        this.getVideoFlv(deviceId, channel)
         const { code, msg } = res.data
         if (code === 200) {
+          this.clickNum++
           this.getVideoFlv(deviceId, channel, msg)
         } else {
-          // this.$message.error(msg || '获取视频错误')
+          this.$message.error(msg || '获取视频错误')
         }
       }, () => {
-        // this.$message.error('获取视频错误')
-
+        this.$message.error('获取视频错误')
       })
     },
     // 获取视频列表
-    getVideoFlv (deviceId, channel) {
-      // console.log(this.lastBtn, this.currentBtn)
+    getVideoFlv (deviceId, channel, msg) {
       let clickNum = this.clickNum - 1
-      // let last = this.menuButtons.findIndex(i => i === this.lastBtn)
       let num = this.menuButtons.findIndex(i => i === this.currentBtn)
-      let msg = 'http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8'
+      // let msg1 = 'http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8'
+      // let msg1 = 'http://183.167.208.113:83/openUrl/RtgjsDm/live.m3u8'
       let index = ''
       if (num === 0) { // 当前只有一个视频框
         index = 0
-        // let url = 'http://153.36.201.214:8088//Service/testPlayerVideo?URI=http://myeye.xuzhouzhihui.com:9050/camera?device=3301061000760&channel=0&streamtype=0&token=83b7271ANz3J330247&type=std.flv' // `http://153.36.201.214:8088/Service/testPlayerVideo?URI=${msg}`
-        // window.open(url)
       } else if (num === 1) { // 当前为4个视频框
         index = clickNum % 4
       } else { // 当前为9个视频框
         index = clickNum % 9
       }
+      console.log(msg)
       this.$set(this.videoList, index, {
         videoSrc: msg,
         deviceId,
@@ -642,7 +651,9 @@ export default {
         id: this.videoList[index].id,
         videoLoading: true
       })
-      // console.log(this.videoList)
+      // this.$nextTick(() => {
+      this.loadingVideo(msg, index)
+      // })
       setTimeout(() => {
         this.$set(this.videoList[index], 'videoLoading', false)
         // this.$message.error('此视频因格式问题或者太大暂无法播放，请稍后再试')
@@ -684,7 +695,7 @@ export default {
       // })
     },
     deleteJcd () {
-      this.dataForm.projectName = ''
+      this.dataForm.title = ''
     },
     destoyrVideo (play) {
       play.pause()
@@ -692,10 +703,21 @@ export default {
       play.destroy()
       play = null
     },
-    loadingVideo () {
-      var vlc = document.getElementById('videoItem10')
-      vlc.video.aspectRatio = '16:9'
-      vlc.playlist.playItem('rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov')
+    // 加载hls流
+    loadingVideo (msg, index) {
+      // let url = 'http://myeye.xuzhouzhihui.com:9040/camera?device=3301061001356&channel=0&streamtype=0&token=J3d8c1A1a60rde2zX2&type=std.m3u8'
+      let video = document.getElementById(`videoItem${index}`)
+      // let video = ref(null)
+      // var Hls = window.Hls
+      if (Hls.isSupported()) {
+        hls = new Hls()
+        hls.loadSource(msg)
+        hls.attachMedia(video)
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          video.value.play()
+          // video.paly()
+        })
+      }
     }
   }
 }
@@ -711,7 +733,10 @@ export default {
   // padding: 2rem 1rem 0.5rem;
   flex-wrap: wrap;
   .el_form_county {
-    width: 46%;
+    width: 100%;
+    /deep/.el-form-item__content {
+      width: 50%;
+    }
   }
   .el_form_search {
     width: 100%;
@@ -1013,15 +1038,15 @@ export default {
   }
   .video-list--one .video-item {
     width: 100%;
-    height: 100%;
+    height: 99.5%;
   }
   .video-list--four .video-item {
     width: 50%;
-    height: 50%;
+    height: 49.5%;
   }
   .video-list--nine .video-item {
     width: 33.33%;
-    height: 33.33%;
+    height: 33.18%;
   }
   .video-player {
     width: 100%;

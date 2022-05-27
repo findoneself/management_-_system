@@ -243,7 +243,7 @@ export default {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   margin-left: -22px;
   background-repeat: no-repeat;

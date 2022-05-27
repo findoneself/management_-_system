@@ -54,9 +54,9 @@
         <el-cascader
           v-model="dataForm.jkdw"
           :show-all-levels="false"
+          :props="props"
           :options="dictOptions.jkdwList"
           size="small"
-          :props="{emitPath: false, value: 'groupId', label: 'label'}"
           @change="getJkdwVideos"
         ></el-cascader>
       </div>
@@ -72,6 +72,21 @@
           controls="controls"
         >
         </video>
+        <!-- <video
+          class="video-js vjs-default-skin fillWidth"
+          controls
+          data-setup='{}'
+          playsinline
+          webkit-playsinline
+          x-webkit-airplay="true"
+          x5-video-player-fullscreen="true"
+          x5-video-player-typ="h5"
+        >
+          <source
+            src="http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8"
+            type="application/x-mpegURL"
+          >
+        </video> -->
       </div>
     </BeautifulCard>
     <BeautifulCard
@@ -126,6 +141,7 @@
         highlight-currow
         :data-list="dataList.sssjList"
         :columns="columns.sssjColumns"
+        :index-obj="{isIndex: true}"
         @rowClick='rowClick'
       />
       <el-pagination
@@ -320,7 +336,7 @@ export default {
         dayList: []
       },
       // 监控点位视频地址
-      videoSrc: 'http://153.36.201.214:9040/camera?device=3301061002402&channel=0&streamtype=0&token=acDUPgcie&type=std.m3u8',
+      videoSrc: '',
       // 所有加载效果
       loadings: {
         sssjLoading: false,
@@ -402,6 +418,7 @@ export default {
       // 图片
       dialogVisibleImg: false,
       imgSrc: '',
+      player: null,
       // 报警详情操作列
       operObj: {
         isOperation: true,
@@ -412,6 +429,19 @@ export default {
             click: this.imgClick
           }
         ]
+      }
+
+    }
+  },
+  computed: {
+    props () {
+      return {
+        emitPath: false,
+        value: 'groupId',
+        label: 'label',
+        lazy: true,
+        expandTrigger: 'hover',
+        lazyLoad: this.lazyLoad
       }
     }
   },
@@ -435,11 +465,12 @@ export default {
     this.getXmbjData()
     // echart的监听
     window.addEventListener('resize', this.watchEchart)
-    // this.palyVideo()
+    //
   },
   destroyed () {
     // 销毁监听
     window.removeEventListener('resize', this.watchEchart)
+    this.flv_destroy()
   },
   methods: {
     // 初始化字典数据
@@ -450,6 +481,35 @@ export default {
         this.dataForm.dayDate = dict.dayDate[0].id
         this.dataForm.xmbjInfoDate = dict.dayDate[0].id
       }
+    },
+    async lazyLoad (node, resolve) {
+      const { data } = node
+      // setTimeout(() => {
+      const list = []
+      if (data && data.count > 0 && !(Object.prototype.hasOwnProperty.call(data, 'children'))) {
+        console.log(data)
+        const { groupId } = data
+        this.$http({
+          url: 'integration/aicr/camera/list/' + groupId
+        }).then(res => {
+          const { data, code, msg } = res.data
+          if (code === 200) {
+            const { cameraList } = data
+            cameraList.map(i => {
+              list.push({ label: i.name, groupId: i.id, status: i.status })
+            })
+            resolve(list)
+            this.pushTree(groupId, list)
+          } else {
+            this.$message.error(msg || '获取失败！')
+          }
+        }, () => { })
+
+      }
+      resolve(list)
+      // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+
+      // }, 1000);
     },
     // 项目报警页码改变
     handleCurrentChange (val) {
@@ -678,7 +738,9 @@ export default {
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
-          this.dictOptions.jkdwList = data.treeData
+          const { treeData } = data
+          this.dictOptions.jkdwList = treeData
+
         } else {
           this.$message.error(msg || '获取失败！')
           this.dictOptions.jkdwList = []
@@ -709,23 +771,71 @@ export default {
       })
     },
     // 获取监控点位视频地址
-    getJkdwVideos () {
-      console.log(this.videoSrc)
-      // if (flvjs.isSupported) { }
+    async getJkdwVideos () {
+      // console.log(this.dictOptions.jkdwList)
       if (!this.dataForm.jkdw) return
-      this.$http({ url: `integration/aicr/camera/video/${this.dataForm.jkdw}` }).then(res => {
-        const { data, msg, code } = res.data
-        if (code === 200) {
-          this.dictOptions.videoSrc = data
+      let list = this.dictOptions.jkdwList[0].children
+      let res = await this.findTree(list)
+      console.log(res)
+      if (res.status === 0) {
+        this.$message.error('该点位离线！')
+      } else {
+        this.$http({ url: `integration/aicr/camera/video/${this.dataForm.jkdw}` }).then(res => {
+          const { data, msg, code } = res.data
+          if (code === 200) {
+            this.palyVideo(data)
+          } else {
+            this.$message.error(msg || '获取视频失败！')
+            this.dataList.videoSrc = ''
+          }
+        }, () => {
+          this.$message.error('视频已失效！')
+          // this.videoSrc = 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4'
+        })
+      }
 
+    },
+    pushTree (id, list) {
+      let List = this.dictOptions.jkdwList[0].children
+      let item = ''
+      item = List.find(i => i.groupId === id)
+      if (!item) {
+        List.map(i => {
+          i.children && i.children.some(o => {
+            if (o.groupId === id) {
+              item = o
+            }
+          })
+        })
+      }
+      this.$set(item, 'children', list)
+
+    },
+    findTree (list) {
+      console.log(list)
+      let val = ' '
+      let flag = this.dataForm.jkdw
+      var that = this
+      list.some(function (i) {
+        console.log(i)
+        if (i.groupId === flag) {
+          console.log(i.groupId === flag)
+          val = i
+          return true
         } else {
-          this.$message.error(msg || '获取视频失败！')
-          this.dataList.videoSrc = ''
+          i.children && i.children.some(function (o) {
+            console.log(o.groupId, flag)
+            if (o.groupId === flag) {
+              val = o
+              return true
+            } else {
+              console.log(o.groupId, o.children)
+              o.children && that.findTree(o.children)
+            }
+          })
         }
-      }, () => {
-        this.$message.error('视频已失效！')
-        // this.videoSrc = 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4'
       })
+      return val
     },
     // 获取报警历史统计数据
     getBjlsData () {
@@ -982,25 +1092,41 @@ export default {
         }
       }
     },
-    palyVideo () {
+    palyVideo (msg) {
       // this.videoList.forEach((item, index) => {
       if (this.$flvjs.isSupported()) {
-        let player = null
         let videoElement = document.getElementById('video')
-        player = this.$flvjs.createPlayer({
+        this.player = this.$flvjs.createPlayer({
           type: 'flv', // => 媒体类型 flv 或 mp4
           isLive: true, // => 是否为直播流
-          hasAudio: true, // => 是否开启声音
-          url: 'http://myeye.xuzhouzhihui.com:9050/camera?device=3301061002355&channel=2&streamtype=0&token=Tz950k6362rb8jbdd1&type=std.flv' // => 视频流地址
+          hasAudio: false, // => 是否开启声音
+          url: msg // 视频流地址
         })
-        player.attachMediaElement(videoElement) // => 绑DOM
-        player.load()
-        player.play()
+        this.player.attachMediaElement(videoElement) // => 绑DOM
+        this.player.load()
+        this.player.play()
+        this.player.on(this.$flvjs.Events.ERROR, (errType, errDetail) => {
+          console.log('errorType:', errType)
+          console.log('errDetail', errDetail)
+          this.$message.error('无效的视频')
+        })
+
       } else {
         this.$message.error('不支持flv格式视频')
       }
       this.vloading = false
       // })
+    },
+    // 销毁flv实例
+    flv_destroy () {
+      if (this.player) {
+        console.log(this.player)
+        this.player.pause()
+        this.player.unload()
+        this.player.detachMediaElement()
+        this.player.destroy()
+        this.player = null
+      }
     }
   }
 }
@@ -1058,7 +1184,7 @@ export default {
   }
 }
 .bjlstj {
-  height: 29px;
+  height: 9%;
 }
 .active-legend {
   background: #2f71ffce;
@@ -1118,10 +1244,9 @@ export default {
 }
 .video-player.video-player.vjs-custom-skin {
   width: 100%;
-  height: calc(100% - 45px);
 }
 .jkdw-card .video {
-  height: 100%;
+  height: calc(100% - 45px);
 }
 .jkdw-card .form-select::before {
   // 为了适应flex布局右边

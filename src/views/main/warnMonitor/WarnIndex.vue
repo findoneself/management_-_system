@@ -8,7 +8,7 @@
   >
     <BeautifulCard
       :isTriangle="false"
-      :title="item.title"
+      :title="item.title+'前十'"
       class="waning_item"
       v-for="(item) in carDataList"
       :key='item.key'
@@ -20,10 +20,10 @@
         >更多</el-button>
         <div v-if="item.key=='ycscyj'">
           <el-select
-            v-model="dustForm.paramType"
+            v-model="dustForm.warnType"
             clearable
             placeholder="请选择"
-            @change="pickerHandel(item.key,'pm')"
+            @change="getMapData(api.dustList, 'ycscyj')"
           >
             <el-option
               v-for="item in paramTypesList"
@@ -38,7 +38,7 @@
             size="small"
             value-format="yyyy-MM-dd"
             :clearable="false"
-            @change="getMapData(api.dustApi,item.key)"
+            @change="getMapData(api.dustList, 'ycscyj')"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -174,16 +174,16 @@ export default {
       borderIcon: ['top', 'right', 'bottom', 'left'],
       wraStyle: { inPadding: '0px' },
       // 今日下拉框
-      dataList: [{ name: '今日', id: '3' }, { name: '明日', id: '5' }],
+      dataList: [],
       // pm2.5等参数下拉框
-      paramTypesList: [{ name: 'pm2.5', id: 'pmq-1' }, { name: '温度', id: 'wd1' }, { name: '湿度', id: 'sd1' }],
+      paramTypesList: [],
       // 整改下拉框
-      zgtypeList: [{ name: '整改分类', id: 'gq-1' }],
+      zgtypeList: [],
       // 安全帽下拉框
-      alertTypes: [{ name: '安全帽', id: 'aq-1' }],
+      alertTypes: [],
       dustForm: {
         dateList: [],
-        paramType: ''
+        warnType: ''
 
       },
       noiseForm: {
@@ -204,22 +204,23 @@ export default {
         title: '扬尘设备预警',
         key: 'ycscyj',
         columns: [
-          { name: '日期', prop: 'datetime', key: 1 },
-          { name: '预警分类', prop: 'warnTypeName', key: 2 },
-          { name: '数值', prop: 'num', key: 3, width: '13%' }
+          { name: '日期', prop: 'warn_time', key: 1 },
+          { name: '预警分类', prop: 'warnType', key: 2 },
+          { name: '数值', prop: 'warnValue', key: 3 }
         ],
-        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-        seriesData: [20, 50, 10, 35, 35, 47, 20, 20, 31, 12],
+        xAxisData: [],
+        seriesData: [],
         color: '#3D73F2'
       }, {
         title: '噪声设备预警',
         key: 'zssbyj',
         columns: [
-          { name: '日期', prop: 'datetime', key: 1, isSort: true },
-          { name: '数值', prop: 'num', key: 3, isSort: true }
+          { name: '日期', prop: 'warn_time', key: 1 },
+          // { name: '预警分类', prop: 'warnType', key: 2 },
+          { name: '数值', prop: 'warnValue', key: 3 }
         ],
-        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-        seriesData: [2, 10, 15, 30, 20, 33, 23],
+        xAxisData: [],
+        seriesData: [],
         color: '#23DBFC'
       },
       //  {
@@ -241,8 +242,8 @@ export default {
           { name: '异常类型', prop: 'alertType', key: 3 },
           { name: '时间', prop: 'createdAt', key: 4, tooltip: 10 }
         ],
-        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-        seriesData: [20, 50, 10, 35, 35, 47, 20],
+        xAxisData: [],
+        seriesData: [],
         color: '#CD482E'
       }, {
         title: '整改项目超期预警',
@@ -251,8 +252,8 @@ export default {
           { name: '整改内容', prop: 'rectificationContent', key: 4, tooltip: 15 },
           { name: '整改结束日期', prop: 'rectificationEndTime', key: 3, tooltip: 10 }
         ],
-        xAxisData: ['云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州', '云-徐州'],
-        seriesData: [20, 50, 10, 35, 35, 47, 20],
+        xAxisData: [],
+        seriesData: [],
         color: '#9662FF'
       }],
       api: {
@@ -260,7 +261,9 @@ export default {
         alertDataApi: 'integration/aicr/algorithm', // AI预警下拉
         paramTypesApi: 'integration/dustMonitoringSource/paramList',
         zgtypeApi: 'integration/rectification/getProjectXl', // 整改分类下拉
-        zgtypeData: 'integration/rectification/getXunChaTj' // 整改统计图
+        zgtypeData: 'integration/rectification/getXunChaTj', // 整改统计图
+        dustList: 'integration/warn/dust/list', // 扬尘设备预警
+        noiseList: 'integration/warn/noise/list'
       }
     }
   },
@@ -273,6 +276,7 @@ export default {
     this.getAlertData()
     this.getparamsList()
     this.getzgType()
+    this.getMapData(this.api.noiseList, 'zssbyj')
   },
   methods: {
     // 获取统计图数据
@@ -291,13 +295,35 @@ export default {
       } else if (key === 'zgsbcqyj') {
         const { zgtype } = this.projectForm
         params = {
-          projectName: this.zgtypeList.find(i => i.value === zgtype).lable, // ,
+          // projectName: this.zgtypeList.find(i => i.value === zgtype).lable, // ,
           projectId: zgtype
+        }
+      } else if (key === 'ycscyj') {
+        const { dateList, warnType } = this.dustForm
+        params = {
+          warnType: this.paramTypesList.find(i => i.prop === warnType).name,
+          pageNum: 1,
+          pageSize: 10,
+          startDate: dateList[0] + ' 00:00:00',
+          endDate: dateList[1] + ' 23:59:59',
+          orderBy: 'asc'
+        }
+      } else if (key === 'zssbyj') {
+        const { dateList } = this.noiseForm
+        params = {
+          warnType: 'noise',
+          pageNum: 1,
+          pageSize: 10,
+          startDate: dateList[0] + ' 00:00:00',
+          endDate: dateList[1] + ' 23:59:59',
+          orderBy: 'asc'
         }
       }
       let data = this.$api.toQueryString(params)
       this.$http({
-        url: api + data
+        url: key === 'zgsbcqyj' ? api : api + data,
+        data: key === 'zgsbcqyj' ? params : {},
+        method: (key === 'ycscyj' || key === 'zssbyj' || key === 'zgsbcqyj') ? 'post' : 'get'
       }).then(res => {
         const { code, msg, data } = res.data
         if (code === 200) {
@@ -310,12 +336,17 @@ export default {
               arr2.push(i.count)
             })
           } else if (key === 'zgsbcqyj') {
-            console.log(data)
+            const { xAxisData, seriesData } = data
+            arr1 = xAxisData
+            arr2 = seriesData
+          } else if (key === 'ycscyj' || key === 'zssbyj') {
+            data.rows.map(i => {
+              arr1.push(i.monitoringSourceName)
+              arr2.push(i.count)
+            })
           }
-
-
-          item.xAxisData = arr1
-          item.seriesData = arr2
+          item.xAxisData = arr1.length > 10 ? arr1.slice(0, 10) : arr1
+          item.seriesData = arr2.length > 10 ? arr2.slice(0, 10) : arr2
         } else {
           this.$message.error(msg || '操作失败')
         }
@@ -355,12 +386,13 @@ export default {
       }).then(res => {
         const { data, code, msg } = res.data
         if (code === 200) {
-          // if (this.router === 'DusIndex') {
-          this.paramTypesList = data
-          this.dustForm.paramType = data[0].prop
-          // } else {
-          // this.dictOptions.paramTypesList = [data.find(i => i.name === '噪声')] || []
-          // }
+          let arr1 = []
+          data.map(i => {
+            (i.prop === 'a34004' || i.name === 'PM10') && arr1.push(i)
+          })
+          this.paramTypesList = arr1
+          this.dustForm.warnType = arr1[0].prop
+          this.getMapData(this.api.dustList, 'ycscyj')
           sessionStorage.setItem('paramTypesList', JSON.stringify(data))
         } else {
           this.$message.error(msg || '获取参数类型数据错误')
@@ -375,12 +407,62 @@ export default {
       }).then(res => {
         this.dataLoading = false
         const { data, msg, code } = res.data
-        console.log(data)
         if (code === 200) {
           this.zgtypeList = data
           this.projectForm.zgtype = data[0].value
-          // this.AiForm.alertType = data.algoConfig[0].task_key
-          // this.getMapData(this.api.zgtypeData, 'zgsbcqyj')
+          this.getMapData(this.api.zgtypeData, 'zgsbcqyj')
+        } else {
+          this.$message.error(msg || '获取报警类型错误')
+        }
+      }, () => {
+        this.$message.error('获取报警类型错误')
+      })
+    },
+    getDustList () {
+      const { dateList, warnType } = this.dustForm
+      let data = {
+        warnType,
+        pageNum: 1,
+        pageSize: 10,
+        startDate: dateList[0] + ' 00:00:00',
+        endDate: dateList[1] + ' 23:59:59',
+        orderBy: 'asc'
+      }
+      let params = this.$api.toQueryString(data)
+      this.$http({
+        url: this.api.dustList + params,
+        method: 'post'
+      }).then(res => {
+        const { data, msg, code } = res.data
+        console.log(data)
+        if (code === 200) {
+          console.log(data)
+        } else {
+          this.$message.error(msg || '获取报警类型错误')
+        }
+      }, () => {
+        this.$message.error('获取报警类型错误')
+      })
+    },
+    getNoiseList () {
+      const { dateList } = this.noiseForm
+      let data = {
+        warnType: 'noise',
+        pageNum: 1,
+        pageSize: 10,
+        startDate: dateList[0] + ' 00:00:00',
+        endDate: dateList[1] + ' 23:59:59',
+        orderBy: 'asc'
+      }
+      let params = this.$api.toQueryString(data)
+      this.$http({
+        url: this.api.dustList + params,
+        method: 'post'
+      }).then(res => {
+        const { data, msg, code } = res.data
+        console.log(data)
+        if (code === 200) {
+          console.log(data)
         } else {
           this.$message.error(msg || '获取报警类型错误')
         }
@@ -419,7 +501,7 @@ button.el-button {
   transform: scale(0.8);
 }
 .el-range-editor--small.el-input__inner {
-  width: 15rem;
+  width: 18rem;
   margin-left: 1rem;
 }
 </style>

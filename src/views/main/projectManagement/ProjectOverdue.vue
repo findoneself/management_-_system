@@ -7,12 +7,18 @@
   >
     <BeautifulWrapper
       :wraStyle="{ inPadding: '0px' }"
-      :isTitle='true'
+      :isTitle='isTitle'
       style="width:100%;geight:100%"
       :title="title"
       @closeClick="closeClick"
       :borderIcon="['right', 'bottom', 'left', 'close']"
     >
+      <div
+        slot="menuRight"
+        style="margin:20px 10%"
+      >
+        <el-button @click="exportList">导出Excel</el-button>
+      </div>
       <TableForm
         :loading="dataLoading"
         :data-list="dataList"
@@ -27,6 +33,7 @@
           slot="headform"
           size="medium"
           class="demo-form-inline"
+          v-if="isTitle"
         >
           <el-form-item class="input_project">
             <el-input
@@ -42,6 +49,18 @@
           >查询</el-button>
           <el-button @click="reset">重置</el-button>
         </el-form>
+        <div
+          slot="oper"
+          slot-scope="{row}"
+        >
+          <el-link
+            @click="item.click(row)"
+            v-for="(item,index) in operButton"
+            :key="index"
+            type='primary'
+            :disabled='item.disabled&&!row.lineAddress'
+          >{{item.text}} </el-link>
+        </div>
       </TableForm>
     </BeautifulWrapper>
     <DialogCenter
@@ -71,6 +90,13 @@ export default {
     dialogVisible: {
       type: Boolean,
       default: false
+    },
+    isTitle: {
+      type: Boolean,
+      default: true
+    },
+    dataLists: {
+      default: []
     }
   },
   data () {
@@ -89,13 +115,21 @@ export default {
       operObj: {
         isOperation: true,
         headName: '操作',
-        operButton: [
-          {
-            text: '详情',
-            click: this.lookDetail
-          }
-        ]
+        isUnifiedOper: false,
+        width: '10rem'
       },
+      operButton: [
+        {
+          text: '详情',
+          disabled: false,
+          click: this.lookDetail
+        },
+        {
+          text: '官网',
+          disabled: true,
+          click: this.jumpPage
+        }
+      ],
       dataColumns: [{ name: '项目编号', prop: 'projectNum', value: '' },
       { name: '备案号', prop: 'projectRecordNum', value: '' },
       { name: '项目名称', prop: 'projectName', value: '' },
@@ -113,8 +147,24 @@ export default {
       { name: '项目竣工状态', prop: 'completeStatu', value: '' }
       ],
       api: {
-        moreApi: 'integration/project/getOver90Projects' // 超期90天
+        moreApi: 'integration/project/getOver90Projects', // 超期90天
+        bigNumExport: 'integration/project/getProjectZsExport', // 项目总数
+        over90Export: 'integration/project/getOver90ProjectsExport' // 超期90天导出
       }
+    }
+  },
+  watch: {
+    dataLists: {
+      handler () {
+        this.getMoreData()
+      },
+      deep: true
+    },
+    title: {
+      handler () {
+        this.getMoreData()
+      },
+      deep: true
     }
   },
   created () {
@@ -132,8 +182,11 @@ export default {
         const { data, code, msg } = res.data
         if (code === 200) {
           const { list } = data
-          this.dataList = list
-
+          if (!this.isTitle && this.dataLists.length > 0) {
+            this.dataList = this.dataLists || []
+          } else {
+            this.dataList = list
+          }
         } else {
           this.$message.error(msg || '获取超期项目错误')
         }
@@ -158,12 +211,34 @@ export default {
 
       this.dialogVisibleCenter = true
     },
+    jumpPage (item) {
+      window.open(item.lineAddress)
+    },
     closeDialogCenter () {
       this.dialogVisibleCenter = false
     },
     reset () {
       this.projectName = ''
       this.getMoreData()
+    },
+    exportList () {
+      console.log(this.title)
+      let url = ''
+      let params = ''
+      let title = this.title
+      // bigNumExport
+      if (this.title === '项目总数') {
+        url = this.api.bigNumExport
+        params = { type: 1 }
+      } else if (this.title === '超期90天未竣工') {
+        url = this.api.over90Export
+        params = { projectName: this.projectName }
+      } else {
+        url = this.api.bigNumExport
+        params = { type: this.title }
+      }
+      this.$api.downloadBlob(url, params, title, function (data) {
+      })
     }
   },
   computed: {
@@ -217,5 +292,10 @@ export default {
 }
 .el-input {
   width: 20rem;
+}
+/deep/button.el-button:focus,
+button.el-button:hover,
+.el-button.el-button--primary {
+  color: #fff;
 }
 </style>

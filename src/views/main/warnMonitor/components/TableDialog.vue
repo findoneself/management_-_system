@@ -25,7 +25,7 @@
             :model="dataForm"
             label-width="6rem"
           >
-            <el-form-item
+            <!-- <el-form-item
               label="项目名称："
               key="xmmc"
               v-if=" currentItme.title === '车辆冲洗预警'"
@@ -36,11 +36,11 @@
                 clearable
               >
               </el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item
               label="设备名称："
               key="sbmc"
-              v-else
+              v-if="currentItme.title !== '整改项目超期'"
             >
               <el-input
                 placeholder="输入设备名称搜索"
@@ -51,7 +51,25 @@
             </el-form-item>
             <el-form-item
               label="预警分类："
-              v-show="currentItme.title === 'AI设备预警' || currentItme.title === '扬尘设备预警'"
+              key="xmmc"
+              v-show=" currentItme.title === '扬尘设备预警'"
+            >
+              <el-select
+                v-model="dataForm.alertType"
+                clearable
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in dictOptions.alertTypes"
+                  :key="item.prop"
+                  :label="item.name"
+                  :value="item.prop"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              label="预警分类："
+              v-show="currentItme.title === 'AI设备预警'"
               key="bjlx"
             >
               <el-select
@@ -85,12 +103,16 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="时间区间：">
+            <el-form-item
+              label="时间区间："
+              v-if="currentItme.title !== '整改项目超期'"
+            >
               <el-date-picker
                 v-model="dataForm.dateList"
                 type="daterange"
                 size="small"
                 clearable
+                value-format="yyyy-MM-dd"
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
@@ -128,6 +150,7 @@
           :data-list="infoDataList"
           :columns="currentItme.columns"
           :oper-obj="currentItme.title === 'AI设备预警' ? infoOperObj : {}"
+          :index-obj="{isIndex: true}"
         ></BeautifulTableList>
         <el-pagination
           @current-change="handleInfoChange"
@@ -264,7 +287,12 @@ export default {
         alertDataApi: 'integration/aicr/algorithm', // 预警下拉
         AiListApi: 'integration/aicr/camera/alert/list', // ai列表
         peojectListApi: '/integration/rectification/getTjList',
-        zgtypeApi: 'integration/rectification/getProjectXl' // 整改分类下拉
+        paramTypesApi: 'integration/dustMonitoringSource/paramList',
+        dustList: 'integration/warn/dust/list', // 扬尘设备预警列表
+        zgtypeApi: 'integration/rectification/getProjectXl', // 整改分类下拉
+        dustDetail: 'integration/warn/dust/info', // 扬尘详情
+        noiseDetail: 'integration/warn/noise/info', // 噪声详情
+        noiseList: 'integration/warn/noise/list'
       }
     }
   },
@@ -274,6 +302,7 @@ export default {
       // 初始化字典
       const now = this.$format.getTwodaysDate()
       this.dataForm.dateList = [now[0], now[1]]
+
       // if (this.dicts.warnType && this.dicts.warnType.length > 0) {
       //   this.dictOptions.warnList = this.dicts.warnType
       // }
@@ -289,6 +318,7 @@ export default {
         const { data, msg, code } = res.data
         if (code === 200) {
           this.dictOptions.alertTypes = data.algoConfig
+          this.dataForm.alertType = data.algoConfig[0].task_key
           this.getList()
         } else {
           this.$message.error(msg || '获取报警类型错误')
@@ -300,12 +330,10 @@ export default {
     },
     getList () {
       const { title } = this.currentItme
+      const { dateList, alertType, name, projectId } = this.dataForm
       let params = {}
       let url = ''
-
       if (title === 'AI设备预警') {
-
-        const { dateList, alertType, name } = this.dataForm
         params = {
           startDate: dateList[0],
           endDate: dateList[1],
@@ -317,20 +345,39 @@ export default {
         }
         url = this.api.AiListApi
       } else if (title === '整改项目超期') {
-        const { projectId } = this.dataForm
-        console.log(projectId)
-
         params = {
-          projectName: this.dictOptions.projectList.find(i => i.value === projectId).lable, //
+          projectName: this.dictOptions.projectList.find(i => i.value === projectId).lable,
           rectificationName: ''
         }
         url = this.api.peojectListApi
+      } else if (title === '扬尘设备预警') {
+        url = this.api.dustList
+        params = {
+          monitoringSourceName: name,
+          warnType: alertType ? this.dictOptions.alertTypes.find(i => i.prop === alertType).name : '',
+          pageNum: this.queryAll.pageIndex,
+          pageSize: this.queryAll.pageSize,
+          startDate: dateList[0] + ' 00:00:00',
+          endDate: dateList[1] + ' 23:59:59',
+          orderBy: 'asc'
+        }
+      } else if (title === '噪声设备预警') {
+        params = {
+          warnType: 'noise',
+          monitoringSourceName: name,
+          pageNum: this.queryAll.pageIndex,
+          pageSize: this.queryAll.pageSize,
+          startDate: dateList[0] + ' 00:00:00',
+          endDate: dateList[1] + ' 23:59:59',
+          orderBy: 'asc'
+        }
+        url = this.api.noiseList
       }
       let data = this.$api.toQueryString(params)
       this.$http({
-        url: url + data
+        url: url + data,
+        method: (title === '扬尘设备预警' || title === '噪声设备预警') ? 'post' : 'get'
       }).then(res => {
-        console.log(res.data)
         this.dataLoading = false
         const { data, msg, code } = res.data
         if (code === 200) {
@@ -341,9 +388,10 @@ export default {
             this.dataTotal = res.data.total
             this.dataList = res.data.rows
             console.log(data.rows)
+          } else if (title === '扬尘设备预警' || title === '噪声设备预警') {
+            this.dataList = data.rows
+            this.dataTotal = data.total
           }
-
-
         } else {
           this.$message.error(msg || '获取数据错误')
           this.total = 0
@@ -356,36 +404,50 @@ export default {
         this.total = 0
         this.dataList = []
       })
+      this.isShowInfo = false
     },
     open (item) {
-      console.log(item)
       this.currentItme = item
       this.$refs.tableDialog.showDialog(true)
       if (item.title === '整改项目超期') {
-        // if(item.title === '整改项目超期预警')
         this.columns = [
           { name: '整改项目', prop: 'projectName', key: 2 },
-          { name: '整改类型', prop: 'rectificationName', key: 3 }]
+          { name: '整改类型', prop: 'rectificationName', key: 3 },
+          { name: '建设单位联系人', prop: 'constructorContacts', key: 4 },
+          { name: '建设单位联系电话', prop: 'constructorTel', key: 5 }]
         this.getzgType()
-      } else {
+      } else if (item.title === '扬尘设备预警' || item.title === '噪声设备预警') {
+        this.columns = [{ name: '监测点', prop: 'monitoringSourceName', key: 3 },
+        { name: '预警次数', prop: 'count', key: 2 }, { name: '建设单位联系人', prop: 'constructorContacts', key: 4 },
+        { name: '建设单位联系电话', prop: 'constructorTel', key: 5 }]
+        this.getparamsList()
+      } else if (item.title === 'AI设备预警') {
         this.columns = [
           { name: '设备名称', prop: 'name', key: 2 },
-          { name: '预警数量', prop: 'count', key: 3 }
+          { name: '预警数量', prop: 'count', key: 3 },
+          { name: '建设单位联系人', prop: 'constructorContacts', key: 4 },
+          { name: '建设单位联系电话', prop: 'constructorTel', key: 5 }
         ]
+        this.getAlertData()
       }
+      // {
+
+      //   this.getList()
+      // }
+
       this.init()
       // this.getWarnData()
-      this.getAlertData()
+
     },
     // 页码改变
     handleCurrentChange (val) {
       this.queryAll.pageIndex = val
-      this.getWarnData()
+      this.getList()
     },
     // 详情页面改变
     handleInfoChange (val) {
       this.queryInfo.pageIndex = val
-      this.getWarnInfo()
+      this.warnLogClick(this.currentInfo)
     },
     // 关闭弹窗
     closeClick () {
@@ -398,9 +460,7 @@ export default {
     // 图片点击
     imgClick (item) {
       // const { title } = this.currentItme // 当前弹窗
-
       this.imgSrc = item.url
-
       this.dialogVisibleImg = true
       // this.$refs.imageRef.showImg(e, item)
     },
@@ -445,8 +505,14 @@ export default {
         this.dataList = list
       })
     },
-    // 预警记录点击
+    // 列表点击查看详情
     warnLogClick (item) {
+      if (item.monitoringSourceId !== this.currentInfo.monitoringSourceId) {
+        this.queryInfo = {
+          pageIndex: 1,
+          pageSize: 20
+        }
+      }
       this.currentInfo = item
       console.log(item)
       const { cameraId } = item
@@ -476,9 +542,59 @@ export default {
       } else if (title === '整改项目超期') {
         this.infoDataList = [item]
         this.infoTotal = 1
-
+      } else if (title === '扬尘设备预警') {
+        const { dateList, alertType } = this.dataForm
+        let params = {
+          monitoringSourceId: item.monitoringSourceId,
+          orderBy: 'asc',
+          startDate: dateList[0],
+          endDate: dateList[1],
+          warnType: alertType ? this.dictOptions.alertTypes.find(i => i.prop === alertType).name : '',
+          pageNum: this.queryInfo.pageIndex,
+          pageSize: this.queryInfo.pageSize
+        }
+        let data = this.$api.toQueryString(params)
+        this.$http({ url: this.api.dustDetail + data, method: 'post' }).then(res => {
+          const { data, msg, code } = res.data
+          if (code === 200) {
+            if (title === '扬尘设备预警') {
+              data.rows.map(i => (i.warnType === 'PM25') && (i.warnType = 'PM2.5'))
+            }
+            this.infoDataList = data.rows
+            this.infoTotal = data.total
+          } else {
+            this.$message.error(msg || '获取详情数据失败！')
+            this.infoDataList = []
+          }
+        }, () => {
+          this.loadings.sssjLoading = false
+        })
+      } else if (title === '噪声设备预警') {
+        const { dateList } = this.dataForm
+        let params = {
+          warnType: 'noise',
+          monitoringSourceId: item.monitoringSourceId,
+          pageNum: this.queryInfo.pageIndex,
+          pageSize: this.queryInfo.pageSize,
+          startDate: dateList[0] + ' 00:00:00',
+          endDate: dateList[1] + ' 23:59:59',
+          orderBy: 'asc'
+        }
+        let data = this.$api.toQueryString(params)
+        this.$http({
+          url: this.api.noiseDetail + data,
+          method: 'post'
+        }).then(res => {
+          const { data, msg, code } = res.data
+          if (code === 200) {
+            this.infoDataList = data.rows
+            this.infoTotal = data.total
+          } else {
+            this.$message.error(msg || '获取详情数据失败！')
+            this.infoDataList = []
+          }
+        })
       }
-
     },
     // 获取预警记录详情
     getWarnInfo () {
@@ -503,36 +619,25 @@ export default {
       }, () => {
         this.infoLoading = false
         this.$message.error(`获取${this.currentItme.title}记录失败！`)
-        const list = [
-          { id: '1212', num: 25, datetime: '2022-02-02 11:00:00', warnTypeName: 'pm2.5', imgUrl: 'http://bj.xpei.ren/zt/work-note/images/head_user.gif' },
-          { id: '165', num: 76, datetime: '2022-02-01 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '1215542', num: 454, datetime: '2022-02-06 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '124', num: 73, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '145452', num: 15, datetime: '2022-02-07 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '1256', num: 45, datetime: '2022-02-08 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '1565232', num: 435, datetime: '2021-02-02 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '15652445', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '156222', num: 45, datetime: '2021-02-02 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '15652565', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '1565323232', num: 45, datetime: '2020-02-02 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '152', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '1552', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' },
-          { id: 'gww', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' },
-          { id: '15gwhw52', num: 45, datetime: '2022-02-02 12:00:00', warnTypeName: 'pm2.5' }
-        ]
-        this.infoTotal = list.length
-        this.infoDataList = list
+        this.infoTotal = 0
+        this.infoDataList = []
       })
     },
     // 重置表单
     refreshClick () {
       this.dataForm = {
         name: '',
+        // 时间区间
         dateList: [],
+        // 报警类型
         alertType: '',
-        modifyType: ''
+        // 整改分类
+        modifyType: '',
+        projectName: '', // 项目名称
+        projectId: ''
       }
       this.init()
+      this.isShowInfo = false
       this.getList()
     },
     // 整改下拉
@@ -553,6 +658,30 @@ export default {
         }
       }, () => {
         this.$message.error('获取报警类型错误')
+      })
+    },
+    // 扬尘参数下拉
+    getparamsList () {
+      this.$http({
+        url: this.api.paramTypesApi
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          let arr1 = []
+          data.map(i => {
+            (i.prop === 'a34004' || i.name === 'PM10') && arr1.push(i)
+          })
+          if (this.currentItme.title === '扬尘设备预警') {
+            this.dictOptions.alertTypes = arr1
+            this.dataForm.alertType = arr1[0].prop
+          }
+          this.getList()
+          sessionStorage.setItem('paramTypesList', JSON.stringify(data))
+        } else {
+          this.$message.error(msg || '获取参数类型数据错误')
+        }
+      }, (err) => {
+        this.$message.error(err.data.msg || err.data.error)
       })
     }
   }

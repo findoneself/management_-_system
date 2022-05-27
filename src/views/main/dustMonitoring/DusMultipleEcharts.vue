@@ -5,6 +5,7 @@
     :data-list="dataList"
     :columns="columns"
     :is-table="tabsType === 'table'"
+    :index-obj="{isIndex: true}"
     :cur-btn-id="echartsType"
     @buttonClick="buttonClick"
     :tform-head="tformHead"
@@ -65,21 +66,17 @@
         >
         </el-date-picker>
       </el-form-item>
-      <el-form-item
-        label="类型："
-        label-width="5rem"
-      >
-        <el-select
-          v-model="dataForm.type"
-          @change="typeChange"
+      <el-form-item label="类型：">
+        <el-radio-group
+          v-model="dataForm.timeSize"
+          @change="getDataList"
         >
-          <el-option
-            v-for="item in dictOptions.typeList"
+          <el-radio
+            :label="item.id"
+            v-for="item in dictOptions.timeList"
             :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
+          >{{ item.name}}</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item
         label="参数类型："
@@ -136,9 +133,9 @@ export default {
       echartsType: '', // 图表 有两个选项（检测源和项目 仅限于排名统计页面）
       // 查询表单
       dataForm: {
-        area: 'xz-1',
+        area: '',
         date: [],
-        type: 'zt',
+        timeSize: 'hour',
         paramTypes: 'wd',
         monitoringSourceIds: []
       },
@@ -146,11 +143,12 @@ export default {
       dictOptions: {
         // 行政区域
         areaList: [],
-        // 排序
+        // 类型
+        timeList: [{ id: 'hour', name: '时数据' }, { id: 'day', name: '天数据' }, { id: 'month', name: '月数据' }, { id: 'quarter', name: '季数据' }],
         typeList: [{ id: 'zt', name: '昨天数据' }, { id: 'jqt', name: '近七天数据' }, { id: 'dy', name: '当月数据' }, { id: 'dn', name: '当年数据' }],
         // 参数类型
         paramTypesList: [],
-        jczdList: [{ id: 'jc-1', name: '站点1' }, { id: 'jc-2', name: '站点2' }, { id: 'jc-3', name: '站点3' }, { id: 'jd-4', name: '站点4' }],
+        jczdList: [],
         tabsTypes: [
           { id: 'echart', name: '图形' },
           { id: 'table', name: '表格' }
@@ -205,7 +203,7 @@ export default {
       let item = this.dictOptions.paramTypesList.find(i => i.prop === this.dataForm.paramTypes) || { name: '测试标题' }
       const info = {
         title: item.name,
-        small: (this.dataForm.date.length > 0 ? `${this.dataForm.date[0]}-${this.dataForm.date[1]}` : '') + '（分钟数据）'
+        small: (this.dataForm.date.length > 0 ? `${this.dataForm.date[0]}-${this.dataForm.date[1]}` : '')
       }
       if (this.tabsType === 'table') {
         info.btnType = 'elbtn'
@@ -234,7 +232,7 @@ export default {
     initDict () {
       // 行政区域数据
       this.dictOptions.areaList = JSON.parse(sessionStorage.getItem('areaList')) || []
-      this.dataForm.area = this.dictOptions.areaList[0].id || ''
+      this.dataForm.area = JSON.parse(sessionStorage.getItem('defaultArea'))
       // 参数类型数据
       let data = JSON.parse(sessionStorage.getItem('paramTypesList'))
       if (!this.currentRoute) {
@@ -253,9 +251,12 @@ export default {
       })
       const tree = this.dictOptions.areaList
       // 默认监测站点数据
-      this.dictOptions.jczdList = tree[0].children || []
-      if (tree[0].children && tree[0].children.length > 0) {
+      let defaultArea = tree.find(i => i.id === this.dataForm.area)
+      this.dictOptions.jczdList = defaultArea.children || []
+      if (defaultArea.children && defaultArea.children.length > 0) {
         this.dataForm.monitoringSourceIds = [tree[0].children[0].id]
+      } else {
+        this.dataForm.monitoringSourceIds = []
       }
       this.getDataList()
     },
@@ -272,35 +273,40 @@ export default {
     getDataList () {
       this.dataLoading = true
       let params = this.getTimeParams()
-      this.$http({
-        url: this.api.echartsDataApi,
-        method: 'post',
-        data: params
-      }).then(res => {
-        this.dataLoading = false
-        const { data, code, msg } = res.data
-        if (code === 200) {
-          if (data) {
-            const { columns, seriesdata, xaxisdata } = data
-            let arr = []
-            columns.map(i => {
-              arr.push({ ...i, key: i.KEY })
-            })
+      console.log(params)
+      if (params.monitoringSourceIds.length > 0) {
+        this.$http({
+          url: this.api.echartsDataApi,
+          method: 'post',
+          data: params
+        }).then(res => {
+          this.dataLoading = false
+          const { data, code, msg } = res.data
+          if (code === 200) {
+            if (data) {
+              const { columns, seriesdata, xaxisdata } = data
+              let arr = []
+              columns.map(i => {
+                arr.push({ ...i, key: i.KEY })
+              })
 
-            this.columns = [{ prop: 'dataTime', name: '时间', key: 0 }, ...arr]
-            console.log(arr)
-            this.seriesDatas = seriesdata
-            this.xAxisDatas = xaxisdata
+              this.columns = [{ prop: 'dataTime', name: '时间', key: 0 }, ...arr]
+              this.seriesDatas = seriesdata
+              this.xAxisDatas = xaxisdata
+            }
+            this.getTableData()
+          } else {
+            this.$message.error(msg || '获取统计数据失败！')
+            this.dataList = []
           }
-          this.getTableData()
-        } else {
-          this.$message.error(msg || '获取统计数据失败！')
-          this.dataList = []
-        }
-      }, () => {
-        this.dataLoading = false
-        this.$message.error('获取统计数据失败！')
-      })
+        }, () => {
+          this.dataLoading = false
+          this.$message.error('获取统计数据失败！')
+        })
+      } else {
+        this.$message.error('请选择监测站点！')
+      }
+
     },
     getTableData () {
       this.dataLoading = true
@@ -310,7 +316,6 @@ export default {
         method: 'post',
         data: params
       }).then(res => {
-        console.log(res.data)
         this.dataLoading = false
         const { data, code, msg } = res.data
         if (code === 200) {
@@ -351,6 +356,8 @@ export default {
       if (isJczd.children && isJczd.children.length > 0) {
         this.dataForm.monitoringSourceIds = [isJczd.children[0].id]
         this.getDataList()
+      } else {
+        this.dataForm.monitoringSourceIds = []
       }
     },
     getTimeParams () {

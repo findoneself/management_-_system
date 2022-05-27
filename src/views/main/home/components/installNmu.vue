@@ -39,7 +39,7 @@ export default {
           {
             align: 'left',
             right: 0,
-            top: -5,
+            top: -3,
             textStyle: {
               color: '#fff',
               fontSize: '12'
@@ -163,6 +163,7 @@ export default {
         ...this.option,
         series
       }
+      console.log(option)
       var myChart = this.$echarts.init(document.getElementById('installnum'))
       myChart.setOption(option)
       window.addEventListener('resize', function () {

@@ -1,7 +1,7 @@
 <template>
   <div
     id="business_sort"
-    style="width: 100%; height: 75%"
+    style="width: 100%; height: 100%"
   ></div>
 </template>
 <script>
@@ -24,7 +24,6 @@ export default {
     total: {
       handler () {
         this.option.title.text = this.total
-        console.log(this.total)
         this.getmap()
       },
       deep: true
@@ -39,56 +38,82 @@ export default {
   data () {
     return {
       option: {
-        emphasis: {
-          label: { show: true, formatter: '{b}: {c}' },
-          labelLine: { show: true },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            // Use axis to trigger tooltip
+            // type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+          }
+        },
+        grid: {
+          left: '5%',
+          right: '10rem',
+          top: '40rem',
+          bottom: '5rem',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          axisLabel: {
+            color: '#fff',
+            fontSize: '14'
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#B9C8DB'
+            }
+          },
+          axisTick: {
+            show: false
+          }
+        },
+        yAxis: {
+          type: 'value',
+          name: '',
+          axisLabel: {
+            color: '#fff',
+            fontSize: '12'
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#B9C8DB'
+            }
+          },
+          // Y轴全部轴线样式（除开边框Y轴）
+          splitLine: {
+            lineStyle: {
+              color: '#F2F2F2',
+              opacity: 0.1
+            }
+          },
+          axisTick: {
+            show: false
+          }
+        },
+        series: [{
+          type: 'bar',
+          barMaxWidth: 25,
+          barGap: '10%',
+          label: {
+            show: true
+          },
           itemStyle: {
             normal: {
-              fontSize: '0.5rem',
-              shadowBlur: 0,
+              color: '#486AFF',
               label: {
-                show: false
-              },
-              labelLine: {
-                show: false
+                show: true,
+                textStyle: {
+                  color: '#fff',
+                  fontSize: '10'
+                },
+                position: 'top',
+                formatter: function (p) {
+                  return p.value > 0 ? (p.value) : ''
+                }
               }
             }
           }
-        },
-        title: {
-          text: this.total,
-          left: '49%',
-          top: '40%',
-          textAlign: 'center',
-          subtext: '项目总数',
-          textStyle: {
-            fontWeight: 'bold',
-            fontSize: 16,
-            color: '#fff'
-          }
-        },
-        toolbox: {
-        },
-        series: [
-          {
-            name: 'Radius Mode',
-            type: 'pie',
-            radius: [45, 65],
-            center: ['50%', '50%'],
-            // roseType: 'radius',
-            itemStyle: {
-              // borderRadius: 5
-            },
-            label: {
-              show: false
-            },
-            emphasis: {
-              label: {
-                show: true
-              }
-            }
-          }
-        ]
+        }]
       }
     }
   },
@@ -98,18 +123,33 @@ export default {
   // 橘黄色//红色//亮蓝//黄色
   methods: {
     getmap () {
-      let data = []
+      const { xAxis, series } = this.option
+      console.log(this.xAxisData)
+      let arr1 = []
+      let arr2 = []
       this.dataList.map(i => {
-        data.push({
-          ...i,
-          itemStyle: {
-            color: i.color
-          }
-        })
+        if (i.length > 10) {
+          arr1.push(i.name.slice(0, 10))
+        } else {
+          arr1.push(i.name)
+        }
+        arr2.push(i.value)
       })
+      xAxis.data = arr1
+      series[0].data = arr2
+      // console.log(this.dataList)
+      // let data = []
+      // this.dataList.map(i => {
+      //   data.push({
+      //     ...i,
+      //     itemStyle: {
+      //       color: i.color
+      //     }
+      //   })
+      // })
       var myChart = this.$echarts.init(document.getElementById('business_sort'))
-      const { series } = this.option
-      series[0].data = data
+      // const { series } = this.option
+      // series[0].data = data
       myChart.setOption(this.option)
       window.addEventListener('resize', function () {
         myChart.resize()

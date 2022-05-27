@@ -14,9 +14,12 @@
             >{{item.name}} : <span>{{ item.num }}</span></li>
           </ul>
           <div class="inspect_people">
-            <div class="first">网络员：</div>
+            <div class="first">网格员：</div>
             <img src="~_ats/img/people.png" />
-            <div class="people_num">{{ patrolData.people }}人</div>
+            <div
+              class="people_num"
+              @click="lookFile('网格员')"
+            >{{ patrolData.people }}人</div>
           </div>
         </div>
         <PatrolMap :data-list="patrolData.patrolList"></PatrolMap>
@@ -24,11 +27,11 @@
       <!-- 中间项目总数 -->
       <div class="home_top_center">
         <div class="totalnum">
-          <!-- <div class="time">
-            <span class="span">{{ projectInfo.year }}年</span> <span>{{ projectInfo.month }}月</span>
-          </div> -->
           <div class="bignum">
-            <div class="bginum-text">
+            <div
+              class="bginum-text"
+              @click="lookFile('项目汇总')"
+            >
               <span
                 class="bginum-text-item"
                 v-for="(val, index) in projectInfo.count"
@@ -40,7 +43,6 @@
             <span>项目总数</span>
             <span></span>
           </div>
-
         </div>
         <div class="images">
           <img
@@ -53,6 +55,7 @@
             :class="'images_item' + (index +1)"
             v-for="(item, index) in projectInfo.list"
             :key="item.id"
+            @click="lookFile(item.name,item)"
           >
             <div class="images_value">{{ item.num }}</div>
             <span>{{ item.name }}</span>
@@ -83,9 +86,10 @@
             class="gkzd-list-item"
             v-for="(item, index) in paramslist"
             :key="index + '.'"
+            :title="item.name+':'+item.value"
           >
-            <span>{{ item.name }}:</span>
-            <span>{{ (item.value&&item.value.length>5)?item.value.slice(0,3)+'...':item.value }}</span>
+            <span :title="item.name+':'+item.value">{{ (item.name && item.name.length>6)?item.name.slice(0,6):item.name }}:</span>
+            <span :title="item.name+':'+item.value">{{ (item.value && item.value.length>5)?item.value.slice(0,3)+'...':item.value }}</span>
           </li>
         </ul>
       </BeautifulCard>
@@ -179,6 +183,7 @@
     <fileDialog
       ref="fileDialog"
       @getFileData='getFileData'
+      :dataLists='dataList'
     />
   </div>
 </template>
@@ -234,26 +239,11 @@ export default {
           { id: 'xm5', name: '项目5', num: 3145 }
         ]
       },
+      allProjectS: [],
+      // 传递到弹窗的数据
+      dataList: [],
       // 国控数据
-      paramslist: [
-        { id: '1', name: '参数类型', value: 2134 },
-        { id: '2', name: '参数类型', value: 2134 },
-        { id: '3', name: '参数类型', value: 2134 },
-        { id: '4', name: '参数类型', value: 2134 },
-        { id: '5', name: '参数类型', value: 2134 },
-        { id: '6', name: '参数类型', value: 2134 },
-        { id: '7', name: '参数类型', value: 2134 },
-        { id: '8', name: '参数类型', value: 2134 },
-        { id: '9', name: '参数类型', value: 2134 },
-        { id: '10', name: '参数类型', value: 2134 },
-        { id: '11', name: '参数类型', value: 2134 },
-        { id: '12', name: '参数类型', value: 2134 },
-        { id: '13', name: '参数类型', value: 2134 },
-        { id: '14', name: '参数类型', value: 2134 },
-        { id: '54', name: '参数类型', value: 2134 },
-        { id: '45', name: '参数类型', value: 2134 },
-        { id: '47', name: '参数类型', value: 2134 }
-      ],
+      paramslist: [],
       // 报警统计图
       xAxisData: ['3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07'],
       seriesData: [20, 50, 10, 35, 35, 47, 20],
@@ -282,7 +272,8 @@ export default {
         gkzdApi: 'integration/epmapStation/epmapStationList', // 国控站点下拉框数据
         getStationDataApi: 'integration/epmapStation/epmapStationData/', // 国控站点根据下拉框的参数列表
         getFileApi: '/integration/document/getNoReadNumberFromWg', // 文件通报
-        getInstallApi: '/integration/project/getGqxAzTjr' // 各县区安装数量
+        getInstallApi: '/integration/project/getGqxAzTjr', // 各县区安装数量
+        userApi: '/integration/gridmember/list' // 网格员
       }
 
     }
@@ -309,7 +300,7 @@ export default {
         }
       })
     },
-    getPatrolData () { // projectTotalApi
+    getPatrolData () {
       this.$http({
         url: this.api.patrolDataApi
       }).then(res => {
@@ -321,7 +312,8 @@ export default {
         }
       })
     },
-    getProjectData () { // projectTotalApi
+    // 中间大数字 项目总数
+    getProjectData () {
       this.$http({
         url: this.api.projectTotalApi
       }).then(res => {
@@ -329,12 +321,18 @@ export default {
         if (code === 200) {
           data.count = data.count.toString()
           this.projectInfo = data
+          this.allProjectS = data.allProjectS
+
         } else {
           this.$message.error(msg || '获取项目总数错误')
         }
       })
     },
     stationChange () {
+      let keyList = {
+        api: '空气质量指数', co: '一氧化碳/小时', ico: '一氧化碳分指数', ino2: '二氧化碳分指数', io3: '臭氧分指数',
+        ipm10: 'PM10分指数', ipm25: 'PM2.5分指数', iso2: '二氧化硫分指数', no2: '二氧化氮/小时', o3: '臭氧/小时', pm10: '颗粒物<=10μm', pm25: '颗粒物<=2.5μm', so2: '二氧化硫/小时'
+      }
       this.$http({
         url: this.api.getStationDataApi + this.stationCode
       }).then(res => {
@@ -342,7 +340,10 @@ export default {
         if (code === 200) {
           let arr = []
           for (let key in data) {
-            arr.push({ name: key, value: data[key] })
+            if (keyList[key]) {
+              arr.push({ name: keyList[key], value: data[key] })
+
+            }
             // console.log(data[key].length)
           }
           this.paramslist = arr
@@ -363,7 +364,7 @@ export default {
         if (code === 200) {
           this.fileData = data
         } else {
-          this.$message.error(msg || '获取国控站点数据错误')
+          this.$message.error(msg || '阅读错误')
         }
       })
     },
@@ -380,7 +381,14 @@ export default {
         }
       })
     },
-    lookFile (name) {
+    lookFile (name, item) {
+      console.log(name)
+      if (name === '项目汇总') {
+        this.dataList = this.allProjectS
+      }
+      if (item) {
+        this.dataList = item.projectList
+      }
       this.$refs.fileDialog.open(name)
     }
   }
@@ -410,6 +418,7 @@ export default {
       position: absolute;
       right: 5%;
       top: 20%;
+      z-index: 9;
     }
   }
   .home_top {
@@ -461,6 +470,7 @@ export default {
         font-size: 24px;
         color: var(--high-color);
         margin-top: 0.5rem;
+        cursor: pointer;
       }
     }
   }
@@ -485,11 +495,11 @@ export default {
       width: calc(50% - 5px);
       display: inline-flex;
       align-items: center;
-      height: 40px;
+      // height: 40px;
       background: rgba(19, 60, 145, 0.85);
       border: 1px solid #334c9e;
       margin: 5px 0;
-      padding: 4px 15px;
+      padding: 4px 10px;
       background-color: #133c91;
       border-radius: 4px;
     }
@@ -568,6 +578,7 @@ export default {
           justify-content: center;
           font-size: 89px;
           font-family: "DS-Digital";
+          cursor: pointer;
         }
         .bginum-text-item {
           position: relative;
@@ -652,7 +663,7 @@ export default {
       .images_item2 .images_value,
       .images_item4 .images_value,
       .images_item6 .images_value {
-        background: url("~_ats/img/img2.png") no-repeat center center;
+        background: url("~_ats/img/img_pie.png") no-repeat center center;
         background-size: 100% 100%;
         width: 9rem;
         height: 9rem;
@@ -724,7 +735,7 @@ export default {
       justify-content: space-around;
       align-items: center;
       background-color: #12298d;
-      padding: 10px 0;
+      // padding: 10px 0;
       border-radius: 1rem;
       margin-bottom: 1rem;
       img {

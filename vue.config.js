@@ -72,6 +72,7 @@ module.exports = {
     config.module
       .rule('images')
       .test(/\.(png|jpe?g|gif|webp|jfif)(\?.*)?$/)
+    config.plugin('webpack-bundle-analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
   },
   css: {
     loaderOptions: {

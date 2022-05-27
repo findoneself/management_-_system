@@ -15,9 +15,11 @@
             <ProjectTotalPie
               :paramslist='paramslist'
               :total='projectTotal'
+              @chartClick='chartClick'
             />
             <div class="params">
               <div
+                @click="chartClick(item)"
                 class="item"
                 v-for="(item, index) in paramslist"
                 :key="index + '.'"
@@ -44,7 +46,7 @@
               :dataList="businessSortList"
               :total='businessTotal'
             />
-            <div class="params business">
+            <!-- <div class="params business">
               <div
                 class="item business"
                 v-for="(item, index) in businessSortList"
@@ -58,7 +60,7 @@
                   <span class="margin">{{ item.value }}</span>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </BeautifulCard>
         <!-- 每月新增 -->
@@ -121,6 +123,7 @@
               :data-list="dataList"
               :columns="columns"
               :operObj='{}'
+              @doubleClick='doubleClick'
             />
             <!-- <div class="columns">
               <div
@@ -188,7 +191,8 @@
     <projectDialog
       :dialogVisible="dialogVisible"
       :title="title"
-      :dataList="DialogDataList"
+      :isTitle="isTitle"
+      :dataLists="DialogDataList"
       @closeDialog='closeDialog'
     > </projectDialog>
     <DialogCenter
@@ -231,15 +235,16 @@ export default {
       projectTotal: 0,
       projectColor: ['#FCFF20', '#FF4F01', '#FF3D54', '#00FFFF', '#FFAE00', '#B78FFF'],
       paramslist: [],
+      totalProjectList: [], // 总的项目
       // 业务分类模块
       businessTotal: 0,
       businessSortList: [],
       // 每月新增模块
-      xAxisData: ['1月', '2月', '3月', '4月', '5月', '6月'],
-      seriesData: [20, 50, 10, 35, 35, 47],
+      xAxisData: [],
+      seriesData: [],
       // 表格表头——右边两个表格
       columns: [
-        { name: '项目名称', prop: 'projectName', key: 1 },
+        { name: '项目名称', prop: 'projectName', key: 1, tooltip: 4, width: '30%' },
         { name: '开发单位', prop: 'constructo', key: 2 },
         { name: '施工单位', prop: 'builder', key: 3 },
         { name: '超期/天', prop: 'chaoQiDays', key: 4 }
@@ -248,35 +253,14 @@ export default {
       more90day: 0,
       dataList: [],
       // 大弹窗数据
-      DialogDataList: [
-        { id: 'geewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'gwg', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geewhwwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geegsdwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-09' },
-        { id: 'geegeewew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geejwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geeerwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geesjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-010' },
-        { id: 'geejjjwew', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '2434', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '2421', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242149661', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '244642141', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' },
-        { id: '242145641', projectName: '防空雷达技术反馈', num: 56, startTime: '2022-03-04', endTime: '2022-03-011' }
-      ],
+      DialogDataList: [],
       // 大弹窗
       dialogVisible: false,
       title: '',
+      isTitle: true,
       // 地图
       searchValue: '', // 输入框搜索
-      coordinateList: [{ lng: 116.2787, lat: 40.0492, value: 80 },
-      { lng: 116.2787, lat: 40.040, value: 130 },
-      { lng: 116.2887, lat: 40.040, value: 230 },
-      { lng: 116.297047, lat: 39.979542, value: 30 },
-      { lng: 116.321768, lat: 39.88748, value: 30 },
-      { lng: 116.494243, lat: 39.956539, value: 10 },
-      { lng: 116.594243, lat: 40.01, value: 100 }],
+      coordinateList: [],
       mapColorList: [{ name: '优', color: '#30D385', section: '0-35' },
       { name: '良', color: '#FFD902', section: '36-75' },
       { name: '轻度', color: '#FF9902', section: '76-115' },
@@ -326,12 +310,13 @@ export default {
         const { data, code, msg } = res.data
         if (code === 200) {
           if (str === 'project') {
-            const { projectTotal, paramslist } = data
+            const { projectTotal, paramslist, totalProjectList } = data
             paramslist && paramslist.map((i, index) => {
               i.color = this.projectColor[index]
             })
             this.projectTotal = projectTotal
             this.paramslist = paramslist
+            this.totalProjectList = totalProjectList
           } else if (str === 'sort') {
             const { businessTotal, businessSortList } = data
             businessSortList && businessSortList.map((i, index) => {
@@ -373,6 +358,7 @@ export default {
         this.$message.error(err.data.msg || err.data.error)
       })
     },
+    // 点击更多
     getMoreData () {
       this.$http({
         url: this.api.moreApi
@@ -395,6 +381,7 @@ export default {
     },
     // 地图点位点击显示详情
     markHandle (item) {
+      console.log('398', item)
       Object.keys(item).map(j => {
         this.dataColumns.map(o => {
           if (o.prop === j) {
@@ -406,16 +393,39 @@ export default {
       this.dialogVisibleCenter = true
 
     },
-    morePage (val) {
-      console.log(val)
-      if (val === '超期90天未竣工') {
+    morePage (val, f) {
+      if (val !== '本月考评') {
         this.dialogVisible = true
+        // if (f) {
+        //   this.isTitle = false
+        //   this.title = val
+        // } else {
+        this.isTitle = true
         this.title = val
+        // }
+
       } else {
         this.$message.error('暂未开放该模块')
-
       }
 
+    },
+    // 项目管理环饼图
+    chartClick (item) {
+      if (item.componentType === 'title') {
+        console.log(item)
+        this.morePage('项目总数', true)
+        this.DialogDataList = this.totalProjectList
+      } else {
+        const { projectList, name } = item
+        this.morePage(name, true)
+        this.DialogDataList = projectList
+      }
+
+    },
+    doubleClick ({ row }) {
+      console.log(row)
+      const { longitude, latitude } = row
+      this.center = { lng: longitude, lat: latitude }
     },
     closeDialog () {
       this.dialogVisible = false
@@ -480,7 +490,7 @@ export default {
       height: 30%;
       .item {
         width: 7.8rem;
-        padding: 0.2rem 0.2rem 0.4rem 0.2rem;
+        padding-left: 0.2rem;
         text-align: center;
         cursor: pointer;
         margin: 0.25rem;

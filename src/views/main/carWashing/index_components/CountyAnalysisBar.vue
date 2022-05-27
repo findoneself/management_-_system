@@ -4,7 +4,7 @@
     <div>
       <div
         id="countyBar"
-        style="width: 98%; height: 14rem"
+        style="width: 98%; height: 12rem"
       ></div>
     </div>
   </div>
@@ -25,7 +25,7 @@ export default {
           left: '20rem',
           right: '10rem',
           top: '60rem',
-          bottom: '5rem',
+          bottom: '15rem',
           containLabel: true
         },
         xAxis: {

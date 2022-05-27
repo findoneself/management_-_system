@@ -107,15 +107,16 @@ export default {
 .menu-list {
   display: flex;
   align-items: center;
-  width: 500px;
+  /* width: 500px; */
 }
 .menu-item {
   position: relative;
-  width: 100px;
+  width: 120px;
   height: 36px;
   line-height: 36px;
   cursor: pointer;
   margin: 0 8px;
+  font-size: 20px;
 }
 .menu-value {
   position: relative;

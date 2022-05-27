@@ -2,7 +2,7 @@
   <!-- 车辆出入分析 双折线 -->
   <div
     id="many_line_chart"
-    style="width: 100%; height: 100%"
+    style="width: 100%; height: 100%;z-index: 20;color:#fff"
   ></div>
 </template>
 <script>
@@ -92,17 +92,24 @@ export default {
           }
         },
         legend: [{
+          type: 'scroll',
+          orient: 'horizontal',
+          // icon: 'rect',
           x: 'center',
-          bottom: '2%',
-          //   y: '30',
+          bottom: '0',
           textStyle: {
             color: '#fff',
-            fontSize: '15'
+            fontSize: '12'
+          },
+          pageTextStyle: {
+            color: '#fff'
           },
           itemWidth: 25,
-          itemHeight: 15,
-          itemGap: 20
+          itemHeight: 20,
+          itemGap: 10
         }]
+
+
       }
     }
   },
@@ -134,7 +141,7 @@ export default {
           type: 'line',
           //  折线图线上的原点
           symbol: 'circle',
-          symbolSize: 15,
+          symbolSize: 10,
           itemStyle: {
             normal: {
               color: this.color[index],

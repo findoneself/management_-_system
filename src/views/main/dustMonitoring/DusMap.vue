@@ -30,7 +30,10 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item class="el_form_county">
+          <el-form-item
+            class="el_form_county"
+            v-if="router === 'DusIndex'"
+          >
             <el-select
               v-model="dataForm.paramTypes"
               clearable
@@ -72,7 +75,7 @@
         :data-list="dataList"
         :columns="columns"
         :loading="loading"
-        :index-obj="{isIndex: false}"
+        :index-obj="{isIndex: true}"
         :operObj='{isOperation: false}'
         cell-height='2rem'
         class="tableList"
@@ -163,12 +166,7 @@ export default {
       activePage: 0,
       dictOptions: {
         // 行政区域
-        areaList: [
-          { id: 'xz-1', name: '区域1' },
-          { id: 'xz-2', name: '区域2' },
-          { id: 'xz-3', name: '区域3' },
-          { id: 'xz-4', name: '区域4' }
-        ],
+        areaList: [],
         paramTypesList: []
       },
       dataForm: {
@@ -182,7 +180,7 @@ export default {
       cardStyle: { padding: '0px' },
 
       // 检测源 表格数据
-      columns: [{ name: '监测点', prop: 'name', key: 1, tooltip: 9 }],
+      columns: [{ name: '监测点', prop: 'name', key: 1 }],
       dataList: [],
       // 监测点数据
       monitoringSspotData: {
@@ -251,8 +249,17 @@ export default {
     },
     markHandle (e) {
       let item = this.dataList.find(i => i.id === e.id)
-      this.monitoringSspotData = item.monitoringSspotData
-      console.log(item)
+      let param = this.dataForm.paramTypes
+      const { detailList, title } = item.monitoringSspotData
+      if (param) {
+        let pieData = detailList.find(i => i.prop === param)
+        this.monitoringSspotData = { pieData, title, detailList }
+        console.log(this.monitoringSspotData)
+      } else {
+        this.monitoringSspotData = item.monitoringSspotData
+
+      }
+      console.log(item, this.dataForm.paramTypes)
       this.activePage = 1
     },
     switchChange (value) {
@@ -267,19 +274,19 @@ export default {
       this.$http({
         url: this.api.areaApi
       }).then(res => {
-        // console.log(res)
-        const { data, status } = res
-        if (status === 200) {
-          this.dictOptions.areaList = data.data || []
-          sessionStorage.setItem('areaList', JSON.stringify(data.data))
-          // this.dataForm.areaId = data.data[0].id
-          this.getDataList()
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          let defaultAreaId = JSON.parse(sessionStorage.getItem('defaultArea'))
+          this.dictOptions.areaList = data || []
+          sessionStorage.setItem('areaList', JSON.stringify(data))
+          this.dataForm.areaId = defaultAreaId
         } else {
-          this.$message.error('获取行政数据错误')
+          this.$message.error(msg || '获取行政数据错误')
         }
+        this.getDataList('true')
       })
     },
-    getDataList () {
+    getDataList (flag) {
       this.loading = true
       const { monitoringSourceName, areaId, paramTypes } = this.dataForm
       this.$http({
@@ -297,7 +304,12 @@ export default {
         if (status === 200) {
           const { center, list } = data.data
           this.mapLoading = false
-          this.center = center
+          if (flag === 'true') {
+            this.center = { lat: 34.209974, lng: 117.290313 }
+          } else {
+            this.center = center
+          }
+          console.log(flag, this.center)
           let val = this.dataForm.paramTypes
           let typeParams = ''
           if (val) {
@@ -305,7 +317,7 @@ export default {
           }
           this.dataList = list
           let coordinateList = []
-          list.map(i => {
+          list && list.map(i => {
             coordinateList.push({ ...i.mapLngLat, type: typeParams, name: i.name, value: i.value, status: i.status, id: i.id })
           })
           this.coordinateList = coordinateList
@@ -329,7 +341,7 @@ export default {
           if (this.router === 'DusIndex') {
             this.dictOptions.paramTypesList = data
           } else {
-            this.dictOptions.paramTypesList = [data.find(i => i.name === '噪声')] || []
+            this.dataForm.paramTypes = data.find(i => i.name === '噪声').prop
           }
           sessionStorage.setItem('paramTypesList', JSON.stringify(data))
         } else {
@@ -393,10 +405,10 @@ export default {
       if (val) {
         let name = this.dictOptions.paramTypesList.find(i => i.prop === val).name
         let prop = this.dictOptions.paramTypesList.find(i => i.prop === val).prop
-        let obj = { name: name, prop: prop, key: 2, isSort: true }
-        this.columns = [{ name: '监测点', prop: 'name', key: 1, tooltip: 9 }, obj]
+        let obj = { name: name, prop: prop, key: 2, isSort: true, width: '30%' }
+        this.columns = [{ name: '监测点', prop: 'name', key: 1, tooltip: 10 }, obj]
       } else {
-        this.columns = [{ name: '监测点', prop: 'name', key: 1, tooltip: 9 }]
+        this.columns = [{ name: '监测点', prop: 'name', key: 1, tooltip: 19 }]
       }
       this.getDataList()
     },
@@ -407,6 +419,7 @@ export default {
     },
     deleteJcd () {
       this.dataForm.monitoringSourceName = ''
+      this.getDataList()
     }
 
   }

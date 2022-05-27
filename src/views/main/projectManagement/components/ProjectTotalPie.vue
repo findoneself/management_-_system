@@ -78,13 +78,14 @@ export default {
       option: {
         title: {
           text: this.total,
+          triggerEvent: true,
           left: '49%',
           top: '40%',
           textAlign: 'center',
           subtext: '项目总数',
           textStyle: {
             fontWeight: 'bold',
-            fontSize: 16,
+            fontSize: 20,
             color: '#fff'
           }
         },
@@ -93,7 +94,7 @@ export default {
           labelLine: { show: true },
           itemStyle: {
             normal: {
-              fontSize: '0.5rem',
+              fontSize: 18,
               shadowBlur: 0,
               label: {
                 show: false
@@ -141,12 +142,17 @@ export default {
           ...i,
           itemStyle: {
             color: i.color
+
           }
         })
       })
       var myChart = this.$echarts.init(document.getElementById('project_total'))
       this.option.series[0].data = data
       myChart.setOption(this.option)
+      myChart.off('click')
+      myChart.on('click', (a) => {
+        this.$emit('chartClick', a)
+      })
       window.addEventListener('resize', function () {
         myChart.resize()
       })

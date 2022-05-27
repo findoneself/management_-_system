@@ -422,7 +422,6 @@ export default {
     subMenu.map(i => {
       this.paramslist.map((o) => {
         if (i.id === o.id) {
-          console.log(i.url.slice(1))
           o.path = i.url.slice(1)
         }
 
@@ -484,7 +483,7 @@ export default {
         flex-direction: column;
         justify-content: space-around;
         font-size: 1rem;
-        padding: 0.6rem 1rem;
+        padding: 0.2rem 0.8rem;
         align-items: flex-start;
         .span {
           display: flex;
@@ -520,7 +519,7 @@ export default {
         background-color: #02004d;
         justify-content: space-around;
         align-items: center;
-        line-height: 2.5rem;
+        line-height: 1.6rem;
         font-size: 0.88rem;
         div {
           flex: 1;
@@ -634,7 +633,7 @@ export default {
         }
         .video_list_data {
           display: flex;
-          padding: 0.5rem;
+          padding: 0.2rem;
           justify-content: space-between;
           align-items: center;
           div {

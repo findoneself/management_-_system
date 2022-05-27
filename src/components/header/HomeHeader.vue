@@ -48,7 +48,7 @@ export default {
   },
   data () {
     return {
-      systemTitle: '江苏本初一体化管理平台',
+      systemTitle: '',
       // 默认首页
       home: {},
       userInfo: {} || this.$store.state.global.userInfo
@@ -58,6 +58,9 @@ export default {
     // 查找默认首页
     const menuRoutes = this.$store.state.global.menuRoutes
     this.home = menuRoutes.find(item => item.meta.type === 'home') || { name: 'home-Home' }
+  },
+  created () {
+    this.getTitle()
   },
   methods: {
     // 退出账户
@@ -74,6 +77,22 @@ export default {
     // logo标题点击
     logoClick () {
       this.$router.push({ name: this.home.name })
+    },
+    getTitle () {
+      this.$http({
+        url: '/integration/title/getTitle'
+      }).then(res => {
+        const { data, code, msg } = res.data
+        if (code === 200) {
+          this.systemTitle = data.titleName
+        } else {
+          this.$message.error(msg || '获取验证码失败')
+        }
+      }, () => {
+        // 登录失败
+        this.$message.error('获取验证码失败!')
+      })
+
     }
   }
 }

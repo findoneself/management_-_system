@@ -8,6 +8,7 @@
       :is-table="true"
       :tform-head="tformHead"
       :operObj='operObj'
+      :index-obj="{isIndex: true, width: '5rem'}"
     >
       <el-form
         :inline="true"
@@ -28,13 +29,17 @@
           type="primary"
         >查询</el-button>
         <el-button @click="reset">重置</el-button>
+        <el-button
+          type="primary"
+          style="margin-left:60%"
+          @click="addHandle"
+        >新增</el-button>
+        <el-button
+          style="width:7rem"
+          @click="exportList"
+        >导出Excel</el-button>
       </el-form>
-      <el-button
-        slot="headform"
-        type="primary"
-        style="margin-top:1rem"
-        @click="addHandle"
-      >新增</el-button>
+
       <div
         slot="oper"
         slot-scope="{row}"
@@ -192,7 +197,8 @@ export default {
       api: {
         dataListApi: '/integration/rectification/listFromWg', // 列表
         deleteApi: '/integration/rectification/fromWG/', // 删除整改记录 /rectification/fromWG
-        editApi: '/integration/rectification/edit'
+        editApi: '/integration/rectification/edit',
+        exportApi: '/integration/rectification/listFromWgExport' // 导出
       }
     }
   },
@@ -374,6 +380,16 @@ export default {
     bigImg (url) {
       this.imgSrc = url
       this.dialogVisibleImg = true
+    },
+    exportList () {
+      let url = this.api.exportApi
+      let title = '整改记录'
+      let data = {
+        projectName: this.projectName
+      }
+      // let params = this.$api.toQueryString(data)
+      this.$api.downloadBlob(url, data, title, function (data) {
+      })
     }
   },
   computed: {

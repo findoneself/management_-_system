@@ -125,14 +125,13 @@ export default {
           method: 'post',
           data: this.loginForm
         }).then(res => {
-
           const { data, code, msg } = res.data
           if (code === 200) {
             let token = data.access_token
             this.$cookie.set('token', token)
             this.$router.push({ name: 'main' })
             sessionStorage.setItem('userId', this.loginForm.username)
-
+            sessionStorage.setItem('defaultArea', JSON.stringify(data.areaId))
           } else {
             this.$message.error(msg || '登录失败')
           }
@@ -143,6 +142,7 @@ export default {
       })
 
     },
+
     getCode () {
       this.$http({
         url: '/code'

@@ -100,7 +100,7 @@ export default {
       this.flagHandle(BMap, map)
     },
     flagHandle (BMap, map) {
-      console.log(this.coordinateList)
+      // console.log(this.coordinateList)
       this.coordinateList || marker.remove()
       map.clearOverlays()
       let that = this
@@ -112,6 +112,7 @@ export default {
         }
         if (this.title === 'project') {
           let labelvValue = item.projectName
+          // console.log(item.projectName)
           var labelopts = {
             position: new BMap.Point(item.lng, item.lat), // 指定文本标注所在的地理位置
             offset: new BMap.Size(-1, -25) // 设置文本偏移量
@@ -134,7 +135,6 @@ export default {
             }
 
           })
-
           map.addOverlay(labels)
           var icon = new BMap.Icon(require('../../assets/img/maker.png'), new BMap.Size(70, 70))
           var marker = new BMap.Marker(new BMap.Point(item.lng, item.lat), { icon: icon })

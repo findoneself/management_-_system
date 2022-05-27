@@ -1,6 +1,6 @@
 <template>
   <!-- 巡查 -->
-  <div style="height:100%">
+  <div style="height:100%,position: relative;">
     <TableForm
       :loading="dataLoading"
       :data-list="dataList"
@@ -8,13 +8,35 @@
       :is-table="true"
       :tform-head="tformHead"
       :operObj='operObj'
+      :index-obj="{isIndex: true, width: '5rem'}"
     >
+      <!-- 巡察报告记录 -->
+      <!-- <div
+        slot="headTab"
+        class="headTab"
+      >
+        <div
+          v-for="(item ,index) in tabL"
+          :key="index"
+          :class="tabIndex===index?'active':''"
+          @click="changeTabPartrol(index)"
+        >{{item}}</div>
+      </div> -->
       <el-form
         :inline="true"
         slot="headform"
         size="medium"
         class="demo-form-inline"
       >
+        <!-- <el-form-item>
+          <div class="headTab">
+            <div
+              v-for="(item ,index) in tabL"
+              :key="index"
+              :class="tabIndex===index?'active':''"
+            >{{item}}</div>
+          </div>
+        </el-form-item> -->
         <el-form-item class="input_project">
           <el-input
             v-model="projectName"
@@ -28,13 +50,25 @@
           type="primary"
         >查询</el-button>
         <el-button @click="reset">重置</el-button>
+        <el-button
+          v-if="tabIndex===0"
+          type="primary"
+          style="margin-left:60%"
+          @click="addHandle('记录')"
+        >新增</el-button>
+        <el-button
+          v-else
+          type="primary"
+          style="margin-left:60%"
+          @click="addHandle('报告')"
+        >上传</el-button>
+        <el-button
+          style="width:7rem"
+          @click="exportList"
+        >导出Excel</el-button>
+
       </el-form>
-      <el-button
-        slot="headform"
-        type="primary"
-        style="margin-top:1rem"
-        @click="addHandle"
-      >新增</el-button>
+
       <div
         slot="oper"
         slot-scope="{row}"
@@ -121,6 +155,8 @@ export default {
   data () {
     return {
       dataLoading: false,
+      tabL: ['巡查记录', '巡查报告'],
+      tabIndex: 0,
       projectName: '',
       columns: [
         { name: '项目名称', prop: 'projectName', key: 1 },
@@ -179,7 +215,8 @@ export default {
       detailImgs: [],
       api: {
         dataListApi: '/integration/patrol/listFromWg', // 列表
-        deleteApi: '/integration/patrol/fromWG/' // 删除巡查记录
+        deleteApi: '/integration/patrol/fromWG/', // 删除巡查记录
+        exportApi: '/integration/patrol/listFromWgExport' // 导出
       }
     }
   },
@@ -261,9 +298,14 @@ export default {
       }
 
     },
-    addHandle () { // 新增弹窗
+    addHandle (val) { // 新增弹窗
       this.dialogVisible = true
-      this.title = '新增巡查记录'
+      if (val === '记录') {
+        this.title = '新增巡查记录'
+      } else {
+        this.title = '上传巡查报告'
+      }
+
       this.paramsObj = {
         projectList: [], // 巡查项目
         patrolName: '', // 巡查分类
@@ -323,6 +365,19 @@ export default {
     bigImg (url) {
       this.imgSrc = url
       this.dialogVisibleImg = true
+    },
+    changeTabPartrol (index) {
+      this.tabIndex = index
+    },
+    exportList () {
+      let url = this.api.exportApi
+      let title = '巡查记录'
+      let data = {
+        projectName: this.projectName
+      }
+      // let params = this.$api.toQueryString(data)
+      this.$api.downloadBlob(url, data, title, function (data) {
+      })
     }
   },
   computed: {
@@ -337,6 +392,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.tform-form {
+  // padding-top: 4rem;
+}
+.headTab {
+  display: flex;
+  position: absolute;
+  > div {
+    width: 10rem;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: #0b3eaf;
+    margin-bottom: 20px;
+  }
+  > div.active {
+    background: #0a44ff;
+  }
+}
 .input_project {
   position: relative;
   .el-icon-search {

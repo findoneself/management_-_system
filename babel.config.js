@@ -15,4 +15,15 @@ module.exports = {
     // 发布产品时候的插件数组
     ...prodPlugins
   ]
+  // module: {
+  //   rules: [
+  //     {
+  //       test: /.jsx?$/,
+  //       loaders: [
+  //         'babel-loader?compact=false'
+  //       ],
+  //       exclude: /(videojs-contrib-hls.js)/
+  //     }
+  //   ]
+  // }
 }

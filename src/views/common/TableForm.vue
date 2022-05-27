@@ -1,5 +1,8 @@
 <template>
   <div class="tform-wrapper">
+    <div>
+      <slot name="headTab" />
+    </div>
     <div class="tform-form">
       <slot name="headform" />
     </div>
@@ -197,7 +200,7 @@ export default {
   flex: 1;
 }
 .tform-form {
-  padding: 18px;
+  padding: 16px;
   flex-shrink: 0;
   background: var(--head-bgcolor);
   border: 1px solid var(--head-bdcolor);
@@ -209,7 +212,7 @@ export default {
   }
 }
 .tfrom-tabs {
-  height: calc(100% - 100px);
+  height: calc(100% - 4rem);
 }
 .is-nohead-tabs {
   padding-top: 30px;
@@ -221,7 +224,7 @@ export default {
 .tform-table-title {
   position: relative;
   text-align: center;
-  height: 100px;
+  height: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -229,7 +232,7 @@ export default {
 }
 .tform-table-title > h2 {
   font-size: 20px;
-  line-height: 180%;
+  line-height: 100%;
   font-weight: bold;
 }
 .tform-table-title > small {

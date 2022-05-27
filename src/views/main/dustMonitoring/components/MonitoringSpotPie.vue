@@ -55,22 +55,23 @@ export default {
     getmap () {
       this.myChart = this.$echarts.init(document.getElementById('monitoring_spot'))
       var item = { ...this.data, ...this.pieData }
+      console.log
       var option = {
         title: {
-          text: item.value,
-          // left: '42%',
-          // top: '20%',
-          x: 'center',
-          y: 'center',
-          subtext: item.unit + '\n' + item.name + '\n\n\n',
+          text: item.name,
+          left: 'center',
+          top: '20%',
+          // x: 'top',
+          // y: 'center',
+          subtext: '\n\n' + item.unit,
           textStyle: {
-            fontWeight: 'normal',
-            fontSize: '25',
-            color: '#fff'
+            fontWeight: '600',
+            fontSize: '16',
+            color: '#4B8AAF'
           },
           subtextStyle: {
-            fontWeight: 'normal',
-            fontSize: '10',
+            fontWeight: '600',
+            fontSize: '16',
             color: '#5496C2'
           }
         },
@@ -97,7 +98,7 @@ export default {
             name: item.name,
             type: 'pie',
             clockWise: false,
-            radius: [31, 43],
+            radius: [50, 65],
             itemStyle: {
               normal: {
                 color: item.color[0],
@@ -105,7 +106,7 @@ export default {
                 fontSize: '2rem',
                 shadowBlur: 0,
                 label: {
-                  show: false
+                  show: true
                 },
                 labelLine: {
                   show: false
@@ -118,7 +119,18 @@ export default {
               {
                 value: item.value,
                 label: {
-                  show: false
+                  normal: {
+                    formatter: function (params) {
+                      return params.value
+                    },
+                    position: 'center',
+                    show: true,
+                    textStyle: {
+                      fontSize: '30',
+                      fontWeight: 'bold',
+                      color: '#fff'
+                    }
+                  }
                 }
               },
               {
@@ -128,12 +140,12 @@ export default {
                   normal: {
                     color: item.color[1],
                     fontSize: 8,
-                    center: ['50%', '80%'],
+                    center: ['50%', '10%'],
                     textStyle: {
                       fontWeight: 'bold',
                       fontSize: '20',
-                      color: '#fff'
-                      // textAlign: 'center'
+                      color: 'red',
+                      textAlign: 'center'
                     }
                   }
 

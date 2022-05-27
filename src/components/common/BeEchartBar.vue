@@ -211,7 +211,7 @@ export default {
         // 图形显示区域
         grid: {
           top: 65,
-          left: '3%',
+          left: '5%',
           right: '3%',
           bottom: '3%',
           containLabel: true
@@ -306,7 +306,14 @@ export default {
       }
       // 序列数据
       options.series = this.series || []
-      options.xAxis.data = this.xAxis
+      options.xAxis.data = this.xAxis.map(i => {
+        if (i.length > 10) {
+          return i.slice(0, 10)
+        } else {
+          return i
+        }
+
+      })
       options.yAxis.data = this.yAxis
       // X轴与Y轴是否转置
       if (this.inverse) {

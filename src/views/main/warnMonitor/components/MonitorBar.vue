@@ -60,10 +60,10 @@ export default {
           }
         },
         grid: {
-          left: '2%',
+          left: '5%',
           right: '10rem',
           top: '40rem',
-          bottom: '1rem',
+          bottom: '-1rem',
           containLabel: true
         },
         xAxis: {
@@ -138,7 +138,15 @@ export default {
   methods: {
     getmap () {
       const { xAxis, series } = this.option
-      xAxis.data = this.xAxisData
+      console.log(this.xAxisData)
+      xAxis.data = this.xAxisData.map(i => {
+        if (i.length > 10) {
+          return i.slice(0, 10)
+        } else {
+          return i
+        }
+
+      })
       series[0].data = this.seriesData
       var myChart = this.$echarts.init(document.getElementById(this.id))
       myChart.setOption(this.option)

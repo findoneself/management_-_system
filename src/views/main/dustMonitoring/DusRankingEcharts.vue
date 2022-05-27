@@ -5,6 +5,7 @@
     :data-list="dataList"
     :columns="columns"
     :is-table="tabsType === 'table'"
+    :index-obj="{isIndex: true}"
     :cur-btn-id="echartsType"
     @buttonClick="buttonClick"
     :tform-head="tformHead"
@@ -197,7 +198,7 @@ export default {
       let item = this.dictOptions.areaList.find(i => i.id === this.dataForm.area) || { name: '' }
       let info = {
         title: item.name + params.name + '排名',
-        small: (this.dataForm.date.length > 0 ? `${this.dataForm.date[0]}-${this.dataForm.date[1]}` : '') + '（分钟数据）'
+        small: (this.dataForm.date.length > 0 ? `${this.dataForm.date[0]}-${this.dataForm.date[1]}` : '')
       }
       if (this.tabsType === 'table') {
         info.btnType = 'elbtn'

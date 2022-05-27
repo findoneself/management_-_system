@@ -16,6 +16,7 @@
         :data-list="dataList"
         :columns="columns"
         :operObj="operObj"
+        :index-obj="{isIndex: true}"
       >
         <el-form
           :inline="true"

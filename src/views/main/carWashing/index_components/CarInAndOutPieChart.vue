@@ -3,7 +3,7 @@
   <div>
     <div
       id="car_in_out_pie"
-      style="width: 12rem; height: 9rem"
+      style="width: 12rem; height: 7.5rem"
     ></div>
   </div>
 </template>
@@ -16,8 +16,8 @@ export default {
           {
             name: '',
             type: 'pie',
-            radius: '100%',
-            center: ['50%', '50%'],
+            radius: '70%',
+            center: ['50%', '40%'],
             label: {
               position: 'inner',
               fontSize: 0,
